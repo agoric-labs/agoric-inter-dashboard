@@ -1,9 +1,8 @@
 # Architecture
 
-TODO:
+![Architecture](./architecture.png)
 
- - miro diagram
- - describe modules
+TODO: describe modules
 
 ## Extractor
 
