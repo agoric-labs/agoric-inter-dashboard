@@ -12,3 +12,8 @@ This project provides a comprehensive tool for extracting and visualizing Cosmos
 cp .env.example .env # and put settings
 docker-compose up
 ```
+
+Endpoints:
+
+ - Dashboard: [http://localhost:8080](http://localhost:8080)
+ - Cube Playground: [http://localhost:4000](http://localhost:4000)

@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: dashboard
+  name: dashboard
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dashboard
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: dashboard
+    spec:
+      volumes:
+      - name: gac
+        secret:
+          secretName: gacreds
+          optional: false
+      - name: data
+        emptyDir:
+          medium: Memory
+          sizeLimit: 16Mi
+      containers:
+        - image: IMAGE
+          name: nginx
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "1"
+              memory: "1Gi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+          readinessProbe:
+            exec:
+              command: ["test", "-f", "/usr/share/nginx/html/data/charts.json"]
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          volumeMounts:
+          - name: data
+            mountPath: /usr/share/nginx/html/data
+
+        - image: IMAGE
+          name: updatedata
+          imagePullPolicy: Always
+          command: ["node", "fetch-data.cjs"]
+          env:
+            - name: "GOOGLE_APPLICATION_CREDENTIALS"
+              value: "/etc/gac/content"
+            - name: UPDATE_INTERVAL
+              value: "60"
+            - name: DATA_DIR
+              value: "/data"
+          resources:
+            requests:
+              cpu: "0.1"
+              memory: "128Mi"
+            limits:
+              cpu: "0.1"
+              memory: "128Mi"
+          volumeMounts:
+          - name: data
+            mountPath: /data
+          - name: gac
+            mountPath: "/etc/gac"
+            readOnly: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: dashboard

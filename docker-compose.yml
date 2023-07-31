@@ -1,6 +1,12 @@
 version: '2.2'
 
 services:
+  dashboard:
+    build:
+      context: ./dashboard
+    ports:
+      - 8080:80
+
   cubejs:
     image: cubejs/cube:v0.33.38
     ports:
