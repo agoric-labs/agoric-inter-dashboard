@@ -7,15 +7,13 @@ services:
       - 4000:4000
       - 3000:3000
       - 5432:5432
-    volumes:
-      - ./cube:/cube/conf
     environment:
-      - DATASET_ID=xxx
+      - DATASET_ID=${DATASET_ID}
       - CUBEJS_DEV_MODE=true
       - CUBEJS_DB_TYPE=bigquery
-      - CUBEJS_DB_BQ_PROJECT_ID=xxx
-      - CUBEJS_DB_BQ_KEY_FILE=/cube/conf/bigquerycreds.json
-      - CUBEJS_DB_EXPORT_BUCKET=cubestore_test
+      - CUBEJS_DB_BQ_PROJECT_ID=${PROJECT_ID}
+      - CUBEJS_DB_BQ_KEY_FILE=/bigquerycreds.json
+      - CUBEJS_DB_EXPORT_BUCKET=${EXPORT_BUCKET}
       - CUBEJS_CUBESTORE_HOST=cubestore_router
       - CUBEJS_PG_SQL_PORT=5432
       - CUBEJS_SQL_USER=myusername
@@ -26,21 +24,25 @@ services:
       - cubestore_router
       - cubestore_worker_1
       - cubestore_worker_2
+    volumes:
+      - ./cube:/cube/conf
+      - "${GOOGLE_CREDS}:/bigquerycreds.json"
 
   cube_refresh_worker:
     restart: always
     image: cubejs/cube:v0.33.38
     environment:
-      - DATASET_ID=agoric_localchain_0
+      - DATASET_ID=${DATASET_ID}
       - CUBEJS_DB_TYPE=bigquery
-      - CUBEJS_DB_BQ_PROJECT_ID=xxx
+      - CUBEJS_DB_BQ_PROJECT_ID=${PROJECT_ID}
       - CUBEJS_DB_BQ_CREDENTIALS=/bigquerycreds.json
-      - CUBEJS_DB_EXPORT_BUCKET=cubestore_test
+      - CUBEJS_DB_EXPORT_BUCKET=${EXPORT_BUCKET}
       - CUBEJS_CUBESTORE_HOST=cubestore_router
       - CUBEJS_API_SECRET=secret
       - CUBEJS_REFRESH_WORKER=true
     volumes:
       - ./cube:/cube/conf
+      - "${GOOGLE_CREDS}:/bigquerycreds.json"
 
   cubestore_router:
     restart: always
