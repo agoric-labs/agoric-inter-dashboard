@@ -7,6 +7,40 @@ services:
     ports:
       - 8080:80
 
+  txdecode:
+    build:
+      context: .
+    environment:
+      PORT: "8081"
+    command:
+      - "http-processor"
+      - "agd"
+      - "txdecode"
+
+  head-indexer: &indexer
+    restart: always
+    stop_grace_period: 600s
+    depends_on:
+      - "txdecode"
+    build:
+      context: .
+    environment:
+      TENDERMINT_TRIGGER_RPC_URL: "${TENDERMINT_RPC_URL}"
+      TENDERMINT_TRIGGER_PROJECT_ID: "${PROJECT_ID}"
+      TENDERMINT_TRIGGER_DATASET_ID: "${DATASET_ID}"
+      TENDERMINT_TRIGGER_BATCH_SIZE: 10
+      TENDERMINT_TRIGGER_MAX_WRITE_COUNT: 100
+      TENDERMINT_TRIGGER_BASE_CONFIG: '{"rpc_url":"${TENDERMINT_TRIGGER_RPC_URL}","batch_size":32,"thread_count":24}'
+      GOOGLE_APPLICATION_CREDENTIALS: "/bigquerycreds.json"
+      DECODE_SERVICE_URL: "http://txdecode:8080"
+    volumes:
+      - "${GOOGLE_CREDS}:/bigquerycreds.json"
+      - "/tmp:/tmp"
+    entrypoint:
+      - "tendermint-trigger"
+      - "head"
+      - "./extract-tendermint.sh"
+
   cubejs:
     image: cubejs/cube:v0.33.38
     ports:
