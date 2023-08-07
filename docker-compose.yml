@@ -28,17 +28,24 @@ services:
       TENDERMINT_TRIGGER_RPC_URL: "${TENDERMINT_RPC_URL}"
       TENDERMINT_TRIGGER_PROJECT_ID: "${PROJECT_ID}"
       TENDERMINT_TRIGGER_DATASET_ID: "${DATASET_ID}"
-      TENDERMINT_TRIGGER_BATCH_SIZE: 10
+      TENDERMINT_TRIGGER_BATCH_SIZE: 100
       TENDERMINT_TRIGGER_MAX_WRITE_COUNT: 100
-      TENDERMINT_TRIGGER_BASE_CONFIG: '{"rpc_url":"${TENDERMINT_TRIGGER_RPC_URL}","batch_size":32,"thread_count":24}'
+      TENDERMINT_TRIGGER_BASE_CONFIG: '{"rpc_url":"${TENDERMINT_RPC_URL}","batch_size":32,"thread_count":24}'
       GOOGLE_APPLICATION_CREDENTIALS: "/bigquerycreds.json"
-      DECODE_SERVICE_URL: "http://txdecode:8080"
+      DECODE_SERVICE_URL: "http://txdecode:8081"
     volumes:
       - "${GOOGLE_CREDS}:/bigquerycreds.json"
       - "/tmp:/tmp"
     entrypoint:
       - "tendermint-trigger"
       - "head"
+      - "./extract-tendermint.sh"
+
+  tail-indexer:
+    <<: *indexer
+    entrypoint:
+      - "tendermint-trigger"
+      - "tail"
       - "./extract-tendermint.sh"
 
   cubejs:

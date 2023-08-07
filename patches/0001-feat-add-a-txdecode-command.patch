@@ -1,0 +1,71 @@
+From e38802dd8e39d7497c8b238baa5310041cd044d8 Mon Sep 17 00:00:00 2001
+From: Alexey Yurchenko <alexes.dev@gmail.com>
+Date: Thu, 29 Jun 2023 01:04:29 +0300
+Subject: [PATCH] feat: add a txdecode command
+
+---
+ golang/cosmos/daemon/main.go     |  2 ++
+ golang/cosmos/daemon/txdecode.go | 38 ++++++++++++++++++++++++++++++++
+ 2 files changed, 40 insertions(+)
+ create mode 100644 golang/cosmos/daemon/txdecode.go
+
+diff --git a/golang/cosmos/daemon/main.go b/golang/cosmos/daemon/main.go
+index fc3bbf455..f4c79ab61 100644
+--- a/golang/cosmos/daemon/main.go
++++ b/golang/cosmos/daemon/main.go
+@@ -42,6 +42,8 @@ func RunWithController(sendToController cmd.Sender) {
+ 	config.Seal()
+ 
+ 	rootCmd, _ := cmd.NewRootCmd(sendToController)
++	rootCmd.AddCommand(getTxDecodeCmd())
++
+ 	if err := svrcmd.Execute(rootCmd, app.DefaultNodeHome); err != nil {
+ 		switch e := err.(type) {
+ 		case server.ErrorCode:
+diff --git a/golang/cosmos/daemon/txdecode.go b/golang/cosmos/daemon/txdecode.go
+new file mode 100644
+index 000000000..6c68d4c6a
+--- /dev/null
++++ b/golang/cosmos/daemon/txdecode.go
+@@ -0,0 +1,38 @@
++package daemon
++
++import (
++	"encoding/base64"
++	"io"
++	"os"
++
++	"github.com/cosmos/cosmos-sdk/client"
++	"github.com/spf13/cobra"
++)
++
++func getTxDecodeCmd() *cobra.Command {
++	return &cobra.Command{
++		Use:   "txdecode",
++		Short: "Decode a binary encoded transaction string from stdin",
++		Args:  cobra.ExactArgs(0),
++		RunE: func(cmd *cobra.Command, _ []string) error {
++			clientCtx := client.GetClientContextFromCmd(cmd)
++
++			txBytes, err := io.ReadAll(base64.NewDecoder(base64.StdEncoding, os.Stdin))
++			if err != nil {
++				return err
++			}
++
++			tx, err := clientCtx.TxConfig.TxDecoder()(txBytes)
++			if err != nil {
++				return err
++			}
++
++			json, err := clientCtx.TxConfig.TxJSONEncoder()(tx)
++			if err != nil {
++				return err
++			}
++
++			return clientCtx.PrintBytes(json)
++		},
++	}
++}
+-- 
+2.41.0
+

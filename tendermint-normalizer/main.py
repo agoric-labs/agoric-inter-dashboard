@@ -97,7 +97,7 @@ def write_state_change(event, block_meta):
             "id": f"{event['id']}:{idx}",
             "path": path,
             "idx": idx,
-            "slots": change_body["slots"],
+            "slots": ujson.dumps(change_body["slots"]),
             "body": ujson.dumps(payload),
         }
 
@@ -530,7 +530,7 @@ STATE_CHANGES_SCHEMA = {
             "block_time": {"type": "string", "format": "date-time"},
             "path": {"type": "string"},
             "idx": {"type": "integer"},
-            "slots": {"type": "array", "items": {"type": "string"}},
+            "slots": {"type": "object"},
             "body": {"type": "object"},
         },
     },

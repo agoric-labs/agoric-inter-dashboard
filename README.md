@@ -6,6 +6,13 @@ This project provides a comprehensive tool for extracting and visualizing Cosmos
  - [Cube](https://cube.dev): Provides a semantic layout and an API for structured data access.
  - React Dashboard: Visualizes the data in an interactive interface.
 
+## Get Started
+
+```
+cp .env.example .env
+docker-compose up head-indexer tail-indexer --build
+```
+
 ## Documentation
 
  - [Architecture](./docs/architecture.md)
