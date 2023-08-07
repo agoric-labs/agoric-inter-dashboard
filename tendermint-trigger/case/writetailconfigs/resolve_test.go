@@ -79,8 +79,8 @@ func TestResolve(t *testing.T) {
 				GetEarliestStatusHeightFunc: func(ctx context.Context) (int64, error) {
 					return 1, nil
 				},
-				GetEarliestDBHeightFunc: func(ctx context.Context) (int64, error) {
-					return 0, nil
+				GetEarliestDBHeightFunc: func(ctx context.Context) (*int64, error) {
+					return int64p(0), nil
 				},
 				WriteConfigFunc: func(rg model.HeightRange) error {
 					return nil

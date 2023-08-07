@@ -5,7 +5,7 @@ Output format: https://hub.meltano.com/singer/spec/
 ## Typical Usage
 
 ```
-tendermint-source | tendermint-normalizer | target-bigquery --config bigquery.json
+tendermint-source | simple-normalizer | target-bigquery --config bigquery.json
 ```
 
 bigquery.json:
@@ -40,32 +40,6 @@ cat data.json | python3 main.py > res.json
 
 # check schemas
 cat res.json | python3 ../schema-checker/main.py
-```
-
-## Check Intigrity
-
-```sql
-select avg(events.count / b.event_count) as status_events
-     , avg(msgs.count / b.message_count) as status_msgs
-     , avg(txs.count / b.transaction_count) as status_txs
-     , count(block_height) / count(distinct block_height) as status_blocks
-     , count(block_height) as total_count
-from cosmoshub_v18.blocks` b
-left join (
-  select block_height, count(block_height) count
-    from cosmoshub_v18.events
-   group by 1
-) events using (block_height)
-left join (
-  select block_height, count(block_height) count
-    from cosmoshub_v18.messages
-   group by 1
-) msgs using (block_height)
-left join (
-  select block_height, count(block_height) count
-    from cosmoshub_v18.transactions
-   group by 1
-) txs using (block_height)
 ```
 
 ## Schema

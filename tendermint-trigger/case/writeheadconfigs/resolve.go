@@ -48,6 +48,7 @@ func Resolve(ctx context.Context, env Env) error {
 	return nil
 }
 
+//nolint:lll
 func makeNextBatch(ctx context.Context, env Env, lastDBHeight, lastStatusHeight, batchSize int64) (int64, int64, error) {
 	if lastStatusHeight > lastDBHeight {
 		nextHead := lastDBHeight + batchSize

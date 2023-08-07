@@ -64,5 +64,6 @@ func (e *Env) GetLatestStatusHeight(ctx context.Context) (int64, error) {
 // WaitNextBlock listens websockets or something like that.
 func (e *Env) WaitNextBlock() error {
 	time.Sleep(2 * time.Second)
+
 	return nil
 }

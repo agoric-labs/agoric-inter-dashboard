@@ -1,20 +1,36 @@
 package env
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
-	"io"
 	"os"
 	"os/exec"
 	"strconv"
 	"syscall"
+	"time"
 
 	"cloud.google.com/go/bigquery"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
 	"p2p-tendermint-trigger/model"
+)
+
+var (
+	writeConfigCount = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "tendermint_trigger_write_config_total",
+		Help: "The total number of generated configs",
+	})
+
+	writeConfigSuccessCount = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "tendermint_trigger_write_config_success_total",
+		Help: "The total number of generated configs",
+	})
 )
 
 // Env contains all internal deps.
@@ -29,18 +45,15 @@ type Env struct {
 	batchSize int64
 
 	maxWriteCount int
-	writeCount    int
 
 	baseConfig map[string]interface{}
 
-	subcommand   []string
-	cmd          *exec.Cmd
-	configWriter io.WriteCloser
-	ctx          context.Context
+	subcommand []string
+	ctx        context.Context
 }
 
 // New is a constructor for Env.
-func New(ctx context.Context, subcommand []string) (*Env, error) {
+func New(ctx context.Context, subcommand []string) (*Env, error) { //nolint:funlen,cyclop
 	log := zerolog.New(os.Stderr).With().
 		Str("type", "LOG").
 		Str("component", "tendermint-trigger").
@@ -78,7 +91,7 @@ func New(ctx context.Context, subcommand []string) (*Env, error) {
 
 	maxWriteCount := os.Getenv("TENDERMINT_TRIGGER_MAX_WRITE_COUNT")
 	if maxWriteCount == "" {
-		maxWriteCount = "10"
+		maxWriteCount = "10000"
 	}
 
 	env := Env{
@@ -89,15 +102,6 @@ func New(ctx context.Context, subcommand []string) (*Env, error) {
 
 		rpcURL: rpcURL,
 		ctx:    ctx,
-
-		configWriter: os.Stdout,
-	}
-
-	if len(subcommand) > 0 {
-		err := env.runSubcommand(subcommand)
-		if err != nil {
-			return nil, fmt.Errorf("failed to runSubcommand: %w", err)
-		}
 	}
 
 	env.maxWriteCount, err = strconv.Atoi(maxWriteCount)
@@ -144,60 +148,41 @@ func (e *Env) GetMaxWriteCount() int {
 }
 
 // WriteConfig writes baseConfig + rg to stdout as json lines.
-func (e *Env) WriteConfig(rg model.HeightRange) error {
-	// TODO: extract to params or replace by maxWriteCount
-	if e.writeCount > 2 {
-		err := e.Close()
-		if err != nil {
-			return fmt.Errorf("failed to close the restarted cmd: %w", err)
-		}
-
-		err = e.runSubcommand(e.subcommand)
-		if err != nil {
-			return fmt.Errorf("failed to restart the cmd: %w", err)
-		}
-
-		e.writeCount = 0
+func (e *Env) WriteConfig(rang model.HeightRange) error {
+	if errors.Is(e.ctx.Err(), context.Canceled) {
+		return fmt.Errorf("from the common ctx: %w", e.ctx.Err())
 	}
 
-	e.baseConfig["earliest_height"] = strconv.FormatInt(rg.Earliest, 10)
-	e.baseConfig["latest_height"] = strconv.FormatInt(rg.Latest, 10)
+	writeConfigCount.Inc()
+
+	e.baseConfig["earliest_height"] = strconv.FormatInt(rang.Earliest, 10)
+	e.baseConfig["latest_height"] = strconv.FormatInt(rang.Latest, 10)
 
 	log.Info().Fields(e.baseConfig).Msg("write config")
 
-	err := json.NewEncoder(e.configWriter).Encode(e.baseConfig)
+	rawConfig, err := json.Marshal(e.baseConfig)
 	if err != nil {
 		return fmt.Errorf("failed to write a new config: %w", err)
 	}
 
-	e.writeCount++
-
-	return nil
-}
-
-// Close free all resources
-func (e *Env) Close() error {
-	if e.cmd != nil {
-		// err := e.configWriter.Close()
-		// if err != nil {
-		// 	e.logger.Warn().Err(err).Msg("failed to close configWriter")
-		// }
-
-		e.logger.Info().Msg("wait the subcommand")
-
-		err := e.cmd.Wait()
+	if len(e.subcommand) == 0 {
+		_, err := os.Stdout.Write(rawConfig)
 		if err != nil {
-			e.logger.Fatal().Err(err).Msg("failed to wait the subcommand")
+			return fmt.Errorf("failed to write next config to stdout: %w", err)
 		}
+
+		writeConfigSuccessCount.Inc()
+
+		return nil
 	}
 
-	return nil
-}
+	log.Info().Strs("cmd", e.subcommand).Msg("start the subcommand and push next config")
 
-func (e *Env) runSubcommand(subcommand []string) error {
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
+	defer cancel()
 
-	cmd := exec.CommandContext(ctx, subcommand[0], subcommand[1:]...) //nolint:gosec
+	cmd := exec.CommandContext(ctx, e.subcommand[0], e.subcommand[1:]...) //nolint:gosec
+	cmd.Stdin = bytes.NewBuffer(append(rawConfig, '\n'))
 	cmd.Stdout = os.Stdout
 	// Stderr uses as a log destination
 	cmd.Stderr = os.Stderr
@@ -205,18 +190,19 @@ func (e *Env) runSubcommand(subcommand []string) error {
 	// to which all its children will belong
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 
-	stdin, err := cmd.StdinPipe()
+	err = cmd.Run()
 	if err != nil {
-		return fmt.Errorf("failed to StdinPipe: %w", err)
+		return fmt.Errorf("failed to run: %w %+v", err, e.subcommand)
 	}
 
-	err = cmd.Start()
-	if err != nil {
-		return fmt.Errorf("failed to run: %w %+v", err, subcommand)
-	}
+	log.Info().Msg("subcommand exited")
 
-	e.configWriter = stdin
-	e.cmd = cmd
+	writeConfigSuccessCount.Inc()
 
+	return nil
+}
+
+// Close free all resources.
+func (e *Env) Close() error {
 	return nil
 }

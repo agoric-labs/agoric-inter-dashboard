@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"p2p-tendermint-trigger/model"
 	"strings"
 
 	"cloud.google.com/go/bigquery"
@@ -12,11 +13,59 @@ import (
 	"google.golang.org/api/iterator"
 )
 
+// GetBlockCountByHeightRange returns count(block_height) between Earliest and Latest heights.
+func (e *Env) GetBlockCountByHeightRange(ctx context.Context, rang model.HeightRange) (int64, error) {
+	sql := fmt.Sprintf(`
+		select count(block_height) val
+		  from %s.blocks
+		 where block_height between @earliest and @latest
+	`, e.bqDatasetID)
+
+	query := e.bqClient.Query(sql)
+	query.Parameters = []bigquery.QueryParameter{
+		{
+			Name:  "earliest",
+			Value: rang.Earliest,
+		},
+		{
+			Name:  "latest",
+			Value: rang.Latest,
+		},
+	}
+
+	iter, err := query.Read(ctx)
+	if err != nil {
+		return 0, fmt.Errorf("failed to read the query: %w", err)
+	}
+
+	var values struct {
+		Val bigquery.NullInt64
+	}
+
+	err = iter.Next(&values)
+	if errors.Is(err, iterator.Done) {
+		return 0, nil
+	}
+
+	if err != nil {
+		return 0, fmt.Errorf("failed to get a first row: %w", err)
+	}
+
+	if values.Val.Valid {
+		return values.Val.Int64, nil
+	}
+
+	return 0, nil
+}
+
+// TODO: in this case, it makes sense, but maybe I can replace *int64 with some struct
+//
+//nolint:nilnil
 func (e *Env) getDBHeight(ctx context.Context, operation string) (*int64, error) {
 	sql := fmt.Sprintf(`select %s(block_height) val from %s.blocks`, operation, e.bqDatasetID)
-	q := e.bqClient.Query(sql)
+	query := e.bqClient.Query(sql)
 
-	iter, err := q.Read(ctx)
+	iter, err := query.Read(ctx)
 	if err != nil {
 		// I'm not sure if this is correct but i don't want to use table validation logic on every request
 		if strings.Contains(err.Error(), "blocks was not found in location") {
