@@ -22,6 +22,90 @@ def to_datetime(val):
     return datetime.strptime(val, "%Y-%m-%dT%H:%M:%S.%fZ").strftime("%Y-%m-%dT%H:%M:%S.%f")
 
 
+def extract_brand(str):
+    return str.replace("Alleged: ", "").replace(" brand", "")
+
+
+def extract_storage_path(value):
+    parts = value.split("\x00")
+    length = int(parts.pop(0))
+
+    if length != len(parts):
+        raise ValueError(f"unexpected path {value}")
+
+    return ".".join(parts)
+
+
+def resolve_brand_names_and_values(body, names={}):
+    # https://github.com/endojs/endo/blob/53973bddbf73f681640ed9b7dd7bafdc2f8a3126/packages/marshal/src/encodeToSmallcaps.js#L47-L59
+    slot_pattern = r"^\$(\d+).?(.*)"
+    number_pattern = r"^[\+-]{1}(\d+)$"
+
+    if isinstance(body, dict):
+        for key in list(body):
+            value = body[key]
+
+            # depricated but exists in chains
+            if isinstance(value, dict):
+                if "@qclass" in value and value["@qclass"] == "slot":
+                    if "iface" in value:
+                        names[value["index"]] = extract_brand(value["iface"])
+
+                    if value["index"] in names:
+                        body["__" + key] = names[value["index"]]
+
+                if "@qclass" in value and value["@qclass"] == "bigint":
+                    body["__" + key] = value["digits"]
+
+            # smallcaps
+            if isinstance(value, str):
+                sm = re.findall(slot_pattern, value)
+                if len(sm) > 0:
+                    idx = int(sm[0][0])
+
+                    if sm[0][1] != "":
+                        names[idx] = extract_brand(sm[0][1])
+
+                    if idx in names:
+                        body["__" + key] = names[idx]
+
+                    continue
+
+                nm = re.findall(number_pattern, value)
+                if nm:
+                    body["__" + key] = nm[0]
+            else:
+                resolve_brand_names_and_values(value, names)
+    elif isinstance(body, list):
+        for item in body:
+            resolve_brand_names_and_values(item, names)
+
+def write_state_change(event, block_meta):
+    if event["attributes"]["store"] != "vstorage":
+        raise ValueError("unknown storage")
+
+    body = ujson.loads(event["attributes"]["value"])
+    path = extract_storage_path(event["attributes"]["key"])
+
+    for idx, change_raw in enumerate(body["values"]):
+        change_body = ujson.loads(change_raw)
+        payload = ujson.loads(re.sub(r"^#", "", change_body["body"]))  # trim # at start
+
+        resolve_brand_names_and_values(payload)
+
+        rec = {
+            "id": f"{event['id']}:{idx}",
+            "path": path,
+            "idx": idx,
+            "slots": change_body["slots"],
+            "body": ujson.dumps(payload),
+        }
+
+        rec.update(block_meta)
+
+        write_record("state_changes", rec)
+
+
 def write_record(stream, data):
     rec = {
         "type": "RECORD",
@@ -254,7 +338,12 @@ def print_block_and_others(row):
 
     if block_results["end_block_events"] is not None:
         for event in block_results["end_block_events"]:
-            events.append(prepare_event("end_block", event, block_meta, len(events)))
+            rec = prepare_event("end_block", event, block_meta, len(events))
+            events.append(rec)
+
+            # agoric specific
+            if rec["event_type"] == "state_change":
+                write_state_change(rec, block_meta)
 
         # reduce the dataset size
         del block_results["end_block_events"]
@@ -426,12 +515,34 @@ VALIDATORS_SCHEMA = {
     },
 }
 
+STATE_CHANGES_SCHEMA = {
+    "type": "SCHEMA",
+    "stream": "state_changes",
+    "key_properties": ["path"],
+    "time_property": "block_time",
+    "schema": {
+        "required": ["id", "block_height", "block_time", "path", "idx", "body", "slots"],
+        "type": "object",
+        "additionalProperties": False,
+        "properties": {
+            "id": {"type": "string"},
+            "block_height": {"type": "integer"},
+            "block_time": {"type": "string", "format": "date-time"},
+            "path": {"type": "string"},
+            "idx": {"type": "integer"},
+            "slots": {"type": "array", "items": {"type": "string"}},
+            "body": {"type": "object"},
+        },
+    },
+}
+
 if __name__ == "__main__":
     print(ujson.dumps(BLOCKS_SCHEMA))
     print(ujson.dumps(EVENTS_SCHEMA))
     print(ujson.dumps(TRANSACTIONS_SCHEMA))
     print(ujson.dumps(MESSAGES_SCHEMA))
     print(ujson.dumps(VALIDATORS_SCHEMA))
+    print(ujson.dumps(STATE_CHANGES_SCHEMA))
 
     for line in sys.stdin:
         print_block_and_others(ujson.loads(line))

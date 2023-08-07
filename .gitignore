@@ -1,3 +1,4 @@
 .cubestore
 .env
+.venv
 bigquerycreds.json
