@@ -1,4 +1,4 @@
-## Check Intigrity
+## Check integrity
 
 ```sql
 with mm as (
@@ -47,7 +47,7 @@ left join (
 ) txs using (block_height)
 ```
 
-## Fill Holes
+## Fill missing blocks
 
 ```
 kubectl port-forward agoric-mainnet-tendermint-head-5f876fb589-cvt5c 3333:3333

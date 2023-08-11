@@ -15,16 +15,53 @@ Technologies used for this solution are following:
 
 This repository consists of following directories:
 
-* `cube` – cube.js model definitions
-* `dashboard` – React visualisation dashboard
-* `docs` – documentation
-* `http-processor` – ???? Почему здесь лежит txdecode?
-* `patches` – ????
-* `tendermint-normalizer` – ????
-* `tendermint-source` – ???
-* `tendermint-trigger` – ????
+* `cube` – Cube.js model definitions. Is built into a separate Docker image.
+* `dashboard` – React visualisation dashboard. Is built into a separate Docker image.
+* `docs` – Documentation directory
+* `http-processor` – HTTP service for decoding trasnactions and calling txdecode command of Agoric node binary. Is a part of a indexating Docker image.
+* `patches` – Ad-hoc patches for z3-target-bigquery library and Agoric binary, which are implemented on docker compose start. Is a part of a indexating Docker image.
+* `tendermint-trigger` – Golang program, which ensures data integrity across gathered data. Is a part of a indexating Docker image.
+* `tendermint-source` – Golang program, which fetches block sources from  RPC node. Is a part of a indexating Docker image.
+* `balances-extractor` – Python script, which fetches balances data from the gRPC node. Is a part of a indexating Docker image.
+* `tendermint-normalizer` – Python script, which decomposes Tendermint RPC responce into blocks, transactions, events, etc. Is a part of a indexating Docker image. 
+
 
 # Architecture
+
+![Architecture](./docs/architecture.png)
+
+The solution consists of the folling parts:
+
+* Extractor
+* Cube.dev data transformation platform
+* Data warehouse (currently a Google BigQuery instance)
+* React analytics dashboard
+
+Tendermint extractor extract data from RPC nodes, normalizes it and stores in BigQuery. Then analytical metrics are calculated by Cube.dev and passed to dashboard for users. Cube.dev also serves as cahcing layer to prevent BigQuery resourcers overspending. Each of these building blocks is run as a Docker container and can be deployed in any Docker-supported environment both as a set of independent containers or as a part of archistration system (i.e. Kubernetes).
+
+## Subsystems detailed description
+
+### Extractor
+
+Extractor is not a monilythic software and consists of the following components which can be reused as single commands and in any order, because they use a UNIX design philosophy and communicate using UNIX pipes between each other. Extractor consists of the following modules:
+
+* `tendermint-trigger`
+* `tendermint-source` is a Golang program
+* `tendermint-normalizer` is a Python script for transforming raw block info in the form suitable for saving data in the database. This includes decoding the blocks' payload, decoding events from base64-encoded form, decoding transactions and extracting state_update events to a separate database table.
+* `balances-extractor` is Python project which makes gRPC calls for fetching balances info for accounts corresponding Agoric channel balances (for calculating Interchain EST). The exact list of addresses can be altered in env configuration. 
+* `z3-target-bigquery` is a BQ writer, which is responcible for sending data to BQ instance. It is installad as a Python package upon Docker image building. 
+
+### Cube.js
+
+TODO: describe why and how we use it
+
+### Data warehouse
+
+TODO: Describe that everithing is tied to bigquery including data consistency
+
+### React analytics dashboard
+
+TODO: ...
 
 # Quickstart
 
@@ -33,38 +70,153 @@ This repository consists of following directories:
 The main configuration is passed to services as environmental variables. Example configuration can be found in `.env.example` file. To prepare configuration from an example file
 
 ```
-cp .env.example .env # and put settings
+cp .env.example .env
 ```
 
 ## Running docker-compose
 
 This repository is shipped with docker compose config and can be started with the following commands:
 
-```
+```bash
 # Build and run containers
 docker-compose up
 ```
 
-On start up the indexer will start processing Agoric blocks from genesis to head using RPC nodes listed in configuration file. You can immediately check extracted data here:
+You can immediately check extracted data here:
 
 * Dashboard: http://localhost:8080
 * Cube Playground: http://localhost:4000
+* Tendermint trigger REST API http://localhost:3333
 
 All other aspects of the indexation process can be analysed checking logs in docker-compose stdout.
 
+## Extracting data
+
+Upon the launch the indexer starts processing Agoric blocks from the head block to newer created blocks and at the same time from head block to genesis using RPC nodes listed in configuration file. This is managed by starting by running two Tendermint trigger containers at the same time. In order to leave only one extraction mode (from the current block to future or from the current block to past) one can comment corresponding block in `docker-compose.yml` configuration file or just run `docker compose` command with certain container only, e.g. `docker-compose up head-indexer` for running a single head indexer.
+
+In order to extract a certain range of blocks one can call Extractor's HTTP interface with the following params:
+
+```bash
+curl -d '{"earliest":"xxx","latest":"xxx"}' http://localhost:3333
+```
+
+This endpoint will check the existance of given blocks in the database and will skip duplicated ones. Please note that blocks are being written into the BQ instance with some latency, normally 1-2 minutes.
+
+## Creating Cube.dev schemas and views
+
+In order to prepare Cube.dev models in BigQuery for serving them through API to dashboard one should manually execute all required queries by running the following set of commands:
+
+TODO: FILL THIS!
+
+```bash
+docker-compose up cubejs
+
+# Wait the indexer schema
+# Make required views
+# Start Cube
+
+bq query …
+```
+
 # REST API
 
-## Cube.js queries
+## Cube.dev Queries
 
-## Cube.js API docs
+### Checking Data Integrity
+
+In order to check the integrity of extracted data one can make the following query to BigQuery instance:
+
+```sql
+with mm as (
+   select min(block_height) mn, max(block_height) mx
+     from `xxx.raw_cosmos_hub.blocks`
+)
+select avg(events.count / b.event_count) as status_events
+     , avg(msgs.count / b.message_count) as status_msgs
+     , avg(txs.count / b.transaction_count) as status_txs
+     , count(block_height) / count(distinct block_height) as status_blocks
+     , count(block_height) / (max(block_height) - min(block_height)) as status_missing_total
+     , sum(events.count) event_count
+     , sum(msgs.count) msg_count
+     , sum(txs.count) tx_count
+     , count(block_height) as total_count
+     , (max(block_height) - min(block_height)) as expected_total
+     , (max(block_time) - min(block_time)) / count(block_height) avg_build_block_time
+     , (max(_sdc_batched_at) - min(_sdc_batched_at)) / count(block_height) avg_extract_block_time
+     , max(block_height) as last_block_height
+     , max(block_height - prev_block_height) as max_hole
+from (
+  select block_height
+       , block_time
+       , event_count
+       , message_count
+       , transaction_count
+       , _sdc_batched_at
+       , lag(block_height) over (order by block_height) as prev_block_height
+    from `xxx.raw_cosmos_hub.blocks`
+    where block_height between (select mn from mm) + 500 and (select mx from mm) - 500
+) b
+left join (
+  select block_height, count(block_height) count
+    from `xxx.raw_cosmos_hub.events`
+   group by 1
+) events using (block_height)
+left join (
+  select block_height, count(block_height) count
+    from `xxx.raw_cosmos_hub.messages`
+   group by 1
+) msgs using (block_height)
+left join (
+  select block_height, count(block_height) count
+    from `xxx.raw_cosmos_hub.transactions`
+   group by 1
+) txs using (block_height)
+```
+
+## Filling Missing Blocks
+
+TODO: Explain how to run these queries and why
+
+```
+kubectl port-forward agoric-mainnet-tendermint-head-5f876fb589-cvt5c 3333:3333
+```
+
+```
+with mm as (
+   select min(block_height) mn, max(block_height) mx
+     from `xxx.raw_cosmos_hub.blocks`
+)
+select array_to_string(array_agg('curl -d \'' || to_json_string(to_json(struct(earliest, latest))) || '\' http://localhost:3333'), '\n'), count(earliest)
+  from (
+    select next as earliest
+         , least(next + 99, block_height - 1) as latest
+     from (
+      select block_height
+           , lag(block_height) over (order by block_height) as prev_block_height
+        from `xxx.raw_cosmos_hub.blocks`
+       where block_height between (select mn from mm) + 500 and (select mx from mm) - 500
+     )
+     cross join unnest(generate_array(prev_block_height + 1, block_height - 1, 100)) next
+     where block_height - prev_block_height > 1
+     order by 1
+  )
+```
+
+
+## Cube.dev API docs
+
+TODO: Describe the process of making queries to Cube.dev
+
+https://cube.dev/docs/reference/rest-api (model-dependent)
 
 # Development
 
-## Subsystems detailed description
-
-
 ## Running tests
+
+TODO: golang tests
 
 ## Running linters
 
-# Deploy
+TODO: Python linters
+TODO: Golang linters
+TODO: TS linters
