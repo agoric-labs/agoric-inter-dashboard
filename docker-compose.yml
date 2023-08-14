@@ -48,6 +48,22 @@ services:
       - "tail"
       - "./extract-tendermint.sh"
 
+  balances-extractor: &grpc-extractor
+    restart: no
+    build:
+      context: .
+    environment:
+      RPC_URL: "${TENDERMINT_RPC_URL}"
+      GRPC_ADDR: "${GRPC_ADDR}"
+      PROJECT_ID: "${PROJECT_ID}"
+      DATASET_ID: "${DATASET_ID}"
+      GOOGLE_APPLICATION_CREDENTIALS: "/bigquerycreds.json"
+      ADDRESSES: "${BALANCE_ADDRESSES}"
+    volumes:
+      - "${GOOGLE_CREDS}:/bigquerycreds.json"
+    entrypoint:
+      - "./extract-balances.sh"
+
   cubejs:
     image: cubejs/cube:v0.33.38
     ports:
