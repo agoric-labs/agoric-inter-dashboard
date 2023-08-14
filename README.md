@@ -53,17 +53,20 @@ Extractor is not a monilythic software and consists of the following components 
 
 ### Cube.js
 
-TODO: describe why and how we use it
+Cube is a universal semantic layer that makes it easy to connect data silos, create consistent metrics, and make them accessible to any data experience your business or your customers needs. Data engineers and application developers use Cube’s developer-friendly platform to organize data from your cloud data warehouses into centralized, consistent definitions, and deliver it to every downstream tool via its APIs.
+
+With Cube, we can build a data model, manage access control and caching, and expose your data to every application via REST, GraphQL, and SQL APIs. With these APIs, we can use any charting library to build custom UI, connect existing dashboarding and reporting tools, and build AI agents with frameworks like Langchain.
 
 ![Architecture](./docs/img/playground.png)
 
 ### Data warehouse
 
-TODO: Describe that everithing is tied to bigquery including data consistency
+Extractors save all data directly to BigQuery without additional
+intermediate databases.
 
-### React analytics dashboard
+### Analytics dashboard
 
-TODO: ...
+The dashboard is built on React and [shadch/ui](https://ui.shadcn.com/). [Rechart.js](https://recharts.org/) is used for visualization.
 
 # Quickstart
 
@@ -108,210 +111,21 @@ This endpoint will check the existance of given blocks in the database and will 
 
 In order to prepare Cube.dev models in BigQuery for serving them through API to dashboard one should manually execute all required queries by running the following set of commands:
 
-TODO: FILL THIS!
-
 ```bash
+# Wait the indexer schema
+
+# create additional views for model
+cat cube/views.sql | bq query
+
+# Start Cube
 docker-compose up cubejs
 
-# Wait the indexer schema
-# Make required views
-# Start Cube
-
-bq query …
+# open http://localhost:4000
 ```
 
 # REST API
 
 ## Cube.dev Queries
-
-The primary endpoint for handling requests is /cubejs-api/v1/load.
-For further details, refer to the Cube documentation: [Cube Docs](https://cube.dev/docs/reference/rest-api).
-
-Example request:
-
-```bash
-# Request with http method GET
-curl \
-  -G \
-  --data-urlencode
-  'query={"measures":["ibc_balances.amount_sum"],"timeDimensions":[{"dimension": "ibc_balances.day","dateRange": "Today"}]}' \
-  http://localhost:4000/cubejs-api/v1/load
-
-# Request with http method POST
-# Use POST to fix problem with query length limits
-curl \
- -X POST  \
- -H "Content-Type: application/json" \
- --data '{"query": {"measures":["ibc_balances.amount_sum"],"timeDimensions":[{"dimension": "ibc_balances.day","dateRange": "Today"}]}}' \
- http://localhost:4000/cubejs-api/v1/load
-```
-
-Example response:
-
-```json
-{
-  "query": {
-    "measures": [
-      "ibc_balances.amount_sum"
-    ],
-    "timeDimensions": [
-      {
-        "dimension": "ibc_balances.day",
-        "dateRange": [
-          "2023-07-31T00:00:00.000",
-          "2023-07-31T23:59:59.999"
-        ]
-      }
-    ],
-    "limit": 10000,
-    "timezone": "UTC",
-    "order": [],
-    "filters": [],
-    "dimensions": [],
-    "rowLimit": 10000
-  },
-  "data": [
-    {
-      "ibc_balances.amount_sum": "793702.001897"
-    }
-  ],
-  "lastRefreshTime": "2023-07-31T11:04:00.000Z",
-  "usedPreAggregations": {
-    "dev_pre_aggregations.ibc_balances_main": {
-      "targetTableName": "dev_pre_aggregations.ibc_balances_main_tz3z0wdm_fkktrsu3_1icf590",
-      "refreshKeyValues": [],
-      "lastUpdatedAt": 1690801440000
-    }
-  },
-  "transformedQuery": {
-    "sortedDimensions": [],
-    "sortedTimeDimensions": [
-      [
-        "ibc_balances.day",
-        "day"
-      ]
-    ],
-    "timeDimensions": [
-      [
-        "ibc_balances.day",
-        null
-      ]
-    ],
-    "measures": [
-      "ibc_balances.amount_sum"
-    ],
-    "leafMeasureAdditive": true,
-    "leafMeasures": [
-      "ibc_balances.amount_sum"
-    ],
-    "measureToLeafMeasures": {
-      "ibc_balances.amount_sum": [
-        {
-          "measure": "ibc_balances.amount_sum",
-          "additive": true,
-          "type": "sum"
-        }
-      ]
-    },
-    "hasNoTimeDimensionsWithoutGranularity": false,
-    "allFiltersWithinSelectedDimensions": true,
-    "isAdditive": true,
-    "granularityHierarchies": {
-      "year": [
-        "year",
-        "quarter",
-        "month",
-        "month",
-        "day",
-        "hour",
-        "minute",
-        "second"
-      ],
-      "quarter": [
-        "quarter",
-        "month",
-        "day",
-        "hour",
-        "minute",
-        "second"
-      ],
-      "month": [
-        "month",
-        "day",
-        "hour",
-        "minute",
-        "second"
-      ],
-      "week": [
-        "week",
-        "day",
-        "hour",
-        "minute",
-        "second"
-      ],
-      "day": [
-        "day",
-        "hour",
-        "minute",
-        "second"
-      ],
-      "hour": [
-        "hour",
-        "minute",
-        "second"
-      ],
-      "minute": [
-        "minute",
-        "second"
-      ],
-      "second": [
-        "second"
-      ]
-    },
-    "hasMultipliedMeasures": false,
-    "hasCumulativeMeasures": false,
-    "windowGranularity": null,
-    "filterDimensionsSingleValueEqual": {},
-    "ownedDimensions": [],
-    "ownedTimeDimensionsWithRollupGranularity": [
-      [
-        "ibc_balances.day",
-        "day"
-      ]
-    ],
-    "ownedTimeDimensionsAsIs": [
-      [
-        "ibc_balances.day",
-        null
-      ]
-    ]
-  },
-  "requestId": "2d56862f-9857-443e-ae7c-d03ef5b9aae9-span-1",
-  "annotation": {
-    "measures": {
-      "ibc_balances.amount_sum": {
-        "title": "Ibc Balances Amount Sum",
-        "shortTitle": "Amount Sum",
-        "type": "number",
-        "drillMembers": [],
-        "drillMembersGrouped": {
-          "measures": [],
-          "dimensions": []
-        }
-      }
-    },
-    "dimensions": {},
-    "segments": {},
-    "timeDimensions": {}
-  },
-  "dataSource": "default",
-  "dbType": "bigquery",
-  "extDbType": "cubestore",
-  "external": true,
-  "slowQuery": false,
-  "total": null
-}
-```
 
 The following queries serve as examples for the dashboard:
 
@@ -449,7 +263,7 @@ In order to check the integrity of extracted data one can make the following que
 ```sql
 with mm as (
    select min(block_height) mn, max(block_height) mx
-     from `xxx.raw_cosmos_hub.blocks`
+     from `xxx.blocks`
 )
 select avg(events.count / b.event_count) as status_events
      , avg(msgs.count / b.message_count) as status_msgs
@@ -473,38 +287,34 @@ from (
        , transaction_count
        , _sdc_batched_at
        , lag(block_height) over (order by block_height) as prev_block_height
-    from `xxx.raw_cosmos_hub.blocks`
+    from `xxx.blocks`
     where block_height between (select mn from mm) + 500 and (select mx from mm) - 500
 ) b
 left join (
   select block_height, count(block_height) count
-    from `xxx.raw_cosmos_hub.events`
+    from `xxx.events`
    group by 1
 ) events using (block_height)
 left join (
   select block_height, count(block_height) count
-    from `xxx.raw_cosmos_hub.messages`
+    from `xxx.messages`
    group by 1
 ) msgs using (block_height)
 left join (
   select block_height, count(block_height) count
-    from `xxx.raw_cosmos_hub.transactions`
+    from `xxx.transactions`
    group by 1
 ) txs using (block_height)
 ```
 
-## Filling Missing Blocks
+## Manual Filling Missing Blocks
 
-TODO: Explain how to run these queries and why
+If some blocks were failed during the indexing process, then you can find them in this way. The result will be `curl` commands to manually start indexing:
 
-```
-kubectl port-forward agoric-mainnet-tendermint-head-5f876fb589-cvt5c 3333:3333
-```
-
-```
+```sql
 with mm as (
    select min(block_height) mn, max(block_height) mx
-     from `xxx.raw_cosmos_hub.blocks`
+     from `xxx.blocks`
 )
 select array_to_string(array_agg('curl -d \'' || to_json_string(to_json(struct(earliest, latest))) || '\' http://localhost:3333'), '\n'), count(earliest)
   from (
@@ -513,7 +323,7 @@ select array_to_string(array_agg('curl -d \'' || to_json_string(to_json(struct(e
      from (
       select block_height
            , lag(block_height) over (order by block_height) as prev_block_height
-        from `xxx.raw_cosmos_hub.blocks`
+        from `xxx.blocks`
        where block_height between (select mn from mm) + 500 and (select mx from mm) - 500
      )
      cross join unnest(generate_array(prev_block_height + 1, block_height - 1, 100)) next
@@ -522,21 +332,179 @@ select array_to_string(array_agg('curl -d \'' || to_json_string(to_json(struct(e
   )
 ```
 
+If the extractors are running in kubernetes, then you can forward the port to the local machine in this way:
+```bash
+kubectl port-forward agoric-mainnet-tendermint-head-5f876fb589-cvt5c 3333:3333
+```
+
 
 ## Cube.dev API docs
 
-TODO: Describe the process of making queries to Cube.dev
+The primary endpoint for handling requests is /cubejs-api/v1/load.
+For further details, refer to the Cube documentation: [Cube Docs](https://cube.dev/docs/reference/rest-api).
 
-https://cube.dev/docs/reference/rest-api (model-dependent)
+Example request:
+
+```bash
+# Request with http method GET
+curl \
+  -G \
+  --data-urlencode
+  'query={"measures":["ibc_balances.amount_sum"],"timeDimensions":[{"dimension": "ibc_balances.day","dateRange": "Today"}]}' \
+  http://localhost:4000/cubejs-api/v1/load
+
+# Request with http method POST
+# Use POST to fix problem with query length limits
+curl \
+ -X POST  \
+ -H "Content-Type: application/json" \
+ --data '{"query": {"measures":["ibc_balances.amount_sum"],"timeDimensions":[{"dimension": "ibc_balances.day","dateRange": "Today"}]}}' \
+ http://localhost:4000/cubejs-api/v1/load
+```
+
+Example response:
+
+```json
+{
+  "query": {
+    "measures": [
+      "ibc_balances.amount_sum"
+    ],
+    "timeDimensions": [
+      {
+        "dimension": "ibc_balances.day",
+        "dateRange": [
+          "2023-07-31T00:00:00.000",
+          "2023-07-31T23:59:59.999"
+        ]
+      }
+    ],
+    "limit": 10000,
+    "timezone": "UTC",
+    "order": [],
+    "filters": [],
+    "dimensions": [],
+    "rowLimit": 10000
+  },
+  "data": [
+    {
+      "ibc_balances.amount_sum": "793702.001897"
+    }
+  ],
+  "lastRefreshTime": "2023-07-31T11:04:00.000Z",
+  "usedPreAggregations": {
+    "dev_pre_aggregations.ibc_balances_main": {
+      "targetTableName": "dev_pre_aggregations.ibc_balances_main_tz3z0wdm_fkktrsu3_1icf590",
+      "refreshKeyValues": [],
+      "lastUpdatedAt": 1690801440000
+    }
+  },
+  "transformedQuery": {
+    "sortedDimensions": [],
+    "sortedTimeDimensions": [
+      [
+        "ibc_balances.day",
+        "day"
+      ]
+    ],
+    "timeDimensions": [
+      [
+        "ibc_balances.day",
+        null
+      ]
+    ],
+    "measures": [
+      "ibc_balances.amount_sum"
+    ],
+    "leafMeasureAdditive": true,
+    "leafMeasures": [
+      "ibc_balances.amount_sum"
+    ],
+    "measureToLeafMeasures": {
+      "ibc_balances.amount_sum": [
+        {
+          "measure": "ibc_balances.amount_sum",
+          "additive": true,
+          "type": "sum"
+        }
+      ]
+    },
+    "hasNoTimeDimensionsWithoutGranularity": false,
+    "allFiltersWithinSelectedDimensions": true,
+    "isAdditive": true,
+    "granularityHierarchies": {
+      "year": ["year", "quarter", "month", "month", "day", "hour", "minute", "second"],
+      "quarter": ["quarter", "month", "day", "hour", "minute", "second"],
+      "month": ["month", "day", "hour", "minute", "second"],
+      "week": ["week", "day", "hour", "minute", "second"],
+      "day": ["day", "hour", "minute", "second"],
+      "hour": ["hour", "minute", "second"],
+      "minute": ["minute", "second"],
+      "second": ["second"]
+    },
+    "hasMultipliedMeasures": false,
+    "hasCumulativeMeasures": false,
+    "windowGranularity": null,
+    "filterDimensionsSingleValueEqual": {},
+    "ownedDimensions": [],
+    "ownedTimeDimensionsWithRollupGranularity": [
+      [
+        "ibc_balances.day",
+        "day"
+      ]
+    ],
+    "ownedTimeDimensionsAsIs": [
+      [
+        "ibc_balances.day",
+        null
+      ]
+    ]
+  },
+  "requestId": "2d56862f-9857-443e-ae7c-d03ef5b9aae9-span-1",
+  "annotation": {
+    "measures": {
+      "ibc_balances.amount_sum": {
+        "title": "Ibc Balances Amount Sum",
+        "shortTitle": "Amount Sum",
+        "type": "number",
+        "drillMembers": [],
+        "drillMembersGrouped": {
+          "measures": [],
+          "dimensions": []
+        }
+      }
+    },
+    "dimensions": {},
+    "segments": {},
+    "timeDimensions": {}
+  },
+  "dataSource": "default",
+  "dbType": "bigquery",
+  "extDbType": "cubestore",
+  "external": true,
+  "slowQuery": false,
+  "total": null
+}
+```
 
 # Development
 
 ## Running tests
 
-TODO: golang tests
+```
+cd tendermint-trigger && go test ./...
+
+cd tendermint-normalizer && pytest
+```
 
 ## Running linters
 
-TODO: Python linters
-TODO: Golang linters
-TODO: TS linters
+```
+cd tendermint-source && golangci-lint run
+
+cd tendermint-trigger && golangci-lint run
+
+cd http-processor && golangci-lint run
+
+cd tendermint-normalizer && python -m black .
+```
