@@ -57,8 +57,6 @@ Cube is a universal semantic layer that makes it easy to connect data silos, cre
 
 With Cube, we can build a data model, manage access control and caching, and expose your data to every application via REST, GraphQL, and SQL APIs. With these APIs, we can use any charting library to build custom UI, connect existing dashboarding and reporting tools, and build AI agents with frameworks like Langchain.
 
-![Architecture](./docs/img/playground.png)
-
 ### Data warehouse
 
 Extractors save all data directly to BigQuery without additional
@@ -253,7 +251,7 @@ The following queries serve as examples for the dashboard:
 
 You can test and make your own queries in the [Cube Playground](https://cube.dev/docs/product/workspace/playground):
 
-![Cube Playground](./playground.png)
+![Cube Playground](./docs/img/playground.png)
 
 
 ### Checking Data Integrity
