@@ -1,11 +1,11 @@
-import { dailySQL } from '../utils';
+import { dailySQL, datasetId } from '../utils';
 
 cube(`ibc_balances`, {
   sql: dailySQL(['amount'], ['address'], `
-     select cast(height as numeric) height
+     select cast(block_height as numeric) height
           , address
           , cast(amount as numeric) / pow(10, 6) as amount
-      from agoric_mainnet_own.balances
+      from ${datasetId()}.balances
      where denom = 'uist'
   `, block_times.sql()),
 

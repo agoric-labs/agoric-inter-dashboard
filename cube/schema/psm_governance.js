@@ -1,11 +1,11 @@
-import { dailySQL } from '../utils';
+import { dailySQL, datasetId } from '../utils';
 
 cube(`psm_governance`, {
   sql: dailySQL(['mint_limit'], ['coin'], `
-    select cast(height as int) as height
+    select block_height as height
          , split(path, '.')[3] as coin
          , cast(json_value(body, '$.current.MintLimit.value.__value') as float64) / pow(10, 6) as mint_limit
-     from agoric_mainnet_own.storage
+     from ${datasetId()}.state_changes
     where path like 'published.psm.%.governance'
   `, block_times.sql()),
 

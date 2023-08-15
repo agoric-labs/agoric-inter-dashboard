@@ -82,7 +82,7 @@ This repository is shipped with docker compose config and can be started with th
 
 ```bash
 # Build and run containers
-docker-compose up
+docker-compose up --build
 ```
 
 You can immediately check extracted data here:

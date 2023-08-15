@@ -67,6 +67,7 @@ COPY --from=agoric /go/agoric-sdk/golang/cosmos/build/agd /app/bin/agd
 COPY --from=build-tendermint-source /app/bin/* /app/bin/
 COPY --from=build-http-processor /app/bin/* /app/bin/
 COPY --from=build-tendermint-trigger /app/bin/* /app/bin/
+COPY --from=fullstorydev/grpcurl:v1.8.7-alpine /bin/grpcurl /app/bin/
 COPY tendermint-normalizer/main.py /app/bin/tendermint-normalizer
 COPY balances-extractor/main.py /app/bin/balances-extractor
 COPY *.catalog.json ./

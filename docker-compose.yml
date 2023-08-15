@@ -41,8 +41,6 @@ services:
       - "tendermint-trigger"
       - "head"
       - "./extract-tendermint.sh"
-    ports:
-      - 3333:3333
 
   # Extracts data from current block to the past, extracting historic data only
   tail-indexer:
@@ -51,6 +49,8 @@ services:
       - "tendermint-trigger"
       - "tail"
       - "./extract-tendermint.sh"
+    ports:
+      - 3333:3333
 
   balances-extractor: &grpc-extractor
     restart: no
