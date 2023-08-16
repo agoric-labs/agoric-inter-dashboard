@@ -68,6 +68,11 @@ The dashboard is built on React and [shadch/ui](https://ui.shadcn.com/). [Rechar
 
 # Quickstart
 
+## Service Account
+
+Create a service account for the indexer & cube with `Bigquery Admin`
+and `Storage Admin`. Copy a json key to `bigquerycreds.json`.
+
 ## Configuration
 
 The main configuration is passed to services as environmental variables. Example configuration can be found in `.env.example` file. To prepare configuration from an example file
@@ -126,6 +131,25 @@ docker-compose up cubejs
 ## Cube.dev Queries
 
 The following queries serve as examples for the dashboard:
+
+## State Changes
+
+```json
+{
+  "order": [
+    [
+      "state_changes.count",
+      "desc"
+    ]
+  ],
+  "dimensions": [
+    "state_changes.path_without_wallet_addresses"
+  ],
+  "measures": [
+    "state_changes.count"
+  ]
+}
+```
 
 ## PSM Stats
 
