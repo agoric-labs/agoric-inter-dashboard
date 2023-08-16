@@ -1,0 +1,96 @@
+{{- define "tendermint-extractor" -}}
+{{- with .root }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "deploy.fullname" . }}-tendermint-{{ $.mode }}
+  labels:
+    {{- include "deploy.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "deploy.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "deploy.selectorLabels" . | nindent 8 }}
+    spec:
+      terminationGracePeriodSeconds: 1200
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      volumes:
+      - name: gac
+        secret:
+          optional: false
+          secretName: {{ .Values.googleCredsSecretName }}
+      - name: tmp
+        emptyDir:
+          medium: Memory
+          sizeLimit: 16Mi
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["tendermint-trigger", "{{ $.mode }}", "./extract-tendermint.sh"]
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: http
+          resources:
+            {{- toYaml .Values.indexerResources | nindent 12 }}
+          volumeMounts:
+          - mountPath: /etc/gac
+            name: gac
+            readOnly: true
+          - mountPath: /tmp
+            name: tmp
+          ports:
+          - containerPort: 3333
+          env:
+          - name: TENDERMINT_TRIGGER_RPC_URL
+            value: "{{ .Values.rpcUrl }}"
+          - name: TENDERMINT_TRIGGER_PROJECT_ID
+            value: "{{ .Values.projectId }}"
+          - name: TENDERMINT_TRIGGER_DATASET_ID
+            value: "{{ .Values.datasetId }}"
+          - name: TENDERMINT_TRIGGER_BATCH_SIZE
+            value: "{{ .Values.extractBlockBatchSize }}"
+          - name: TENDERMINT_TRIGGER_MAX_WRITE_COUNT
+            value: "99999"
+          - name: GOOGLE_APPLICATION_CREDENTIALS
+            value: "/etc/gac/content"
+          - name: DECODE_SERVICE_URL
+            value: "{{ .Values.decodeServiceUrl }}"
+          - name: TENDERMINT_TRIGGER_BASE_CONFIG
+            value: '{"rpc_url":"{{ .Values.rpcUrl }}","batch_size":32,"thread_count":24}'
+          - name: TENDERMINT_TRIGGER_ADDR
+            value: ':3333'
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
+{{- end }}
+
+{{- include "tendermint-extractor" (dict "root" . "mode" "tail") }}
+{{- include "tendermint-extractor" (dict "root" . "mode" "head") }}

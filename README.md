@@ -485,6 +485,25 @@ Example response:
 }
 ```
 
+# Deploy to Kubernetes
+
+```
+# create a secret with the BQ service account
+kubectl create secret generic indexer-google-creds --from-file=content=bigquerycreds.json
+
+# create mainnet.values.yaml based on deploy/values.yaml
+# create devnet.values.yaml based on deploy/values.yaml
+# create emerynet.values.yaml based on deploy/values.yaml
+
+# check specs
+helm install agoric-mainnet ./deploy --values mainnet.values.yaml --dry-run
+
+# apply
+helm install agoric-mainnet ./deploy --values mainnet.values.yaml
+helm install agoric-devnet ./deploy --values devnet.values.yaml
+helm install agoric-emerynet ./deploy --values emerynet.values.yaml
+```
+
 # Development
 
 ## Running tests

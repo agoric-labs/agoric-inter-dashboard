@@ -2,3 +2,4 @@
 .env
 .venv
 bigquerycreds.json
+*.values.yaml

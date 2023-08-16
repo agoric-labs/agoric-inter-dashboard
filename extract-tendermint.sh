@@ -12,7 +12,7 @@ cat > /tmp/bigquery_config.json << EOL
     "cluster_on_key_properties": true,
     "schema_resolver_version": 2,
     "location": "US",
-    "batch_size": 500,
+    "batch_size": 250,
     "options": {
       "storage_write_batch_mode": true
     }

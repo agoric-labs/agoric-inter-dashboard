@@ -1,0 +1,66 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "deploy.fullname" . }}-balances
+  labels:
+    {{- include "deploy.labels" . | nindent 4 }}
+spec:
+  schedule: "{{ .Values.balancesShedule }}"
+  concurrencyPolicy: Replace # avoid target-biquery freezes
+  suspend: false
+  successfulJobsHistoryLimit: 10
+  failedJobsHistoryLimit: 10
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          selector:
+            matchLabels:
+              {{- include "deploy.selectorLabels" . | nindent 10 }}
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          securityContext:
+            {{- toYaml .Values.podSecurityContext | nindent 12 }}
+          restartPolicy: OnFailure
+          volumes:
+          - name: gac
+            secret:
+              optional: false
+              secretName: {{ .Values.googleCredsSecretName }}
+          - name: tmp
+            emptyDir:
+              medium: Memory
+              sizeLimit: 16Mi
+          containers:
+          - name: {{ .Chart.Name }}
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            command: ["./extract-balances.sh"]
+            securityContext:
+              {{- toYaml .Values.securityContext | nindent 16 }}
+            resources:
+              {{- toYaml .Values.indexerResources | nindent 16 }}
+            env:
+            - name: PROJECT_ID
+              value: "{{ .Values.projectId }}"
+            - name: DATASET_ID
+              value: "{{ .Values.datasetId }}"
+            - name: RPC_URL
+              value: "{{ .Values.rpcUrl }}"
+            - name: GRPC_ADDR
+              value: "{{ .Values.grpcAddr }}"
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /etc/gac/content
+            - name: WORKER_COUNT
+              value: "8"
+            - name: ADDRESSES
+              value: "{{ .Values.balanceAddresses }}"
+            volumeMounts:
+            - mountPath: /etc/gac
+              name: gac
+              readOnly: true
+            - mountPath: /tmp
+              name: tmp
+
