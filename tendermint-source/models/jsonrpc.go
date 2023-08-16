@@ -17,11 +17,11 @@ type JSONRPCRequest struct {
 //
 //easyjson:json
 type JSONRPCResponse struct {
-	JSONRPC string `json:"jsonrpc,intern"`
-	ID      string `json:"id,intern"`
+	JSONRPC string `json:"jsonrpc,intern"` //nolint:staticcheck
+	ID      string `json:"id,intern"`      //nolint:staticcheck
 
-	Result easyjson.RawMessage `json:"result,omitempty,nocopy"`
-	Error  easyjson.RawMessage `json:"error,omitempty,nocopy"`
+	Result easyjson.RawMessage `json:"result,omitempty,nocopy"` //nolint:staticcheck
+	Error  easyjson.RawMessage `json:"error,omitempty,nocopy"`  //nolint:staticcheck
 }
 
 // JSONRPCBatchResponse a slice of JSONRPCResponse for easyjson.

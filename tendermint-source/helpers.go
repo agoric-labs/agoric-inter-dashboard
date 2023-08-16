@@ -40,6 +40,17 @@ func readConfigFromBytes(value []byte) (*models.Config, error) {
 }
 
 func readCatalog(path string) (*models.ConfiguredCatalog, error) {
+	if path == "" {
+		// load all by default
+		return &models.ConfiguredCatalog{
+			Streams: []*models.ConfiguredCatalogStream{
+				&models.ConfiguredCatalogStream{Stream: &models.ConfiguredCatalogStreamStream{Name: "blocks"}},
+				&models.ConfiguredCatalogStream{Stream: &models.ConfiguredCatalogStreamStream{Name: "events"}},
+				&models.ConfiguredCatalogStream{Stream: &models.ConfiguredCatalogStreamStream{Name: "validators"}},
+			},
+		}, nil
+	}
+
 	configFile, err := os.Open(path)
 	if err != nil {
 		return nil, fmt.Errorf("failed to open: %w", err)

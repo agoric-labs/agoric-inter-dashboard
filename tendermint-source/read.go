@@ -430,7 +430,7 @@ func (r *Read) init(args []string, nextConfig []byte) error {
 
 	fs := flag.NewFlagSet("read", flag.ExitOnError)
 	fs.StringVar(&configPath, "config", "config.json", "path to the json configuration file (@ - stdin)")
-	fs.StringVar(&catalogPath, "catalog", "catalog.json", "path to the catalog used to determine which data to read")
+	fs.StringVar(&catalogPath, "catalog", "", "path to the catalog used to determine which data to read")
 	fs.StringVar(&format, "format", "airbyte", "airbyte or squash")
 
 	err := fs.Parse(args)
