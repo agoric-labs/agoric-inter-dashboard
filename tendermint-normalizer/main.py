@@ -242,6 +242,12 @@ def write_validators(pages, events, block, block_meta):
 
 
 def decode_tx(data):
+    url = os.environ["DECODE_SERVICE_URL"]
+
+    # special url for e2e tests
+    if url == "skip_for_tests":
+        return None
+
     res = requests.post(os.environ["DECODE_SERVICE_URL"], data=data)
 
     if res.status_code != 200:
