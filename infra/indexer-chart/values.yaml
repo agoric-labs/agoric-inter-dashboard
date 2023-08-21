@@ -20,12 +20,17 @@ grpcAddr: ""
 googleCredsSecretName: "indexer-google-creds"
 projectId: "your-project-id"
 datasetId: "your-dataset-id"
-extractBlockBatchSize: 100
+extractBlockBatchSize: 200
 decodeServiceUrl: "cloud run url"
 
+tendermintHeadEnabled: true
+tendermintTailEnabled: true
+
+balancesEnabled: false
 balancesShedule: "*/10 * * * *"
 balanceAddresses: ""
 
+coingekoEnabled: false
 coingekoShedule: "0 0 * * *"
 
 serviceAccount:

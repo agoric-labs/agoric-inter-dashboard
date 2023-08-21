@@ -45,7 +45,7 @@ func readCatalog(path string) (*models.ConfiguredCatalog, error) {
 		return &models.ConfiguredCatalog{
 			Streams: []*models.ConfiguredCatalogStream{
 				&models.ConfiguredCatalogStream{Stream: &models.ConfiguredCatalogStreamStream{Name: "blocks"}},
-				&models.ConfiguredCatalogStream{Stream: &models.ConfiguredCatalogStreamStream{Name: "events"}},
+				&models.ConfiguredCatalogStream{Stream: &models.ConfiguredCatalogStreamStream{Name: "block_results"}},
 				&models.ConfiguredCatalogStream{Stream: &models.ConfiguredCatalogStreamStream{Name: "validators"}},
 			},
 		}, nil

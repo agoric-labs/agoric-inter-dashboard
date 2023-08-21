@@ -9,6 +9,8 @@ metadata:
     {{- include "deploy.labels" . | nindent 4 }}
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       {{- include "deploy.selectorLabels" . | nindent 6 }}
@@ -92,5 +94,10 @@ spec:
 {{- end }}
 {{- end }}
 
+{{- if .Values.tendermintTailEnabled }}
 {{- include "tendermint-extractor" (dict "root" . "mode" "tail") }}
+{{- end }}
+
+{{- if .Values.tendermintHeadEnabled }}
 {{- include "tendermint-extractor" (dict "root" . "mode" "head") }}
+{{- end }}

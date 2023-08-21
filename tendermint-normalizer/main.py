@@ -87,6 +87,10 @@ def write_state_change(event, block_meta):
     body = ujson.loads(event["attributes"]["value"])
     path = extract_storage_path(event["attributes"]["key"])
 
+    if "values" not in body:
+        print(f"too old state_change: {block_meta['block_height']}: {ujson.dumps(body)}", file=sys.stderr)
+        return
+
     for idx, change_raw in enumerate(body["values"]):
         change_body = ujson.loads(change_raw)
         payload = ujson.loads(re.sub(r"^#", "", change_body["body"]))  # trim # at start
@@ -207,7 +211,7 @@ def write_validators(pages, events, block, block_meta):
 
     # by default events starting from the proposer
     # sort by rewards for get correct indices
-    extra_data.sort(key=lambda x: x["rewards"] - (x["proposer_reward"] or 0), reverse=True)
+    extra_data.sort(key=lambda x: (x["rewards"] or 0) - (x["proposer_reward"] or 0), reverse=True)
 
     validator_idx = 0
 

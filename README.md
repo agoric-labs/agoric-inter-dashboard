@@ -528,6 +528,10 @@ helm install agoric-devnet ./deploy --values devnet.values.yaml
 helm install agoric-emerynet ./deploy --values emerynet.values.yaml
 ```
 
+Warning: Avoid reinstalling with the command helm uninstall
+`agoric-mainnet && helm install agoric-mainnet ...`, as it can lead to the
+creation of duplicate pods and data corruption!
+
 # Development
 
 ## Running tests
