@@ -2,15 +2,15 @@ import { dailySQL } from '../utils';
 
 cube(`reserve`, {
   sql: dailySQL(['atom_amount', 'fee_amount', 'shortfall_balance', 'total_fee_burned', 'total_fee_minted'], [], `
-    select cast(height as int) as height
+    select block_time -- for dailySQL
          , coalesce(cast(json_value(body, '$.allocations.ATOM.__value') as float64) / pow(10, 6), 0) as atom_amount
          , coalesce(cast(json_value(body, '$.allocations.Fee.__value') as float64) / pow(10, 6), 0) as fee_amount
          , cast(json_value(body, '$.shortfallBalance.__value') as float64) / pow(10, 6) as shortfall_balance
          , cast(json_value(body, '$.totalFeeBurned.__value') as float64) / pow(10, 6) as total_fee_burned
          , cast(json_value(body, '$.totalFeeMinted.__value') as float64) / pow(10, 6) as total_fee_minted
-      from agoric_mainnet_own.storage
+      from ${state_changes.sql()}
      where path = 'published.reserve.metrics'
-  `, block_times.sql()),
+  `),
 
   measures: {
     atom_amount_avg: {

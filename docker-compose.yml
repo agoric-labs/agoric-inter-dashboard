@@ -68,6 +68,20 @@ services:
     entrypoint:
       - "./extract-balances.sh"
 
+  coingeko-extractor:
+    restart: no
+    build:
+      context: .
+    environment:
+      COIN_ID: cosmos
+      PROJECT_ID: "${PROJECT_ID}"
+      DATASET_ID: "${DATASET_ID}"
+      GOOGLE_APPLICATION_CREDENTIALS: "/bigquerycreds.json"
+    volumes:
+      - "${GOOGLE_CREDS}:/bigquerycreds.json"
+    entrypoint:
+      - "./extract-coingeko.sh"
+
   cubejs:
     image: cubejs/cube:v0.33.38
     ports:

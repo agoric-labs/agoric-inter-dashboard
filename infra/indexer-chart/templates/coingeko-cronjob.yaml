@@ -3,11 +3,11 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: {{ include "deploy.fullname" . }}-balances
+  name: {{ include "deploy.fullname" . }}-coingeko-atom
   labels:
     {{- include "deploy.labels" . | nindent 4 }}
 spec:
-  schedule: "{{ .Values.balancesShedule }}"
+  schedule: "{{ .Values.coingekoShedule }}"
   concurrencyPolicy: Replace # avoid target-biquery freezes
   suspend: false
   successfulJobsHistoryLimit: 10
@@ -38,7 +38,7 @@ spec:
           containers:
           - name: {{ .Chart.Name }}
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-            command: ["./extract-balances.sh"]
+            command: ["./extract-coingeko.sh"]
             securityContext:
               {{- toYaml .Values.securityContext | nindent 16 }}
             resources:
@@ -48,16 +48,10 @@ spec:
               value: "{{ .Values.projectId }}"
             - name: DATASET_ID
               value: "{{ .Values.datasetId }}"
-            - name: RPC_URL
-              value: "{{ .Values.rpcUrl }}"
-            - name: GRPC_ADDR
-              value: "{{ .Values.grpcAddr }}"
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: /etc/gac/content
-            - name: WORKER_COUNT
-              value: "8"
-            - name: ADDRESSES
-              value: "{{ .Values.balanceAddresses }}"
+            - name: COIN_ID
+              value: "cosmos"
             volumeMounts:
             - mountPath: /etc/gac
               name: gac

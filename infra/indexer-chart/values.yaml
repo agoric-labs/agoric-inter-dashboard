@@ -14,16 +14,19 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+rpcUrl: "" # https://main.rpc.agoric.net"
+grpcAddr: ""
+
 googleCredsSecretName: "indexer-google-creds"
 projectId: "your-project-id"
 datasetId: "your-dataset-id"
-rpcUrl: "https://main.rpc.agoric.net"
 extractBlockBatchSize: 100
 decodeServiceUrl: "cloud run url"
 
-grpcAddr: ""
 balancesShedule: "*/10 * * * *"
 balanceAddresses: ""
+
+coingekoShedule: "0 0 * * *"
 
 serviceAccount:
   # Specifies whether a service account should be created

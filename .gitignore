@@ -1,5 +1,6 @@
 .cubestore
 .env
 .venv
+*__pycache__*
 bigquerycreds.json
 *.values.yaml
