@@ -570,6 +570,10 @@ if __name__ == "__main__":
     print(ujson.dumps(VALIDATORS_SCHEMA))
     print(ujson.dumps(STATE_CHANGES_SCHEMA))
 
+    # create an empty table for data from previous indexer
+    STATE_CHANGES_SCHEMA["stream"] = "old_" + STATE_CHANGES_SCHEMA["stream"]
+    print(ujson.dumps(STATE_CHANGES_SCHEMA))
+
     worker_count = int(os.getenv("WORKER_COUNT", multiprocessing.cpu_count()*2))
 
     with multiprocessing.Pool(worker_count) as p:

@@ -1,7 +1,11 @@
 import { datasetId } from '../utils';
 
 cube(`state_changes`, {
-  sql: `select * from ${datasetId()}.state_changes`,
+  sql: `
+    select * from ${datasetId()}.old_state_changes
+    union all
+    select * from ${datasetId()}.state_changes
+  `,
 
   measures: {
     count: {
