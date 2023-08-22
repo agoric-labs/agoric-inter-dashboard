@@ -34,6 +34,18 @@ COPY ./tendermint-trigger .
 RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 \
  go build -ldflags="-w -s" -o "bin/tendermint-trigger" .
 
+# bqreader
+FROM golang:1.20 as build-bqreader
+
+WORKDIR /app
+
+COPY bqreader/go.* .
+RUN go mod download && go mod verify
+
+COPY ./bqreader .
+RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 \
+ go build -ldflags="-w -s" -o "bin/bqreader" .
+
 # build agd for Agoric with a txdecode command
 FROM golang:1.20 as agoric
 
@@ -68,6 +80,7 @@ COPY --from=build-tendermint-source /app/bin/* /app/bin/
 COPY --from=build-http-processor /app/bin/* /app/bin/
 COPY --from=build-tendermint-trigger /app/bin/* /app/bin/
 COPY --from=fullstorydev/grpcurl:v1.8.7-alpine /bin/grpcurl /app/bin/
+COPY --from=build-bqreader /app/bin/* /app/bin/
 COPY tendermint-normalizer/main.py /app/bin/tendermint-normalizer
 COPY balances-extractor/main.py /app/bin/balances-extractor
 COPY coingeko-extractor/main.py /app/bin/coingeko-extractor

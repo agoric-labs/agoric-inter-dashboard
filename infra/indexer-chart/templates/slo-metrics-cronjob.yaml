@@ -1,11 +1,11 @@
-{{- if .Values.balancesEnabled -}}
+{{- if .Values.sloMetricsEnabled -}}
 ---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: {{ include "deploy.fullname" . }}-balances
+  name: {{ include "deploy.fullname" . }}-slo-metrics
 spec:
-  schedule: "{{ .Values.balancesShedule }}"
+  schedule: "{{ .Values.sloMetricsShedule }}"
   concurrencyPolicy: Replace # avoid target-biquery freezes
   suspend: false
   successfulJobsHistoryLimit: 10
@@ -33,7 +33,7 @@ spec:
           containers:
           - name: {{ .Chart.Name }}
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-            command: ["./extract-balances.sh"]
+            command: ["./extract-slo-metrics.sh"]
             securityContext:
               {{- toYaml .Values.securityContext | nindent 16 }}
             resources:
@@ -45,14 +45,8 @@ spec:
               value: "{{ .Values.datasetId }}"
             - name: RPC_URL
               value: "{{ .Values.rpcUrl }}"
-            - name: GRPC_ADDR
-              value: "{{ .Values.grpcAddr }}"
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: /etc/gac/content
-            - name: WORKER_COUNT
-              value: "8"
-            - name: ADDRESSES
-              value: "{{ .Values.balanceAddresses }}"
             volumeMounts:
             - mountPath: /etc/gac
               name: gac

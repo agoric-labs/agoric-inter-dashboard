@@ -31,7 +31,10 @@ balancesShedule: "*/10 * * * *"
 balanceAddresses: ""
 
 coingekoEnabled: false
-coingekoShedule: "0 0 * * *"
+coingekoShedule: "0 * * * *"
+
+sloMetricsEnabled: false
+sloMetricsShedule: "30 * * * *"
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -84,6 +87,14 @@ indexerResources:
   requests:
     cpu: 1.6
     memory: 4Gi
+
+cronjobResources:
+  limits:
+    cpu: 0.5
+    memory: 1Gi
+  requests:
+    cpu: 0.5
+    memory: 1Gi
 
 nodeSelector: {}
 

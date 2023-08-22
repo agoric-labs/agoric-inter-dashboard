@@ -37,7 +37,7 @@ spec:
             securityContext:
               {{- toYaml .Values.securityContext | nindent 16 }}
             resources:
-              {{- toYaml .Values.indexerResources | nindent 16 }}
+              {{- toYaml .Values.cronjobResources | nindent 16 }}
             env:
             - name: PROJECT_ID
               value: "{{ .Values.projectId }}"
