@@ -20,5 +20,5 @@ echo "Addresses: $ADDRESSES"
 
 echo "\"$ADDRESSES\"" |
   jq -c '. | split(",") | map({address: . | gsub("^\\s+|\\s+$";"")}) | .[]' |
-  balances-extractor --plaintext | # Note: --plaintext is an additional argument for grpcurl
+  balances-extractor "$@" | # Note: --plaintext is an additional argument for grpcurl
   target-bigquery --config /tmp/bigquery_config.json
