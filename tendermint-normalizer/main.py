@@ -18,7 +18,6 @@ BLOCKS_SCHEMA = {
     "type": "SCHEMA",
     "stream": "blocks",
     "key_properties": [],
-    "time_property": "block_time",
     "schema": {
         "required": [
             "block_height",
@@ -32,6 +31,7 @@ BLOCKS_SCHEMA = {
         ],
         "type": "object",
         "additionalProperties": False,
+        "time_property": "block_time",
         "properties": {
             "block_height": {"type": "integer"},
             "block_time": {"type": "string", "format": "date-time"},
@@ -49,11 +49,11 @@ EVENTS_SCHEMA = {
     "type": "SCHEMA",
     "stream": "events",
     "key_properties": ["phase_type", "event_type"],
-    "time_property": "block_time",
     "schema": {
         "required": ["id", "block_height", "block_time", "idx", "phase_type", "event_type", "attributes"],
         "type": "object",
         "additionalProperties": False,
+        "time_property": "block_time",
         "properties": {
             "id": {"type": "string"},
             "block_height": {"type": "integer"},
@@ -71,11 +71,11 @@ MESSAGES_SCHEMA = {
     "type": "SCHEMA",
     "stream": "messages",
     "key_properties": ["type"],
-    "time_property": "block_time",
     "schema": {
         "required": ["id", "block_height", "block_time", "transaction_id", "idx", "type", "body"],
         "type": "object",
         "additionalProperties": False,
+        "time_property": "block_time",
         "properties": {
             "id": {"type": "string"},
             "block_height": {"type": "integer"},
@@ -92,11 +92,11 @@ TRANSACTIONS_SCHEMA = {
     "type": "SCHEMA",
     "stream": "transactions",
     "key_properties": ["code"],
-    "time_property": "block_time",
     "schema": {
         "required": ["id", "block_height", "block_time", "idx", "code", "gas_used", "gas_wanted", "hash"],
         "type": "object",
         "additionalProperties": False,
+        "time_property": "block_time",
         "properties": {
             "id": {"type": "string"},
             "block_height": {"type": "integer"},
@@ -116,11 +116,11 @@ VALIDATORS_SCHEMA = {
     "type": "SCHEMA",
     "stream": "validators",
     "key_properties": [],
-    "time_property": "block_time",
     "schema": {
         "required": ["id", "block_height", "block_time", "pubkey_hex", "voting_power", "proposer_priority"],
         "type": "object",
         "additionalProperties": False,
+        "time_property": "block_time",
         "properties": {
             "id": {"type": "string"},
             "block_height": {"type": "integer"},
@@ -140,11 +140,11 @@ STATE_CHANGES_SCHEMA = {
     "type": "SCHEMA",
     "stream": "state_changes",
     "key_properties": ["path"],
-    "time_property": "block_time",
     "schema": {
         "required": ["id", "block_height", "block_time", "path", "idx", "body", "slots"],
         "type": "object",
         "additionalProperties": False,
+        "time_property": "block_time",
         "properties": {
             "id": {"type": "string"},
             "block_height": {"type": "integer"},
@@ -223,13 +223,6 @@ def resolve_brand_names_and_values(body, names={}):
             resolve_brand_names_and_values(item, names)
 
 
-def write_schema(name):
-    with open(f"schemas/{name}.json", "r") as file:
-        # compact to one line
-        schema = ujson.loads(file.read())
-        print(ujson.dumps(schema))
-
-
 def null_str(v):
     if v is None:
         return None
@@ -279,7 +272,7 @@ def decode_tx(data):
     if url == "skip_for_tests":
         return None
 
-    res = requests.post(os.environ["DECODE_SERVICE_URL"], data=data)
+    res = requests.post(url, data=data)
 
     if res.status_code != 200:
         return None
