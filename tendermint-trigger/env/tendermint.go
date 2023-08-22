@@ -7,9 +7,13 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/rs/zerolog/log"
 )
 
 func (e *Env) getSyncStatus(ctx context.Context, latest bool) (int64, error) {
+	log.Info().Msg("get the sync status")
+
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, e.rpcURL+"/status", nil)
 	if err != nil {
 		return 0, fmt.Errorf("failed to create request: %w", err)

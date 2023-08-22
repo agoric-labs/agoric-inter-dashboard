@@ -89,6 +89,13 @@ MAIN_LOOP:
 		if atomic.LoadInt32(&stopped) > 0 {
 			break
 		}
+
+		if mode == "tail" {
+			log.Fatal().Msg("nothing to load")
+		} else {
+			log.Info().Msg("nothing to load... waiting 1m")
+			time.Sleep(time.Minute)
+		}
 	}
 }
 

@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"cloud.google.com/go/bigquery"
+	"github.com/rs/zerolog/log"
 	"google.golang.org/api/googleapi"
 	"google.golang.org/api/iterator"
 )
@@ -62,6 +63,8 @@ func (e *Env) GetBlockCountByHeightRange(ctx context.Context, rang model.HeightR
 //
 //nolint:nilnil
 func (e *Env) getDBHeight(ctx context.Context, operation string) (*int64, error) {
+	log.Info().Str("operation", operation).Msg("get the db height")
+
 	sql := fmt.Sprintf(`select %s(block_height) val from %s.blocks`, operation, e.bqDatasetID)
 	query := e.bqClient.Query(sql)
 

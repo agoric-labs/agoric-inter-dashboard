@@ -49,9 +49,9 @@ spec:
           livenessProbe:
             httpGet:
               path: /metrics
-              port: http
+              port: 3333
           resources:
-            {{- toYaml .Values.indexerResources | nindent 12 }}
+            {{- toYaml $.resources | nindent 12 }}
           volumeMounts:
           - mountPath: /etc/gac
             name: gac
@@ -95,9 +95,9 @@ spec:
 {{- end }}
 
 {{- if .Values.tendermintTailEnabled }}
-{{- include "tendermint-extractor" (dict "root" . "mode" "tail") }}
+{{- include "tendermint-extractor" (dict "root" . "mode" "tail" "resources" .Values.tailIndexerResources) }}
 {{- end }}
 
 {{- if .Values.tendermintHeadEnabled }}
-{{- include "tendermint-extractor" (dict "root" . "mode" "head") }}
+{{- include "tendermint-extractor" (dict "root" . "mode" "head" "resources" .Values.headIndexerResources) }}
 {{- end }}

@@ -532,6 +532,13 @@ Warning: Avoid reinstalling with the command helm uninstall
 `agoric-mainnet && helm install agoric-mainnet ...`, as it can lead to the
 creation of duplicate pods and data corruption!
 
+Set log alerts for `failed` and `fatal` keywords
+```
+resource.type="k8s_container" AND
+resource.labels.container_name="extractor" AND
+(textPayload:"failed" OR textPayload:"fatal")
+```
+
 # Development
 
 ## Running tests

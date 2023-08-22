@@ -33,7 +33,7 @@ balanceAddresses: ""
 coingekoEnabled: false
 coingekoShedule: "0 * * * *"
 
-sloMetricsEnabled: false
+sloMetricsEnabled: true
 sloMetricsShedule: "30 * * * *"
 
 serviceAccount:
@@ -80,13 +80,21 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-indexerResources:
+tailIndexerResources:
   limits:
-    cpu: 1.6
-    memory: 4Gi
+    cpu: 3250m
+    memory: 3.25Gi
   requests:
-    cpu: 1.6
-    memory: 4Gi
+    cpu: 3250m
+    memory: 3.25Gi
+
+headIndexerResources:
+  limits:
+    cpu: 1
+    memory: 1Gi
+  requests:
+    cpu: 1
+    memory: 1Gi
 
 cronjobResources:
   limits:
