@@ -76,7 +76,7 @@ spec:
           - name: DECODE_SERVICE_URL
             value: "{{ .Values.decodeServiceUrl }}"
           - name: TENDERMINT_TRIGGER_BASE_CONFIG
-            value: '{"rpc_url":"{{ .Values.rpcUrl }}","batch_size":32,"thread_count":24}'
+            value: '{"rpc_url":"{{ .Values.rpcUrl }}","batch_size":32,"thread_count":8}'
           - name: TENDERMINT_TRIGGER_ADDR
             value: ':3333'
       {{- with .Values.nodeSelector }}

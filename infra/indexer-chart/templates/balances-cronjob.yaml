@@ -4,8 +4,6 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: {{ include "deploy.fullname" . }}-balances
-  labels:
-    {{- include "deploy.labels" . | nindent 4 }}
 spec:
   schedule: "{{ .Values.balancesShedule }}"
   concurrencyPolicy: Replace # avoid target-biquery freezes
@@ -16,9 +14,6 @@ spec:
     spec:
       template:
         spec:
-          selector:
-            matchLabels:
-              {{- include "deploy.selectorLabels" . | nindent 10 }}
           {{- with .Values.imagePullSecrets }}
           imagePullSecrets:
             {{- toYaml . | nindent 12 }}
