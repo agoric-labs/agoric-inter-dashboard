@@ -433,8 +433,29 @@ class BlockProcessor:
         if event["attributes"]["store"] != "vstorage":
             raise ValueError("unknown storage")
 
-        body = ujson.loads(event["attributes"]["value"])
         path = extract_storage_path(event["attributes"]["key"])
+
+        try:
+            body = ujson.loads(event["attributes"]["value"])
+        except ujson.JSONDecodeError:
+            # save non json data
+            # path: highPrioritySenders
+            # value: economicCommittee
+            # height: 11214233
+            rec = {
+                "id": f"{event['id']}:0",
+                "path": path,
+                "idx": 0,
+                "slots": "[]",
+                "body": ujson.dumps(event["attributes"]["value"]),
+            }
+
+            rec.update(block_meta)
+
+            print(f"non-json data: {block_meta['block_height']}: {ujson.dumps(event['attributes'])}", file=sys.stderr)
+            self._write_record(STATE_CHANGES_SCHEMA["stream"], rec)
+
+            return
 
         if "values" not in body:
             print(f"too old state_change: {block_meta['block_height']}: {ujson.dumps(body)}", file=sys.stderr)
