@@ -547,6 +547,8 @@ resource.labels.container_name="extractor" AND
 cd tendermint-trigger && go test ./...
 
 cd tendermint-normalizer && pytest
+
+pytest cube/e2e
 ```
 
 ## Running linters

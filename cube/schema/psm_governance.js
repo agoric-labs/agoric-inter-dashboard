@@ -2,12 +2,12 @@ import { dailySQL, datasetId } from '../utils';
 
 cube(`psm_governance`, {
   sql: dailySQL(['mint_limit'], ['coin'], `
-    select block_height as height
+    select block_time
          , split(path, '.')[3] as coin
          , cast(json_value(body, '$.current.MintLimit.value.__value') as float64) / pow(10, 6) as mint_limit
-     from ${datasetId()}.state_changes
+     from ${state_changes.sql()}
     where path like 'published.psm.%.governance'
-  `, block_times.sql()),
+  `),
 
   measures: {
     last_mint_limit: {

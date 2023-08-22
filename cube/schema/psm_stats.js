@@ -2,12 +2,12 @@ import { dailySQL } from '../utils';
 
 cube(`psm_stats`, {
   sql: dailySQL(['minted_pool_balance'], ['coin'], `
-    select cast(height as int) as height
+    select block_time
          , split(path, '.')[3] as coin
          , cast(json_value(body, '$.mintedPoolBalance.__value') as float64) / pow(10, 6) as  minted_pool_balance
-     from agoric_mainnet_own.storage
+     from ${state_changes.sql()}
     where path like 'published.psm.%.metrics'
-  `, block_times.sql()),
+  `),
 
   joins: {
     psm_governance: {
