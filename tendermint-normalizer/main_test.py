@@ -3,6 +3,7 @@ import subprocess
 
 from main import resolve_brand_names_and_values, extract_storage_path
 
+
 def test_e2e():
     with open("output_test.json", "r") as f:
         expected_output = f.read()
@@ -13,6 +14,7 @@ def test_e2e():
     actual_output = stdout.decode("utf-8")
 
     assert actual_output == expected_output
+
 
 def test_extract_storage_path():
     assert extract_storage_path("3\x00published\x00auction\x00book0") == "published.auction.book0"
