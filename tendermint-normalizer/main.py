@@ -404,9 +404,16 @@ class BlockProcessor:
 
         validator_idx = 0
 
+        # events contain rewards from the previous block, skipping the genesis.
+        skip_extra = len(extra_data) == 0 and block_meta["block_height"] == 1
+
         for page in pages:
             for val in page["validators"]:
-                extra = extra_data[validator_idx]
+                if skip_extra:
+                    extra = { "proposer_reward": 0, "rewards": 0, "commission": 0, "valoper_addr": "unknown" }
+                else:
+                    extra = extra_data[validator_idx]
+
                 validator_idx += 1
 
                 rec = {
@@ -424,7 +431,7 @@ class BlockProcessor:
 
                 self._write_record(VALIDATORS_SCHEMA["stream"], rec)
 
-        if validator_idx != len(extra_data):
+        if not skip_extra and validator_idx != len(extra_data):
             raise ValueError("unexpected extra_data size")
 
         return proposer_addr
