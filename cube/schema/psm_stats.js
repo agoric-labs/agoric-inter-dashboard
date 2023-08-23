@@ -1,10 +1,12 @@
 import { dailySQL } from '../utils';
 
 cube(`psm_stats`, {
-  sql: dailySQL(['minted_pool_balance'], ['coin'], `
+  sql: dailySQL(['minted_pool_balance', 'anchor_pool_balance', 'total_minted_provided'], ['coin'], `
     select block_time
          , split(path, '.')[3] as coin
          , cast(json_value(body, '$.mintedPoolBalance.__value') as float64) / pow(10, 6) as  minted_pool_balance
+         , cast(json_value(body, '$.anchorPoolBalance.__value') as float64) / pow(10, 6) as anchor_pool_balance
+         , cast(json_value(body, '$.totalMintedProvided.__value') as float64) / pow(10, 6) as total_minted_provided
      from ${state_changes.sql()}
     where path like 'published.psm.%.metrics'
   `),
@@ -19,6 +21,14 @@ cube(`psm_stats`, {
   measures: {
     last_minted_pool_balance: {
       sql: `array_agg(minted_pool_balance)[0]`,
+      type: `number`,
+    },
+    last_total_minted_provided: {
+      sql: `array_agg(total_minted_provided)[0]`,
+      type: `number`,
+    },
+    last_anchor_pool_balance: {
+      sql: `array_agg(anchor_pool_balance)[0]`,
       type: `number`,
     },
     last_utilization_rate: {
@@ -49,6 +59,8 @@ cube(`psm_stats`, {
       measures: [
         last_minted_pool_balance,
         last_utilization_rate,
+        last_total_minted_provided,
+        last_anchor_pool_balance,
         psm_governance.last_mint_limit,
       ],
       dimensions: [psm_stats.coin],

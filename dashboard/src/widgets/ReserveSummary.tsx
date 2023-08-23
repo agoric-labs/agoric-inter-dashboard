@@ -1,5 +1,5 @@
 import { useCubeQuery } from '@cubejs-client/react';
-import { ValueCard } from './ValueCard';
+import { ValueCard } from '@/components/ValueCard';
 import { formatPrice, getCubeQueryView } from '@/utils';
 
 export function ReserveSummary() {

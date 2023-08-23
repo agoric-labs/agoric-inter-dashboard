@@ -11,7 +11,9 @@ export const getCubeQueryView = ({
   resultSet,
   error,
   isLoading,
-}: UseCubeQueryResult<unknown>): [NonNullable<UseCubeQueryResult<unknown>['resultSet']>, null] | [null, JSX.Element] => {
+}: UseCubeQueryResult<unknown>):
+  | [NonNullable<UseCubeQueryResult<unknown>['resultSet']>, null]
+  | [null, JSX.Element] => {
   if (isLoading) {
     return [null, <Loading />];
   }

@@ -2,14 +2,11 @@ import { useCubeQuery } from '@cubejs-client/react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { getCubeQueryView, formatDay } from '@/utils';
-import { colors } from './palette';
+import { colors } from '@/components/palette';
 
 export function ReserveHistory() {
   const res = useCubeQuery({
-    measures: [
-      'reserve.fee_amount_avg',
-      'reserve.atom_amount_usd_avg',
-    ],
+    measures: ['reserve.fee_amount_avg', 'reserve.atom_amount_usd_avg'],
     timeDimensions: [{ dimension: 'reserve.day', granularity: 'day' }],
     order: {
       'reserve.day': 'asc',
