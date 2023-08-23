@@ -515,17 +515,22 @@ Example response:
 # create a secret with the BQ service account
 kubectl create secret generic indexer-google-creds --from-file=content=bigquerycreds.json
 
-# create mainnet.values.yaml based on deploy/values.yaml
-# create devnet.values.yaml based on deploy/values.yaml
-# create emerynet.values.yaml based on deploy/values.yaml
+# create mainnet.values.yaml based on infra/indexer-chart/values.yaml
+# create devnet.values.yaml based on infra/indexer-chart/values.yaml
+# create emerynet.values.yaml based on infra/indexer-chart/values.yaml
 
 # check specs
-helm install agoric-mainnet ./deploy --values mainnet.values.yaml --dry-run
+helm install mainnet ./infra/indexer-chart --values mainnet.values.yaml --dry-run
 
 # apply
-helm install agoric-mainnet ./deploy --values mainnet.values.yaml
-helm install agoric-devnet ./deploy --values devnet.values.yaml
-helm install agoric-emerynet ./deploy --values emerynet.values.yaml
+helm install mainnet ./infra/indexer-chart --values mainnet.values.yaml
+helm install devnet ./infra/indexer-chart --values devnet.values.yaml
+helm install emerynet ./infra/indexer-chart --values emerynet.values.yaml
+
+# extract coingeko history
+kubectl create job --from=cronjob.batch/mainnet-extractor-coingeko-atom mainnet-extractor-coingeko-atom-manual0 --dry-run -o "json" \
+  | jq ".spec.template.spec.containers[0].env += [{ \"name\": \"DEPTH\", value:\"90\" }]" \
+  | kubectl apply -f -
 ```
 
 Warning: Avoid reinstalling with the command helm uninstall

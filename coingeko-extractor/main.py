@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import sys
 import json
 import time
 import requests
@@ -66,5 +67,6 @@ if __name__ == "__main__":
     while depth > 0:
         day -= delta
         depth -= 1
+        print(day, file=sys.stderr)
         extract(day, coin_id)
         time.sleep(10) # Public API: Rate limit /min: 10-30*, 6 here
