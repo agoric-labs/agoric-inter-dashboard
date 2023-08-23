@@ -66,3 +66,20 @@ def test_oracle_prices():
             "dimensions": ["oracle_prices.price_feed_name"],
         }
     )
+
+
+def test_coingeko_history():
+    request(
+        {
+            "measures": [
+                "coingeko_history.current_price_usd_last",
+                "coingeko_history.current_price_usd_avg",
+            ],
+            "timeDimensions": [
+                {"dimension": "coingeko_history.day", "granularity": "day"}
+            ],
+            "order": [["coingeko_history.day", "desc"]],
+            "dimensions": ["coingeko_history.coin_id"],
+            "limit": 1,
+        }
+    )
