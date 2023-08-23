@@ -103,7 +103,7 @@ if __name__ == "__main__":
 
     height = os.getenv("BLOCK_HEIGHT")
     if height is None:
-        height = get_current_height(os.environ["RPC_URL"])
+        height = get_current_height(os.environ["RPC_URL"]) - 1
 
     worker_count = int(os.getenv("WORKER_COUNT", 128))
     grpc_addr = os.environ["GRPC_ADDR"]
