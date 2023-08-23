@@ -2,6 +2,7 @@
 
 import os
 import json
+import time
 import requests
 
 from datetime import datetime, timedelta
@@ -49,7 +50,7 @@ if __name__ == "__main__":
 
     day = os.getenv("DAY")
     if day is None:
-        day = datetime.now()
+        day = datetime.utcnow() - timedelta(hours=4)
     else:
         day = datetime.strptime(day, "%d-%m-%Y")
 
@@ -58,3 +59,12 @@ if __name__ == "__main__":
         raise ValueError("COIN_ID not set")
 
     extract(day, coin_id)
+
+    depth = max(0, int(os.getenv("DEPTH", 0)))
+    delta = timedelta(days=1)
+
+    while depth > 0:
+        day -= delta
+        depth -= 1
+        extract(day, coin_id)
+        time.sleep(10) # Public API: Rate limit /min: 10-30*, 6 here
