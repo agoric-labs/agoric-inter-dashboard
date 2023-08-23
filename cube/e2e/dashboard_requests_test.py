@@ -83,3 +83,22 @@ def test_coingeko_history():
             "limit": 1,
         }
     )
+
+
+def test_slo_metrics():
+    request(
+        {
+            "measures": [
+                "tendermint_slo_metrics.max_db_latest_block_height",
+                "tendermint_slo_metrics.max_status_latest_block_height",
+            ],
+            "timeDimensions": [
+                {
+                    "dimension": "tendermint_slo_metrics.extracted_at",
+                    "granularity": "day",
+                }
+            ],
+            "order": {"tendermint_slo_metrics.max_db_latest_block_height": "desc"},
+            "dimensions": ["tendermint_slo_metrics.section"],
+        }
+    )

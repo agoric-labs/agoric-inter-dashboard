@@ -6,6 +6,7 @@ import { ErrorAlert } from '@/components/ErrorAlert';
 import { Loading } from '@/components/Loading';
 
 export const formatDay = (v: string) => format(parseISO(v), 'MM/dd');
+export const formatDayAndTime = (v: string) => format(parseISO(v), 'MM/dd HH:mm');
 
 export const getCubeQueryView = ({
   resultSet,

@@ -9,6 +9,7 @@ import { Vaults } from './pages/Vaults';
 import { InterProtocol } from './pages/InterProtocol';
 import { PSM } from './pages/PSM';
 import { Reserve } from './pages/Reserve';
+import { Internal } from './pages/Internal';
 
 const devToken =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2OTI3MzM4ODN9.ziFC61eELOABmVzfLgC8cjVDG5fzuQ_w4_iCJ-INWWU';
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: '/reserve',
         element: <Reserve />,
+      },
+      {
+        path: '/internal',
+        element: <Internal />,
       },
     ],
   },
