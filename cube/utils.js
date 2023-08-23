@@ -33,7 +33,7 @@ exports.dailySQL = (measures, dimensions, baseSQL) => {
     ), rows_by_days as (
       select date_trunc(block_time, day) day
            ${suffix(', ', dimensions.join(', '))}
-           , ${measures.map(name => `array_agg(${name})[0] as ${name}`).join('\n         , ')}
+           , ${measures.map(name => `array_agg(${name} order by block_time desc)[0] as ${name}`).join('\n         , ')}
         from base_rows g
        group by 1${suffix(', ', groupBy)}
     ), start_days as (

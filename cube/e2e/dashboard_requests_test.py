@@ -102,3 +102,7 @@ def test_slo_metrics():
             "dimensions": ["tendermint_slo_metrics.section"],
         }
     )
+
+
+def test_wallet_count():
+    request({"measures": ["wallets.address_count"], "order": {"wallets.day": "asc"}})

@@ -1,6 +1,6 @@
 import { dailySQL, datasetId } from '../utils';
 
-cube(`ibc_balances`, {
+cube(`balances`, {
   sql: dailySQL(['amount'], ['address', 'denom'], `
      select b.block_time
           , bl.address

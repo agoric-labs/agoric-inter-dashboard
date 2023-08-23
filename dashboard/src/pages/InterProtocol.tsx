@@ -7,8 +7,24 @@ import { PageHeader } from '@/components/PageHeader';
 import { PageContent } from '@/components/PageContent';
 import { colors } from '@/components/palette';
 import { formatPercent, roundPrice, formatPrice, formatIST } from '@/utils';
+import { WalletCountCard } from '@/widgets/WalletCountCard';
+import { ISTinCirculationCard } from '@/widgets/ISTinCirculationCard';
 
 export function InterProtocol() {
+  return (
+    <>
+      <PageHeader title="Summary" />
+      <PageContent>
+        <ValueCardGrid>
+          <ISTinCirculationCard />
+          <WalletCountCard />
+        </ValueCardGrid>
+      </PageContent>
+    </>
+  );
+}
+
+export function InterProtocolOld() {
   const data: any = useLoaderData();
 
   let totalMintLimit = data.psm_stats.reduce((s: any, i: any) => s + i.mint_limit, 0);
