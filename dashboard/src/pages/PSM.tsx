@@ -3,7 +3,7 @@ import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
 import { PageHeader } from '@/components/PageHeader';
 import { PageContent } from '@/components/PageContent';
 import { ValueCardGrid } from '@/components/ValueCardGrid';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/card';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { PSMStats } from '@/components/PSMStats';
 import { BarChart } from '@/components/BarChart';
 import { RadianTooltip } from '@/components/RadianTooltip';

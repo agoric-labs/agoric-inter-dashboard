@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardContent, CardTitle } from '@/components/card';
+import { Card, CardHeader, CardContent, CardTitle } from './ui/card';
 
 type Props = {
   value: string;

@@ -1,5 +1,5 @@
 import { formatPrice, formatPercent } from '@/utils';
-import { Card, CardDescription, CardContent, CardHeader, CardTitle } from './card';
+import { Card, CardDescription, CardContent, CardHeader, CardTitle } from './ui/card';
 
 type Props = {
   data: {

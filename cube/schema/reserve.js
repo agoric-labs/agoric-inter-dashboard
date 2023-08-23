@@ -28,10 +28,12 @@ cube(`reserve`, {
     atom_amount_usd_avg: {
       sql: `atom_amount * atom_price_usd`,
       type: `avg`,
+      title: `ATOM $`,
     },
     fee_amount_avg: {
       sql: `fee_amount`,
       type: `avg`,
+      title: `IST Fees`,
     },
     shortfall_balance_avg: {
       sql: `shortfall_balance`,

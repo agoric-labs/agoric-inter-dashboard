@@ -8,8 +8,8 @@ import {
 } from '@tanstack/react-table';
 
 import React, { useState } from 'react';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/table';
-import { formatPercent } from '../utils';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
+import { formatPercent } from '@/utils';
 
 export const renderUSD = (val: string) => {
   const amount = parseFloat(val);

@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { Outlet, Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { ShieldCheck, Box, ReplaceAll, LayoutGrid } from 'lucide-react';
 import { Helmet } from 'react-helmet';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Footer } from './Footer';
 import { Logo } from './Logo';
 

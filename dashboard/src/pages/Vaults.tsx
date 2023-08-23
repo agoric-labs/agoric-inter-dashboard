@@ -1,6 +1,6 @@
 import { useLoaderData } from 'react-router-dom';
 import { VaultManagersTable } from '@/components/VaultManagersTable';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/card';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { ValueCard } from '@/components/ValueCard';
 import { ValueCardGrid } from '@/components/ValueCardGrid';
 import { OpenVaultsTable } from '@/components/OpenVaultsTable';

@@ -1,4 +1,8 @@
+import { StrictMode } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import cubejs from '@cubejs-client/core';
+import { CubeProvider } from '@cubejs-client/react';
+
 import { ErrorPage } from './pages/ErrorPage';
 import { MainLayout } from './components/MainLayout';
 import { Vaults } from './pages/Vaults';
@@ -6,16 +10,13 @@ import { InterProtocol } from './pages/InterProtocol';
 import { PSM } from './pages/PSM';
 import { Reserve } from './pages/Reserve';
 
+const devToken =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2OTI3MzM4ODN9.ziFC61eELOABmVzfLgC8cjVDG5fzuQ_w4_iCJ-INWWU';
+
 // @ts-ignore
-const dataBaseUrl = import.meta.env.VITE_DATA_BASE_URL || '/data';
+const accessToken = import.meta.env.VITE_ACCESS_TOKEN || devToken;
 
-export const loader = ({ request }: any) => {
-  const url = new URL(request.url);
-  const chain = url.searchParams.get('chain') || 'mainnet';
-  const range = url.searchParams.get('range') || 'day';
-
-  return fetch(`${dataBaseUrl}/${chain}-${range}.json`).then((r) => r.json());
-};
+const cubejsApi = cubejs(accessToken, { apiUrl: '/cubejs-api/v1' });
 
 const router = createBrowserRouter([
   {
@@ -27,12 +28,10 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <InterProtocol />,
-        loader,
       },
       {
         path: '/psm',
         element: <PSM />,
-        loader,
       },
       {
         path: '/vaults',
@@ -41,12 +40,17 @@ const router = createBrowserRouter([
       {
         path: '/reserve',
         element: <Reserve />,
-        loader,
       },
     ],
   },
 ]);
 
 export function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <StrictMode>
+      <CubeProvider cubejsApi={cubejsApi}>
+        <RouterProvider router={router} />
+      </CubeProvider>
+    </StrictMode>
+  );
 }
