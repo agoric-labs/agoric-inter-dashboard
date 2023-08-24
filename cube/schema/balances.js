@@ -1,14 +1,18 @@
 import { dailySQL, datasetId } from '../utils';
 
 cube(`balances`, {
-  sql: dailySQL(['amount'], ['address', 'denom'], `
+  sql: dailySQL(
+    ['amount'],
+    ['address', 'denom'],
+    `
      select b.block_time
           , bl.address
           , cast(bl.amount as numeric) / pow(10, 6) as amount
           , bl.denom
       from ${datasetId()}.balances bl
       join ${datasetId()}.blocks b using (block_height)
-  `),
+  `,
+  ),
 
   measures: {
     amount_avg: {
@@ -29,11 +33,11 @@ cube(`balances`, {
     },
     address: {
       sql: `address`,
-      type: `string`
+      type: `string`,
     },
     denom: {
       sql: `denom`,
-      type: `string`
+      type: `string`,
     },
     day: {
       sql: `day`,

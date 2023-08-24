@@ -1,7 +1,10 @@
 import { dailySQL, datasetId } from '../utils';
 
 cube(`oracle_prices`, {
-  sql: dailySQL(['type_in_amount', 'type_out_amount'], ['price_feed_name'], `
+  sql: dailySQL(
+    ['type_in_amount', 'type_out_amount'],
+    ['price_feed_name'],
+    `
      select block_time
           , split(path, 'published.priceFeed.')[safe_offset(1)] price_feed_name
           , regexp_extract(split(path, 'published.priceFeed.')[safe_offset(1)], r'^(\\w+)-') type_in_name
@@ -10,7 +13,8 @@ cube(`oracle_prices`, {
           , cast(json_value(body, '$.amountOut.__value') as float64) type_out_amount
      from ${state_changes.sql()}
      where path like 'published.priceFeed.%_price_feed'
-  `),
+  `,
+  ),
 
   measures: {
     type_in_amount_avg: {
@@ -35,7 +39,7 @@ cube(`oracle_prices`, {
     },
     price_feed_name: {
       sql: `price_feed_name`,
-      type: `string`
+      type: `string`,
     },
     day: {
       sql: `day`,

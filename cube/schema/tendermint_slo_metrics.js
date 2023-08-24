@@ -1,4 +1,4 @@
-import {datasetId} from '../utils';
+import { datasetId } from '../utils';
 
 cube(`head_tendermint_slo_metrics`, {
   sql: `

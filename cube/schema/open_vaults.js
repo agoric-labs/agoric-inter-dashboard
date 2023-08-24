@@ -1,4 +1,4 @@
-import {datasetId, dailySQL} from '../utils';
+import { datasetId, dailySQL } from '../utils';
 
 cube('open_vaults', {
   sql: dailySQL(

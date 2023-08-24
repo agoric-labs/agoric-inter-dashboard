@@ -1,7 +1,10 @@
 import { dailySQL } from '../utils';
 
 cube(`psm_stats`, {
-  sql: dailySQL(['minted_pool_balance', 'anchor_pool_balance', 'total_minted_provided'], ['coin'], `
+  sql: dailySQL(
+    ['minted_pool_balance', 'anchor_pool_balance', 'total_minted_provided'],
+    ['coin'],
+    `
     select block_time
          , split(path, '.')[3] as coin
          , cast(json_value(body, '$.mintedPoolBalance.__value') as float64) / pow(10, 6) as  minted_pool_balance
@@ -9,7 +12,8 @@ cube(`psm_stats`, {
          , cast(json_value(body, '$.totalMintedProvided.__value') as float64) / pow(10, 6) as total_minted_provided
      from ${state_changes.sql()}
     where path like 'published.psm.%.metrics'
-  `),
+  `,
+  ),
 
   joins: {
     psm_governance: {

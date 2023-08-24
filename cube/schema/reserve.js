@@ -1,7 +1,10 @@
 import { dailySQL } from '../utils';
 
 cube(`reserve`, {
-  sql: dailySQL(['atom_amount', 'fee_amount', 'shortfall_balance', 'total_fee_burned', 'total_fee_minted', 'atom_price_usd'], [], `
+  sql: dailySQL(
+    ['atom_amount', 'fee_amount', 'shortfall_balance', 'total_fee_burned', 'total_fee_minted', 'atom_price_usd'],
+    [],
+    `
     with coingecko_history as (
       select day, array_agg(current_price_usd order by _sdc_received_at desc)[0] as current_price_usd
         from ${coingecko_history.sql()}
@@ -18,7 +21,8 @@ cube(`reserve`, {
       from ${state_changes.sql()}
       left join coingecko_history ch on extract(date from ch.day) = extract(date from block_time)
      where path = 'published.reserve.metrics'
-  `),
+  `,
+  ),
 
   measures: {
     atom_amount_avg: {

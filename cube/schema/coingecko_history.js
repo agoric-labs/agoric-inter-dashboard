@@ -23,7 +23,7 @@ cube(`coingecko_history`, {
   dimensions: {
     coin_id: {
       sql: `coin_id`,
-      type: `string`
+      type: `string`,
     },
     day: {
       sql: `day`,

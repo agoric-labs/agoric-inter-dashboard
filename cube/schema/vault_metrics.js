@@ -1,4 +1,4 @@
-import {datasetId} from '../utils';
+import { datasetId } from '../utils';
 
 cube(`vault_metrics`, {
   sql: `

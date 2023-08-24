@@ -1,7 +1,10 @@
 import { dailySQL, datasetId } from '../utils';
 
 cube(`wallet_purses`, {
-  sql: dailySQL(['amount'], ['address', 'brand'], `
+  sql: dailySQL(
+    ['amount'],
+    ['address', 'brand'],
+    `
      select block_time
           , split(path, '.')[2] as address
           , json_value(p, '$.__brand') as brand
@@ -9,7 +12,8 @@ cube(`wallet_purses`, {
       from ${state_changes.sql()}
      cross join unnest(json_extract_array(body, '$.purses')) p
      where path like 'published.wallet%'and path like '%current'
-  `),
+  `,
+  ),
 
   measures: {
     address_count: {
@@ -29,11 +33,11 @@ cube(`wallet_purses`, {
   dimensions: {
     address: {
       sql: `address`,
-      type: `string`
+      type: `string`,
     },
     brand: {
       sql: `brand`,
-      type: `string`
+      type: `string`,
     },
     day: {
       sql: `day`,

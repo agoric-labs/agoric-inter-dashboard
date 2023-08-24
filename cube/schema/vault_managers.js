@@ -1,4 +1,4 @@
-import {dailySQL, datasetId} from '../utils';
+import { dailySQL, datasetId } from '../utils';
 
 cube('vault_managers', {
   sql: dailySQL(
@@ -197,10 +197,7 @@ cube('vault_managers', {
       granularity: `day`,
     },
     summary2: {
-      measures: [
-        ist_minting_limit_sum,
-        total_ist_minted_sum,
-      ],
+      measures: [ist_minting_limit_sum, total_ist_minted_sum],
       timeDimension: day,
       granularity: `day`,
     },
