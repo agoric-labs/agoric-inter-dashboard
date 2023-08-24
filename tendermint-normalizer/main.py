@@ -437,6 +437,10 @@ class BlockProcessor:
         return proposer_addr
 
     def _write_state_change(self, event, block_meta):
+        # emerynet.rpc.agoric.net, block: 71573
+        if "store" not in event["attributes"]:
+            return
+
         if event["attributes"]["store"] != "vstorage":
             raise ValueError("unknown storage")
 
