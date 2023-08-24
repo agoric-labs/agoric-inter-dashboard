@@ -23,10 +23,8 @@ cube(`wallets`, {
   },
 
   pre_aggregations: {
-    main: {
+    main1: {
       measures: [address_count],
-      time_dimension: day,
-      granularity: `day`,
       refreshKey: {
         every: `1 hour`,
       },

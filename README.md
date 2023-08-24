@@ -513,7 +513,9 @@ Example response:
 
 ```
 # create a secret with the BQ service account
-kubectl create secret generic indexer-google-creds --from-file=content=bigquerycreds.json
+kubectl create secret generic agoric-indexer-google-creds \
+  --from-file=content=bigquerycreds.json \
+  --from-literal=b64=`cat bigquerycreds.json | base64 -w0`
 
 # create mainnet.values.yaml based on infra/indexer-chart/values.yaml
 # create devnet.values.yaml based on infra/indexer-chart/values.yaml
@@ -522,10 +524,18 @@ kubectl create secret generic indexer-google-creds --from-file=content=bigqueryc
 # check specs
 helm install mainnet ./infra/indexer-chart --values mainnet.values.yaml --dry-run
 
-# apply
+# setup indexers
 helm install mainnet ./infra/indexer-chart --values mainnet.values.yaml
 helm install devnet ./infra/indexer-chart --values devnet.values.yaml
 helm install emerynet ./infra/indexer-chart --values emerynet.values.yaml
+helm install emerynet ./infra/indexer-chart --values emerynet.values.yaml
+
+# setup cube
+cp infra/cube.values.yaml . # and edit
+cp infra/cubestore.values.yaml . # and edit
+
+helm install cube gadsme/cube --values cube.values.yaml
+helm install cubestore gadsme/cubestore --values cubestore.values.yaml
 
 # extract coingeko history
 kubectl create job --from=cronjob.batch/mainnet-extractor-coingeko-atom mainnet-extractor-coingeko-atom-manual0 --dry-run -o "json" \
@@ -534,6 +544,9 @@ kubectl create job --from=cronjob.batch/mainnet-extractor-coingeko-atom mainnet-
 
 # manual update all charts
 ls *.values.yaml | sed 's/\.values\.yaml$//' | xargs -I{} helm upgrade {} ./infra/indexer-chart --values {}.values.yaml
+
+# apply a custom gke ingress resources
+kubectl apply -f infra/ingress.yaml
 ```
 
 Warning: Avoid reinstalling with the command helm uninstall

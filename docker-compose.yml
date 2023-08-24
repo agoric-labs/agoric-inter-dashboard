@@ -99,7 +99,7 @@ services:
       - CUBEJS_PG_SQL_PORT=5432
       - CUBEJS_SQL_USER=myusername
       - CUBEJS_SQL_PASSWORD=mypassword
-      - CUBEJS_API_SECRET=secret
+      - CUBEJS_API_SECRET=agoric
     depends_on:
       - cube_refresh_worker
       - cubestore_router
@@ -119,7 +119,7 @@ services:
       - CUBEJS_DB_BQ_CREDENTIALS=/bigquerycreds.json
       - CUBEJS_DB_EXPORT_BUCKET=${EXPORT_BUCKET}
       - CUBEJS_CUBESTORE_HOST=cubestore_router
-      - CUBEJS_API_SECRET=secret
+      - CUBEJS_API_SECRET=agoric
       - CUBEJS_REFRESH_WORKER=true
     volumes:
       - ./cube:/cube/conf
