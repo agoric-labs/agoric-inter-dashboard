@@ -106,3 +106,38 @@ def test_slo_metrics():
 
 def test_wallet_count():
     request({"measures": ["wallets.address_count"], "order": {"wallets.day": "asc"}})
+
+
+def test_open_vaults():
+    request(
+        {
+            "measures": [
+                "open_vaults.collateral_amount",
+                "open_vaults.current_collateral_price",
+                "open_vaults.collateral_oracle_usd_value",
+                "open_vaults.ist_debt_amount",
+                "open_vaults.liquidation_margin",
+                "open_vaults.liquidation_price",
+                "open_vaults.liquidation_cushion",
+            ],
+            "timeDimensions": [
+                {
+                    "dimension": "open_vaults.day",
+                    "granularity": "day",
+                    "dateRange": "Today",
+                }
+            ],
+            "order": {"open_vaults.collateral_amount": "desc"},
+            "dimensions": ["open_vaults.vault_ix"],
+        }
+    )
+
+
+def test_open_vault_count():
+    request(
+        {
+            "measures": ["open_vaults.count"],
+            "timeDimensions": [{"dimension": "open_vaults.day", "dateRange": "Today"}],
+            "order": {},
+        }
+    )

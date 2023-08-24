@@ -6,9 +6,16 @@ type Props = {
   title?: string;
 };
 
-export function WalletCountCard({ title = 'Smart Wallets Provisioned' }: Props) {
+export function ActiveVaultCountCard({ title = 'Total Active Vaults' }: Props) {
   const res = useCubeQuery({
-    measures: ['wallets.address_count'],
+    measures: ['open_vaults.count'],
+    timeDimensions: [
+      {
+        dimension: 'open_vaults.day',
+        dateRange: 'Today',
+      },
+    ],
+    order: {},
   });
 
   if (res.isLoading || !res.resultSet) {
@@ -25,5 +32,5 @@ export function WalletCountCard({ title = 'Smart Wallets Provisioned' }: Props) 
     return null;
   }
 
-  return <ValueCard title={title} value={rows[0]['wallets.address_count'] as string} />;
+  return <ValueCard title={title} value={rows[0]['open_vaults.count'] as string} />;
 }

@@ -14,6 +14,10 @@ cube(`psm_governance`, {
       sql: `array_agg(mint_limit)[0]`,
       type: `number`,
     },
+    mint_limit_sum: {
+      sql: `mint_limit`,
+      type: `sum`,
+    },
   },
 
   dimensions: {

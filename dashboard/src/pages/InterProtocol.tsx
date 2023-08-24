@@ -1,4 +1,5 @@
 import { useLoaderData } from 'react-router-dom';
+import { useCubeQuery } from '@cubejs-client/react';
 import { PieChart, Pie, Cell, Tooltip } from 'recharts';
 import { SectionHeader } from '@/components/SectionHeader';
 import { ValueCard } from '@/components/ValueCard';
@@ -7,17 +8,54 @@ import { PageHeader } from '@/components/PageHeader';
 import { PageContent } from '@/components/PageContent';
 import { colors } from '@/components/palette';
 import { formatPercent, roundPrice, formatPrice, formatIST } from '@/utils';
-import { WalletCountCard } from '@/widgets/WalletCountCard';
-import { ISTinCirculationCard } from '@/widgets/ISTinCirculationCard';
+import { Loading } from '@/components/Loading';
+import { ErrorAlert } from '@/components/ErrorAlert';
 
 export function InterProtocol() {
+  const wcRes = useCubeQuery({
+    measures: ['wallets.address_count'],
+  });
+
+  const ibcRes = useCubeQuery({
+    measures: ['balances.amount_sum'],
+    timeDimensions: [
+      {
+        dimension: 'balances.day',
+        granularity: 'day',
+        dateRange: 'Today',
+      },
+    ],
+    filters: [
+      {
+        member: 'balances.denom',
+        operator: 'equals',
+        values: ['uist'],
+      },
+    ],
+  });
+
+  if (wcRes.isLoading || !wcRes.resultSet || ibcRes.isLoading || !ibcRes.resultSet) {
+    return <Loading />;
+  }
+
+  if (wcRes.error) {
+    return <ErrorAlert value={wcRes.error} />;
+  }
+
+  if (ibcRes.error) {
+    return <ErrorAlert value={ibcRes.error} />;
+  }
+
+  const ibcBalance = ibcRes.resultSet.tablePivot()[0]['balances.amount_sum'];
+  const walletCount = wcRes.resultSet.tablePivot()[0]['wallets.address_count'].toString();
+
   return (
     <>
       <PageHeader title="Summary" />
       <PageContent>
         <ValueCardGrid>
-          <ISTinCirculationCard />
-          <WalletCountCard />
+          <ValueCard title="IST in Circulation" value={formatIST(ibcBalance)} />
+          <ValueCard title="Smart Wallets Provisioned" value={walletCount} />
         </ValueCardGrid>
       </PageContent>
     </>

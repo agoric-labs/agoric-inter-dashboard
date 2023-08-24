@@ -8,9 +8,29 @@ import { SectionHeader } from '@/components/SectionHeader';
 import { PageHeader } from '@/components/PageHeader';
 import { PageContent } from '@/components/PageContent';
 import { BarChart } from '@/components/BarChart';
+import { OraclePriceCards } from '@/widgets/OraclePriceCards';
+import { ActiveVaultCountCard } from '@/widgets/ActiveVaultCountCard';
+import { VaultTotalLockedCollateralChart } from '@/widgets/VaultTotalLockedCollateralChart';
+import { VaultTotalMintedISTChart } from '@/widgets/VaultTotalMintedISTChart';
 import { formatPrice } from '@/utils';
 
 export function Vaults() {
+  return (
+    <>
+      <PageHeader title="Vaults" />
+      <PageContent>
+        <ValueCardGrid>
+          <OraclePriceCards />
+          <ActiveVaultCountCard />
+        </ValueCardGrid>
+        <VaultTotalLockedCollateralChart />
+        <VaultTotalMintedISTChart />
+      </PageContent>
+    </>
+  );
+}
+
+export function OldVaults() {
   const data: any = useLoaderData();
   // const atomPrice
 
