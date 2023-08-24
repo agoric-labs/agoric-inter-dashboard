@@ -37,13 +37,10 @@ export function OraclePriceCards({ title = 'Smart Wallets Provisioned' }: Props)
         const rawLabel = row['oracle_prices.price_feed_name'].toString();
         const value = row['oracle_prices.rate_avg'].toString();
 
-        const label = rawLabel.replace(/(\w+)-(\w+?)_.*/g, '$1 ↔︎ $2')
+        const label = rawLabel.replace(/(\w+)-(\w+?)_.*/g, '$1 ↔︎ $2');
 
         return (
-          <ValueCard
-            title={`Oracle Price, ${label}`}
-            value={rawLabel.includes('USD') ? formatPrice(value) : value}
-          />
+          <ValueCard title={`Oracle Price, ${label}`} value={rawLabel.includes('USD') ? formatPrice(value) : value} />
         );
       })}
     </>

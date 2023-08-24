@@ -1,7 +1,7 @@
 import { DataTable, DataColumn } from './DataTable';
 
 type Row = {
-  vault_manager_type: string;
+  collateral_type: string;
   total_locked_collateral: number;
   total_locked_collateral_usd: number;
   total_ist_minted: number;
@@ -16,7 +16,7 @@ type Props = {
 
 export const columns: DataColumn<Row>[] = [
   {
-    accessorKey: 'vault_manager_type',
+    accessorKey: 'collateral_type',
     type: 'text',
     header: 'Collateral Type',
   },

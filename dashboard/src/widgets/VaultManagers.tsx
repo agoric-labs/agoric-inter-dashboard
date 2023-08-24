@@ -1,5 +1,5 @@
 import { useCubeQuery } from '@cubejs-client/react';
-import { OpenVaultsTable } from '@/components/OpenVaultsTable';
+import { VaultManagersTable } from '@/components/VaultManagersTable';
 import { SectionHeader } from '@/components/SectionHeader';
 import { getCubeQueryView } from '@/utils';
 
@@ -7,29 +7,26 @@ type Props = {
   title?: string;
 };
 
-export function OpenVaults({ title = 'Open vaults' }: Props) {
+export function VaultManagers({ title = 'Collateral Type' }: Props) {
   const res = useCubeQuery({
     measures: [
-      'open_vaults.collateral_amount',
-      'open_vaults.current_collateral_price',
-      'open_vaults.collateral_oracle_usd_value',
-      'open_vaults.ist_debt_amount',
-      'open_vaults.liquidation_margin',
-      'open_vaults.liquidation_price',
-      'open_vaults.liquidation_cushion',
-      'open_vaults.collateralization_ratio',
+      'vault_managers.total_locked_collateral_avg',
+      'vault_managers.total_locked_collateral_usd_avg',
+      'vault_managers.total_ist_minted_avg',
+      'vault_managers.colletarization_ratio_avg',
+      'vault_managers.ist_minting_limit_avg',
+      'vault_managers.utilization_rate_avg',
     ],
     timeDimensions: [
       {
-        dimension: 'open_vaults.day',
-        granularity: 'day',
+        dimension: 'vault_managers.day',
         dateRange: 'Today',
       },
     ],
     order: {
-      'open_vaults.vault_ix': 'asc',
+      'vault_managers.collateral_type': 'desc',
     },
-    dimensions: ['open_vaults.vault_ix', 'open_vaults.collateral_type'],
+    dimensions: ['vault_managers.collateral_type'],
   });
 
   if (res.isLoading || !res.resultSet) {
@@ -50,7 +47,7 @@ export function OpenVaults({ title = 'Open vaults' }: Props) {
     const newRow: any = {};
 
     Object.keys(row).forEach((key) => {
-      newRow[key.replace('open_vaults.', '')] = row[key];
+      newRow[key.replace('vault_managers.', '').replace('_avg', '')] = row[key];
     });
 
     return newRow;
@@ -59,7 +56,7 @@ export function OpenVaults({ title = 'Open vaults' }: Props) {
   return (
     <>
       <SectionHeader>{title}</SectionHeader>
-      <OpenVaultsTable data={rows} />
+      <VaultManagersTable data={rows} />
     </>
   );
 }

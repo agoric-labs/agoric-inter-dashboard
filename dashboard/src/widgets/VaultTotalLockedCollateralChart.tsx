@@ -10,9 +10,7 @@ type Props = {
 
 export function VaultTotalLockedCollateralChart({ title = 'Total Locked Collateral' }: Props) {
   const res = useCubeQuery({
-    measures: [
-      'vault_metrics.avg_total_locked_collateral_usd',
-    ],
+    measures: ['vault_metrics.avg_total_locked_collateral_usd'],
     timeDimensions: [
       {
         dimension: 'vault_metrics.date',
@@ -58,13 +56,7 @@ export function VaultTotalLockedCollateralChart({ title = 'Total Locked Collater
         <Tooltip />
         <Legend />
         {resultSet.seriesNames().map((col, idx) => (
-          <Bar
-            key={col.key}
-            stackId="a"
-            dataKey={col.key}
-            name={col.shortTitle}
-            fill={colors[idx % colors.length]}
-          />
+          <Bar key={col.key} stackId="a" dataKey={col.key} name={col.shortTitle} fill={colors[idx % colors.length]} />
         ))}
       </BarChart>
     </ResponsiveContainer>

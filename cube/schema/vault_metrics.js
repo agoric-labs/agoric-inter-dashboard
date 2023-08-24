@@ -3,10 +3,11 @@ import {datasetId} from '../utils';
 cube(`vault_metrics`, {
   sql: `
     with atom_prices as (
-      select cast(current_price_usd as float64) as usd_price
-           , day as date
+      select day as date
+           , array_agg(cast(current_price_usd as float64) order by _sdc_batched_at)[0] as usd_price
         from ${datasetId()}.coingeko_history
        where coin_id = 'cosmos'
+       group by 1
     ),
 
     block_time as (

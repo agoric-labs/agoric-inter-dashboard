@@ -10,9 +10,7 @@ type Props = {
 
 export function VaultTotalMintedISTChart({ title = 'Total Minted IST' }: Props) {
   const res = useCubeQuery({
-    measures: [
-      'vault_metrics.avg_total_ist_minted',
-    ],
+    measures: ['vault_metrics.avg_total_ist_minted'],
     timeDimensions: [
       {
         dimension: 'vault_metrics.date',
@@ -53,18 +51,12 @@ export function VaultTotalMintedISTChart({ title = 'Total Minted IST' }: Props) 
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="x" stroke="#666" tickFormatter={formatDay} />
-        <YAxis stroke="#666" tickFormatter={v => formatIST(v / 1000000)} />
+        <YAxis stroke="#666" tickFormatter={(v) => formatIST(v / 1000000)} />
         <YAxis />
         <Tooltip />
         <Legend />
         {resultSet.seriesNames().map((col, idx) => (
-          <Bar
-            key={col.key}
-            stackId="a"
-            dataKey={col.key}
-            name={col.shortTitle}
-            fill={colors[idx % colors.length]}
-          />
+          <Bar key={col.key} stackId="a" dataKey={col.key} name={col.shortTitle} fill={colors[idx % colors.length]} />
         ))}
       </BarChart>
     </ResponsiveContainer>

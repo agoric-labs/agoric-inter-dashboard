@@ -12,7 +12,7 @@ import { Reserve } from './pages/Reserve';
 import { Internal } from './pages/Internal';
 
 const devToken =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2OTI3MzM4ODN9.ziFC61eELOABmVzfLgC8cjVDG5fzuQ_w4_iCJ-INWWU';
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2OTI4NDk5MDh9.ZhpE9wNivR17Ie4kyU6z10-YWHAWNpQspoZH4XyZMOI';
 
 // @ts-ignore
 const accessToken = import.meta.env.VITE_ACCESS_TOKEN || devToken;

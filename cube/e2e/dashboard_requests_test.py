@@ -47,10 +47,10 @@ def test_psm_stats():
 def test_interchain_ist():
     request(
         {
-            "order": {"ibc_balances.amount_avg": "desc"},
-            "measures": ["ibc_balances.amount_avg", "ibc_balances.amount_sum"],
-            "timeDimensions": [{"dimension": "ibc_balances.day", "dateRange": "Today"}],
-            "dimensions": ["ibc_balances.denom"],
+            "order": {"balances.amount_avg": "desc"},
+            "measures": ["balances.amount_avg", "balances.amount_sum"],
+            "timeDimensions": [{"dimension": "balances.day", "dateRange": "Today"}],
+            "dimensions": ["balances.denom"],
         }
     )
 
@@ -68,18 +68,18 @@ def test_oracle_prices():
     )
 
 
-def test_coingeko_history():
+def test_coingecko_history():
     request(
         {
             "measures": [
-                "coingeko_history.current_price_usd_last",
-                "coingeko_history.current_price_usd_avg",
+                "coingecko_history.current_price_usd_last",
+                "coingecko_history.current_price_usd_avg",
             ],
             "timeDimensions": [
-                {"dimension": "coingeko_history.day", "granularity": "day"}
+                {"dimension": "coingecko_history.day", "granularity": "day"}
             ],
-            "order": [["coingeko_history.day", "desc"]],
-            "dimensions": ["coingeko_history.coin_id"],
+            "order": [["coingecko_history.day", "desc"]],
+            "dimensions": ["coingecko_history.coin_id"],
             "limit": 1,
         }
     )
@@ -89,17 +89,16 @@ def test_slo_metrics():
     request(
         {
             "measures": [
-                "tendermint_slo_metrics.max_db_latest_block_height",
-                "tendermint_slo_metrics.max_status_latest_block_height",
+                "head_tendermint_slo_metrics.max_db_latest_block_height",
+                "head_tendermint_slo_metrics.max_status_latest_block_height",
             ],
             "timeDimensions": [
                 {
-                    "dimension": "tendermint_slo_metrics.extracted_at",
+                    "dimension": "head_tendermint_slo_metrics.extracted_at",
                     "granularity": "day",
                 }
             ],
-            "order": {"tendermint_slo_metrics.max_db_latest_block_height": "desc"},
-            "dimensions": ["tendermint_slo_metrics.section"],
+            "order": {"head_tendermint_slo_metrics.max_db_latest_block_height": "desc"},
         }
     )
 
@@ -140,5 +139,25 @@ def test_open_vault_count():
             "measures": ["open_vaults.count"],
             "timeDimensions": [{"dimension": "open_vaults.day", "dateRange": "Today"}],
             "order": {},
+        }
+    )
+
+
+def test_vault_managers():
+    request(
+        {
+            "measures": [
+                "vault_managers.total_locked_collateral_avg",
+                "vault_managers.total_locked_collateral_usd_avg",
+                "vault_managers.total_ist_minted_avg",
+                "vault_managers.colletarization_ratio_avg",
+                "vault_managers.ist_minting_limit_avg",
+                "vault_managers.utilization_rate_avg",
+            ],
+            "timeDimensions": [
+                {"dimension": "vault_managers.day", "dateRange": "Today"}
+            ],
+            "order": {"vault_managers.total_locked_collateral_avg": "desc"},
+            "dimensions": ["vault_managers.collateral_type"],
         }
     )
