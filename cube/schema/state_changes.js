@@ -2,9 +2,9 @@ import { datasetId } from '../utils';
 
 cube(`state_changes`, {
   sql: `
-    select * from ${datasetId()}.old_state_changes
+    select * from $$DATASET$$.old_state_changes
     union all
-    select * from ${datasetId()}.state_changes
+    select * from $$DATASET$$.state_changes
   `,
 
   measures: {

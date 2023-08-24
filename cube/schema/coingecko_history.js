@@ -6,7 +6,7 @@ cube(`coingecko_history`, {
          , cast(current_price_usd as decimal) current_price_usd
          , coin_id
          , _sdc_received_at
-      from ${datasetId()}.coingeko_history
+      from $$DATASET$$.coingeko_history
   `,
 
   measures: {

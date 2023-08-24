@@ -89,7 +89,7 @@ services:
       - 3000:3000
       - 5432:5432
     environment:
-      - DATASET_ID=${DATASET_ID}
+      - ALLOWED_DATASETS=${ALLOWED_DATASETS}
       - CUBEJS_DEV_MODE=true
       - CUBEJS_DB_TYPE=bigquery
       - CUBEJS_DB_BQ_PROJECT_ID=${PROJECT_ID}
@@ -113,7 +113,7 @@ services:
     restart: always
     image: cubejs/cube:v0.33.38
     environment:
-      - DATASET_ID=${DATASET_ID}
+      - ALLOWED_DATASETS=${ALLOWED_DATASETS}
       - CUBEJS_DB_TYPE=bigquery
       - CUBEJS_DB_BQ_PROJECT_ID=${PROJECT_ID}
       - CUBEJS_DB_BQ_CREDENTIALS=/bigquerycreds.json

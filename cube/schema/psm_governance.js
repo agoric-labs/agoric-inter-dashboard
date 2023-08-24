@@ -1,4 +1,4 @@
-import { dailySQL, datasetId } from '../utils';
+import { dailySQL } from '../utils';
 
 cube(`psm_governance`, {
   sql: dailySQL(
