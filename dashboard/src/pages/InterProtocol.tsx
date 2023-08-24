@@ -1,4 +1,3 @@
-import { useLoaderData } from 'react-router-dom';
 import { useCubeQuery } from '@cubejs-client/react';
 import { PieChart, Pie, Cell, Tooltip } from 'recharts';
 import { SectionHeader } from '@/components/SectionHeader';
@@ -34,9 +33,58 @@ export function InterProtocol() {
     ],
   });
 
-  if (wcRes.isLoading || !wcRes.resultSet || ibcRes.isLoading || !ibcRes.resultSet) {
-    return <Loading />;
-  }
+  const vmRes = useCubeQuery({
+    measures: ['vault_managers.ist_minting_limit_sum', 'vault_managers.total_ist_minted_sum'],
+    timeDimensions: [
+      {
+        dimension: 'vault_managers.day',
+        granularity: 'day',
+        dateRange: 'Today',
+      },
+    ],
+  });
+
+  const vaultMetricsRes = useCubeQuery({
+    measures: ['vault_metrics.avg_total_locked_collateral_usd'],
+    timeDimensions: [
+      {
+        dimension: 'vault_metrics.date',
+        granularity: 'day',
+        dateRange: 'Today',
+      },
+    ],
+  });
+
+  const psmGovRes = useCubeQuery({
+    measures: ['psm_governance.mint_limit_sum'],
+    timeDimensions: [
+      {
+        dimension: 'psm_governance.day',
+        granularity: 'day',
+        dateRange: 'Today',
+      },
+    ],
+  });
+
+  const psmRes = useCubeQuery({
+    measures: ['psm_stats.minted_pool_balance_sum'],
+    timeDimensions: [
+      {
+        dimension: 'psm_stats.day',
+        granularity: 'day',
+        dateRange: 'Today',
+      },
+    ],
+  });
+
+  const reserveRes = useCubeQuery({
+    measures: ['reserve.shortfall_balance_avg', 'reserve.total_usd_avg'],
+    timeDimensions: [{ dimension: 'reserve.day', granularity: 'day' }],
+    order: {
+      'reserve.day': 'desc',
+    },
+    limit: 1,
+  });
 
   if (wcRes.error) {
     return <ErrorAlert value={wcRes.error} />;
@@ -46,39 +94,63 @@ export function InterProtocol() {
     return <ErrorAlert value={ibcRes.error} />;
   }
 
-  const ibcBalance = ibcRes.resultSet.tablePivot()[0]['balances.amount_sum'];
+  if (vmRes.error) {
+    return <ErrorAlert value={vmRes.error} />;
+  }
+
+  if (psmGovRes.error) {
+    return <ErrorAlert value={psmGovRes.error} />;
+  }
+
+  if (psmRes.error) {
+    return <ErrorAlert value={psmRes.error} />;
+  }
+
+  if (reserveRes.error) {
+    return <ErrorAlert value={reserveRes.error} />;
+  }
+
+  if (vaultMetricsRes.error) {
+    return <ErrorAlert value={vaultMetricsRes.error} />;
+  }
+
+  if (
+    wcRes.isLoading ||
+    !wcRes.resultSet ||
+    ibcRes.isLoading ||
+    !ibcRes.resultSet ||
+    vmRes.isLoading ||
+    !vmRes.resultSet ||
+    psmRes.isLoading ||
+    !psmRes.resultSet ||
+    reserveRes.isLoading ||
+    !reserveRes.resultSet ||
+    vaultMetricsRes.isLoading ||
+    !vaultMetricsRes.resultSet ||
+    psmGovRes.isLoading ||
+    !psmGovRes.resultSet
+  ) {
+    return <Loading />;
+  }
+
+  // top cards
+  const ibcBalance = parseFloat(ibcRes.resultSet.tablePivot()[0]['balances.amount_sum'] as string);
   const walletCount = wcRes.resultSet.tablePivot()[0]['wallets.address_count'].toString();
 
-  return (
-    <>
-      <PageHeader title="Summary" />
-      <PageContent>
-        <ValueCardGrid>
-          <ValueCard title="IST in Circulation" value={formatIST(ibcBalance)} />
-          <ValueCard title="Smart Wallets Provisioned" value={walletCount} />
-        </ValueCardGrid>
-      </PageContent>
-    </>
-  );
-}
+  const psmMinted = parseFloat(psmRes.resultSet.tablePivot()[0]['psm_stats.minted_pool_balance_sum'] as string);
+  const vaultMinted = parseFloat(vmRes.resultSet.tablePivot()[0]['vault_managers.total_ist_minted_sum'] as string);
+  const totalMinted = psmMinted + vaultMinted;
 
-export function InterProtocolOld() {
-  const data: any = useLoaderData();
+  const vaultMintLimit = parseFloat(vmRes.resultSet.tablePivot()[0]['vault_managers.ist_minting_limit_sum'] as string);
+  const psmMintLimit = parseFloat(psmGovRes.resultSet.tablePivot()[0]['psm_governance.mint_limit_sum'] as string);
+  const totalMintLimit = vaultMintLimit + psmMintLimit;
 
-  let totalMintLimit = data.psm_stats.reduce((s: any, i: any) => s + i.mint_limit, 0);
-  let totalMinted = data.psm_stats.reduce((s: any, i: any) => s + i.minted_pool_balance, 0);
-
-  if (data.vault_total_minted[0]?.value) {
-    totalMinted += data.vault_total_minted[0].value;
-  }
-
-  if (data.managers.length > 0) {
-    data.managers.forEach((m: any) => {
-      totalMintLimit += m.ist_minting_limit;
-    });
-  }
-
-  const interchanIST = data.ibc_balances[0]?.total || 0;
+  // bottom cards
+  const totalReserve = reserveRes.resultSet.tablePivot()[0]['reserve.total_usd_avg'] as string;
+  const reserveShortfall = reserveRes.resultSet.tablePivot()[0]['reserve.shortfall_balance_avg'] as string;
+  const vaultLocked = vaultMetricsRes.resultSet.tablePivot()[0][
+    'vault_metrics.avg_total_locked_collateral_usd'
+  ] as string;
 
   return (
     <>
@@ -86,27 +158,23 @@ export function InterProtocolOld() {
       <PageContent>
         <ValueCardGrid>
           <ValueCard title="IST in Circulation" value={formatIST(totalMinted)} />
-          <ValueCard title="Total Mint Limit" value={formatIST(totalMintLimit)} />
+          <ValueCard title="Total Mint Limit" value={formatIST(vaultMintLimit + psmMintLimit)} />
           <ValueCard title="Total Mint Limit Utilized" value={formatPercent(totalMinted / totalMintLimit)} />
-          <ValueCard title="Total Interchain IST" value={formatIST(interchanIST)} />
-          <ValueCard title="% of Interchain IST" value={formatPercent(interchanIST / totalMinted)} />
-          <ValueCard title="Smart Wallets Provisioned" value={data.smart_wallet_provisioned[0].value} />
+          <ValueCard title="Total Interchain IST" value={formatIST(ibcBalance)} />
+          <ValueCard title="% of Interchain IST" value={formatPercent(ibcBalance / totalMinted)} />
+          <ValueCard title="Smart Wallets Provisioned" value={walletCount} />
         </ValueCardGrid>
 
         <SectionHeader>Balances</SectionHeader>
         <div className="flex-none md:flex">
           <div className="flex-1 grid grid-cols-2 gap-4">
-            <ValueCard title="Total Reserve Assets" value={formatPrice(data.total_reserve_assets[0]?.value)} />
-            <ValueCard title="Total Minted IST" value={formatIST(data.total_minted_ist[0]?.value)} />
-            <ValueCard title="Total Vault Assets" value={formatPrice(data.vault_total_assets[0]?.value)} />
-            <ValueCard title="Minted by Vaults" value={formatIST(data.vault_total_minted[0]?.value)} />
-            <ValueCard title="Total PSM Assets" value={formatPrice(data.psm_total_assets[0]?.value)} />
-            <ValueCard title="Minted by PSM" value={formatIST(data.psm_total_minted[0]?.value)} />
-            <ValueCard
-              title="Reserve Shortfall"
-              value={formatPrice(data.reserve_shortfall[0]?.value)}
-              className="col-span-2"
-            />
+            <ValueCard title="Total Reserve Assets" value={formatPrice(totalReserve)} />
+            <ValueCard title="Total Minted IST" value={formatIST(totalMinted)} />
+            <ValueCard title="Total Vault Assets" value={formatPrice(vaultLocked)} />
+            <ValueCard title="Minted by Vaults" value={formatIST(vaultMinted)} />
+            <ValueCard title="Total PSM Assets" value={formatPrice(psmMinted)} />
+            <ValueCard title="Minted by PSM" value={formatIST(psmMinted)} />
+            <ValueCard title="Reserve Shortfall" value={formatPrice(reserveShortfall)} className="col-span-2" />
           </div>
           <div className="w-[400px] ml-5">
             <PieChart width={400} height={400}>
@@ -115,11 +183,11 @@ export function InterProtocolOld() {
                 data={[
                   {
                     name: 'Vaults',
-                    value: roundPrice(data.vault_total_minted[0]?.value || 0),
+                    value: roundPrice(vaultMinted),
                   },
                   {
                     name: 'PSM',
-                    value: roundPrice(data.psm_total_minted[0]?.value || 0),
+                    value: roundPrice(psmMinted),
                   },
                 ]}
                 outerRadius={100}
@@ -137,5 +205,3 @@ export function InterProtocolOld() {
     </>
   );
 }
-
-export const interProtocolLoader = () => fetch('/data/ollinet.json').then((r) => r.json());

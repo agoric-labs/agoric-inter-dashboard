@@ -161,3 +161,48 @@ def test_vault_managers():
             "dimensions": ["vault_managers.collateral_type"],
         }
     )
+
+
+def test_vault_stats():
+    request(
+        {
+            "measures": ["vault_managers.ist_minting_limit_sum"],
+            "timeDimensions": [
+                {
+                    "dimension": "vault_managers.day",
+                    "granularity": "day",
+                    "dateRange": "Today",
+                }
+            ],
+        }
+    )
+
+
+def test_psm_governance_stats():
+    request(
+        {
+            "measures": ["psm_governance.mint_limit_sum"],
+            "timeDimensions": [
+                {
+                    "dimension": "psm_governance.day",
+                    "granularity": "day",
+                    "dateRange": "Today",
+                }
+            ],
+        }
+    )
+
+
+def test_psm_stats():
+    request(
+        {
+            "measures": ["psm_stats.minted_pool_balance_sum"],
+            "timeDimensions": [
+                {
+                    "dimension": "psm_stats.day",
+                    "granularity": "day",
+                    "dateRange": "Today",
+                }
+            ],
+        }
+    )

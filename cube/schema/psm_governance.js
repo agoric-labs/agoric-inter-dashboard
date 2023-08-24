@@ -37,9 +37,17 @@ cube(`psm_governance`, {
   },
 
   pre_aggregations: {
-    mint_limit_per_coin: {
+    main: {
       measures: [psm_governance.last_mint_limit],
       dimensions: [psm_governance.coin],
+      time_dimension: psm_governance.day,
+      granularity: `day`,
+      refreshKey: {
+        every: `1 hour`,
+      },
+    },
+    stats: {
+      measures: [psm_governance.mint_limit_sum],
       time_dimension: psm_governance.day,
       granularity: `day`,
       refreshKey: {

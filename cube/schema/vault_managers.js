@@ -149,6 +149,10 @@ cube('vault_managers', {
       sql: `total_ist_minted`,
       type: `avg`,
     },
+    total_ist_minted_sum: {
+      sql: `total_ist_minted`,
+      type: `sum`,
+    },
     colletarization_ratio_avg: {
       sql: `colletarization_ratio`,
       type: `avg`,
@@ -156,6 +160,10 @@ cube('vault_managers', {
     ist_minting_limit_avg: {
       sql: `ist_minting_limit`,
       type: `avg`,
+    },
+    ist_minting_limit_sum: {
+      sql: `ist_minting_limit`,
+      type: `sum`,
     },
     utilization_rate_avg: {
       sql: `utilization_rate`,
@@ -185,6 +193,14 @@ cube('vault_managers', {
         utilization_rate_avg,
       ],
       dimensions: [collateral_type],
+      timeDimension: day,
+      granularity: `day`,
+    },
+    summary2: {
+      measures: [
+        ist_minting_limit_sum,
+        total_ist_minted_sum,
+      ],
       timeDimension: day,
       granularity: `day`,
     },

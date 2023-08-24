@@ -19,6 +19,10 @@ cube(`psm_stats`, {
   },
 
   measures: {
+    minted_pool_balance_sum: {
+      sql: `minted_pool_balance`,
+      type: `sum`,
+    },
     last_minted_pool_balance: {
       sql: `array_agg(minted_pool_balance)[0]`,
       type: `number`,
@@ -64,6 +68,14 @@ cube(`psm_stats`, {
         psm_governance.last_mint_limit,
       ],
       dimensions: [psm_stats.coin],
+      time_dimension: psm_stats.day,
+      granularity: `day`,
+      refreshKey: {
+        every: `1 hour`,
+      },
+    },
+    stats: {
+      measures: [minted_pool_balance_sum],
       time_dimension: psm_stats.day,
       granularity: `day`,
       refreshKey: {
