@@ -119,6 +119,7 @@ def test_open_vaults():
                 "open_vaults.liquidation_margin",
                 "open_vaults.liquidation_price",
                 "open_vaults.liquidation_cushion",
+                "open_vaults.collateralization_ratio",
             ],
             "timeDimensions": [
                 {
@@ -128,7 +129,7 @@ def test_open_vaults():
                 }
             ],
             "order": {"open_vaults.collateral_amount": "desc"},
-            "dimensions": ["open_vaults.vault_ix"],
+            "dimensions": ["open_vaults.vault_ix", "open_vaults.collateral_type"],
         }
     )
 

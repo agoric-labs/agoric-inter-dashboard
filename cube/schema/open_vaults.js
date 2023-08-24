@@ -16,7 +16,7 @@ cube('open_vaults', {
     `
       with vault_factory_vaults as (
       select block_height,
-             split(path, 'published.vaultFactory.managers.manager0.vaults.vault')[safe_offset(1)] vault_ix,
+             cast(split(path, 'published.vaultFactory.managers.manager0.vaults.vault')[safe_offset(1)] as int) vault_ix,
 
              json_value(body, '$.debtSnapshot.debt.__brand') debt_type_name,
              cast(json_value(body, '$.debtSnapshot.debt.__value') as float64) / pow(10, 6) debt_value,
@@ -194,31 +194,31 @@ cube('open_vaults', {
       sql: `vault_ix`,
       type: `number`,
     },
+    collateral_type: {
+      sql: `collateral_type`,
+      type: `number`,
+    },
     day: {
       sql: `day`,
       type: `time`,
     },
   },
 
-  // pre_aggregations: {
-  //   main: {
-  //     measures: [
-  //       count,
-  //       collateral_amount,
-  //       current_collateral_price,
-  //       collateral_oracle_usd_value,
-  //       ist_debt_amount,
-  //       liquidation_margin,
-  //       liquidation_price,
-  //       liquidation_cushion,
-  //       collateralization_ratio,
-  //     ],
-  //     dimensions: [vault_ix],
-  //     time_dimension: day,
-  //     granularity: `day`,
-  //     refreshKey: {
-  //       every: `1 hour`,
-  //     },
-  //   },
-  // },
+  pre_aggregations: {
+    main: {
+      measures: [
+        collateral_amount,
+        current_collateral_price,
+        collateral_oracle_usd_value,
+        ist_debt_amount,
+        liquidation_margin,
+        liquidation_price,
+        liquidation_cushion,
+        collateralization_ratio,
+      ],
+      dimensions: [collateral_type, vault_ix],
+      timeDimension: day,
+      granularity: `day`,
+    },
+  },
 });
