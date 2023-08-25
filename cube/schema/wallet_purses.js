@@ -8,7 +8,7 @@ cube(`wallet_purses`, {
      select block_time
           , split(path, '.')[2] as address
           , json_value(p, '$.__brand') as brand
-          , cast(json_value(p, '$.balance.__value') as int) / pow(10, 6) as amount
+          , cast(json_value(p, '$.balance.__value') as float64) / pow(10, 6) as amount
       from ${state_changes.sql()}
      cross join unnest(json_extract_array(body, '$.purses')) p
      where path like 'published.wallet%'and path like '%current'

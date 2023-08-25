@@ -220,5 +220,10 @@ cube('open_vaults', {
       timeDimension: day,
       granularity: `day`,
     },
+    stats: {
+      measures: [count],
+      timeDimension: day,
+      granularity: `day`,
+    },
   },
 });

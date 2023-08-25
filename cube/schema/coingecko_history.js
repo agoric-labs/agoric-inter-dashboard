@@ -1,12 +1,13 @@
 import { datasetId } from '../utils';
 
 cube(`coingecko_history`, {
+  // we collect coingecko_history only in the agoric_mainnet
   sql: `
     select cast(day as timestamp) day
          , cast(current_price_usd as decimal) current_price_usd
          , coin_id
          , _sdc_received_at
-      from $$DATASET$$.coingeko_history
+      from agoric_mainnet.coingeko_history
   `,
 
   measures: {

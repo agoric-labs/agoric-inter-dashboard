@@ -570,6 +570,8 @@ cd tendermint-trigger && go test ./...
 cd tendermint-normalizer && pytest
 
 pytest cube/e2e
+API_URL=http://xxx pytest cube/e2e
+DEFAULT_DATASET=agoric_devnet pytest cube/e2e
 ```
 
 ## Running linters

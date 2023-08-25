@@ -3,13 +3,34 @@ import json
 import os
 
 API_URL = os.getenv("API_URL", "http://localhost:4000")
+DEFAULT_DATASET = os.getenv("DEFAULT_DATASET", "agoric_mainnet")
 
 
-def request(query):
-    res = requests.post(f"{API_URL}/cubejs-api/v1/load", json={"query": query}).json()
+def request(query, dataset=DEFAULT_DATASET):
+    url = f"{API_URL}/cubejs-api/v1/load"
+    headers = {"X-Dataset": dataset}
+    res = requests.post(url, json={"query": query}, headers=headers).json()
 
     if "error" in res:
+        if res["error"] == "Continue wait":
+            return request(query, dataset)
+
         raise ValueError(res["error"])
+
+    return res
+
+
+def test_dataset_header():
+    if DEFAULT_DATASET == "agoric_ollinet":
+        return
+
+    mainnet = request({"measures": ["state_changes.count"]})
+    ollinet = request({"measures": ["state_changes.count"]}, "agoric_ollinet")
+
+    assert (
+        mainnet["data"][0]["state_changes.count"]
+        != ollinet["data"][0]["state_changes.count"]
+    )
 
 
 def test_reserve():
@@ -49,7 +70,13 @@ def test_interchain_ist():
         {
             "order": {"balances.amount_avg": "desc"},
             "measures": ["balances.amount_avg", "balances.amount_sum"],
-            "timeDimensions": [{"dimension": "balances.day", "dateRange": "Today"}],
+            "timeDimensions": [
+                {
+                    "dimension": "balances.day",
+                    "granularity": "day",
+                    "dateRange": "Today",
+                }
+            ],
             "dimensions": ["balances.denom"],
         }
     )
@@ -60,7 +87,11 @@ def test_oracle_prices():
         {
             "measures": ["oracle_prices.rate_avg"],
             "timeDimensions": [
-                {"dimension": "oracle_prices.day", "dateRange": "Today"}
+                {
+                    "dimension": "oracle_prices.day",
+                    "granularity": "day",
+                    "dateRange": "Today",
+                }
             ],
             "order": [["oracle_prices.price_feed_name", "asc"]],
             "dimensions": ["oracle_prices.price_feed_name"],
@@ -137,7 +168,13 @@ def test_open_vault_count():
     request(
         {
             "measures": ["open_vaults.count"],
-            "timeDimensions": [{"dimension": "open_vaults.day", "dateRange": "Today"}],
+            "timeDimensions": [
+                {
+                    "dimension": "open_vaults.day",
+                    "dateRange": "Today",
+                    "granularity": "day",
+                }
+            ],
             "order": {},
         }
     )
@@ -155,7 +192,11 @@ def test_vault_managers():
                 "vault_managers.utilization_rate_avg",
             ],
             "timeDimensions": [
-                {"dimension": "vault_managers.day", "dateRange": "Today"}
+                {
+                    "dimension": "vault_managers.day",
+                    "dateRange": "Today",
+                    "granularity": "day",
+                }
             ],
             "order": {"vault_managers.total_locked_collateral_avg": "desc"},
             "dimensions": ["vault_managers.collateral_type"],

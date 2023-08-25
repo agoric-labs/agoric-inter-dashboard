@@ -46,8 +46,8 @@ cube(`balances`, {
   },
 
   pre_aggregations: {
-    main: {
-      measures: [amount_sum],
+    main1: {
+      measures: [amount_sum, amount_avg],
       dimensions: [denom],
       time_dimension: day,
       granularity: `day`,

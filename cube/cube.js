@@ -9,7 +9,7 @@ class ReplaceDatasetFileRepository extends FileRepository {
   async dataSchemaFiles(includeDependencie) {
     const files = await super.dataSchemaFiles(includeDependencie);
 
-    files.forEach(f => {
+    files.forEach((f) => {
       f.content = f.content.replace(/\$\$DATASET\$\$/g, this.dataset);
     });
 
@@ -28,16 +28,18 @@ const paPrefix = process.env.NODE_ENV !== 'production' ? '_dev' : '';
 
 module.exports = {
   // disable built-in security
-  checkAuth: (req, auth) => {},
+  checkAuth: (req, auth) => {
+    req.securityContext = {};
+    return {};
+  },
 
   contextToAppId: ({ dataset }) => `CUBEJS_APP_${dataset || defaultDataset}`,
 
   contextToOrchestratorId: ({ dataset }) => `CUBEJS_APP_${dataset || defaultDataset}`,
 
-  preAggregationsSchema: ({ dataset }) =>
-    `pre_aggregations_${dataset || defaultDataset}${paPrefix}`,
+  preAggregationsSchema: ({ dataset }) => `pre_aggregations_${dataset || defaultDataset}${paPrefix}`,
 
-  repositoryFactory: ({ dataset }) => new ReplaceDatasetFileRepository('schema', dataset),
+  repositoryFactory: ({ dataset }) => new ReplaceDatasetFileRepository('schema', dataset || defaultDataset),
 
   extendContext: (req) => {
     const dataset = req.headers['x-dataset'] || defaultDataset;
@@ -49,7 +51,7 @@ module.exports = {
   },
 
   scheduledRefreshContexts: async () =>
-    allowedDatasets.map(dataset => ({
+    allowedDatasets.map((dataset) => ({
       dataset,
     })),
 };
