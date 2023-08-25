@@ -48,7 +48,34 @@ cube(`oracle_prices`, {
   },
 
   pre_aggregations: {
-    main: {
+    main_year: {
+      measures: [rate_avg],
+      dimensions: [price_feed_name],
+      time_dimension: day,
+      granularity: `year`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    main_month: {
+      measures: [rate_avg],
+      dimensions: [price_feed_name],
+      time_dimension: day,
+      granularity: `month`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    main_week: {
+      measures: [rate_avg],
+      dimensions: [price_feed_name],
+      time_dimension: day,
+      granularity: `week`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    main_day: {
       measures: [rate_avg],
       dimensions: [price_feed_name],
       time_dimension: day,

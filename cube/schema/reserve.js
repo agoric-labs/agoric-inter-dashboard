@@ -1,4 +1,4 @@
-import { dailySQL } from '../utils';
+import { dailySQL, withAllGranularity } from '../utils';
 
 cube(`reserve`, {
   sql: dailySQL(
@@ -67,7 +67,55 @@ cube(`reserve`, {
   },
 
   pre_aggregations: {
-    main: {
+    main_year: {
+      measures: [
+        atom_amount_avg,
+        fee_amount_avg,
+        shortfall_balance_avg,
+        total_fee_minted_avg,
+        total_fee_burned_avg,
+        atom_amount_usd_avg,
+        total_usd_avg,
+      ],
+      time_dimension: day,
+      granularity: `year`,
+      refresh_key: {
+        every: `24 hour`,
+      },
+    },
+    main_month: {
+      measures: [
+        atom_amount_avg,
+        fee_amount_avg,
+        shortfall_balance_avg,
+        total_fee_minted_avg,
+        total_fee_burned_avg,
+        atom_amount_usd_avg,
+        total_usd_avg,
+      ],
+      time_dimension: day,
+      granularity: `month`,
+      refresh_key: {
+        every: `24 hour`,
+      },
+    },
+    main_week: {
+      measures: [
+        atom_amount_avg,
+        fee_amount_avg,
+        shortfall_balance_avg,
+        total_fee_minted_avg,
+        total_fee_burned_avg,
+        atom_amount_usd_avg,
+        total_usd_avg,
+      ],
+      time_dimension: day,
+      granularity: `week`,
+      refresh_key: {
+        every: `24 hour`,
+      },
+    },
+    main_day: {
       measures: [
         atom_amount_avg,
         fee_amount_avg,
@@ -79,7 +127,7 @@ cube(`reserve`, {
       ],
       time_dimension: day,
       granularity: `day`,
-      refreshKey: {
+      refresh_key: {
         every: `1 hour`,
       },
     },

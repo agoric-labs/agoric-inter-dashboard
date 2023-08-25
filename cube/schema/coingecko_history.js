@@ -33,7 +33,34 @@ cube(`coingecko_history`, {
   },
 
   pre_aggregations: {
-    main: {
+    main_year: {
+      measures: [current_price_usd_last, current_price_usd_avg],
+      dimensions: [coin_id],
+      time_dimension: day,
+      granularity: `year`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    main_month: {
+      measures: [current_price_usd_last, current_price_usd_avg],
+      dimensions: [coin_id],
+      time_dimension: day,
+      granularity: `month`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    main_week: {
+      measures: [current_price_usd_last, current_price_usd_avg],
+      dimensions: [coin_id],
+      time_dimension: day,
+      granularity: `week`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    main_day: {
       measures: [current_price_usd_last, current_price_usd_avg],
       dimensions: [coin_id],
       time_dimension: day,

@@ -210,7 +210,55 @@ cube(`vault_metrics`, {
   },
 
   pre_aggregations: {
-    main_by_day: {
+    main_year: {
+      measures: [
+        avg_total_locked_collateral,
+        avg_total_locked_collateral_usd,
+        avg_total_ist_minted,
+        avg_colletarization_ratio,
+        avg_ist_minting_limit,
+        avg_utilization_rate,
+      ],
+      dimensions: [collateral_type, debt_type],
+      time_dimension: date,
+      granularity: `year`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    main_month: {
+      measures: [
+        avg_total_locked_collateral,
+        avg_total_locked_collateral_usd,
+        avg_total_ist_minted,
+        avg_colletarization_ratio,
+        avg_ist_minting_limit,
+        avg_utilization_rate,
+      ],
+      dimensions: [collateral_type, debt_type],
+      time_dimension: date,
+      granularity: `month`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    main_week: {
+      measures: [
+        avg_total_locked_collateral,
+        avg_total_locked_collateral_usd,
+        avg_total_ist_minted,
+        avg_colletarization_ratio,
+        avg_ist_minting_limit,
+        avg_utilization_rate,
+      ],
+      dimensions: [collateral_type, debt_type],
+      time_dimension: date,
+      granularity: `week`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    main_day: {
       measures: [
         avg_total_locked_collateral,
         avg_total_locked_collateral_usd,

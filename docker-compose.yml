@@ -92,6 +92,8 @@ services:
       - ALLOWED_DATASETS=${ALLOWED_DATASETS}
       - CUBEJS_DEV_MODE=true
       - CUBEJS_DB_TYPE=bigquery
+      - CUBEJS_ROLLUP_ONLY=true
+      - CUBEJS_DB_BQ_CREDENTIALS=${GOOGLE_CREDS_B64}
       - CUBEJS_DB_BQ_PROJECT_ID=${PROJECT_ID}
       - CUBEJS_DB_BQ_KEY_FILE=/bigquerycreds.json
       - CUBEJS_DB_EXPORT_BUCKET=${EXPORT_BUCKET}
@@ -107,7 +109,6 @@ services:
       - cubestore_worker_2
     volumes:
       - ./cube:/cube/conf
-      - "${GOOGLE_CREDS}:/bigquerycreds.json"
 
   cube_refresh_worker:
     restart: always
@@ -116,14 +117,13 @@ services:
       - ALLOWED_DATASETS=${ALLOWED_DATASETS}
       - CUBEJS_DB_TYPE=bigquery
       - CUBEJS_DB_BQ_PROJECT_ID=${PROJECT_ID}
-      - CUBEJS_DB_BQ_CREDENTIALS=/bigquerycreds.json
+      - CUBEJS_DB_BQ_CREDENTIALS=${GOOGLE_CREDS_B64}
       - CUBEJS_DB_EXPORT_BUCKET=${EXPORT_BUCKET}
       - CUBEJS_CUBESTORE_HOST=cubestore_router
       - CUBEJS_API_SECRET=agoric
       - CUBEJS_REFRESH_WORKER=true
     volumes:
       - ./cube:/cube/conf
-      - "${GOOGLE_CREDS}:/bigquerycreds.json"
 
   cubestore_router:
     restart: always
@@ -134,7 +134,7 @@ services:
       - CUBESTORE_META_PORT=9999
       - CUBESTORE_SERVER_NAME=cubestore_router:9999
     volumes:
-      - .cubestore:/cube/data
+      - .cubestore2:/cube/data
 
   cubestore_worker_1:
     restart: always
@@ -146,7 +146,7 @@ services:
       - CUBESTORE_REMOTE_DIR=/cube/data
       - CUBESTORE_META_ADDR=cubestore_router:9999
     volumes:
-      - .cubestore:/cube/data
+      - .cubestore2:/cube/data
     depends_on:
       - cubestore_router
 
@@ -160,6 +160,6 @@ services:
       - CUBESTORE_REMOTE_DIR=/cube/data
       - CUBESTORE_META_ADDR=cubestore_router:9999
     volumes:
-      - .cubestore:/cube/data
+      - .cubestore2:/cube/data
     depends_on:
       - cubestore_router

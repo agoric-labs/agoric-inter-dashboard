@@ -41,7 +41,34 @@ cube(`psm_governance`, {
   },
 
   pre_aggregations: {
-    main: {
+    main_year: {
+      measures: [psm_governance.last_mint_limit],
+      dimensions: [psm_governance.coin],
+      time_dimension: psm_governance.day,
+      granularity: `year`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    main_month: {
+      measures: [psm_governance.last_mint_limit],
+      dimensions: [psm_governance.coin],
+      time_dimension: psm_governance.day,
+      granularity: `month`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    main_week: {
+      measures: [psm_governance.last_mint_limit],
+      dimensions: [psm_governance.coin],
+      time_dimension: psm_governance.day,
+      granularity: `week`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    main_day: {
       measures: [psm_governance.last_mint_limit],
       dimensions: [psm_governance.coin],
       time_dimension: psm_governance.day,
@@ -50,7 +77,31 @@ cube(`psm_governance`, {
         every: `1 hour`,
       },
     },
-    stats: {
+    stats_year: {
+      measures: [psm_governance.mint_limit_sum],
+      time_dimension: psm_governance.day,
+      granularity: `year`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    stats_month: {
+      measures: [psm_governance.mint_limit_sum],
+      time_dimension: psm_governance.day,
+      granularity: `month`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    stats_week: {
+      measures: [psm_governance.mint_limit_sum],
+      time_dimension: psm_governance.day,
+      granularity: `week`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    stats_day: {
       measures: [psm_governance.mint_limit_sum],
       time_dimension: psm_governance.day,
       granularity: `day`,

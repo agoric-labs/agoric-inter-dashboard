@@ -1,4 +1,4 @@
-.cubestore
+.cubestore*
 .env
 .venv
 *__pycache__*

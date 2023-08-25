@@ -205,7 +205,61 @@ cube('open_vaults', {
   },
 
   pre_aggregations: {
-    main: {
+    main_year: {
+      measures: [
+        collateral_amount,
+        current_collateral_price,
+        collateral_oracle_usd_value,
+        ist_debt_amount,
+        liquidation_margin,
+        liquidation_price,
+        liquidation_cushion,
+        collateralization_ratio,
+      ],
+      dimensions: [collateral_type, vault_ix],
+      timeDimension: day,
+      granularity: `year`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    main_month: {
+      measures: [
+        collateral_amount,
+        current_collateral_price,
+        collateral_oracle_usd_value,
+        ist_debt_amount,
+        liquidation_margin,
+        liquidation_price,
+        liquidation_cushion,
+        collateralization_ratio,
+      ],
+      dimensions: [collateral_type, vault_ix],
+      timeDimension: day,
+      granularity: `month`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    main_week: {
+      measures: [
+        collateral_amount,
+        current_collateral_price,
+        collateral_oracle_usd_value,
+        ist_debt_amount,
+        liquidation_margin,
+        liquidation_price,
+        liquidation_cushion,
+        collateralization_ratio,
+      ],
+      dimensions: [collateral_type, vault_ix],
+      timeDimension: day,
+      granularity: `week`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    main_day: {
       measures: [
         collateral_amount,
         current_collateral_price,
@@ -219,11 +273,41 @@ cube('open_vaults', {
       dimensions: [collateral_type, vault_ix],
       timeDimension: day,
       granularity: `day`,
+      refreshKey: {
+        every: `1 hour`,
+      },
     },
-    stats: {
+    stats_year: {
+      measures: [count],
+      timeDimension: day,
+      granularity: `year`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    stats_month: {
+      measures: [count],
+      timeDimension: day,
+      granularity: `month`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    stats_week: {
+      measures: [count],
+      timeDimension: day,
+      granularity: `month`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    stats_day: {
       measures: [count],
       timeDimension: day,
       granularity: `day`,
+      refreshKey: {
+        every: `1 hour`,
+      },
     },
   },
 });

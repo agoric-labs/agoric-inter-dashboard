@@ -63,7 +63,52 @@ cube(`psm_stats`, {
   },
 
   pre_aggregations: {
-    main: {
+    main_year: {
+      measures: [
+        last_minted_pool_balance,
+        last_utilization_rate,
+        last_total_minted_provided,
+        last_anchor_pool_balance,
+        psm_governance.last_mint_limit,
+      ],
+      dimensions: [psm_stats.coin],
+      time_dimension: psm_stats.day,
+      granularity: `year`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    main_month: {
+      measures: [
+        last_minted_pool_balance,
+        last_utilization_rate,
+        last_total_minted_provided,
+        last_anchor_pool_balance,
+        psm_governance.last_mint_limit,
+      ],
+      dimensions: [psm_stats.coin],
+      time_dimension: psm_stats.day,
+      granularity: `month`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    main_week: {
+      measures: [
+        last_minted_pool_balance,
+        last_utilization_rate,
+        last_total_minted_provided,
+        last_anchor_pool_balance,
+        psm_governance.last_mint_limit,
+      ],
+      dimensions: [psm_stats.coin],
+      time_dimension: psm_stats.day,
+      granularity: `week`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    main_day: {
       measures: [
         last_minted_pool_balance,
         last_utilization_rate,
@@ -78,7 +123,31 @@ cube(`psm_stats`, {
         every: `1 hour`,
       },
     },
-    stats: {
+    stats_year: {
+      measures: [minted_pool_balance_sum],
+      time_dimension: psm_stats.day,
+      granularity: `year`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    stats_month: {
+      measures: [minted_pool_balance_sum],
+      time_dimension: psm_stats.day,
+      granularity: `month`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    stats_week: {
+      measures: [minted_pool_balance_sum],
+      time_dimension: psm_stats.day,
+      granularity: `week`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    stats_day: {
       measures: [minted_pool_balance_sum],
       time_dimension: psm_stats.day,
       granularity: `day`,

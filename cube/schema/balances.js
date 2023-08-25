@@ -46,7 +46,34 @@ cube(`balances`, {
   },
 
   pre_aggregations: {
-    main1: {
+    main_year: {
+      measures: [amount_sum, amount_avg],
+      dimensions: [denom],
+      time_dimension: day,
+      granularity: `year`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    main_month: {
+      measures: [amount_sum, amount_avg],
+      dimensions: [denom],
+      time_dimension: day,
+      granularity: `month`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    main_week: {
+      measures: [amount_sum, amount_avg],
+      dimensions: [denom],
+      time_dimension: day,
+      granularity: `week`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    main_day: {
       measures: [amount_sum, amount_avg],
       dimensions: [denom],
       time_dimension: day,

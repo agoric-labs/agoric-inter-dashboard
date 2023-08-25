@@ -6,18 +6,25 @@ API_URL = os.getenv("API_URL", "http://localhost:4000")
 DEFAULT_DATASET = os.getenv("DEFAULT_DATASET", "agoric_mainnet")
 
 
-def request(query, dataset=DEFAULT_DATASET):
+def cube_request(query, dataset=DEFAULT_DATASET):
     url = f"{API_URL}/cubejs-api/v1/load"
     headers = {"X-Dataset": dataset}
     res = requests.post(url, json={"query": query}, headers=headers).json()
 
     if "error" in res:
         if res["error"] == "Continue wait":
-            return request(query, dataset)
+            return cube_request(query, dataset)
 
         raise ValueError(res["error"])
 
     return res
+
+
+def request(query, dataset=DEFAULT_DATASET):
+    return cube_request(query, dataset)
+    # if "timeDimensions" in query and "granularity" in query["timeDimensions"][0]:
+    #     query["timeDimensions"][0]["granularity"] = "month"
+    # cube_request(query, dataset)
 
 
 def test_dataset_header():
