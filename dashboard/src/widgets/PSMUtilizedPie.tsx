@@ -25,9 +25,13 @@ export function PSMUtilizedPie() {
     return requestView;
   }
 
-  const data = resultSet.tablePivot().map((row) => ({
+  let data = resultSet.tablePivot().map((row) => ({
     value: parseFloat(row['psm_stats.last_utilization_rate'] as string),
   }));
+
+  if (data.every(r => r.value === 0)) {
+    data = data.map(() => ({ value: 1 }));
+  }
 
   return (
     <Card>

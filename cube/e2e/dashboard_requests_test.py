@@ -7,9 +7,8 @@ DEFAULT_DATASET = os.getenv("DEFAULT_DATASET", "agoric_mainnet")
 
 
 def cube_request(query, dataset=DEFAULT_DATASET):
-    url = f"{API_URL}/cubejs-api/v1/load"
-    headers = {"X-Dataset": dataset}
-    res = requests.post(url, json={"query": query}, headers=headers).json()
+    url = f"{API_URL}/cubejs-api/{dataset}/v1/load"
+    res = requests.post(url, json={"query": query}).json()
 
     if "error" in res:
         if res["error"] == "Continue wait":

@@ -15,12 +15,17 @@ export const getCubeQueryView = ({
 }: UseCubeQueryResult<unknown>):
   | [NonNullable<UseCubeQueryResult<unknown>['resultSet']>, null]
   | [null, JSX.Element] => {
-  if (isLoading || !resultSet) {
+  if (isLoading) {
     return [null, <Loading />];
   }
 
   if (error) {
     return [null, <ErrorAlert value={error} title="Request Error" />];
+  }
+
+  // skip the cube flash
+  if (!resultSet) {
+    return [null, <Loading />];
   }
 
   return [resultSet, null];

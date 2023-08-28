@@ -134,23 +134,24 @@ export function InterProtocol() {
   }
 
   // top cards
-  const ibcBalance = parseFloat(ibcRes.resultSet.tablePivot()[0]['balances.amount_sum'] as string);
+  const ibcBalance = parseFloat(ibcRes.resultSet.tablePivot()[0]['balances.amount_sum'] as string) || 0;
   const walletCount = wcRes.resultSet.tablePivot()[0]['wallets.address_count'].toString();
 
   const psmMinted = parseFloat(psmRes.resultSet.tablePivot()[0]['psm_stats.minted_pool_balance_sum'] as string);
   const vaultMinted = parseFloat(vmRes.resultSet.tablePivot()[0]['vault_managers.total_ist_minted_sum'] as string);
   const totalMinted = psmMinted + vaultMinted;
 
-  const vaultMintLimit = parseFloat(vmRes.resultSet.tablePivot()[0]['vault_managers.ist_minting_limit_sum'] as string);
-  const psmMintLimit = parseFloat(psmGovRes.resultSet.tablePivot()[0]['psm_governance.mint_limit_sum'] as string);
+  const vaultMintLimit =
+    parseFloat(vmRes.resultSet.tablePivot()[0]['vault_managers.ist_minting_limit_sum'] as string) || 0;
+  const psmMintLimit = parseFloat(psmGovRes.resultSet.tablePivot()[0]['psm_governance.mint_limit_sum'] as string) || 0;
   const totalMintLimit = vaultMintLimit + psmMintLimit;
 
   // bottom cards
   const totalReserve = reserveRes.resultSet.tablePivot()[0]['reserve.total_usd_avg'] as string;
   const reserveShortfall = reserveRes.resultSet.tablePivot()[0]['reserve.shortfall_balance_avg'] as string;
-  const vaultLocked = vaultMetricsRes.resultSet.tablePivot()[0][
-    'vault_metrics.avg_total_locked_collateral_usd'
-  ] as string;
+  const vaultLocked =
+    parseFloat(vaultMetricsRes.resultSet.tablePivot()[0]['vault_metrics.avg_total_locked_collateral_usd'] as string) ||
+    0;
 
   return (
     <>

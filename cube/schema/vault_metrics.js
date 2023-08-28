@@ -274,5 +274,13 @@ cube(`vault_metrics`, {
         every: `1 hour`,
       },
     },
+    summary: {
+      measures: [avg_total_locked_collateral_usd],
+      time_dimension: date,
+      granularity: `day`,
+      refreshKey: {
+        every: `1 hour`,
+      },
+    },
   },
 });
