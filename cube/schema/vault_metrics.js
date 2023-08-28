@@ -5,7 +5,7 @@ cube(`vault_metrics`, {
     with atom_prices as (
       select day as date
            , array_agg(cast(current_price_usd as float64) order by _sdc_batched_at)[0] as usd_price
-        from ${datasetId()}.coingeko_history
+        from agoric_mainnet.coingeko_history
        where coin_id = 'cosmos'
        group by 1
     ),
