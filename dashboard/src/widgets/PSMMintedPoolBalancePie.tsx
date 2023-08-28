@@ -13,6 +13,7 @@ export function PSMMintedPoolBalancePie() {
       {
         dimension: 'psm_stats.day',
         dateRange: 'Today',
+        granularity: 'day',
       },
     ],
     order: [['psm_stats.coin', 'asc']],

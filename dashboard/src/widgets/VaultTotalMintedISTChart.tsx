@@ -3,18 +3,20 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { getCubeQueryView, formatDay, formatIST } from '@/utils';
 import { colors } from '@/components/palette';
+import { useGranularity } from '@/components/CubeProvider';
 
 type Props = {
   title?: string;
 };
 
 export function VaultTotalMintedISTChart({ title = 'Total Minted IST' }: Props) {
+  const granularity = useGranularity();
   const res = useCubeQuery({
     measures: ['vault_metrics.avg_total_ist_minted'],
     timeDimensions: [
       {
         dimension: 'vault_metrics.date',
-        granularity: 'day',
+        granularity,
       },
     ],
     dimensions: ['vault_metrics.collateral_type', 'vault_metrics.debt_type'],

@@ -2,6 +2,7 @@ import { useCubeQuery } from '@cubejs-client/react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { getCubeQueryView, formatDay } from '@/utils';
+import { useGranularity } from '@/components/CubeProvider';
 import { colors } from '@/components/palette';
 
 type Props = {
@@ -9,12 +10,13 @@ type Props = {
 };
 
 export function VaultTotalLockedCollateralChart({ title = 'Total Locked Collateral' }: Props) {
+  const granularity = useGranularity();
   const res = useCubeQuery({
     measures: ['vault_metrics.avg_total_locked_collateral_usd'],
     timeDimensions: [
       {
         dimension: 'vault_metrics.date',
-        granularity: 'day',
+        granularity,
       },
     ],
     dimensions: ['vault_metrics.collateral_type', 'vault_metrics.debt_type'],

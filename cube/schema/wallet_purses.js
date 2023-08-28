@@ -1,4 +1,4 @@
-import { dailySQL } from '../utils';
+import { dailySQL, datasetId } from '../utils';
 
 cube(`wallet_purses`, {
   sql: dailySQL(

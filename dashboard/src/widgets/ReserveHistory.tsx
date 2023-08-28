@@ -1,13 +1,15 @@
 import { useCubeQuery } from '@cubejs-client/react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { useGranularity } from '@/components/CubeProvider';
 import { getCubeQueryView, formatDay } from '@/utils';
 import { colors } from '@/components/palette';
 
 export function ReserveHistory() {
+  const granularity = useGranularity();
   const res = useCubeQuery({
     measures: ['reserve.fee_amount_avg', 'reserve.atom_amount_usd_avg'],
-    timeDimensions: [{ dimension: 'reserve.day', granularity: 'day' }],
+    timeDimensions: [{ dimension: 'reserve.day', granularity }],
     order: {
       'reserve.day': 'asc',
     },

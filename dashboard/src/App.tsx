@@ -1,7 +1,6 @@
-import { StrictMode } from 'react';
+import { StrictMode, ReactNode } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import cubejs from '@cubejs-client/core';
-import { CubeProvider } from '@cubejs-client/react';
+import { CubeProvider } from '@/components/CubeProvider';
 
 import { ErrorPage } from './pages/ErrorPage';
 import { MainLayout } from './components/MainLayout';
@@ -11,18 +10,18 @@ import { PSM } from './pages/PSM';
 import { Reserve } from './pages/Reserve';
 import { Internal } from './pages/Internal';
 
-const devToken =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2OTI4NDk5MDh9.ZhpE9wNivR17Ie4kyU6z10-YWHAWNpQspoZH4XyZMOI';
-
-// @ts-ignore
-const accessToken = import.meta.env.VITE_ACCESS_TOKEN || devToken;
-
-const cubejsApi = cubejs(accessToken, { apiUrl: '/cubejs-api/v1' });
+const MainLayoutWithCoube = ({ children }: { children?: ReactNode }) => (
+  <CubeProvider>
+    <MainLayout>
+      {children}
+    </MainLayout>
+  </CubeProvider>
+);
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <MainLayout />,
+    element: <MainLayoutWithCoube />,
     errorElement: <ErrorPage />,
 
     children: [
@@ -53,9 +52,7 @@ const router = createBrowserRouter([
 export function App() {
   return (
     <StrictMode>
-      <CubeProvider cubejsApi={cubejsApi}>
         <RouterProvider router={router} />
-      </CubeProvider>
     </StrictMode>
   );
 }

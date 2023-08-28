@@ -5,7 +5,7 @@ cube(`head_tendermint_slo_metrics`, {
     select _sdc_batched_at as extracted_at
          , lastest_block_height as db_latest_block_height
          , cast(json_value(node_status, '$.sync_info.latest_block_height') as float64) as status_latest_block_height
-      from $$DATASET$$.tendermint_slo_metrics
+      from ${datasetId()}.tendermint_slo_metrics
      where section = 3
   `,
 

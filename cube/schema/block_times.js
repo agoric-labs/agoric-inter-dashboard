@@ -4,7 +4,7 @@ cube('block_times', {
   sql: `
     select block_height as height
          , block_time as value
-      from $$DATASET$$.blocks
+      from ${datasetId()}.blocks
   `,
 
   measures: {

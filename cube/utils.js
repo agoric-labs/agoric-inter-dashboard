@@ -1,3 +1,7 @@
+const datasetId = () => process.env.DATASET_ID;
+
+exports.datasetId = datasetId;
+
 const suffix = (s, v) => (v ? `${s}${v}` : '');
 
 const windowMeasure = (measure, dimensions) => {

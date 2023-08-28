@@ -1,4 +1,4 @@
-import { dailySQL } from '../utils';
+import { dailySQL, datasetId } from '../utils';
 
 cube(`balances`, {
   sql: dailySQL(
@@ -9,8 +9,8 @@ cube(`balances`, {
           , bl.address
           , cast(bl.amount as numeric) / pow(10, 6) as amount
           , bl.denom
-      from $$DATASET$$.balances bl
-      join $$DATASET$$.blocks b using (block_height)
+      from ${datasetId()}.balances bl
+      join ${datasetId()}.blocks b using (block_height)
   `,
   ),
 

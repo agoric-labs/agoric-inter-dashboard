@@ -7,14 +7,17 @@ type Props = {
     message: string;
   };
   title?: string;
+  className?: string;
 };
 
-export function ErrorAlert({ value, title = 'Error' }: Props) {
+export function ErrorAlert({ value, title = 'Error', className }: Props) {
   return (
-    <Alert variant="destructive">
-      <AlertCircle className="h-4 w-4" />
-      <AlertTitle>{title}</AlertTitle>
-      <AlertDescription>{value.message}</AlertDescription>
-    </Alert>
+    <div className="p-8">
+      <Alert variant="destructive" className={className}>
+        <AlertCircle className="h-4 w-4" />
+        <AlertTitle>{title}</AlertTitle>
+        <AlertDescription>{value.message}</AlertDescription>
+      </Alert>
+    </div>
   );
 }

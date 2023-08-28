@@ -5,14 +5,14 @@ cube(`vault_metrics`, {
     with atom_prices as (
       select day as date
            , array_agg(cast(current_price_usd as float64) order by _sdc_batched_at)[0] as usd_price
-        from $$DATASET$$.coingeko_history
+        from ${datasetId()}.coingeko_history
        where coin_id = 'cosmos'
        group by 1
     ),
 
     block_time as (
       select block_height as height, block_time as time
-        from $$DATASET$$.blocks
+        from ${datasetId()}.blocks
     ),
 
     vault_factory_metrics as (
@@ -77,7 +77,7 @@ cube(`vault_metrics`, {
              cast(json_value(body, '$.current.InterestRate.value.denominator.__value') as int64) interest_rate,
              cast(json_value(body, '$.current.LiquidationMargin.value.numerator.__value') as int64)/
              cast(json_value(body, '$.current.LiquidationMargin.value.denominator.__value') as int64) liquidation_margin
-      from $$DATASET$$.state_changes
+      from ${datasetId()}.state_changes
       where path = 'published.vaultFactory.managers.manager0.governance'
     ),
 

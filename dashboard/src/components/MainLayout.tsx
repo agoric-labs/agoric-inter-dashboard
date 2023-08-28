@@ -36,6 +36,7 @@ const menuItems = [
 const chains: { [key: string]: string } = {
   mainnet: 'Mainnet',
   emerynet: 'Emerynet',
+  ollinet: 'Ollinet',
   devnet: 'Devnet',
 };
 
@@ -89,7 +90,7 @@ export function MainLayout({ children }: Props) {
             })}
           </div>
           <Select onValueChange={handleChainChange}>
-            <SelectTrigger className="w-[180px] text-gray-700 border-gray-700 m-8 my-4">
+            <SelectTrigger className="w-[180px] text-gray-700 border-gray-700 m-8 my-4 bg-transparent">
               <SelectValue placeholder={chains[chain]} />
             </SelectTrigger>
             <SelectContent>
@@ -101,7 +102,7 @@ export function MainLayout({ children }: Props) {
             </SelectContent>
           </Select>
           <Select onValueChange={handleRangeChange}>
-            <SelectTrigger className="w-[180px] text-gray-700 border-gray-700 m-8 my-4">
+            <SelectTrigger className="w-[180px] text-gray-700 border-gray-700 m-8 my-4 bg-transparent">
               <SelectValue placeholder={ranges[range]} />
             </SelectTrigger>
             <SelectContent>

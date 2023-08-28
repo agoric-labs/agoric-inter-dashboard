@@ -89,10 +89,9 @@ services:
       - 3000:3000
       - 5432:5432
     environment:
-      - ALLOWED_DATASETS=${ALLOWED_DATASETS}
+      - DATASET_ID=${DATASET_ID}
       - CUBEJS_DEV_MODE=true
       - CUBEJS_DB_TYPE=bigquery
-      - CUBEJS_ROLLUP_ONLY=true
       - CUBEJS_DB_BQ_CREDENTIALS=${GOOGLE_CREDS_B64}
       - CUBEJS_DB_BQ_PROJECT_ID=${PROJECT_ID}
       - CUBEJS_DB_BQ_KEY_FILE=/bigquerycreds.json
@@ -114,8 +113,9 @@ services:
     restart: always
     image: cubejs/cube:v0.33.38
     environment:
-      - ALLOWED_DATASETS=${ALLOWED_DATASETS}
+      - DATASET_ID=${DATASET_ID}
       - CUBEJS_DB_TYPE=bigquery
+      - CUBEJS_DEV_MODE=true
       - CUBEJS_DB_BQ_PROJECT_ID=${PROJECT_ID}
       - CUBEJS_DB_BQ_CREDENTIALS=${GOOGLE_CREDS_B64}
       - CUBEJS_DB_EXPORT_BUCKET=${EXPORT_BUCKET}

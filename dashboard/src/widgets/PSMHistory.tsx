@@ -3,15 +3,17 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { getCubeQueryView, formatDay } from '@/utils';
 import { colors } from '@/components/palette';
+import { useGranularity } from '@/components/CubeProvider';
 import { formatCoinLabels } from '../coinLabels';
 
 export function PSMHistory() {
+  const granularity = useGranularity();
   const res = useCubeQuery({
     measures: ['psm_stats.last_total_minted_provided'],
     timeDimensions: [
       {
         dimension: 'psm_stats.day',
-        granularity: 'day',
+        granularity,
       },
     ],
     order: [['psm_stats.coin', 'asc']],

@@ -1,6 +1,7 @@
 import { useCubeQuery } from '@cubejs-client/react';
 import { OpenVaultsTable } from '@/components/OpenVaultsTable';
 import { SectionHeader } from '@/components/SectionHeader';
+import { useGranularity } from '@/components/CubeProvider';
 import { getCubeQueryView } from '@/utils';
 
 type Props = {
@@ -8,6 +9,7 @@ type Props = {
 };
 
 export function OpenVaults({ title = 'Open vaults' }: Props) {
+  const granularity = useGranularity();
   const res = useCubeQuery({
     measures: [
       'open_vaults.collateral_amount',
@@ -22,7 +24,7 @@ export function OpenVaults({ title = 'Open vaults' }: Props) {
     timeDimensions: [
       {
         dimension: 'open_vaults.day',
-        granularity: 'day',
+        granularity,
         dateRange: 'Today',
       },
     ],

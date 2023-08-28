@@ -13,6 +13,7 @@ export function ActiveVaultCountCard({ title = 'Total Active Vaults' }: Props) {
       {
         dimension: 'open_vaults.day',
         dateRange: 'Today',
+        granularity: 'day',
       },
     ],
     order: {},
