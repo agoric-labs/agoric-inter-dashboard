@@ -40,7 +40,7 @@ export function PSMStats() {
             minted_pool_balance: s['psm_stats.last_minted_pool_balance'],
             utilized: s['psm_stats.last_utilization_rate'] / 100,
           }}
-          key={s.coin}
+          key={s['psm_stats.coin']}
         />
       ))}
     </ValueCardGrid>

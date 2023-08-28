@@ -25,19 +25,21 @@ export function PSMMintedPoolBalancePie() {
     return requestView;
   }
 
-  const data = resultSet.chartPivot();
+  const data = resultSet.tablePivot().map((row) => ({
+    value: parseFloat(row['psm_stats.last_minted_pool_balance'] as string),
+  }));
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>IST Utilization Per Anchor</CardTitle>
+        <CardTitle>Total Minted IST Per Anchor</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="w-full h-[400px]">
           <ResponsiveContainer width="100%" height="100%">
-            <PieChart width={800} height={400}>
+            <PieChart width={400} height={400}>
               <Pie
-                dataKey="psm_stats.last_minted_pool_balance"
+                dataKey="value"
                 data={data}
                 innerRadius={70}
                 outerRadius={100}

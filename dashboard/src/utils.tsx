@@ -15,16 +15,12 @@ export const getCubeQueryView = ({
 }: UseCubeQueryResult<unknown>):
   | [NonNullable<UseCubeQueryResult<unknown>['resultSet']>, null]
   | [null, JSX.Element] => {
-  if (isLoading) {
+  if (isLoading || !resultSet) {
     return [null, <Loading />];
   }
 
   if (error) {
     return [null, <ErrorAlert value={error} title="Request Error" />];
-  }
-
-  if (!resultSet) {
-    return [null, <ErrorAlert value={{ message: 'Latest results missing' }} />];
   }
 
   return [resultSet, null];

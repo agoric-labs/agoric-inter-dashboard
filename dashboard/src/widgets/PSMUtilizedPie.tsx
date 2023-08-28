@@ -25,7 +25,9 @@ export function PSMUtilizedPie() {
     return requestView;
   }
 
-  const data = resultSet.chartPivot();
+  const data = resultSet.tablePivot().map((row) => ({
+    value: parseFloat(row['psm_stats.last_utilization_rate'] as string),
+  }));
 
   return (
     <Card>
@@ -37,7 +39,7 @@ export function PSMUtilizedPie() {
           <ResponsiveContainer width="100%" height="100%">
             <PieChart width={800} height={400}>
               <Pie
-                dataKey="psm_stats.last_utilization_rate"
+                dataKey="value"
                 data={data}
                 innerRadius={70}
                 outerRadius={100}
