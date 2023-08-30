@@ -23,18 +23,24 @@ datasetId: "your-dataset-id"
 extractBlockBatchSize: 200
 decodeServiceUrl: "cloud run url"
 
-tendermintHeadEnabled: true
-tendermintTailEnabled: true
+tendermintHead:
+  enabled: true
 
-balancesEnabled: false
-balancesShedule: "*/10 * * * *"
-balanceAddresses: ""
+tendermintTail:
+  enabled: true
 
-coingekoEnabled: false
-coingekoShedule: "0 * * * *"
+balances:
+  enabled: false
+  shedule: "*/10 * * * *"
+  addresses: ""
 
-sloMetricsEnabled: true
-sloMetricsShedule: "30 * * * *"
+coingeko:
+  enabled: false
+  shedule: "0 * * * *"
+
+sloMetrics:
+  enabled: true
+  shedule: "30 * * * *"
 
 serviceAccount:
   # Specifies whether a service account should be created

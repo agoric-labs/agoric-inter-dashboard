@@ -94,10 +94,10 @@ spec:
 {{- end }}
 {{- end }}
 
-{{- if .Values.tendermintTailEnabled }}
+{{- if .Values.tendermintTail.enabled }}
 {{- include "tendermint-extractor" (dict "root" . "mode" "tail" "resources" .Values.tailIndexerResources) }}
 {{- end }}
 
-{{- if .Values.tendermintHeadEnabled }}
+{{- if .Values.tendermintHead.enabled }}
 {{- include "tendermint-extractor" (dict "root" . "mode" "head" "resources" .Values.headIndexerResources) }}
 {{- end }}

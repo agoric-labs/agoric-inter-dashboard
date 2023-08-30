@@ -1,4 +1,4 @@
-{{- if .Values.balancesEnabled -}}
+{{- if .Values.balances.enabled -}}
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -52,7 +52,7 @@ spec:
             - name: WORKER_COUNT
               value: "8"
             - name: ADDRESSES
-              value: "{{ .Values.balanceAddresses }}"
+              value: "{{ .Values.balances.addresses }}"
             volumeMounts:
             - mountPath: /etc/gac
               name: gac

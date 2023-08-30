@@ -1,4 +1,4 @@
-{{- if .Values.coingekoEnabled -}}
+{{- if .Values.coingeko.enabled -}}
 ---
 apiVersion: batch/v1
 kind: CronJob
