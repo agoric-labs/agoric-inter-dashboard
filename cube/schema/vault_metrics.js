@@ -18,7 +18,8 @@ cube(`vault_metrics`, {
     vault_factory_metrics as (
         select *
         from ${state_changes.sql()}
-      where path = 'published.vaultFactory.managers.manager0.metrics'
+      where path like 'published.vaultFactory.managers.manager%'
+        and split(path, '.')[safe_offset(4)] = 'metrics'
     ),
 
     vault_factory_manager_metrics as (
@@ -78,7 +79,8 @@ cube(`vault_metrics`, {
              cast(json_value(body, '$.current.LiquidationMargin.value.numerator.__value') as int64)/
              cast(json_value(body, '$.current.LiquidationMargin.value.denominator.__value') as int64) liquidation_margin
       from ${datasetId()}.state_changes
-      where path = 'published.vaultFactory.managers.manager0.governance'
+      where path like 'published.vaultFactory.managers.manager%'
+        and split(path, '.')[safe_offset(4)] = 'governance'
     ),
 
     governance as (
@@ -116,9 +118,8 @@ cube(`vault_metrics`, {
       select
         block_height,
         cast(block_ts as datetime) block_ts,
-        'IST' debt_type,
-         'ATOM' collateral_type,
-         'ATOM' vault_manager_type,
+        v.debt_type,
+        v.collateral_type,
         total_locked_collateral total_locked_collateral,
         total_locked_collateral * p.usd_price total_locked_collateral_usd,
         total_ist_minted total_ist_minted,

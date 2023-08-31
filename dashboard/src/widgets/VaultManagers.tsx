@@ -27,7 +27,7 @@ export function VaultManagers({ title = 'Collateral Type' }: Props) {
     order: {
       'vault_managers.collateral_type': 'desc',
     },
-    dimensions: ['vault_managers.collateral_type'],
+    dimensions: ['vault_managers.collateral_type', 'vault_managers.debt_type'],
   });
 
   if (res.isLoading || !res.resultSet) {

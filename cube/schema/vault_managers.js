@@ -10,24 +10,18 @@ cube('vault_managers', {
       'ist_minting_limit',
       'utilization_rate',
     ],
-    ['collateral_type'],
+    ['collateral_type', 'debt_type'],
     `
-      with block_time as (
-        select
-          block_height as height,
-          block_time as time
-        from
-          agoric_mainnet.blocks
-      ),
-
-      vault_factory_metrics as (
+      with vault_factory_metrics as (
           select *
           from ${state_changes.sql()}
-        where path = 'published.vaultFactory.managers.manager0.metrics'
+         where path like 'published.vaultFactory.managers.manager%'
+           and split(path, '.')[safe_offset(4)] = 'metrics'
       ),
 
       vault_factory_manager_metrics as (
         select block_height,
+               block_time,
                json_extract_scalar(body, '$.liquidatingCollateral.__brand') collateral_type,
                --json_extract_scalar(body, '$.liquidatingCollateral.brand.index') liquidating_collateral_type_ix,
                json_extract_scalar(body, '$.liquidatingCollateral.__value') liquidating_collateral_amount,
@@ -65,6 +59,7 @@ cube('vault_managers', {
 
       metrics as (
         select m.block_height block_height,
+               m.block_time,
                m.collateral_type,
                debt_type,
                cast(m.tot_collateral_value as float64) total_locked_collateral,
@@ -81,7 +76,8 @@ cube('vault_managers', {
                SAFE_DIVIDE(cast(json_value(body, '$.current.LiquidationMargin.value.numerator.__value') as int64),
                cast(json_value(body, '$.current.LiquidationMargin.value.denominator.__value') as int64)) liquidation_margin
         from ${state_changes.sql()}
-        where path = 'published.vaultFactory.managers.manager0.governance'
+       where path like 'published.vaultFactory.managers.manager%'
+         and split(path, '.')[safe_offset(4)] = 'governance'
       ),
 
       governance as (
@@ -108,13 +104,6 @@ cube('vault_managers', {
         order by m.block_height
       ),
 
-      raw_vault_manager_table as (
-          select t.time as block_ts,
-          m.* from all_metrics m
-          left join block_time t
-          on m.block_height = cast(t.height as int64)
-      ),
-
       atom_prices as (
         select day as date
              , array_agg(cast(current_price_usd as float64) order by _sdc_batched_at)[0] as usd_price
@@ -123,16 +112,17 @@ cube('vault_managers', {
          group by 1
       )
 
-      select block_ts as block_time
+      select block_time
            , collateral_type
+           , debt_type
            , total_locked_collateral/pow(10,6) total_locked_collateral
            , total_locked_collateral/pow(10,6) * p.usd_price total_locked_collateral_usd
            , total_ist_minted/pow(10,6) total_ist_minted
            , colletarization_ratio * p.usd_price colletarization_ratio
            , ist_minting_limit/pow(10,6) ist_minting_limit
            , utilization_rate
-      from raw_vault_manager_table v
-      join atom_prices p on p.date = date(v.block_ts) - 1
+      from all_metrics v
+      join atom_prices p on p.date = date(block_time) - 1
   `,
   ),
 
@@ -176,30 +166,34 @@ cube('vault_managers', {
       sql: `collateral_type`,
       type: `string`,
     },
+    debt_type: {
+      sql: `debt_type`,
+      type: `string`,
+    },
     day: {
       sql: `day`,
       type: `time`,
     },
   },
 
-  // pre_aggregations: {
-  //   main3: {
-  //     measures: [
-  //       total_locked_collateral_avg,
-  //       total_locked_collateral_usd_avg,
-  //       total_ist_minted_avg,
-  //       colletarization_ratio_avg,
-  //       ist_minting_limit_avg,
-  //       utilization_rate_avg,
-  //     ],
-  //     dimensions: [collateral_type],
-  //     timeDimension: day,
-  //     granularity: `day`,
-  //   },
-  //   summary3: {
-  //     measures: [ist_minting_limit_sum, total_ist_minted_sum],
-  //     timeDimension: day,
-  //     granularity: `day`,
-  //   },
-  // },
+  pre_aggregations: {
+    main3: {
+      measures: [
+        total_locked_collateral_avg,
+        total_locked_collateral_usd_avg,
+        total_ist_minted_avg,
+        colletarization_ratio_avg,
+        ist_minting_limit_avg,
+        utilization_rate_avg,
+      ],
+      dimensions: [collateral_type, debt_type],
+      timeDimension: day,
+      granularity: `day`,
+    },
+    summary3: {
+      measures: [ist_minting_limit_sum, total_ist_minted_sum],
+      timeDimension: day,
+      granularity: `day`,
+    },
+  },
 });

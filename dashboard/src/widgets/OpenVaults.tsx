@@ -29,10 +29,10 @@ export function OpenVaults({ title = 'Open vaults' }: Props) {
       },
     ],
     order: {
-      'open_vaults.manager_ix': 'asc',
+      'open_vaults.debt_type': 'asc',
       'open_vaults.vault_ix': 'asc',
     },
-    dimensions: ['open_vaults.manager_ix', 'open_vaults.vault_ix', 'open_vaults.collateral_type'],
+    dimensions: ['open_vaults.debt_type', 'open_vaults.vault_ix', 'open_vaults.collateral_type'],
   });
 
   if (res.isLoading || !res.resultSet) {
