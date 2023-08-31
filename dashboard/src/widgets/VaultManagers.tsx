@@ -21,6 +21,7 @@ export function VaultManagers({ title = 'Collateral Type' }: Props) {
       {
         dimension: 'vault_managers.day',
         dateRange: 'Today',
+        granularity: 'day',
       },
     ],
     order: {

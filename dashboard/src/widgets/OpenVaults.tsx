@@ -29,9 +29,10 @@ export function OpenVaults({ title = 'Open vaults' }: Props) {
       },
     ],
     order: {
+      'open_vaults.manager_ix': 'asc',
       'open_vaults.vault_ix': 'asc',
     },
-    dimensions: ['open_vaults.vault_ix', 'open_vaults.collateral_type'],
+    dimensions: ['open_vaults.manager_ix', 'open_vaults.vault_ix', 'open_vaults.collateral_type'],
   });
 
   if (res.isLoading || !res.resultSet) {
@@ -51,7 +52,7 @@ export function OpenVaults({ title = 'Open vaults' }: Props) {
   const rows = resultSet.tablePivot().map((row: any) => {
     const newRow: any = {};
 
-    Object.keys(row).forEach((key) => {
+    Object.keys(row).forEach(key => {
       newRow[key.replace('open_vaults.', '')] = row[key];
     });
 

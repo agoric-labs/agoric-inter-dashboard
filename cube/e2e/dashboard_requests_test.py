@@ -210,6 +210,26 @@ def test_vault_managers():
     )
 
 
+def test_vault_managers2():
+    request(
+        {
+            "measures": [
+                "vault_managers.total_locked_collateral_avg",
+                "vault_managers.total_locked_collateral_usd_avg",
+                "vault_managers.total_ist_minted_avg",
+                "vault_managers.colletarization_ratio_avg",
+                "vault_managers.ist_minting_limit_avg",
+                "vault_managers.utilization_rate_avg",
+            ],
+            "timeDimensions": [
+                {"dimension": "vault_managers.day", "dateRange": "Today","granularity": "day"}
+            ],
+            "order": {"vault_managers.collateral_type": "desc"},
+            "dimensions": ["vault_managers.collateral_type"],
+        }
+    )
+
+
 def test_vault_stats():
     request(
         {

@@ -22,7 +22,7 @@ cube('vault_managers', {
 
       vault_factory_metrics as (
           select *
-          from agoric_mainnet.state_changes
+          from ${state_changes.sql()}
         where path = 'published.vaultFactory.managers.manager0.metrics'
       ),
 
@@ -80,7 +80,7 @@ cube('vault_managers', {
                cast(json_value(body, '$.current.InterestRate.value.denominator.__value') as int64)) interest_rate,
                SAFE_DIVIDE(cast(json_value(body, '$.current.LiquidationMargin.value.numerator.__value') as int64),
                cast(json_value(body, '$.current.LiquidationMargin.value.denominator.__value') as int64)) liquidation_margin
-        from agoric_mainnet.state_changes
+        from ${state_changes.sql()}
         where path = 'published.vaultFactory.managers.manager0.governance'
       ),
 
@@ -182,24 +182,24 @@ cube('vault_managers', {
     },
   },
 
-  pre_aggregations: {
-    main2: {
-      measures: [
-        total_locked_collateral_avg,
-        total_locked_collateral_usd_avg,
-        total_ist_minted_avg,
-        colletarization_ratio_avg,
-        ist_minting_limit_avg,
-        utilization_rate_avg,
-      ],
-      dimensions: [collateral_type],
-      timeDimension: day,
-      granularity: `day`,
-    },
-    summary2: {
-      measures: [ist_minting_limit_sum, total_ist_minted_sum],
-      timeDimension: day,
-      granularity: `day`,
-    },
-  },
+  // pre_aggregations: {
+  //   main3: {
+  //     measures: [
+  //       total_locked_collateral_avg,
+  //       total_locked_collateral_usd_avg,
+  //       total_ist_minted_avg,
+  //       colletarization_ratio_avg,
+  //       ist_minting_limit_avg,
+  //       utilization_rate_avg,
+  //     ],
+  //     dimensions: [collateral_type],
+  //     timeDimension: day,
+  //     granularity: `day`,
+  //   },
+  //   summary3: {
+  //     measures: [ist_minting_limit_sum, total_ist_minted_sum],
+  //     timeDimension: day,
+  //     granularity: `day`,
+  //   },
+  // },
 });

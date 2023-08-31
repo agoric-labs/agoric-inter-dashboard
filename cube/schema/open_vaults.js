@@ -12,11 +12,12 @@ cube('open_vaults', {
       'liquidation_cushion',
       'collateralization_ratio',
     ],
-    ['vault_ix', 'collateral_type'],
+    ['vault_ix', 'manager_ix', 'collateral_type'],
     `
       with vault_factory_vaults as (
       select block_height,
-             cast(split(path, 'published.vaultFactory.managers.manager0.vaults.vault')[safe_offset(1)] as int) vault_ix,
+             cast(replace(split(path, '.')[safe_offset(3)], 'manager', '') as int) manager_ix,
+             cast(replace(split(path, '.')[safe_offset(5)], 'vault', '') as int) vault_ix,
 
              json_value(body, '$.debtSnapshot.debt.__brand') debt_type_name,
              cast(json_value(body, '$.debtSnapshot.debt.__value') as float64) / pow(10, 6) debt_value,
@@ -30,7 +31,8 @@ cube('open_vaults', {
 
              json_value(body, '$.vaultState') vault_state
       from ${state_changes.sql()}
-      where path like 'published.vaultFactory.managers.manager0.vaults.%'
+      where path like 'published.vaultFactory.managers.manager%'
+        and split(path, '.')[safe_offset(4)] = 'vaults'
     ),
 
     vaults_statuses as (
@@ -41,6 +43,7 @@ cube('open_vaults', {
 
     active_vaults as (
       select vault_ix,
+             manager_ix,
              block_height,
              locked_type_name,
              cast(ARRAY_AGG(locked_value order by block_height desc)[safe_offset(0)] as float64) collateral_amount,
@@ -48,7 +51,7 @@ cube('open_vaults', {
              cast(ARRAY_AGG(debt_value order by block_height desc)[safe_offset(0)] as float64) ist_debt_amount
       from vault_factory_vaults
       where vault_ix in (select vault_ix from vaults_statuses where vault_state = 'active') and debt_type_name = 'IST'
-      group by vault_ix, block_height, locked_type_name, debt_type_name
+      group by manager_ix, vault_ix, block_height, locked_type_name, debt_type_name
     ),
 
     oracle_prices as (
@@ -97,22 +100,22 @@ cube('open_vaults', {
     ),
 
     vault_manager_governance as (
-      select block_height,
-             json_value(body, '$.current.DebtLimit.value.__brand') debt_limit_name,
-             json_value(body, '$.current.DebtLimit.value.__value') debt_limit_value,
-             cast(json_value(body, '$.current.InterestRate.value.numerator.__value') as int64)/
-             cast(json_value(body, '$.current.InterestRate.value.denominator.__value') as int64) interest_rate,
-             cast(json_value(body, '$.current.LiquidationMargin.value.numerator.__value') as int64)/
-             cast(json_value(body, '$.current.LiquidationMargin.value.denominator.__value') as int64) liquidation_margin
+      select block_height
+           , cast(replace(split(path, '.')[safe_offset(3)], 'manager', '') as int) as manager_ix
+           , json_value(body, '$.current.DebtLimit.value.__brand') debt_limit_name
+           , json_value(body, '$.current.DebtLimit.value.__value') debt_limit_value
+           , cast(json_value(body, '$.current.InterestRate.value.numerator.__value') as int64)/cast(json_value(body, '$.current.InterestRate.value.denominator.__value') as int64) interest_rate
+           , cast(json_value(body, '$.current.LiquidationMargin.value.numerator.__value') as int64)/cast(json_value(body, '$.current.LiquidationMargin.value.denominator.__value') as int64) liquidation_margin
       from ${state_changes.sql()}
-      where path = 'published.vaultFactory.managers.manager0.governance'
+      where path like 'published.vaultFactory.managers.manager%'
+        and split(path, '.')[safe_offset(4)] = 'governance'
     ),
 
     governance as (
-      select debt_limit_name,
-      ARRAY_AGG(liquidation_margin order by cast(block_height as int64) desc)[safe_offset(0)] liquidation_margin
+      select manager_ix
+           , ARRAY_AGG(liquidation_margin order by cast(block_height as int64) desc)[safe_offset(0)] liquidation_margin
       from vault_manager_governance
-      group by debt_limit_name
+      group by 1
     ),
 
     add_prices as (
@@ -122,10 +125,13 @@ cube('open_vaults', {
       left join
       last_oracle_prices p
       on v.locked_type_name = p.type_in_name
-    ), final_rows as (
+    ),
+
+    final_rows as (
       select b.block_time,
              cast(a.block_height as int) as height,
              a.vault_ix,
+             a.manager_ix,
              a.locked_type_name collateral_type,
              a.collateral_amount,
              a.last_oracle_price current_collateral_price,
@@ -133,10 +139,10 @@ cube('open_vaults', {
              a.ist_debt_amount,
              g.liquidation_margin,
              coalesce(SAFE_DIVIDE(a.ist_debt_amount*g.liquidation_margin, a.collateral_amount), 0) liquidation_price,
-             coalesce(SAFE_DIVIDE(a.last_oracle_price, ( a.ist_debt_amount*g.liquidation_margin/a.collateral_amount) - 1), 0) liquidation_cushion
+             coalesce(SAFE_DIVIDE(a.last_oracle_price, coalesce(SAFE_DIVIDE(a.ist_debt_amount * g.liquidation_margin, a.collateral_amount), 0) - 1), 0) liquidation_cushion
       from add_prices a
       join ${state_changes.sql()} b using (block_height)
-      left join governance g on a.debt_type_name = g.debt_limit_name
+      left join governance g using (manager_ix)
     )
     select *
          , coalesce(SAFE_DIVIDE(collateral_oracle_usd_value, ist_debt_amount), 0) as collateralization_ratio
@@ -186,9 +192,13 @@ cube('open_vaults', {
 
   dimensions: {
     id: {
-      sql: `concat(vault_ix, height)`,
+      sql: `concat(vault_ix, manager_ix, height)`,
       type: `string`,
       primary_key: true,
+    },
+    manager_ix: {
+      sql: `manager_ix`,
+      type: `number`,
     },
     vault_ix: {
       sql: `vault_ix`,
@@ -216,7 +226,7 @@ cube('open_vaults', {
         liquidation_cushion,
         collateralization_ratio,
       ],
-      dimensions: [collateral_type, vault_ix],
+      dimensions: [collateral_type, vault_ix, manager_ix],
       timeDimension: day,
       granularity: `year`,
       refreshKey: {
@@ -234,7 +244,7 @@ cube('open_vaults', {
         liquidation_cushion,
         collateralization_ratio,
       ],
-      dimensions: [collateral_type, vault_ix],
+      dimensions: [collateral_type, vault_ix, manager_ix],
       timeDimension: day,
       granularity: `month`,
       refreshKey: {
@@ -252,7 +262,7 @@ cube('open_vaults', {
         liquidation_cushion,
         collateralization_ratio,
       ],
-      dimensions: [collateral_type, vault_ix],
+      dimensions: [collateral_type, vault_ix, manager_ix],
       timeDimension: day,
       granularity: `week`,
       refreshKey: {
@@ -270,7 +280,7 @@ cube('open_vaults', {
         liquidation_cushion,
         collateralization_ratio,
       ],
-      dimensions: [collateral_type, vault_ix],
+      dimensions: [collateral_type, vault_ix, manager_ix],
       timeDimension: day,
       granularity: `day`,
       refreshKey: {
