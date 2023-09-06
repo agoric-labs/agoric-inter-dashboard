@@ -2,13 +2,14 @@ import { useCubeQuery } from '@cubejs-client/react';
 import { ValueCard } from '@/components/ValueCard';
 import { formatPrice, getCubeQueryView } from '@/utils';
 
-export function ReserveSummary() {
+export function ReserveShortfall() {
   const res = useCubeQuery({
-    measures: ['reserve_allocations.amount_usd_sum'],
-    timeDimensions: [{ dimension: 'reserve_allocations.day', granularity: 'day', dateRange: 'Today' }],
+    measures: ['reserve.shortfall_balance_avg'],
+    timeDimensions: [{ dimension: 'reserve.day', granularity: 'day' }],
     order: {
       'reserve.day': 'desc',
     },
+    limit: 1,
   });
 
   const [resultSet, requestView] = getCubeQueryView(res);
@@ -21,5 +22,5 @@ export function ReserveSummary() {
     return <div>Nothing to show</div>;
   }
 
-  return <ValueCard title="Total Reserve Assets" value={formatPrice(latest['reserve_allocations.amount_usd_sum'])} />;
+  return <ValueCard title="Reserve Shortfall" value={formatPrice(latest['reserve.shortfall_balance_avg'] || 0)} />;
 }

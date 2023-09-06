@@ -90,6 +90,25 @@ This repository is shipped with docker compose config and can be started with th
 docker-compose up --build
 ```
 
+Create an extract function for reserves:
+```sql
+CREATE FUNCTION agoric_mainnet.extract_allocations(input STRING)
+RETURNS Array<JSON>
+LANGUAGE js AS """
+  var res = [];
+  var data = JSON.parse(input);
+
+  Object.keys(data).forEach(k => {
+    res.push({
+      key: k,
+      data: data[k],
+    });
+  });
+
+  return res;
+""";
+```
+
 You can immediately check extracted data here:
 
 * Dashboard: http://localhost:8080

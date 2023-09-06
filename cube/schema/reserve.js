@@ -2,7 +2,7 @@ import { dailySQL, withAllGranularity } from '../utils';
 
 cube(`reserve`, {
   sql: dailySQL(
-    ['atom_amount', 'fee_amount', 'shortfall_balance', 'total_fee_burned', 'total_fee_minted', 'atom_price_usd'],
+    ['shortfall_balance', 'total_fee_burned', 'total_fee_minted'],
     [],
     `
     with coingecko_history as (
@@ -12,33 +12,15 @@ cube(`reserve`, {
        group by 1
     )
     select block_time -- for dailySQL
-         , coalesce(cast(json_value(body, '$.allocations.ATOM.__value') as float64) / pow(10, 6), 0) as atom_amount
-         , coalesce(cast(json_value(body, '$.allocations.Fee.__value') as float64) / pow(10, 6), 0) as fee_amount
          , cast(json_value(body, '$.shortfallBalance.__value') as float64) / pow(10, 6) as shortfall_balance
          , cast(json_value(body, '$.totalFeeBurned.__value') as float64) / pow(10, 6) as total_fee_burned
          , cast(json_value(body, '$.totalFeeMinted.__value') as float64) / pow(10, 6) as total_fee_minted
-         , cast(coalesce(ch.current_price_usd) as float64) as atom_price_usd
       from ${state_changes.sql()}
-      left join coingecko_history ch on extract(date from ch.day) = extract(date from block_time)
      where path = 'published.reserve.metrics'
   `,
   ),
 
   measures: {
-    atom_amount_avg: {
-      sql: `atom_amount`,
-      type: `avg`,
-    },
-    atom_amount_usd_avg: {
-      sql: `atom_amount * atom_price_usd`,
-      type: `avg`,
-      title: `ATOM $`,
-    },
-    fee_amount_avg: {
-      sql: `fee_amount`,
-      type: `avg`,
-      title: `IST Fees`,
-    },
     shortfall_balance_avg: {
       sql: `shortfall_balance`,
       type: `avg`,
@@ -49,10 +31,6 @@ cube(`reserve`, {
     },
     total_fee_burned_avg: {
       sql: `total_fee_burned`,
-      type: `avg`,
-    },
-    total_usd_avg: {
-      sql: `fee_amount + atom_amount * atom_price_usd`,
       type: `avg`,
     },
   },
@@ -69,13 +47,9 @@ cube(`reserve`, {
   pre_aggregations: {
     main_year: {
       measures: [
-        atom_amount_avg,
-        fee_amount_avg,
         shortfall_balance_avg,
         total_fee_minted_avg,
         total_fee_burned_avg,
-        atom_amount_usd_avg,
-        total_usd_avg,
       ],
       time_dimension: day,
       granularity: `year`,
@@ -85,13 +59,9 @@ cube(`reserve`, {
     },
     main_month: {
       measures: [
-        atom_amount_avg,
-        fee_amount_avg,
         shortfall_balance_avg,
         total_fee_minted_avg,
         total_fee_burned_avg,
-        atom_amount_usd_avg,
-        total_usd_avg,
       ],
       time_dimension: day,
       granularity: `month`,
@@ -101,13 +71,9 @@ cube(`reserve`, {
     },
     main_week: {
       measures: [
-        atom_amount_avg,
-        fee_amount_avg,
         shortfall_balance_avg,
         total_fee_minted_avg,
         total_fee_burned_avg,
-        atom_amount_usd_avg,
-        total_usd_avg,
       ],
       time_dimension: day,
       granularity: `week`,
@@ -117,13 +83,9 @@ cube(`reserve`, {
     },
     main_day: {
       measures: [
-        atom_amount_avg,
-        fee_amount_avg,
         shortfall_balance_avg,
         total_fee_minted_avg,
         total_fee_burned_avg,
-        atom_amount_usd_avg,
-        total_usd_avg,
       ],
       time_dimension: day,
       granularity: `day`,

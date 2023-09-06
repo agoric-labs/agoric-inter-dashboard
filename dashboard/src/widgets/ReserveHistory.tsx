@@ -8,10 +8,11 @@ import { colors } from '@/components/palette';
 export function ReserveHistory() {
   const granularity = useGranularity();
   const res = useCubeQuery({
-    measures: ['reserve.fee_amount_avg', 'reserve.atom_amount_usd_avg'],
-    timeDimensions: [{ dimension: 'reserve.day', granularity }],
+    measures: ['reserve_allocations.amount_usd_avg'],
+    dimensions: ['reserve_allocations.key', 'reserve_allocations.brand'],
+    timeDimensions: [{ dimension: 'reserve_allocations.day', granularity }],
     order: {
-      'reserve.day': 'asc',
+      'reserve_allocations.day': 'asc',
     },
   });
 
@@ -40,7 +41,7 @@ export function ReserveHistory() {
         <Tooltip />
         <Legend />
         {resultSet.seriesNames().map((col, idx) => (
-          <Bar key={col.key} stackId="a" name={col.shortTitle} dataKey={col.key} fill={colors[idx % colors.length]} />
+          <Bar key={col.key} stackId="a" name={col.yValues[0]} dataKey={col.key} fill={colors[idx % colors.length]} />
         ))}
       </BarChart>
     </ResponsiveContainer>

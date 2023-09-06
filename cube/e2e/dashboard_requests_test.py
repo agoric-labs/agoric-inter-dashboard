@@ -43,16 +43,34 @@ def test_reserve():
     request(
         {
             "measures": [
-                "reserve.atom_amount_avg",
-                "reserve.fee_amount_avg",
                 "reserve.shortfall_balance_avg",
                 "reserve.total_fee_minted_avg",
                 "reserve.total_fee_burned_avg",
             ],
             "timeDimensions": [
-                {"dimension": "reserve.day", "granularity": "day", "dateRange": "Today"}
+                {
+                    "dimension": "reserve.day",
+                    "granularity": "day",
+                    "dateRange": "Today",
+                }
             ],
             "order": {"reserve.day": "asc"},
+        }
+    )
+
+
+def test_reserve_allocations():
+    request(
+        {
+            "measures": ["reserve_allocations.amount_usd_avg"],
+            "order": [["reserve_allocations.day", "asc"]],
+            "dimensions": ["reserve_allocations.key", "reserve_allocations.brand"],
+            "timeDimensions": [
+                {
+                    "dimension": "reserve_allocations.day",
+                    "granularity": "day",
+                }
+            ],
         }
     )
 
@@ -222,7 +240,11 @@ def test_vault_managers2():
                 "vault_managers.utilization_rate_avg",
             ],
             "timeDimensions": [
-                {"dimension": "vault_managers.day", "dateRange": "Today","granularity": "day"}
+                {
+                    "dimension": "vault_managers.day",
+                    "dateRange": "Today",
+                    "granularity": "day",
+                }
             ],
             "order": {"vault_managers.collateral_type": "desc"},
             "dimensions": ["vault_managers.collateral_type"],
