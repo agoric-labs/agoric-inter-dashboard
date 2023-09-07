@@ -78,13 +78,25 @@ export function InterProtocol() {
   });
 
   const reserveRes = useCubeQuery({
-    measures: ['reserve.shortfall_balance_avg', 'reserve.total_usd_avg'],
+    measures: ['reserve.shortfall_balance_avg'],
     timeDimensions: [{ dimension: 'reserve.day', granularity: 'day' }],
     order: {
       'reserve.day': 'desc',
     },
     limit: 1,
   });
+
+  const reserveAllocRes = useCubeQuery({
+    measures: ['reserve_allocations.amount_usd_sum'],
+    timeDimensions: [{ dimension: 'reserve_allocations.day', granularity: 'day', dateRange: 'Today' }],
+    order: {
+      'reserve_allocations.day': 'desc',
+    },
+  });
+
+  if (reserveAllocRes.error) {
+    return <ErrorAlert value={reserveAllocRes.error} />;
+  }
 
   if (wcRes.error) {
     return <ErrorAlert value={wcRes.error} />;
@@ -127,6 +139,8 @@ export function InterProtocol() {
     !reserveRes.resultSet ||
     vaultMetricsRes.isLoading ||
     !vaultMetricsRes.resultSet ||
+    reserveAllocRes.isLoading ||
+    !reserveAllocRes.resultSet ||
     psmGovRes.isLoading ||
     !psmGovRes.resultSet
   ) {
@@ -147,7 +161,7 @@ export function InterProtocol() {
   const totalMintLimit = vaultMintLimit + psmMintLimit;
 
   // bottom cards
-  const totalReserve = reserveRes.resultSet.tablePivot()[0]['reserve.total_usd_avg'] as string;
+  const totalReserve = reserveAllocRes.resultSet.tablePivot()[0]['reserve_allocations.amount_usd_sum'] as string;
   const reserveShortfall = reserveRes.resultSet.tablePivot()[0]['reserve.shortfall_balance_avg'] as string;
   const vaultLocked =
     parseFloat(vaultMetricsRes.resultSet.tablePivot()[0]['vault_metrics.avg_total_locked_collateral_usd'] as string) ||

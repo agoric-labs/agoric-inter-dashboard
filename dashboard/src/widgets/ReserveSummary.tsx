@@ -7,7 +7,7 @@ export function ReserveSummary() {
     measures: ['reserve_allocations.amount_usd_sum'],
     timeDimensions: [{ dimension: 'reserve_allocations.day', granularity: 'day', dateRange: 'Today' }],
     order: {
-      'reserve.day': 'desc',
+      'reserve_allocations.day': 'desc',
     },
   });
 
