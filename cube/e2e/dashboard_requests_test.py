@@ -183,7 +183,7 @@ def test_open_vaults():
                 }
             ],
             "order": {"open_vaults.collateral_amount": "desc"},
-            "dimensions": ["open_vaults.vault_ix", "open_vaults.collateral_type"],
+            "dimensions": ["open_vaults.vault_ix", "open_vaults.collateral_type", "open_vaults.debt_type"],
         }
     )
 
@@ -223,7 +223,7 @@ def test_vault_managers():
                 }
             ],
             "order": {"vault_managers.total_locked_collateral_avg": "desc"},
-            "dimensions": ["vault_managers.collateral_type"],
+            "dimensions": ["vault_managers.collateral_type", "vault_managers.debt_type"],
         }
     )
 
@@ -247,7 +247,7 @@ def test_vault_managers2():
                 }
             ],
             "order": {"vault_managers.collateral_type": "desc"},
-            "dimensions": ["vault_managers.collateral_type"],
+            "dimensions": ["vault_managers.collateral_type", "vault_managers.debt_type"],
         }
     )
 
