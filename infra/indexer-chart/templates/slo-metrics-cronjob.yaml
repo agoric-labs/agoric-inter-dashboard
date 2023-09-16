@@ -5,7 +5,7 @@ kind: CronJob
 metadata:
   name: {{ include "deploy.fullname" . }}-slo-metrics
 spec:
-  schedule: "{{ .Values.sloMetricsShedule }}"
+  schedule: "{{ .Values.sloMetrics.shedule }}"
   concurrencyPolicy: Replace # avoid target-biquery freezes
   suspend: false
   successfulJobsHistoryLimit: 10

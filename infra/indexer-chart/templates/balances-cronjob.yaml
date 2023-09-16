@@ -5,7 +5,7 @@ kind: CronJob
 metadata:
   name: {{ include "deploy.fullname" . }}-balances
 spec:
-  schedule: "{{ .Values.balancesShedule }}"
+  schedule: "{{ .Values.balances.shedule }}"
   concurrencyPolicy: Replace # avoid target-biquery freezes
   suspend: false
   successfulJobsHistoryLimit: 1
