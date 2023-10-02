@@ -56,6 +56,9 @@ export function OpenVaults({ title = 'Open vaults' }: Props) {
       newRow[key.replace('open_vaults.', '')] = row[key];
     });
 
+    // published.vaultFactory.managers.manager0.vaults.vault10 -> 10
+    newRow.vault_ix = newRow.vault_ix.replace(/.*?(\d+)$/, '$1');
+
     return newRow;
   });
 

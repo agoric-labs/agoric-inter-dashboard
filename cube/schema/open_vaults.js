@@ -16,7 +16,7 @@ cube('open_vaults', {
     `
       with vault_factory_vaults as (
       select block_height,
-             cast(replace(split(path, '.')[safe_offset(5)], 'vault', '') as int) vault_ix,
+             path as vault_ix, -- manager id + vault id
 
              json_value(body, '$.debtSnapshot.debt.__brand') debt_type_name,
              cast(json_value(body, '$.debtSnapshot.debt.__value') as float64) / pow(10, 6) debt_value,
@@ -48,7 +48,7 @@ cube('open_vaults', {
              debt_type_name,
              cast(ARRAY_AGG(debt_value order by block_height desc)[safe_offset(0)] as float64) ist_debt_amount
       from vault_factory_vaults
-      where vault_ix in (select vault_ix from vaults_statuses where vault_state = 'active') and debt_type_name = 'IST'
+      where vault_ix in (select vault_ix from vaults_statuses where vault_state = 'active')
       group by vault_ix, block_height, locked_type_name, debt_type_name
     ),
 
@@ -189,7 +189,7 @@ cube('open_vaults', {
 
   dimensions: {
     id: {
-      sql: `concat(vault_ix, manager_ix, height)`,
+      sql: `concat(vault_ix, height)`,
       type: `string`,
       primary_key: true,
     },
