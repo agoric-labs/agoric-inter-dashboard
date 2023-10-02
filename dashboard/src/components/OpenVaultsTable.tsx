@@ -46,7 +46,7 @@ export const columns: DataColumn<Row>[] = [
   {
     accessorKey: 'collateral_oracle_usd_value',
     type: 'usd',
-    header: 'Collateral Oracle Price',
+    header: 'Collateral Value ($USD)',
   },
   {
     accessorKey: 'ist_debt_amount',
@@ -56,7 +56,7 @@ export const columns: DataColumn<Row>[] = [
   {
     accessorKey: 'liquidation_margin',
     type: 'number',
-    header: 'Liquidation Margin',
+    header: 'Liquidation Ratio',
   },
   {
     accessorKey: 'liquidation_price',

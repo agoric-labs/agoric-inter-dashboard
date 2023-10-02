@@ -8,7 +8,7 @@ type Props = {
   title?: string;
 };
 
-export function OpenVaults({ title = 'Open vaults' }: Props) {
+export function OpenVaults({ title = 'Open Vaults' }: Props) {
   const granularity = useGranularity();
   const res = useCubeQuery({
     measures: [
