@@ -37,7 +37,7 @@ cube(`head_tendermint_slo_metrics`, {
       time_dimension: extracted_at,
       granularity: `hour`,
       refreshKey: {
-        every: `1 hour`,
+        every: `10 minutes`,
       },
     },
   },

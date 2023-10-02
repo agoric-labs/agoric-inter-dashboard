@@ -41,7 +41,7 @@ cube(`state_changes`, {
       time_dimension: blockTime,
       granularity: `day`,
       refreshKey: {
-        every: `1 hour`,
+        every: `10 minutes`,
       },
     },
     group_by_path_without_addresses: {
@@ -50,7 +50,7 @@ cube(`state_changes`, {
       time_dimension: blockTime,
       granularity: `day`,
       refreshKey: {
-        every: `1 hour`,
+        every: `10 minutes`,
       },
     },
   },

@@ -84,7 +84,7 @@ cube(`reserve`, {
       time_dimension: day,
       granularity: `day`,
       refresh_key: {
-        every: `1 hour`,
+        every: `10 minutes`,
       },
     },
   },

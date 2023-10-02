@@ -74,7 +74,7 @@ cube(`psm_governance`, {
       time_dimension: psm_governance.day,
       granularity: `day`,
       refreshKey: {
-        every: `1 hour`,
+        every: `10 minutes`,
       },
     },
     stats_year: {
@@ -106,7 +106,7 @@ cube(`psm_governance`, {
       time_dimension: psm_governance.day,
       granularity: `day`,
       refreshKey: {
-        every: `1 hour`,
+        every: `10 minutes`,
       },
     },
   },

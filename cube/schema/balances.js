@@ -79,7 +79,7 @@ cube(`balances`, {
       time_dimension: day,
       granularity: `day`,
       refreshKey: {
-        every: `1 hour`,
+        every: `10 minutes`,
       },
     },
   },

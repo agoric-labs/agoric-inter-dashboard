@@ -281,7 +281,7 @@ cube('open_vaults', {
       timeDimension: day,
       granularity: `day`,
       refreshKey: {
-        every: `1 hour`,
+        every: `10 minutes`,
       },
     },
     stats_year: {
@@ -313,7 +313,7 @@ cube('open_vaults', {
       timeDimension: day,
       granularity: `day`,
       refreshKey: {
-        every: `1 hour`,
+        every: `10 minutes`,
       },
     },
   },
