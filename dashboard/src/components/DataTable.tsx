@@ -68,7 +68,7 @@ export function DataTable<T>({ data, columns }: { data: T[]; columns: DataColumn
     const oldCol = col.header;
 
     col.header = ({ column }) => (
-      <button onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="text-left" type="button">
+      <button onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="text-left w-full" type="button">
         {typeof oldCol === 'string' ? oldCol : React.createElement(oldCol as any, { column })}
       </button>
     );
