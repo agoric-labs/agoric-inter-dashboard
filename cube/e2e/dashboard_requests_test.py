@@ -123,23 +123,6 @@ def test_oracle_prices():
     )
 
 
-def test_coingecko_history():
-    request(
-        {
-            "measures": [
-                "coingecko_history.current_price_usd_last",
-                "coingecko_history.current_price_usd_avg",
-            ],
-            "timeDimensions": [
-                {"dimension": "coingecko_history.day", "granularity": "day"}
-            ],
-            "order": [["coingecko_history.day", "desc"]],
-            "dimensions": ["coingecko_history.coin_id"],
-            "limit": 1,
-        }
-    )
-
-
 def test_slo_metrics():
     request(
         {

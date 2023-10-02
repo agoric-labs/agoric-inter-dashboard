@@ -5,12 +5,6 @@ cube(`reserve`, {
     ['shortfall_balance', 'total_fee_burned', 'total_fee_minted'],
     [],
     `
-    with coingecko_history as (
-      select day, array_agg(current_price_usd order by _sdc_received_at desc)[0] as current_price_usd
-        from ${coingecko_history.sql()}
-       where coin_id = 'cosmos'
-       group by 1
-    )
     select block_time -- for dailySQL
          , cast(json_value(body, '$.shortfallBalance.__value') as float64) / pow(10, 6) as shortfall_balance
          , cast(json_value(body, '$.totalFeeBurned.__value') as float64) / pow(10, 6) as total_fee_burned

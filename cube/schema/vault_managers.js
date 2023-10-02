@@ -9,6 +9,7 @@ cube('vault_managers', {
       'colletarization_ratio',
       'ist_minting_limit',
       'utilization_rate',
+      'price_rate',
     ],
     ['collateral_type', 'debt_type'],
     `
@@ -102,27 +103,20 @@ cube('vault_managers', {
         and g.ebh > m.block_height
         and g.debt_limit_name = debt_type
         order by m.block_height
-      ),
-
-      atom_prices as (
-        select day as date
-             , array_agg(cast(current_price_usd as float64) order by _sdc_batched_at)[0] as usd_price
-          from agoric_mainnet.coingeko_history
-         where coin_id = 'cosmos'
-         group by 1
       )
 
       select block_time
            , collateral_type
            , debt_type
            , total_locked_collateral/pow(10,6) total_locked_collateral
-           , total_locked_collateral/pow(10,6) * p.usd_price total_locked_collateral_usd
+           , total_locked_collateral/pow(10,6) * coalesce(p.type_out_amount / p.type_in_amount, 1) total_locked_collateral_usd
            , total_ist_minted/pow(10,6) total_ist_minted
-           , colletarization_ratio * p.usd_price colletarization_ratio
+           , colletarization_ratio * coalesce(p.type_out_amount / p.type_in_amount, 1) colletarization_ratio
            , ist_minting_limit/pow(10,6) ist_minting_limit
            , utilization_rate
+           , coalesce(p.type_out_amount / p.type_in_amount, 1) price_rate
       from all_metrics v
-      join atom_prices p on p.date = date(block_time) - 1
+      left join ${oracle_prices.sql()} p on p.day = date_trunc(block_time, day) and p.price_feed_name like concat(collateral_type, '-USD%')
   `,
   ),
 
@@ -157,6 +151,10 @@ cube('vault_managers', {
     },
     utilization_rate_avg: {
       sql: `utilization_rate`,
+      type: `avg`,
+    },
+    price_rate_avg: {
+      sql: `price_rate`,
       type: `avg`,
     },
   },

@@ -2,15 +2,7 @@ import { datasetId } from '../utils';
 
 cube(`vault_metrics`, {
   sql: `
-    with atom_prices as (
-      select day as date
-           , array_agg(cast(current_price_usd as float64) order by _sdc_batched_at)[0] as usd_price
-        from agoric_mainnet.coingeko_history
-       where coin_id = 'cosmos'
-       group by 1
-    ),
-
-    block_time as (
+    with block_time as (
       select block_height as height, block_time as time
         from ${datasetId()}.blocks
     ),
@@ -110,8 +102,7 @@ cube(`vault_metrics`, {
     raw_vault_manager_table as (
         select t.time as block_ts,
         m.* from all_metrics m
-        left join block_time t
-        on m.block_height = cast(t.height as int64)
+        left join block_time t on m.block_height = cast(t.height as int64)
     ),
 
     pre as (
@@ -121,13 +112,13 @@ cube(`vault_metrics`, {
         v.debt_type,
         v.collateral_type,
         total_locked_collateral total_locked_collateral,
-        total_locked_collateral * p.usd_price total_locked_collateral_usd,
+        total_locked_collateral * coalesce(p.type_out_amount / p.type_in_amount, 1) as total_locked_collateral_usd,
         total_ist_minted total_ist_minted,
         colletarization_ratio,
         ist_minting_limit ist_minting_limit,
         utilization_rate
         from raw_vault_manager_table v
-        join atom_prices p on p.date = date(v.block_ts) - 1
+        left join ${oracle_prices.sql()} p on p.day = date_trunc(v.block_ts, day) and p.price_feed_name like concat(v.collateral_type, '-USD%')
         order by block_height desc
     ),
 
@@ -162,9 +153,9 @@ cube(`vault_metrics`, {
                LAST_VALUE(utilization_rate IGNORE NULLS) OVER (partition by collateral_type, debt_type order by ts) utilization_rate,
         from inserted_dates
       )
-      select d.*, usd_price
+      select d.*, coalesce(p.type_out_amount / p.type_in_amount, 1) as usd_price
        from pre_filled d
-       left join atom_prices p on p.date = d.date
+       left join ${oracle_prices.sql()} p on cast(p.day as date) = d.date and p.price_feed_name like concat(collateral_type, '-USD%')
        where d.date is not null
   `,
 
