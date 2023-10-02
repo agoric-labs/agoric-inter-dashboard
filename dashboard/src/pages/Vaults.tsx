@@ -7,6 +7,7 @@ import { VaultTotalLockedCollateralChart } from '@/widgets/VaultTotalLockedColla
 import { VaultTotalMintedISTChart } from '@/widgets/VaultTotalMintedISTChart';
 import { VaultStatesChart } from '@/widgets/VaultStatesChart';
 import { OpenVaults } from '@/widgets/OpenVaults';
+import { LiquidatedVaults } from '@/widgets/LiquidatedVaults';
 import { VaultManagers } from '@/widgets/VaultManagers';
 
 export function Vaults() {
@@ -25,6 +26,8 @@ export function Vaults() {
         <VaultManagers />
         <hr className="my-5" />
         <OpenVaults />
+        <hr className="my-5" />
+        <LiquidatedVaults />
       </PageContent>
     </>
   );
