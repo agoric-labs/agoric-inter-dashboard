@@ -16,7 +16,7 @@ export function PSMUtilizedPie() {
         granularity: 'day',
       },
     ],
-    order: [['psm_stats.coin', 'asc']],
+    order: [['psm_stats.last_utilization_rate', 'asc']],
     dimensions: ['psm_stats.coin'],
   });
 
@@ -50,7 +50,7 @@ export function PSMUtilizedPie() {
                 fill="green"
                 nameKey="label"
                 paddingAngle={3}
-                minAngle={15}
+                minAngle={3}
                 labelLine={false}
                 label={RadianTooltip}
               >
