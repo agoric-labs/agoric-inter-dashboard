@@ -5,6 +5,7 @@ import { OraclePriceCards } from '@/widgets/OraclePriceCards';
 import { ActiveVaultCountCard } from '@/widgets/ActiveVaultCountCard';
 import { VaultTotalLockedCollateralChart } from '@/widgets/VaultTotalLockedCollateralChart';
 import { VaultTotalMintedISTChart } from '@/widgets/VaultTotalMintedISTChart';
+import { VaultStatesChart } from '@/widgets/VaultStatesChart';
 import { OpenVaults } from '@/widgets/OpenVaults';
 import { VaultManagers } from '@/widgets/VaultManagers';
 
@@ -19,6 +20,7 @@ export function Vaults() {
         </ValueCardGrid>
         <VaultTotalLockedCollateralChart />
         <VaultTotalMintedISTChart />
+        <VaultStatesChart />
         <hr className="my-5" />
         <VaultManagers />
         <hr className="my-5" />

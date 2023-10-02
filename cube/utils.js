@@ -1,58 +1,78 @@
-const datasetId = () => process.env.DATASET_ID;
+import { datasetId, dailySQL } from '../utils';
 
-exports.datasetId = datasetId;
+cube('vaults', {
+  sql: dailySQL(
+    [
+      'collateral_amount',
+      'state',
+    ],
+    ['vault_ix', 'debt_type_name', 'collateral_type'],
+    `
+      select block_time,
+             path as vault_ix, -- manager id + vault id
+             json_value(body, '$.debtSnapshot.debt.__brand') debt_type_name,
+             json_value(body, '$.locked.__brand') collateral_type,
+             cast(json_value(body, '$.locked.__value') as float64) / pow(10, 6) collateral_amount,
+             json_value(body, '$.vaultState') state
+      from ${state_changes.sql()}
+      where path like 'published.vaultFactory.managers.manager%'
+        and split(path, '.')[safe_offset(4)] = 'vaults'
+    `
+  ),
+  measures: {
+    count: {
+      sql: `vault_ix`,
+      type: `count`,
+    },
+    last_state: {
+      sql: `state`,
+      type: `sql`,
+    },
+  },
 
-const suffix = (s, v) => (v ? `${s}${v}` : '');
+  dimensions: {
+    day: {
+      sql: `day`,
+      type: `time`,
+    },
+  },
 
-const windowMeasure = (measure, dimensions) => {
-  let partition = '';
-
-  if (dimensions.length > 0) {
-    partition = `partition by ${dimensions.map((name) => `sd.${name}`)}`;
-  }
-
-  return `last_value(${measure} ignore nulls) over (${partition} order by day asc) as ${measure}`;
-};
-
-// The dailySQL helper function constructs a SQL query to aggregate data daily, based on provided
-// measures, dimensions, and base SQL logic. It fills day gaps from min(day) to current_date().
-// baseSQL must returns height as a first column for join times + measures + dimensions
-// Example:
-//   select cast(height as int) as height
-//        , split(path, '.')[3] as coin
-//        , cast(json_value(body, '$.mintedPoolBalance.__value') as float64) / pow(10, 6) as  minted_pool_balance
-//     from agoric_mainnet_own.storage
-//    where path like 'published.psm.%.metrics'
-exports.dailySQL = (measures, dimensions, baseSQL) => {
-  const groupBy = Array.apply(null, Array(dimensions.length))
-    .map((_, n) => `${n + 2}`)
-    .join(', ');
-
-  return `
-    with base_rows as (
-      ${baseSQL}
-      order by 1 desc
-    ), rows_by_days as (
-      select date_trunc(block_time, day) day
-           ${suffix(', ', dimensions.join(', '))}
-           , ${measures
-             .map((name) => `array_agg(${name} order by block_time desc)[0] as ${name}`)
-             .join('\n         , ')}
-        from base_rows g
-       group by 1${suffix(', ', groupBy)}
-    ), start_days as (
-      select min(day) as min_day
-          ${suffix(', ', dimensions.join(', '))}
-        from rows_by_days
-       ${suffix('group by ', groupBy)}
-    )
-    select day
-         ${suffix(', ', dimensions.map((name) => `sd.${name}`).join(', '))}
-         , ${measures.map((name) => windowMeasure(name, dimensions)).join('\n         , ')}
-      from start_days sd, unnest(generate_timestamp_array(min_day, current_timestamp(), interval 1 day)) day
-      left join rows_by_days g on g.day = day ${suffix(
-        'and ',
-        dimensions.map((name) => `g.${name} = sd.${name}`).join(' and '),
-      )}
-  `;
-};
+  // pre_aggregations: {
+  //   stats_year: {
+  //     measures: [count],
+  //     dimensions: [state],
+  //     timeDimension: day,
+  //     granularity: `year`,
+  //     refreshKey: {
+  //       every: `24 hour`,
+  //     },
+  //   },
+  //   stats_month: {
+  //     measures: [count],
+  //     dimensions: [state],
+  //     timeDimension: day,
+  //     granularity: `month`,
+  //     refreshKey: {
+  //       every: `24 hour`,
+  //     },
+  //   },
+  //   stats_week: {
+  //     measures: [count],
+  //     dimensions: [state],
+  //     timeDimension: day,
+  //     granularity: `month`,
+  //     refreshKey: {
+  //       every: `24 hour`,
+  //     },
+  //   },
+  //   stats_day: {
+  //     measures: [count],
+  //     dimensions: [state],
+  //     timeDimension: day,
+  //     granularity: `day`,
+  //     refreshKey: {
+  //       every: `10 minutes`,
+  //     },
+  //   },
+  // },
+});
