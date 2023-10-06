@@ -9,6 +9,7 @@ import { InterProtocol } from './pages/InterProtocol';
 import { PSM } from './pages/PSM';
 import { Reserve } from './pages/Reserve';
 import { Internal } from './pages/Internal';
+import { Liquidated } from './pages/Liquidated';
 
 const MainLayoutWithCoube = ({ children }: { children?: ReactNode }) => (
   <CubeProvider>
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: '/reserve',
         element: <Reserve />,
+      },
+      {
+        path: '/liquidated',
+        element: <Liquidated />,
       },
       {
         path: '/internal',

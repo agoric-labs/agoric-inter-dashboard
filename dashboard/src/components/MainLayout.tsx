@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Outlet, Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { ShieldCheck, Box, ReplaceAll, LayoutGrid } from 'lucide-react';
+import { ShieldCheck, Box, Table2, ReplaceAll, LayoutGrid } from 'lucide-react';
 import { Helmet } from 'react-helmet';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Footer } from './Footer';
@@ -25,6 +25,11 @@ const menuItems = [
     label: 'Vaults',
     icon: <Box />,
     to: '/vaults',
+  },
+  {
+    label: 'Liquidated',
+    icon: <Table2 />,
+    to: '/liquidated',
   },
   {
     label: 'Reserve',

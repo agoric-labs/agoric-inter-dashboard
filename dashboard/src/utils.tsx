@@ -83,3 +83,25 @@ export const formatPrice = makeCoinFormatter(formatUSD);
 export const formatIST = makeCoinFormatter(formatISTRaw);
 
 export const formatPercent = (v: any) => `${roundPrice(v * 100)}%`;
+
+export const toTitleCase = (str: string) =>
+  str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+
+export const formatSecondsToHumanReadable = (seconds: number) => {
+  if (seconds < 60) {
+    return `${seconds} second${seconds !== 1 ? 's' : ''}`;
+  }
+
+  if (seconds < 3600) {
+    const minutes = Math.floor(seconds / 60);
+    return `${minutes} minute${minutes !== 1 ? 's' : ''}`;
+  }
+
+  if (seconds < 86400) {
+    const hours = Math.floor(seconds / 3600);
+    return `${hours} hour${hours !== 1 ? 's' : ''}`;
+  }
+
+  const days = Math.floor(seconds / 86400);
+  return `${days} day${days !== 1 ? 's' : ''}`;
+};

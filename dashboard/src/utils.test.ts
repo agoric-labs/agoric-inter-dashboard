@@ -1,4 +1,10 @@
-import { formatPrice } from './utils';
+import { formatPrice, toTitleCase } from './utils';
+
+test('toTitleCase', () => {
+  expect(toTitleCase('hello')).toBe('Hello');
+  expect(toTitleCase('Hello')).toBe('Hello');
+  expect(toTitleCase('hELLO')).toBe('Hello');
+});
 
 test('formatPrice', () => {
   expect(formatPrice(1)).toBe('$1.00');

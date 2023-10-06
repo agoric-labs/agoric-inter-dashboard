@@ -1,5 +1,6 @@
 import { datasetId, dailySQL } from '../utils';
 
+// liquidated + liquidated
 cube('liquidated_vaults', {
   sql: dailySQL(
     [
@@ -11,11 +12,14 @@ cube('liquidated_vaults', {
       'liquidation_price',
       'liquidation_cushion',
       'collateralization_ratio',
+      'liquidating_start_time',
+      'liquidated_time',
     ],
-    ['vault_ix', 'debt_type_name', 'collateral_type'],
+    ['vault_ix', 'debt_type_name', 'collateral_type', 'vault_state'],
     `
       with vault_factory_vaults as (
       select block_height,
+             block_time,
              path as vault_ix, -- manager id + vault id
 
              json_value(body, '$.debtSnapshot.debt.__brand') debt_type_name,
@@ -35,21 +39,26 @@ cube('liquidated_vaults', {
     ),
 
     vaults_statuses as (
-      select vault_ix, ARRAY_AGG(vault_state order by block_height desc)[safe_offset(0)] vault_state
+      select vault_ix, vault_state
+           , ARRAY_AGG(block_time order by block_height)[safe_offset(0)] as switch_time
         from vault_factory_vaults
-       group by vault_ix
+       group by 1, 2
     ),
 
     active_vaults as (
-      select vault_ix,
-             block_height,
-             locked_type_name,
+      select v.vault_ix,
+             v.block_height,
+             v.locked_type_name,
+             v.vault_state,
              cast(ARRAY_AGG(locked_value order by block_height desc)[safe_offset(0)] as float64) collateral_amount,
              debt_type_name,
-             cast(ARRAY_AGG(debt_value order by block_height desc)[safe_offset(0)] as float64) ist_debt_amount
-      from vault_factory_vaults
-      where vault_ix in (select vault_ix from vaults_statuses where vault_state = 'liquidated')
-      group by vault_ix, block_height, locked_type_name, debt_type_name
+             cast(ARRAY_AGG(debt_value order by block_height desc)[safe_offset(0)] as float64) ist_debt_amount,
+             cast(array_agg(in_process_s.switch_time)[0] as timestamp) liquidating_start_time,
+             cast(array_agg(done_s.switch_time)[0] as timestamp) liquidated_time
+      from vault_factory_vaults v
+      join vaults_statuses in_process_s on in_process_s.vault_ix = v.vault_ix and in_process_s.vault_state = 'liquidating'
+      left join vaults_statuses done_s on done_s.vault_ix = v.vault_ix and done_s.vault_state = 'liquidated'
+      group by vault_ix, block_height, locked_type_name, debt_type_name, v.vault_state
     ),
 
     oracle_prices as (
@@ -127,6 +136,7 @@ cube('liquidated_vaults', {
     final_rows as (
       select b.block_time,
              cast(a.block_height as int) as height,
+             vault_state,
              a.debt_type_name,
              a.vault_ix,
              a.locked_type_name collateral_type,
@@ -135,6 +145,8 @@ cube('liquidated_vaults', {
              a.collateral_amount*a.last_oracle_price collateral_oracle_usd_value,
              a.ist_debt_amount,
              g.liquidation_margin,
+             liquidating_start_time,
+             liquidated_time,
              coalesce(SAFE_DIVIDE(a.ist_debt_amount*g.liquidation_margin, a.collateral_amount), 0) liquidation_price,
              coalesce(SAFE_DIVIDE(a.last_oracle_price, coalesce(SAFE_DIVIDE(a.ist_debt_amount * g.liquidation_margin, a.collateral_amount), 0) - 1), 0) liquidation_cushion
       from add_prices a
@@ -150,7 +162,15 @@ cube('liquidated_vaults', {
   measures: {
     count: {
       sql: `vault_ix`,
-      type: `count`,
+      type: `countDistinct`,
+    },
+    liquidating_start_time: {
+      sql: `max(unix_seconds(liquidating_start_time))`,
+      type: `number`,
+    },
+    liquidated_time: {
+      sql: `max(unix_seconds(liquidated_time))`,
+      type: `number`,
     },
     collateral_amount: {
       sql: `collateral_amount`,
@@ -195,7 +215,11 @@ cube('liquidated_vaults', {
     },
     vault_ix: {
       sql: `vault_ix`,
-      type: `number`,
+      type: `string`,
+    },
+    vault_state: {
+      sql: `vault_state`,
+      type: `string`,
     },
     collateral_type: {
       sql: `collateral_type`,
@@ -212,7 +236,7 @@ cube('liquidated_vaults', {
   },
 
   pre_aggregations: {
-    main_year: {
+    main_year2: {
       measures: [
         collateral_amount,
         current_collateral_price,
@@ -222,15 +246,17 @@ cube('liquidated_vaults', {
         liquidation_price,
         liquidation_cushion,
         collateralization_ratio,
+        liquidating_start_time,
+        liquidated_time,
       ],
-      dimensions: [collateral_type, vault_ix, debt_type],
+      dimensions: [collateral_type, vault_ix, debt_type, vault_state],
       timeDimension: day,
       granularity: `year`,
       refreshKey: {
         every: `24 hour`,
       },
     },
-    main_month: {
+    main_month2: {
       measures: [
         collateral_amount,
         current_collateral_price,
@@ -240,15 +266,17 @@ cube('liquidated_vaults', {
         liquidation_price,
         liquidation_cushion,
         collateralization_ratio,
+        liquidating_start_time,
+        liquidated_time,
       ],
-      dimensions: [collateral_type, vault_ix, debt_type],
+      dimensions: [collateral_type, vault_ix, debt_type, vault_state],
       timeDimension: day,
       granularity: `month`,
       refreshKey: {
         every: `24 hour`,
       },
     },
-    main_week: {
+    main_week2: {
       measures: [
         collateral_amount,
         current_collateral_price,
@@ -258,15 +286,17 @@ cube('liquidated_vaults', {
         liquidation_price,
         liquidation_cushion,
         collateralization_ratio,
+        liquidating_start_time,
+        liquidated_time,
       ],
-      dimensions: [collateral_type, vault_ix, debt_type],
+      dimensions: [collateral_type, vault_ix, debt_type, vault_state],
       timeDimension: day,
       granularity: `week`,
       refreshKey: {
         every: `24 hour`,
       },
     },
-    main_day: {
+    main_day2: {
       measures: [
         collateral_amount,
         current_collateral_price,
@@ -276,8 +306,10 @@ cube('liquidated_vaults', {
         liquidation_price,
         liquidation_cushion,
         collateralization_ratio,
+        liquidating_start_time,
+        liquidated_time,
       ],
-      dimensions: [collateral_type, vault_ix, debt_type],
+      dimensions: [collateral_type, vault_ix, debt_type, vault_state],
       timeDimension: day,
       granularity: `day`,
       refreshKey: {

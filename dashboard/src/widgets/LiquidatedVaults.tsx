@@ -1,8 +1,9 @@
 import { useCubeQuery } from '@cubejs-client/react';
-import { OpenVaultsTable } from '@/components/OpenVaultsTable';
+import { format } from 'date-fns';
+import { LiquidatedVaultsTable } from '@/components/LiquidatedVaultsTable';
 import { SectionHeader } from '@/components/SectionHeader';
 import { useGranularity } from '@/components/CubeProvider';
-import { getCubeQueryView } from '@/utils';
+import { getCubeQueryView, toTitleCase, formatSecondsToHumanReadable } from '@/utils';
 
 type Props = {
   title?: string;
@@ -20,6 +21,8 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults' }: Props) {
       'liquidated_vaults.liquidation_price',
       'liquidated_vaults.liquidation_cushion',
       'liquidated_vaults.collateralization_ratio',
+      'liquidated_vaults.liquidating_start_time',
+      'liquidated_vaults.liquidated_time',
     ],
     timeDimensions: [
       {
@@ -32,7 +35,7 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults' }: Props) {
       'liquidated_vaults.debt_type': 'asc',
       'liquidated_vaults.vault_ix': 'asc',
     },
-    dimensions: ['liquidated_vaults.debt_type', 'liquidated_vaults.vault_ix', 'liquidated_vaults.collateral_type'],
+    dimensions: ['liquidated_vaults.debt_type', 'liquidated_vaults.vault_ix', 'liquidated_vaults.collateral_type', 'liquidated_vaults.vault_state'],
   });
 
   if (res.isLoading || !res.resultSet) {
@@ -58,6 +61,17 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults' }: Props) {
 
     // published.vaultFactory.managers.manager0.vaults.vault10 -> 10
     newRow.vault_ix = newRow.vault_ix.replace(/.*?(\d+)$/, '$1');
+    newRow.vault_state = toTitleCase(newRow.vault_state);
+
+    const starting = new Date(row['liquidated_vaults.liquidating_start_time'] * 1000);
+    newRow.liquidationStartTime = format(starting, 'MM/dd/yyyy HH:mm');
+
+    if (row['liquidated_vaults.liquidated_time']) {
+      const diff = row['liquidated_vaults.liquidated_time'] - row['liquidated_vaults.liquidating_start_time'];
+      newRow.liquidationTime = formatSecondsToHumanReadable(diff);
+    } else {
+      newRow.liquidationTime = '—';
+    }
 
     return newRow;
   });
@@ -65,7 +79,7 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults' }: Props) {
   return (
     <>
       <SectionHeader>{title}</SectionHeader>
-      <OpenVaultsTable data={rows} />
+      <LiquidatedVaultsTable data={rows} />
     </>
   );
 }
