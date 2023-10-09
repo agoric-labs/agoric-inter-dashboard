@@ -1,7 +1,7 @@
 import { useCubeQuery } from '@cubejs-client/react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { getCubeQueryView, formatDay } from '@/utils';
+import { getCubeQueryView, formatDay, toTitleCase } from '@/utils';
 import { useGranularity } from '@/components/CubeProvider';
 import { colors } from '@/components/palette';
 
@@ -58,7 +58,7 @@ export function VaultStatesChart({ title = 'Vault States' }: Props) {
         <Tooltip />
         <Legend />
         {resultSet.seriesNames().map((col, idx) => (
-          <Bar key={col.key} stackId="a" dataKey={col.key} name={col.shortTitle} fill={colors[idx % colors.length]} />
+          <Bar key={col.key} stackId="a" dataKey={col.key} name={toTitleCase(col.shortTitle)} fill={colors[idx % colors.length]} />
         ))}
       </BarChart>
     </ResponsiveContainer>

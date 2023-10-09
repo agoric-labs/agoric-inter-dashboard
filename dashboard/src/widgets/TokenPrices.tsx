@@ -62,7 +62,7 @@ export function TokenPrices({ title = 'Token Prices' }: Props) {
     rows.push({
       token: label,
       dayChange:
-        changeValue > 0 ? (
+        changeValue >= 0 ? (
           <div className="text-right text-green-500">+{changeValue}%</div>
         ) : (
           <div className="text-right text-red-500">{changeValue}%</div>

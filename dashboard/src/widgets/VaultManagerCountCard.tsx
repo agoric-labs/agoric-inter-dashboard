@@ -12,7 +12,6 @@ export function VaultManagerCountCard({ title = 'Total Collateral Types' }: Prop
     order: {
       'vault_managers.count': 'desc',
     },
-    dimensions: ['vault_managers.collateral_type', 'vault_managers.debt_type'],
     timeDimensions: [
       {
         dimension: 'vault_managers.day',
