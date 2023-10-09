@@ -171,6 +171,7 @@ cube('open_vaults', {
     liquidation_margin: {
       sql: `liquidation_margin`,
       type: `avg`,
+      format: `percent`,
     },
     liquidation_price: {
       sql: `liquidation_price`,

@@ -1,7 +1,7 @@
 import { ValueCardGrid } from '@/components/ValueCardGrid';
 import { PageHeader } from '@/components/PageHeader';
 import { PageContent } from '@/components/PageContent';
-import { OraclePriceCards } from '@/widgets/OraclePriceCards';
+import { TokenPrices } from '@/widgets/TokenPrices';
 import { ActiveVaultCountCard } from '@/widgets/ActiveVaultCountCard';
 import { VaultTotalLockedCollateralChart } from '@/widgets/VaultTotalLockedCollateralChart';
 import { VaultTotalMintedISTChart } from '@/widgets/VaultTotalMintedISTChart';
@@ -15,9 +15,9 @@ export function Vaults() {
       <PageHeader title="Vaults" />
       <PageContent>
         <ValueCardGrid>
-          <OraclePriceCards />
           <ActiveVaultCountCard />
         </ValueCardGrid>
+        <TokenPrices />
         <VaultTotalLockedCollateralChart />
         <VaultTotalMintedISTChart />
         <hr className="my-5" />

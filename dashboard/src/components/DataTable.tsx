@@ -34,7 +34,7 @@ export const renderPercent = (val: string) => <div className="text-right font-me
 
 export const numberHeader = (t: string) => () => <div className="text-right">{t}</div>;
 
-export type DataColumn<T> = ColumnDef<T> & { type: 'number' | 'usd' | 'percent' | 'text' };
+export type DataColumn<T> = ColumnDef<T> & { type: 'number' | 'usd' | 'percent' | 'text' | 'markup' };
 
 export function DataTable<T>({ data, columns }: { data: T[]; columns: DataColumn<T>[] }) {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -63,12 +63,21 @@ export function DataTable<T>({ data, columns }: { data: T[]; columns: DataColumn
         // @ts-ignore
         col.cell = ({ row }) => renderNumber(row.getValue(col.accessorKey));
       }
+
+      if (type === 'markup') {
+        // @ts-ignore
+        col.cell = ({ row }) => row.getValue(col.accessorKey);
+      }
     }
 
     const oldCol = col.header;
 
     col.header = ({ column }) => (
-      <button onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="text-left w-full" type="button">
+      <button
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        className="text-left w-full"
+        type="button"
+      >
         {typeof oldCol === 'string' ? oldCol : React.createElement(oldCol as any, { column })}
       </button>
     );
@@ -94,7 +103,7 @@ export function DataTable<T>({ data, columns }: { data: T[]; columns: DataColumn
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
+                <TableHead key={header.id} style={{ width: header.getSize() !== 0 ? header.getSize() : undefined }}>
                   {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                 </TableHead>
               ))}
