@@ -8,6 +8,8 @@ import { VaultTotalMintedISTChart } from '@/widgets/VaultTotalMintedISTChart';
 import { OpenVaults } from '@/widgets/OpenVaults';
 import { LiquidatedVaults } from '@/widgets/LiquidatedVaults';
 import { VaultManagers } from '@/widgets/VaultManagers';
+import { VaultManagerCountCard } from '@/widgets/VaultManagerCountCard';
+import { VaultTotalLockedCollateralValueCard } from '@/widgets/VaultTotalLockedCollateralValueCard';
 
 export function Vaults() {
   return (
@@ -15,7 +17,9 @@ export function Vaults() {
       <PageHeader title="Vaults" />
       <PageContent>
         <ValueCardGrid>
+          <VaultManagerCountCard />
           <ActiveVaultCountCard />
+          <VaultTotalLockedCollateralValueCard />
         </ValueCardGrid>
         <TokenPrices />
         <VaultTotalLockedCollateralChart />
