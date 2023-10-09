@@ -35,7 +35,12 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults' }: Props) {
       'liquidated_vaults.debt_type': 'asc',
       'liquidated_vaults.vault_ix': 'asc',
     },
-    dimensions: ['liquidated_vaults.debt_type', 'liquidated_vaults.vault_ix', 'liquidated_vaults.collateral_type', 'liquidated_vaults.vault_state'],
+    dimensions: [
+      'liquidated_vaults.debt_type',
+      'liquidated_vaults.vault_ix',
+      'liquidated_vaults.collateral_type',
+      'liquidated_vaults.vault_state',
+    ],
   });
 
   if (res.isLoading || !res.resultSet) {
@@ -55,7 +60,7 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults' }: Props) {
   const rows = resultSet.tablePivot().map((row: any) => {
     const newRow: any = {};
 
-    Object.keys(row).forEach(key => {
+    Object.keys(row).forEach((key) => {
       newRow[key.replace('liquidated_vaults.', '')] = row[key];
     });
 

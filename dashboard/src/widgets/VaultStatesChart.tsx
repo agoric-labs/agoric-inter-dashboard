@@ -58,7 +58,13 @@ export function VaultStatesChart({ title = 'Vault States' }: Props) {
         <Tooltip />
         <Legend />
         {resultSet.seriesNames().map((col, idx) => (
-          <Bar key={col.key} stackId="a" dataKey={col.key} name={toTitleCase(col.shortTitle)} fill={colors[idx % colors.length]} />
+          <Bar
+            key={col.key}
+            stackId="a"
+            dataKey={col.key}
+            name={toTitleCase(col.shortTitle)}
+            fill={colors[idx % colors.length]}
+          />
         ))}
       </BarChart>
     </ResponsiveContainer>

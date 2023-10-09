@@ -13,9 +13,7 @@ import { Liquidated } from './pages/Liquidated';
 
 const MainLayoutWithCoube = ({ children }: { children?: ReactNode }) => (
   <CubeProvider>
-    <MainLayout>
-      {children}
-    </MainLayout>
+    <MainLayout>{children}</MainLayout>
   </CubeProvider>
 );
 
@@ -57,7 +55,7 @@ const router = createBrowserRouter([
 export function App() {
   return (
     <StrictMode>
-        <RouterProvider router={router} />
+      <RouterProvider router={router} />
     </StrictMode>
   );
 }

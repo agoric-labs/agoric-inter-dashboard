@@ -32,5 +32,7 @@ export function VaultTotalLockedCollateralValueCard({ title = 'Total Locked Coll
     return null;
   }
 
-  return <ValueCard title={title} value={formatPrice(rows[0]['vault_managers.total_locked_collateral_usd_avg'] as string)} />;
+  return (
+    <ValueCard title={title} value={formatPrice(rows[0]['vault_managers.total_locked_collateral_usd_avg'] as string)} />
+  );
 }
