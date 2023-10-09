@@ -45,20 +45,28 @@ cube('liquidated_vaults', {
        group by 1, 2
     ),
 
+    vault_last_states as (
+      select vault_ix
+           , ARRAY_AGG(vault_state order by switch_time desc)[safe_offset(0)] as vault_state
+        from vaults_statuses
+       group by 1
+    ),
+
     active_vaults as (
       select v.vault_ix,
-             v.block_height,
-             v.locked_type_name,
-             v.vault_state,
+             array_agg(v.block_height order by block_height desc)[safe_offset(0)] as block_height,
+             array_agg(v.locked_type_name order by block_height desc)[safe_offset(0)] as locked_type_name,
+             array_agg(v.debt_type_name order by block_height desc)[safe_offset(0)] as debt_type_name,
              cast(ARRAY_AGG(locked_value order by block_height desc)[safe_offset(0)] as float64) collateral_amount,
-             debt_type_name,
              cast(ARRAY_AGG(debt_value order by block_height desc)[safe_offset(0)] as float64) ist_debt_amount,
              cast(array_agg(in_process_s.switch_time)[0] as timestamp) liquidating_start_time,
-             cast(array_agg(done_s.switch_time)[0] as timestamp) liquidated_time
+             cast(array_agg(done_s.switch_time)[0] as timestamp) liquidated_time,
+             array_agg(v.vault_state order by block_height desc)[safe_offset(0)] as vault_state
       from vault_factory_vaults v
       join vaults_statuses in_process_s on in_process_s.vault_ix = v.vault_ix and in_process_s.vault_state = 'liquidating'
       left join vaults_statuses done_s on done_s.vault_ix = v.vault_ix and done_s.vault_state = 'liquidated'
-      group by vault_ix, block_height, locked_type_name, debt_type_name, v.vault_state
+      where v.vault_ix in (select vault_ix from vault_last_states where vault_state in ('liquidated', 'liquidating'))
+      group by vault_ix
     ),
 
     oracle_prices as (
@@ -80,7 +88,7 @@ cube('liquidated_vaults', {
       type_out_name,
       cast(type_out_amount as float64)/cast(type_in_amount as float64) price
       from oracle_prices
-    ),
+   ),
 
     oracle_price_grid as (
       select g.block_height,
@@ -128,9 +136,7 @@ cube('liquidated_vaults', {
       select v.*,
              cast(p.last_oracle_price as float64) last_oracle_price
       from active_vaults v
-      left join
-      last_oracle_prices p
-      on v.locked_type_name = p.type_in_name
+      left join last_oracle_prices p on v.locked_type_name = p.type_in_name
     ),
 
     final_rows as (
