@@ -39,7 +39,7 @@ coingeko:
   shedule: "0 * * * *"
 
 sloMetrics:
-  enabled: true
+  enabled: false
   shedule: "30 * * * *"
 
 serviceAccount:
