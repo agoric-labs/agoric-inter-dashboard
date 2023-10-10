@@ -3,13 +3,14 @@ import { DataTable, DataColumn } from './DataTable';
 type Row = {
   vault_ix: string;
   collateral_type: string;
-  collateral_amount: number;
+  liquidating_locked_value: number;
   current_collateral_price: number;
   collateral_oracle_usd_value: number;
   ist_debt_amount: number;
   liquidation_margin: number;
   liquidation_price: number;
   liquidation_cushion: number;
+  liquidation_token_price: number;
   collateralization_ratio: number;
 };
 
@@ -28,12 +29,12 @@ export const columns: DataColumn<Row>[] = [
     accessorKey: 'collateral_type',
     type: 'text',
     header: 'Vault Manager',
-    size: 50,
+    size: 300,
   },
   {
-    accessorKey: 'liquidation_margin',
-    type: 'number',
-    header: 'Liquidation Ratio',
+    accessorKey: 'vault_state',
+    type: 'text',
+    header: 'State',
   },
   {
     accessorKey: 'liquidationStartTime',
@@ -46,19 +47,24 @@ export const columns: DataColumn<Row>[] = [
     header: 'Liquidation Time',
   },
   {
-    accessorKey: 'vault_state',
-    type: 'text',
-    header: 'State',
+    accessorKey: 'liquidation_margin',
+    type: 'number',
+    header: 'Liquidation Ratio',
   },
   {
-    accessorKey: 'collateral_amount',
-    type: 'number',
-    header: 'Collateral Amount',
-  },
-  {
-    accessorKey: 'liquidation_price',
-    type: 'number',
+    accessorKey: 'liquidation_token_price',
+    type: 'usd',
     header: 'Liquidation Price',
+  },
+  {
+    accessorKey: 'liquidating_locked_value',
+    type: 'number',
+    header: 'Collateral Returned Amount',
+  },
+  {
+    accessorKey: 'liquidating_locked_value_usd',
+    type: 'usd',
+    header: 'Collateral returned ($USD)',
   },
 ];
 

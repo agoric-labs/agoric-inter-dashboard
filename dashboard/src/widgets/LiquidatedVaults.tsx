@@ -13,7 +13,8 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults' }: Props) {
   const granularity = useGranularity();
   const res = useCubeQuery({
     measures: [
-      'liquidated_vaults.collateral_amount',
+      'liquidated_vaults.liquidating_locked_value',
+      'liquidated_vaults.liquidation_token_price',
       'liquidated_vaults.current_collateral_price',
       'liquidated_vaults.collateral_oracle_usd_value',
       'liquidated_vaults.ist_debt_amount',
@@ -67,6 +68,7 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults' }: Props) {
     // published.vaultFactory.managers.manager0.vaults.vault10 -> 10
     newRow.vault_ix = newRow.vault_ix.replace(/.*?(\d+)$/, '$1');
     newRow.vault_state = toTitleCase(newRow.vault_state);
+    newRow.liquidating_locked_value_usd = newRow.liquidating_locked_value * newRow.liquidation_token_price;
 
     const starting = new Date(row['liquidated_vaults.liquidating_start_time'] * 1000);
     newRow.liquidationStartTime = format(starting, 'MM/dd/yyyy HH:mm');

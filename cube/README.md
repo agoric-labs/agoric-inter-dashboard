@@ -6,7 +6,6 @@ cube('liquidated_vaults', {
     [
       'collateral_amount',
       'liquidation_token_price',
-      'liquidating_locked_value',
       'current_collateral_price',
       'collateral_oracle_usd_value',
       'ist_debt_amount',
@@ -43,7 +42,7 @@ cube('liquidated_vaults', {
     vaults_statuses as (
       select vault_ix, vault_state
            , ARRAY_AGG(block_time order by block_height)[safe_offset(0)] as switch_time
-           , ARRAY_AGG(locked_value order by block_height)[safe_offset(0)] as locked_value
+           , ARRAY_AGG(collateral_amount order by block_height)[safe_offset(0)] as locked_value
         from vault_factory_vaults
        group by 1, 2
     ),
@@ -60,11 +59,11 @@ cube('liquidated_vaults', {
              array_agg(v.block_height order by block_height desc)[safe_offset(0)] as block_height,
              array_agg(v.locked_type_name order by block_height desc)[safe_offset(0)] as locked_type_name,
              array_agg(v.debt_type_name order by block_height desc)[safe_offset(0)] as debt_type_name,
-             cast(ARRAY_AGG(v.locked_value order by block_height desc)[safe_offset(0)] as float64) collateral_amount,
+             cast(ARRAY_AGG(locked_value order by block_height desc)[safe_offset(0)] as float64) collateral_amount,
              cast(ARRAY_AGG(debt_value order by block_height desc)[safe_offset(0)] as float64) ist_debt_amount,
              cast(array_agg(in_process_s.switch_time)[0] as timestamp) liquidating_start_time,
+             cast(array_agg(in_process_s.locked_value)[0] as timestamp) liquidating_locked_value,
              cast(array_agg(done_s.switch_time)[0] as timestamp) liquidated_time,
-             array_agg(in_process_s.locked_value)[0] liquidating_locked_value,
              array_agg(v.vault_state order by block_height desc)[safe_offset(0)] as vault_state
       from vault_factory_vaults v
       join vaults_statuses in_process_s on in_process_s.vault_ix = v.vault_ix and in_process_s.vault_state = 'liquidating'
@@ -159,8 +158,7 @@ cube('liquidated_vaults', {
              liquidated_time,
              coalesce(SAFE_DIVIDE(a.ist_debt_amount*g.liquidation_margin, a.collateral_amount), 0) liquidation_price,
              coalesce(SAFE_DIVIDE(a.last_oracle_price, coalesce(SAFE_DIVIDE(a.ist_debt_amount * g.liquidation_margin, a.collateral_amount), 0) - 1), 0) liquidation_cushion,
-             liq_op.type_out_amount / liq_op.type_in_amount as liquidation_token_price,
-             liquidating_locked_value
+             liq_op.type_out_amount / liq_op.type_in_amount as liquidation_token_price
       from add_prices a
       join ${state_changes.sql()} b using (block_height)
       join ${oracle_prices.sql()} liq_op on liq_op.day = date_trunc(a.liquidated_time, day) and liq_op.price_feed_name like concat(a.locked_type_name, '%')
@@ -187,10 +185,6 @@ cube('liquidated_vaults', {
     },
     liquidation_token_price: {
       sql: `liquidation_token_price`,
-      type: `avg`,
-    },
-    liquidating_locked_value: {
-      sql: `liquidating_locked_value`,
       type: `avg`,
     },
     collateral_amount: {
@@ -265,7 +259,6 @@ cube('liquidated_vaults', {
         ist_debt_amount,
         liquidation_margin,
         liquidation_price,
-        liquidating_locked_value,
         liquidation_cushion,
         collateralization_ratio,
         liquidating_start_time,
@@ -288,7 +281,6 @@ cube('liquidated_vaults', {
         liquidation_margin,
         liquidation_price,
         liquidation_cushion,
-        liquidating_locked_value,
         collateralization_ratio,
         liquidating_start_time,
         liquidated_time,
@@ -312,7 +304,6 @@ cube('liquidated_vaults', {
         liquidation_cushion,
         collateralization_ratio,
         liquidating_start_time,
-        liquidating_locked_value,
         liquidated_time,
         liquidation_token_price,
       ],
@@ -334,7 +325,6 @@ cube('liquidated_vaults', {
         liquidation_cushion,
         collateralization_ratio,
         liquidating_start_time,
-        liquidating_locked_value,
         liquidated_time,
         liquidation_token_price,
       ],
