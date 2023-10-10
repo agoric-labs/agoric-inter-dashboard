@@ -48,7 +48,7 @@ export const columns: DataColumn<Row>[] = [
   },
   {
     accessorKey: 'liquidation_margin',
-    type: 'number',
+    type: 'percent',
     header: 'Liquidation Ratio',
   },
   {
