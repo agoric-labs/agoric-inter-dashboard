@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { DataTable, DataColumn } from './DataTable';
 
 export type Row = {
-  token: string;
+  token: ReactNode;
   dayChange: ReactNode;
   oraclePrice: number;
 };
@@ -14,13 +14,13 @@ type Props = {
 export const columns: DataColumn<Row>[] = [
   {
     accessorKey: 'token',
-    type: 'text',
+    type: 'markup',
     header: 'Token',
     size: 200,
   },
   {
     accessorKey: 'dayChange',
-    type: 'markup',
+    type: 'markupRight',
     header: '24h change',
     size: 50,
   },

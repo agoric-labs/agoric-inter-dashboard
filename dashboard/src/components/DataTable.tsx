@@ -34,7 +34,7 @@ export const renderPercent = (val: string) => <div className="text-right font-me
 
 export const numberHeader = (t: string) => () => <div className="text-right">{t}</div>;
 
-export type DataColumn<T> = ColumnDef<T> & { type: 'number' | 'usd' | 'percent' | 'text' | 'markup' };
+export type DataColumn<T> = ColumnDef<T> & { type: 'number' | 'usd' | 'percent' | 'text' | 'markup' | 'markupRight' };
 
 export function DataTable<T>({ data, columns }: { data: T[]; columns: DataColumn<T>[] }) {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -42,7 +42,7 @@ export function DataTable<T>({ data, columns }: { data: T[]; columns: DataColumn
     const { type, ...col } = c;
 
     // @ts-ignore
-    if (type !== 'text' && typeof col.header === 'string') {
+    if (type !== 'text' && type !== 'markup' && typeof col.header === 'string') {
       col.header = numberHeader(col.header);
     }
 
@@ -64,7 +64,7 @@ export function DataTable<T>({ data, columns }: { data: T[]; columns: DataColumn
         col.cell = ({ row }) => renderNumber(row.getValue(col.accessorKey));
       }
 
-      if (type === 'markup') {
+      if (type === 'markup' || type === 'markupRight') {
         // @ts-ignore
         col.cell = ({ row }) => row.getValue(col.accessorKey);
       }

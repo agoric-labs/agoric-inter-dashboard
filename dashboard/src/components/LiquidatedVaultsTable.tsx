@@ -22,11 +22,13 @@ export const columns: DataColumn<Row>[] = [
     accessorKey: 'vault_ix',
     type: 'text',
     header: 'ID',
+    size: 50,
   },
   {
     accessorKey: 'collateral_type',
     type: 'text',
     header: 'Vault Manager',
+    size: 50,
   },
   {
     accessorKey: 'liquidation_margin',

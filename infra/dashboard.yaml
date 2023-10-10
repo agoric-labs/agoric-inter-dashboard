@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: xxx
+        image: alexes/source-cosmos-validator-delegations:add15
         ports:
         - containerPort: 80
         resources:

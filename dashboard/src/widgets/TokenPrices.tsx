@@ -3,8 +3,19 @@ import { SectionHeader } from '@/components/SectionHeader';
 import { TokenPricesTable, Row } from '@/components/TokenPricesTable';
 import { getCubeQueryView } from '@/utils';
 
+import atom from '../icons/atom.svg';
+import statom from '../icons/statom.svg';
+import unknown from '../icons/unknown.svg';
+
 type Props = {
   title?: string;
+};
+
+const icons: { [key: string]: string } = {
+  ATOM: atom,
+  STATOM1: atom,
+  stATOM: statom,
+  unknown,
 };
 
 export function TokenPrices({ title = 'Token Prices' }: Props) {
@@ -60,7 +71,12 @@ export function TokenPrices({ title = 'Token Prices' }: Props) {
     const changeValue = Math.round(change * 10000) / 100;
 
     rows.push({
-      token: label,
+      token: (
+        <span className="flex">
+          <img src={icons[label] || icons.unknown} alt={label} width="w-4 h-4" />{' '}
+          <span className="flex-1 ml-2">{label}</span>
+        </span>
+      ),
       dayChange:
         changeValue >= 0 ? (
           <div className="text-right text-green-500">+{changeValue}%</div>
