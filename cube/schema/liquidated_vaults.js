@@ -5,6 +5,7 @@ cube('liquidated_vaults', {
   sql: dailySQL(
     [
       'collateral_amount',
+      'liquidating_debt_amount',
       'liquidation_token_price',
       'liquidating_locked_value',
       'current_collateral_price',
@@ -44,6 +45,7 @@ cube('liquidated_vaults', {
       select vault_ix, vault_state
            , ARRAY_AGG(block_time order by block_height)[safe_offset(0)] as switch_time
            , ARRAY_AGG(locked_value order by block_height)[safe_offset(0)] as locked_value
+           , ARRAY_AGG(debt_value order by block_height)[safe_offset(0)] as debt_value
         from vault_factory_vaults
        group by 1, 2
     ),
@@ -61,10 +63,12 @@ cube('liquidated_vaults', {
              array_agg(v.locked_type_name order by block_height desc)[safe_offset(0)] as locked_type_name,
              array_agg(v.debt_type_name order by block_height desc)[safe_offset(0)] as debt_type_name,
              cast(ARRAY_AGG(v.locked_value order by block_height desc)[safe_offset(0)] as float64) collateral_amount,
-             cast(ARRAY_AGG(debt_value order by block_height desc)[safe_offset(0)] as float64) ist_debt_amount,
+             cast(ARRAY_AGG(v.debt_value order by block_height desc)[safe_offset(0)] as float64) ist_debt_amount,
              cast(array_agg(in_process_s.switch_time)[0] as timestamp) liquidating_start_time,
+
              cast(array_agg(done_s.switch_time)[0] as timestamp) liquidated_time,
              array_agg(in_process_s.locked_value)[0] liquidating_locked_value,
+             cast(ARRAY_AGG(in_process_s.debt_value order by block_height desc)[safe_offset(0)] as float64) liquidating_debt_amount,
              array_agg(v.vault_state order by block_height desc)[safe_offset(0)] as vault_state
       from vault_factory_vaults v
       join vaults_statuses in_process_s on in_process_s.vault_ix = v.vault_ix and in_process_s.vault_state = 'liquidating'
@@ -160,6 +164,7 @@ cube('liquidated_vaults', {
              coalesce(SAFE_DIVIDE(a.ist_debt_amount*g.liquidation_margin, a.collateral_amount), 0) liquidation_price,
              coalesce(SAFE_DIVIDE(a.last_oracle_price, coalesce(SAFE_DIVIDE(a.ist_debt_amount * g.liquidation_margin, a.collateral_amount), 0) - 1), 0) liquidation_cushion,
              liq_op.type_out_amount / liq_op.type_in_amount as liquidation_token_price,
+             liquidating_debt_amount,
              liquidating_locked_value
       from add_prices a
       join ${state_changes.sql()} b using (block_height)
@@ -187,6 +192,10 @@ cube('liquidated_vaults', {
     },
     liquidation_token_price: {
       sql: `liquidation_token_price`,
+      type: `avg`,
+    },
+    liquidating_debt_amount: {
+      sql: `liquidating_debt_amount`,
       type: `avg`,
     },
     liquidating_locked_value: {
@@ -260,6 +269,7 @@ cube('liquidated_vaults', {
     main_year2: {
       measures: [
         collateral_amount,
+        liquidating_debt_amount,
         current_collateral_price,
         collateral_oracle_usd_value,
         ist_debt_amount,
@@ -282,6 +292,7 @@ cube('liquidated_vaults', {
     main_month2: {
       measures: [
         collateral_amount,
+        liquidating_debt_amount,
         current_collateral_price,
         collateral_oracle_usd_value,
         ist_debt_amount,
@@ -304,6 +315,7 @@ cube('liquidated_vaults', {
     main_week2: {
       measures: [
         collateral_amount,
+        liquidating_debt_amount,
         current_collateral_price,
         collateral_oracle_usd_value,
         ist_debt_amount,
@@ -326,6 +338,7 @@ cube('liquidated_vaults', {
     main_day2: {
       measures: [
         collateral_amount,
+        liquidating_debt_amount,
         current_collateral_price,
         collateral_oracle_usd_value,
         ist_debt_amount,

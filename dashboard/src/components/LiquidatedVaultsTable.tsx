@@ -47,6 +47,11 @@ export const columns: DataColumn<Row>[] = [
     header: 'Liquidation Time',
   },
   {
+    accessorKey: 'liquidating_debt_amount',
+    type: 'number',
+    header: 'IST Debt Amount',
+  },
+  {
     accessorKey: 'liquidation_margin',
     type: 'percent',
     header: 'Liquidation Ratio',

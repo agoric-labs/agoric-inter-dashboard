@@ -17,7 +17,7 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults' }: Props) {
       'liquidated_vaults.liquidation_token_price',
       'liquidated_vaults.current_collateral_price',
       'liquidated_vaults.collateral_oracle_usd_value',
-      'liquidated_vaults.ist_debt_amount',
+      'liquidated_vaults.liquidating_debt_amount',
       'liquidated_vaults.liquidation_margin',
       'liquidated_vaults.liquidation_price',
       'liquidated_vaults.liquidation_cushion',
