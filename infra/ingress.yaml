@@ -67,16 +67,26 @@ spec:
     targetPort: http
 
 ---
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: agoric-tool-cert
+spec:
+  domains:
+    - agoric.tool.p2p.org
+
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: cube-gke
   annotations:
     kubernetes.io/ingress.global-static-ip-name: agoric-dashboard
+    networking.gke.io/managed-certificates: agoric-tool-cert
 spec:
   defaultBackend:
     service:
-      name: dashboard-nodeport
+      name: info-dashboard
       port:
         name: http
   rules:
