@@ -69,7 +69,7 @@ export const columns: DataColumn<Row>[] = [
   {
     accessorKey: 'liquidating_locked_value_usd',
     type: 'usd',
-    header: 'Collateral returned ($USD)',
+    header: 'Collateral Returned ($USD)',
   },
 ];
 
