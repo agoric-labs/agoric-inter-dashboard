@@ -16,6 +16,9 @@ def cube_request(query, dataset=DEFAULT_DATASET):
 
         raise ValueError(res["error"])
 
+    # check cache bugs
+    assert len(res["data"]) > 0
+
     return res
 
 
