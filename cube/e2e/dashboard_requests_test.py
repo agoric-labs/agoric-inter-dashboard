@@ -166,7 +166,11 @@ def test_open_vaults():
                 }
             ],
             "order": {"open_vaults.collateral_amount": "desc"},
-            "dimensions": ["open_vaults.vault_ix", "open_vaults.collateral_type", "open_vaults.debt_type"],
+            "dimensions": [
+                "open_vaults.vault_ix",
+                "open_vaults.collateral_type",
+                "open_vaults.debt_type",
+            ],
         }
     )
 
@@ -206,7 +210,10 @@ def test_vault_managers():
                 }
             ],
             "order": {"vault_managers.total_locked_collateral_avg": "desc"},
-            "dimensions": ["vault_managers.collateral_type", "vault_managers.debt_type"],
+            "dimensions": [
+                "vault_managers.collateral_type",
+                "vault_managers.debt_type",
+            ],
         }
     )
 
@@ -230,7 +237,10 @@ def test_vault_managers2():
                 }
             ],
             "order": {"vault_managers.collateral_type": "desc"},
-            "dimensions": ["vault_managers.collateral_type", "vault_managers.debt_type"],
+            "dimensions": [
+                "vault_managers.collateral_type",
+                "vault_managers.debt_type",
+            ],
         }
     )
 
@@ -275,6 +285,39 @@ def test_psm_stats():
                     "granularity": "day",
                     "dateRange": "Today",
                 }
+            ],
+        }
+    )
+
+
+def test_liquidated_vaults():
+    request(
+        {
+            "measures": [
+                "liquidated_vaults.liquidating_locked_value",
+                "liquidated_vaults.liquidation_token_price",
+                "liquidated_vaults.current_collateral_price",
+                "liquidated_vaults.liquidating_debt_amount",
+                "liquidated_vaults.liquidation_margin",
+                "liquidated_vaults.liquidating_start_time",
+                "liquidated_vaults.liquidated_time",
+            ],
+            "timeDimensions": [
+                {
+                    "dimension": "liquidated_vaults.day",
+                    "granularity": "day",
+                    "dateRange": "Today",
+                }
+            ],
+            "order": {
+                "liquidated_vaults.debt_type": "asc",
+                "liquidated_vaults.vault_ix": "asc",
+            },
+            "dimensions": [
+                "liquidated_vaults.debt_type",
+                "liquidated_vaults.vault_ix",
+                "liquidated_vaults.collateral_type",
+                "liquidated_vaults.vault_state",
             ],
         }
     )

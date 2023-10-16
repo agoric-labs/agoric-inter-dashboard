@@ -3,15 +3,15 @@ import { DataTable, DataColumn } from './DataTable';
 type Row = {
   vault_ix: string;
   collateral_type: string;
+  vault_state: string;
+  liquidationStartTime: string;
+  liquidationTime: string;
+  liquidating_debt_amount: number;
   liquidating_locked_value: number;
-  current_collateral_price: number;
-  collateral_oracle_usd_value: number;
   ist_debt_amount: number;
+  liquidating_locked_value_usd: number;
   liquidation_margin: number;
-  liquidation_price: number;
-  liquidation_cushion: number;
   liquidation_token_price: number;
-  collateralization_ratio: number;
 };
 
 type Props = {

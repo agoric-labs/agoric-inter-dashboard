@@ -273,6 +273,39 @@ The following queries serve as examples for the dashboard:
 }
 ```
 
+### Liquidated vaults
+
+```json
+{
+    "measures": [
+        "liquidated_vaults.liquidating_locked_value",
+        "liquidated_vaults.liquidation_token_price",
+        "liquidated_vaults.current_collateral_price",
+        "liquidated_vaults.liquidating_debt_amount",
+        "liquidated_vaults.liquidation_margin",
+        "liquidated_vaults.liquidating_start_time",
+        "liquidated_vaults.liquidated_time"
+    ],
+    "timeDimensions": [
+        {
+            "dimension": "liquidated_vaults.day",
+            "granularity": "day",
+            "dateRange": "Today"
+        }
+    ],
+    "order": {
+        "liquidated_vaults.debt_type": "asc",
+        "liquidated_vaults.vault_ix": "asc"
+    },
+    "dimensions": [
+        "liquidated_vaults.debt_type",
+        "liquidated_vaults.vault_ix",
+        "liquidated_vaults.collateral_type",
+        "liquidated_vaults.vault_state"
+    ]
+}
+```
+
 ### Total Interchain IST
 
 ```json
