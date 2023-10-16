@@ -1,8 +1,19 @@
 ---
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: cloudflare-only
+spec:
+  securityPolicy:
+    name: cloudflare-only
+
+---
 apiVersion: v1
 kind: Service
 metadata:
   name: cube-mainnet-nodeport
+  annotations:
+    cloud.google.com/backend-config: '{"ports":{"4000":"cloudflare-only"}}'
 spec:
   type: NodePort
   selector:
@@ -20,6 +31,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: cube-ollinet-nodeport
+  annotations:
+    cloud.google.com/backend-config: '{"ports":{"4000":"cloudflare-only"}}'
 spec:
   type: NodePort
   selector:
@@ -37,6 +50,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: cube-emerynet-nodeport
+  annotations:
+    cloud.google.com/backend-config: '{"ports":{"4000":"cloudflare-only"}}'
 spec:
   type: NodePort
   selector:
@@ -54,6 +69,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: cube-devnet-nodeport
+  annotations:
+    cloud.google.com/backend-config: '{"ports":{"4000":"cloudflare-only"}}'
 spec:
   type: NodePort
   selector:
