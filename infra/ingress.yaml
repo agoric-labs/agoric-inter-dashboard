@@ -92,6 +92,14 @@ spec:
   rules:
     - http:
         paths:
+          - path: /data/*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: oldagoric
+                port:
+                  name: http
+
           - path: /cubejs-api/agoric_mainnet/*
             pathType: ImplementationSpecific
             backend:
