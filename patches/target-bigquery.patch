@@ -35,7 +35,7 @@ index 63ff9b0..174be8d 100644
              ),
              "time_partitioning": TimePartitioning(
 -                type_=TimePartitioningType.MONTH, field="_sdc_batched_at"
-+                type_=TimePartitioningType.MONTH, field=self.jsonschema.get("time_field", "_sdc_batched_at")
++                type_=TimePartitioningType.MONTH, field=self.jsonschema.get("time_property", "_sdc_batched_at")
              ),
          }
  
@@ -52,7 +52,7 @@ index 63ff9b0..174be8d 100644
              kwargs["table"]["time_partitioning"] = TimePartitioning(
                  type_=PARTITION_STRATEGY[partition_grain.upper()],
 -                field="_sdc_batched_at",
-+                field=self.schema.get("time_field", "_sdc_batched_at"),
++                field=self.schema.get("time_property", "_sdc_batched_at"),
              )
          # Dataset opts
          location: str = self.config.get(
