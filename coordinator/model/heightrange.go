@@ -46,3 +46,30 @@ func CompressHeightRanges(ranges []*HeightRange) []*HeightRange {
 	// push a last range
 	return append(res, &nextRg)
 }
+
+// BatchHeightRanges make batches that not less than $batchSize.
+func BatchHeightRanges(ranges []*HeightRange, batchSize int64) [][]*HeightRange {
+	if len(ranges) < 1 {
+		return nil
+	}
+
+	next := []*HeightRange{ranges[0]}
+	nextCount := ranges[0].Size()
+
+	res := [][]*HeightRange{}
+
+	for idx := 1; idx < len(ranges); idx++ {
+		if nextCount < batchSize {
+			next = append(next, ranges[idx])
+			nextCount += ranges[idx].Size()
+		} else {
+			res = append(res, next)
+			next = []*HeightRange{ranges[idx]}
+			nextCount = ranges[idx].Size()
+		}
+	}
+
+	res = append(res, next)
+
+	return res
+}

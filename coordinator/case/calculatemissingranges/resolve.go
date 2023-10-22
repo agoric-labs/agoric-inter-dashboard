@@ -11,7 +11,7 @@ import (
 // ErrSyncedRangesOverlaped throws if some ranges overlaped.
 var ErrSyncedRangesOverlaped = errors.New("synced ranges overlaped")
 
-// ErrSplitBrain too big difference between the status state and db state
+// ErrSplitBrain too big difference between the status state and db state.
 var ErrSplitBrain = errors.New("split brain")
 
 // Input ...
@@ -28,7 +28,7 @@ type Env interface {
 
 // Resolve returns missing ranges.
 //
-//nolint:funlen
+//nolint:funlen,cyclop
 func Resolve(ctx context.Context, env Env, input Input) ([]*model.HeightRange, error) {
 	status, err := env.GetTendermintRange(ctx)
 	if err != nil {

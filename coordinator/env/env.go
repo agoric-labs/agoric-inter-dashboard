@@ -61,15 +61,10 @@ func New(subcommand []string) (*Env, error) {
 }
 
 // WriteConfig writes baseConfig + rg to stdout as json lines.
-func (e *Env) WriteConfig(rang model.HeightRange) error {
-	e.baseConfig["earliest_height"] = strconv.FormatInt(rang.Earliest, 10)
-	e.baseConfig["latest_height"] = strconv.FormatInt(rang.Latest, 10)
-
-	log.Info().Fields(e.baseConfig).Msg("write config")
-
-	rawConfig, err := json.Marshal(e.baseConfig)
+func (e *Env) WriteConfig(ranges []*model.HeightRange) error {
+	rawConfig, err := e.generateConfigLines(ranges)
 	if err != nil {
-		return fmt.Errorf("failed to write a new config: %w", err)
+		return err
 	}
 
 	if len(e.subcommand) == 0 {
@@ -118,6 +113,27 @@ func (e *Env) WriteConfig(rang model.HeightRange) error {
 	log.Info().Msg("subcommand exited")
 
 	return nil
+}
+
+func (e *Env) generateConfigLines(ranges []*model.HeightRange) ([]byte, error) {
+	rawConfig := []byte{}
+
+	for _, rang := range ranges {
+		e.baseConfig["earliest_height"] = strconv.FormatInt(rang.Earliest, 10)
+		e.baseConfig["latest_height"] = strconv.FormatInt(rang.Latest, 10)
+
+		log.Info().Fields(e.baseConfig).Msg("write config")
+
+		line, err := json.Marshal(e.baseConfig)
+		if err != nil {
+			return nil, fmt.Errorf("failed to write a new config: %w", err)
+		}
+
+		rawConfig = append(rawConfig, line...)
+		rawConfig = append(rawConfig, '\n')
+	}
+
+	return rawConfig, nil
 }
 
 func waitCheckpoint(stderr io.ReadCloser, cmd *exec.Cmd, commitMsg string) error {

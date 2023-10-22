@@ -35,14 +35,6 @@ var (
 		Name: "coordinator_synced_ranges_size",
 		Help: "The total count of synced ranges",
 	})
-	newRangesCount = promauto.NewGauge(prometheus.GaugeOpts{
-		Name: "coordinator_new_ranges_size",
-		Help: "The total count of ranges in progress",
-	})
-	roundBlockCount = promauto.NewGauge(prometheus.GaugeOpts{
-		Name: "coordinator_round_block_size",
-		Help: "The total count of processed blocks",
-	})
 	avgBlockTime = promauto.NewGauge(prometheus.GaugeOpts{
 		Name: "coordinator_avg_block_time",
 		Help: "The average extract block time",
@@ -93,8 +85,8 @@ func process(ctx context.Context, subcommand []string) error {
 
 	input := calculatemissingranges.Input{
 		SyncedRanges: syncedRanges,
-		BatchSize:    100, // TODO: read from the env
-		OutputLimit:  10,  // TODO: read from the env
+		BatchSize:    1000, // TODO: read from the env
+		OutputLimit:  10,   // TODO: read from the env
 	}
 
 	roundDelay := 1 * time.Second
@@ -121,29 +113,30 @@ MainLoop:
 		}
 
 		blockCount := int64(0)
+		batchedRanges := model.BatchHeightRanges(newRanges, input.BatchSize)
 
-		for n, newRange := range newRanges {
+		for _, bRanges := range batchedRanges {
 			// with ctx WriteConfig breaks writing after stopping
-			err := env.WriteConfig(*newRange)
+			err := env.WriteConfig(bRanges)
 			if err != nil {
 				return fmt.Errorf("failed to WriteConfig: %w", err)
 			}
 
-			blockCount += newRange.Size()
+			// update state for each batched range
+			for rangeIdx, newRange := range bRanges {
+				blockCount += newRange.Size()
+				input.SyncedRanges = model.CompressHeightRanges(append(input.SyncedRanges, newRange))
 
-			input.SyncedRanges = model.CompressHeightRanges(append(input.SyncedRanges, newRange))
+				// update state for the monitoring page
+				state.Lock()
+				state.NewRanges = append([]*model.HeightRange{}, newRanges[rangeIdx:]...)
+				state.SyncedRanges = append([]*model.HeightRange{}, input.SyncedRanges...)
+				state.Unlock()
 
-			// update state for the monitoring page
-			state.Lock()
-			state.NewRanges = append([]*model.HeightRange{}, newRanges[n:]...)
-			state.SyncedRanges = append([]*model.HeightRange{}, input.SyncedRanges...)
-			state.Unlock()
-
-			// calculate metrics
-			newRangesCount.Set(float64(len(newRanges)))
-			syncedRangesCount.Set(float64(len(input.SyncedRanges)))
-			roundBlockCount.Set(float64(blockCount))
-			avgBlockTime.Set(time.Since(startedAt).Seconds() / float64(blockCount))
+				// calculate metrics
+				syncedRangesCount.Set(float64(len(input.SyncedRanges)))
+				avgBlockTime.Set(time.Since(startedAt).Seconds() / float64(blockCount))
+			}
 
 			// graceful shutdown after each range
 			if atomic.LoadInt32(&stopped) > 0 {
