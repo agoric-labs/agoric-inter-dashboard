@@ -1,7 +1,7 @@
 import json
 import subprocess
 
-from main import resolve_brand_names_and_values, extract_storage_path
+from main import resolve_brand_names_and_values, extract_storage_path, to_datetime
 
 
 def test_e2e():
@@ -14,6 +14,12 @@ def test_e2e():
     actual_output = stdout.decode("utf-8")
 
     assert actual_output == expected_output
+
+
+def test_to_datetime():
+    assert to_datetime('2023-10-23T02:04:15.499906859Z') == '2023-10-23T02:04:15.499900'
+    assert to_datetime('2022-06-28T09:00:36.769Z') == '2022-06-28T09:00:36.769000'
+    assert to_datetime('2022-06-28T09:00:43.270903042Z') == '2022-06-28T09:00:43.270900'
 
 
 def test_extract_storage_path():

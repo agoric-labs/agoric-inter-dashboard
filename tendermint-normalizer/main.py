@@ -160,7 +160,7 @@ STATE_CHANGES_SCHEMA = {
 
 def to_datetime(val):
     # However, Python's datetime also supports only up to microseconds precision.
-    val = val[:-4] + "Z"
+    val = re.sub(r'\.(\d+)Z$', lambda m: f".{m.group(1)[0:4]}Z", val)
     return datetime.strptime(val, "%Y-%m-%dT%H:%M:%S.%fZ").strftime("%Y-%m-%dT%H:%M:%S.%f")
 
 
@@ -412,9 +412,18 @@ class BlockProcessor:
                 if skip_extra:
                     extra = { "proposer_reward": 0, "rewards": 0, "commission": 0, "valoper_addr": "unknown" }
                 else:
-                    extra = extra_data[validator_idx]
+                    # cosmoshub: 10096340
+                    if len(extra_data) > validator_idx:
+                        extra = extra_data[validator_idx]
+                        validator_idx += 1
+                    else:
+                        extra = {
+                            "valoper_addr": "new",
+                            "rewards": 0,
+                            "commission": 0,
+                            "proposer_reward": 0,
+                        }
 
-                validator_idx += 1
 
                 rec = {
                     "id": f"{page['block_height']}:{val['address']}:{validator_idx}",
