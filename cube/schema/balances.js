@@ -73,7 +73,7 @@ cube(`balances`, {
         every: `24 hour`,
       },
     },
-    main_day: {
+    main_day2: {
       measures: [amount_sum, amount_avg],
       dimensions: [denom],
       time_dimension: day,

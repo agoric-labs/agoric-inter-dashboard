@@ -133,6 +133,10 @@ cube('vault_managers', {
       sql: `total_locked_collateral_usd`,
       type: `avg`,
     },
+    total_locked_collateral_usd_sum: {
+      sql: `total_locked_collateral_usd`,
+      type: `sum`,
+    },
     total_ist_minted_avg: {
       sql: `total_ist_minted`,
       type: `avg`,
@@ -193,7 +197,7 @@ cube('vault_managers', {
       granularity: `day`,
     },
     summary3: {
-      measures: [ist_minting_limit_sum, total_ist_minted_sum, total_locked_collateral_usd_avg, count],
+      measures: [ist_minting_limit_sum, total_ist_minted_sum, total_locked_collateral_usd_avg, total_locked_collateral_usd_sum, count],
       timeDimension: day,
       granularity: `day`,
     },

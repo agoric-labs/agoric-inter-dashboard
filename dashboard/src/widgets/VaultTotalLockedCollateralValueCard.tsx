@@ -8,7 +8,7 @@ type Props = {
 
 export function VaultTotalLockedCollateralValueCard({ title = 'Total Locked Collateral Value' }: Props) {
   const res = useCubeQuery({
-    measures: ['vault_managers.total_locked_collateral_usd_avg'],
+    measures: ['vault_managers.total_locked_collateral_usd_sum'],
     timeDimensions: [
       {
         dimension: 'vault_managers.day',
@@ -33,6 +33,6 @@ export function VaultTotalLockedCollateralValueCard({ title = 'Total Locked Coll
   }
 
   return (
-    <ValueCard title={title} value={formatPrice(rows[0]['vault_managers.total_locked_collateral_usd_avg'] as string)} />
+    <ValueCard title={title} value={formatPrice(rows[0]['vault_managers.total_locked_collateral_usd_sum'] as string)} />
   );
 }
