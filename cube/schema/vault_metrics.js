@@ -263,7 +263,7 @@ cube(`vault_metrics`, {
       time_dimension: date,
       granularity: `day`,
       refreshKey: {
-        every: `10 minutes`,
+        every: `1 hour`,
       },
     },
     summary: {
@@ -271,7 +271,7 @@ cube(`vault_metrics`, {
       time_dimension: date,
       granularity: `day`,
       refreshKey: {
-        every: `10 minutes`,
+        every: `1 hour`,
       },
     },
   },

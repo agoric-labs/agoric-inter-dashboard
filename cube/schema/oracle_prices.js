@@ -81,7 +81,7 @@ cube(`oracle_prices`, {
       time_dimension: day,
       granularity: `day`,
       refreshKey: {
-        every: `10 minutes`,
+        every: `1 hour`,
       },
     },
   },

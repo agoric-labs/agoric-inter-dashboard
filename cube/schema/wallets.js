@@ -26,7 +26,7 @@ cube(`wallets`, {
     main1: {
       measures: [address_count],
       refreshKey: {
-        every: `10 minutes`,
+        every: `1 hour`,
       },
     },
   },

@@ -355,7 +355,7 @@ cube('liquidated_vaults', {
       timeDimension: day,
       granularity: `day`,
       refreshKey: {
-        every: `10 minutes`,
+        every: `1 hour`,
       },
     },
     stats_year: {
@@ -387,7 +387,7 @@ cube('liquidated_vaults', {
       timeDimension: day,
       granularity: `day`,
       refreshKey: {
-        every: `10 minutes`,
+        every: `1 hour`,
       },
     },
   },

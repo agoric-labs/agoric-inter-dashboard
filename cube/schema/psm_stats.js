@@ -120,7 +120,7 @@ cube(`psm_stats`, {
       time_dimension: psm_stats.day,
       granularity: `day`,
       refreshKey: {
-        every: `10 minutes`,
+        every: `1 hour`,
       },
     },
     stats_year: {
@@ -152,7 +152,7 @@ cube(`psm_stats`, {
       time_dimension: psm_stats.day,
       granularity: `day`,
       refreshKey: {
-        every: `10 minutes`,
+        every: `1 hour`,
       },
     },
   },

@@ -123,7 +123,7 @@ cube(`reserve_allocations`, {
       time_dimension: day,
       granularity: `day`,
       refresh_key: {
-        every: `10 minutes`,
+        every: `1 hour`,
       },
     },
     stats_year: {
@@ -155,7 +155,7 @@ cube(`reserve_allocations`, {
       time_dimension: day,
       granularity: `day`,
       refreshKey: {
-        every: `10 minutes`,
+        every: `1 hour`,
       },
     },
   },
