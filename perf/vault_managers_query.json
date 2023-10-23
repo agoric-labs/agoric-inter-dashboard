@@ -1,0 +1,1 @@
+{"query":{"measures":["vault_managers.count"],"order":{"vault_managers.count":"desc"},"timeDimensions":[{"dimension":"vault_managers.day","granularity":"day","dateRange":"Today"}]}}

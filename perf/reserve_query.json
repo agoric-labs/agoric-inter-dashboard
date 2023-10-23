@@ -1,0 +1,1 @@
+{"query":{"measures":["reserve_allocations.amount_usd_avg"],"dimensions":["reserve_allocations.key","reserve_allocations.brand"],"timeDimensions":[{"dimension":"reserve_allocations.day","granularity":"day"}],"order":{"reserve_allocations.day":"asc"}}}
