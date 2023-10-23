@@ -600,8 +600,9 @@ if __name__ == "__main__":
     print(ujson.dumps(STATE_CHANGES_SCHEMA))
 
     # create an empty table for data from previous indexer
-    STATE_CHANGES_SCHEMA["stream"] = "old_" + STATE_CHANGES_SCHEMA["stream"]
-    print(ujson.dumps(STATE_CHANGES_SCHEMA))
+    old_changes_schema = STATE_CHANGES_SCHEMA.copy()
+    old_changes_schema["stream"] = "old_" + STATE_CHANGES_SCHEMA["stream"]
+    print(ujson.dumps(old_changes_schema))
 
     worker_count = int(os.getenv("WORKER_COUNT", multiprocessing.cpu_count()*2))
 
