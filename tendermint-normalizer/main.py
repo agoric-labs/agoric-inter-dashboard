@@ -3,6 +3,7 @@
 import requests
 import sys
 import ujson
+import json
 import re
 import os
 import dateutil
@@ -450,6 +451,10 @@ class BlockProcessor:
         if "store" not in event["attributes"]:
             return
 
+        # mainnet, block: 11877417
+        if "value" not in event["attributes"]:
+            return
+
         if event["attributes"]["store"] != "vstorage":
             raise ValueError("unknown storage")
 
@@ -482,6 +487,10 @@ class BlockProcessor:
             return
 
         for idx, change_raw in enumerate(body["values"]):
+            # empty values in the 11872248 block
+            if change_raw == "":
+                continue
+
             change_body = ujson.loads(change_raw)
             payload = ujson.loads(re.sub(r"^#", "", change_body["body"]))  # trim # at start
 
