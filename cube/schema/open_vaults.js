@@ -99,6 +99,7 @@ cube('open_vaults', {
 
     vault_manager_governance as (
       select block_height
+           , split(path, '.')[safe_offset(3)] as manager_name
            , json_value(body, '$.current.DebtLimit.value.__brand') debt_limit_name
            , json_value(body, '$.current.DebtLimit.value.__value') debt_limit_value
            , cast(json_value(body, '$.current.InterestRate.value.numerator.__value') as int64)/cast(json_value(body, '$.current.InterestRate.value.denominator.__value') as int64) interest_rate
@@ -110,9 +111,10 @@ cube('open_vaults', {
 
     governance as (
       select debt_limit_name
+           , manager_name
            , ARRAY_AGG(liquidation_margin order by cast(block_height as int64) desc)[safe_offset(0)] liquidation_margin
       from vault_manager_governance
-      group by 1
+      group by 1, 2
     ),
 
     add_prices as (
@@ -139,7 +141,7 @@ cube('open_vaults', {
              coalesce(SAFE_DIVIDE(a.last_oracle_price, coalesce(SAFE_DIVIDE(a.ist_debt_amount * g.liquidation_margin, a.collateral_amount), 0) - 1), 0) liquidation_cushion
       from add_prices a
       join ${state_changes.sql()} b using (block_height)
-      left join governance g on a.debt_type_name = g.debt_limit_name
+      left join governance g on a.debt_type_name = g.debt_limit_name and g.manager_name = split(a.vault_ix, '.')[safe_offset(3)]
     )
     select *
          , coalesce(SAFE_DIVIDE(collateral_oracle_usd_value, ist_debt_amount), 0) as collateralization_ratio
@@ -223,6 +225,7 @@ cube('open_vaults', {
         liquidation_price,
         liquidation_cushion,
         collateralization_ratio,
+        count,
       ],
       dimensions: [collateral_type, vault_ix, debt_type],
       timeDimension: day,
@@ -241,6 +244,7 @@ cube('open_vaults', {
         liquidation_price,
         liquidation_cushion,
         collateralization_ratio,
+        count,
       ],
       dimensions: [collateral_type, vault_ix, debt_type],
       timeDimension: day,
@@ -259,6 +263,7 @@ cube('open_vaults', {
         liquidation_price,
         liquidation_cushion,
         collateralization_ratio,
+        count,
       ],
       dimensions: [collateral_type, vault_ix, debt_type],
       timeDimension: day,
@@ -277,6 +282,7 @@ cube('open_vaults', {
         liquidation_price,
         liquidation_cushion,
         collateralization_ratio,
+        count,
       ],
       dimensions: [collateral_type, vault_ix, debt_type],
       timeDimension: day,

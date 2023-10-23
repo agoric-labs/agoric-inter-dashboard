@@ -12,14 +12,14 @@ type Props = {
 export function VaultTotalLockedCollateralChart({ title = 'Total Locked Collateral' }: Props) {
   const granularity = useGranularity();
   const res = useCubeQuery({
-    measures: ['vault_metrics.avg_total_locked_collateral_usd'],
+    measures: ['vault_managers.total_locked_collateral_usd_sum'],
     timeDimensions: [
       {
-        dimension: 'vault_metrics.date',
+        dimension: 'vault_managers.day',
         granularity,
       },
     ],
-    dimensions: ['vault_metrics.collateral_type', 'vault_metrics.debt_type'],
+    dimensions: ['vault_managers.collateral_type', 'vault_managers.debt_type'],
   });
 
   if (res.isLoading || !res.resultSet) {
@@ -54,7 +54,6 @@ export function VaultTotalLockedCollateralChart({ title = 'Total Locked Collater
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="x" stroke="#666" tickFormatter={formatDay} />
         <YAxis stroke="#666" />
-        <YAxis />
         <Tooltip />
         <Legend />
         {resultSet.seriesNames().map((col, idx) => (

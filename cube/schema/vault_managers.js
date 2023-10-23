@@ -191,6 +191,8 @@ cube('vault_managers', {
         colletarization_ratio_avg,
         ist_minting_limit_avg,
         utilization_rate_avg,
+        total_locked_collateral_usd_sum,
+        total_ist_minted_sum,
       ],
       dimensions: [collateral_type, debt_type],
       timeDimension: day,

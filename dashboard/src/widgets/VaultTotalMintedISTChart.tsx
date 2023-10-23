@@ -12,14 +12,14 @@ type Props = {
 export function VaultTotalMintedISTChart({ title = 'Total Minted IST' }: Props) {
   const granularity = useGranularity();
   const res = useCubeQuery({
-    measures: ['vault_metrics.avg_total_ist_minted'],
+    measures: ['vault_managers.total_ist_minted_sum'],
     timeDimensions: [
       {
-        dimension: 'vault_metrics.date',
+        dimension: 'vault_managers.day',
         granularity,
       },
     ],
-    dimensions: ['vault_metrics.collateral_type', 'vault_metrics.debt_type'],
+    dimensions: ['vault_managers.collateral_type', 'vault_managers.debt_type'],
   });
 
   if (res.isLoading || !res.resultSet) {
@@ -53,7 +53,7 @@ export function VaultTotalMintedISTChart({ title = 'Total Minted IST' }: Props) 
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="x" stroke="#666" tickFormatter={formatDay} />
-        <YAxis stroke="#666" tickFormatter={(v) => formatIST(v / 1000000)} />
+        <YAxis stroke="#666" tickFormatter={(v) => formatIST(v)} />
         <YAxis />
         <Tooltip />
         <Legend />

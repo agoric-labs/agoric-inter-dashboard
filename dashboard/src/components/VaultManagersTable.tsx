@@ -28,7 +28,7 @@ export const columns: DataColumn<Row>[] = [
   {
     accessorKey: 'total_locked_collateral',
     type: 'number',
-    header: 'Total Locked Collateral (ATOM)',
+    header: 'Total Locked Collateral',
   },
   {
     accessorKey: 'total_locked_collateral_usd',

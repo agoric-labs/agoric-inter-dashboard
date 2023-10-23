@@ -33,6 +33,7 @@ export const RadianTooltip = (props: any) => {
   if (tooltipPayload.dataKey === 'utilizedPercent') {
     label = value.toFixed(2);
   }
+  console.log(props);
 
   return (
     <g>

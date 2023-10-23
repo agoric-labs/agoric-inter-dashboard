@@ -27,6 +27,7 @@ export function PSMMintedPoolBalancePie() {
 
   const data = resultSet.tablePivot().map((row) => ({
     value: parseFloat(row['psm_stats.last_minted_pool_balance'] as string),
+    label: coinLabels[row['psm_stats.coin'] as string],
   }));
 
   return (
@@ -50,8 +51,8 @@ export function PSMMintedPoolBalancePie() {
                 labelLine={false}
                 label={RadianTooltip}
               >
-                {Object.keys(coinLabels).map((key, idx) => (
-                  <Cell fill={colors[idx % colors.length]} key={key} name={coinLabels[key]} />
+                {data.map((item, idx) => (
+                  <Cell fill={colors[idx % colors.length]} key={item.label} name={item.label} />
                 ))}
               </Pie>
               <Tooltip />

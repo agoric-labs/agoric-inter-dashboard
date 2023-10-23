@@ -185,10 +185,10 @@ export function InterProtocol() {
           <div className="flex-1 grid grid-cols-2 gap-4">
             <ValueCard title="Total Reserve Assets" value={formatPrice(totalReserve)} />
             <ValueCard title="Total Minted IST" value={formatIST(totalMinted)} />
-            <ValueCard title="Total Vault Assets" value={formatPrice(totalLockedCollateral)} />
-            <ValueCard title="Minted by Vaults" value={formatIST(vaultMinted)} />
+            <ValueCard title="Total Collateral Value Locked" value={formatPrice(totalLockedCollateral)} />
+            <ValueCard title="IST minted by Vaults" value={formatIST(vaultMinted)} />
             <ValueCard title="Total PSM Assets" value={formatPrice(psmMinted)} />
-            <ValueCard title="Minted by PSM" value={formatIST(psmMinted)} />
+            <ValueCard title="IST minted by PSM" value={formatIST(psmMinted)} />
             <ValueCard title="Reserve Shortfall" value={formatPrice(reserveShortfall)} className="col-span-2" />
           </div>
           <div className="w-[400px] ml-5">

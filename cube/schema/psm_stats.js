@@ -28,15 +28,15 @@ cube(`psm_stats`, {
       type: `sum`,
     },
     last_minted_pool_balance: {
-      sql: `array_agg(minted_pool_balance)[0]`,
+      sql: `array_agg(minted_pool_balance order by ${CUBE.day} desc)[0]`,
       type: `number`,
     },
     last_total_minted_provided: {
-      sql: `array_agg(total_minted_provided)[0]`,
+      sql: `array_agg(total_minted_provided order by ${CUBE.day} desc)[0]`,
       type: `number`,
     },
     last_anchor_pool_balance: {
-      sql: `array_agg(anchor_pool_balance)[0]`,
+      sql: `array_agg(anchor_pool_balance order by ${CUBE.day} desc)[0]`,
       type: `number`,
     },
     last_utilization_rate: {

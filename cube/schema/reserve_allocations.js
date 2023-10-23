@@ -28,7 +28,7 @@ cube(`reserve_allocations`, {
     select block_time -- for dailySQL
          , json_value(alloc, '$.data.__brand') as brand
          , json_value(alloc, '$.key') as key
-         , cast(json_value(alloc, '$.data.__value') as float64) / pow(10, 0) as amount
+         , cast(json_value(alloc, '$.data.__value') as float64) / pow(10, 6) as amount
          , coalesce(p.type_out_amount / p.type_in_amount, 1) as usd_rate -- 1 for ist without the oracle feed
       from ${state_changes.sql()} c
       cross join unnest(agoric_mainnet.extract_allocations(to_json_string(json_query(body, '$.allocations')))) alloc

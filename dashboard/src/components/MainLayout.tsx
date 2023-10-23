@@ -27,7 +27,7 @@ const menuItems = [
     to: '/vaults',
   },
   {
-    label: 'Liquidated',
+    label: 'Liquidations',
     icon: <Table2 />,
     to: '/liquidated',
   },

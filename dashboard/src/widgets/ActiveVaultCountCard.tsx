@@ -9,6 +9,7 @@ type Props = {
 export function ActiveVaultCountCard({ title = 'Total Active Vaults' }: Props) {
   const res = useCubeQuery({
     measures: ['open_vaults.count'],
+    dimensions: ['open_vaults.debt_type', 'open_vaults.collateral_type'],
     timeDimensions: [
       {
         dimension: 'open_vaults.day',
@@ -33,5 +34,15 @@ export function ActiveVaultCountCard({ title = 'Total Active Vaults' }: Props) {
     return null;
   }
 
-  return <ValueCard title={title} value={rows[0]['open_vaults.count'] as string} />;
+  return (
+    <>
+      {rows.map(r => (
+        <ValueCard
+          key={r['open_vaults.debt_type'] as string}
+          title={`${title} (${r['open_vaults.collateral_type']})`}
+          value={r['open_vaults.count'] as string}
+        />
+      ))}
+    </>
+  );
 }
