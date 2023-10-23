@@ -26,6 +26,9 @@ type Env struct {
 	commitMsg    string
 
 	tendermintURL string
+
+	batchSize   int64
+	outputLimit int64
 }
 
 // New creates a new instance of Env.
@@ -45,6 +48,16 @@ func New(subcommand []string) (*Env, error) {
 		baseConfig = "{}"
 	}
 
+	batchSize := os.Getenv("COORDINATOR_BATCH_SIZE")
+	if batchSize == "" {
+		batchSize = "100"
+	}
+
+	outputLimit := os.Getenv("COORDINATOR_OUTPUT_LIMIT")
+	if outputLimit == "" {
+		outputLimit = "50"
+	}
+
 	env := Env{
 		syncedRanges:  syncedRanges,
 		subcommand:    subcommand,
@@ -52,12 +65,38 @@ func New(subcommand []string) (*Env, error) {
 		commitMsg:     os.Getenv("COORDINATOR_COMMIT_MSG"),
 	}
 
+	env.batchSize, err = strconv.ParseInt(batchSize, 10, 64)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse COORDINATOR_BATCH_SIZE: %w", err)
+	}
+
+	env.outputLimit, err = strconv.ParseInt(outputLimit, 10, 64)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse COORDINATOR_OUTPUT_LIMIT: %w", err)
+	}
+
 	err = json.Unmarshal([]byte(baseConfig), &env.baseConfig)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse BASE_COFIG: %w", err)
 	}
 
+	log.Info().
+		Int64("COORDINATOR_BATCH_SIZE", env.batchSize).
+		Int64("COORDINATOR_OUTPUT_SIZE", env.outputLimit).
+		Str("COORDINATOR_TENDERMINT_URL", env.tendermintURL).
+		Msg("config")
+
 	return &env, nil
+}
+
+// GetBatchSize ...
+func (e *Env) GetBatchSize() int64 {
+	return e.batchSize
+}
+
+// GetOutputLimit ...
+func (e *Env) GetOutputLimit() int64 {
+	return e.outputLimit
 }
 
 // WriteConfig writes baseConfig + rg to stdout as json lines.
@@ -79,7 +118,7 @@ func (e *Env) WriteConfig(ranges []*model.HeightRange) error {
 	log.Info().Strs("cmd", e.subcommand).Msg("start the subcommand and push next config")
 
 	cmd := exec.Command(e.subcommand[0], e.subcommand[1:]...) //nolint:gosec
-	cmd.Stdin = bytes.NewBuffer(append(rawConfig, '\n'))
+	cmd.Stdin = bytes.NewBuffer(rawConfig)
 	cmd.Stdout = os.Stdout
 	// request the OS to assign process group to the new process,
 	// to which all its children will belong
@@ -104,7 +143,14 @@ func (e *Env) WriteConfig(ranges []*model.HeightRange) error {
 			return err
 		}
 	} else {
-		err := cmd.Wait()
+		log.Info().Str("msg", e.commitMsg).Msg("wait exit")
+
+		_, err = io.Copy(os.Stderr, stderr)
+		if err != nil {
+			return fmt.Errorf("failed to copy stderr: %w", err)
+		}
+
+		err = cmd.Wait()
 		if err != nil {
 			return fmt.Errorf("failed to wait: %w", err)
 		}

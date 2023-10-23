@@ -2,8 +2,6 @@
 
 set -e
 
-set -e
-
 if [[ -z "$DATASET_ID" ]]; then
   echo "DATASET_ID not set"
   exit 1
@@ -38,9 +36,9 @@ cat > $BQ_CONFIG << EOL
   }
 EOL
 
-while read line; do
-  echo $line | \
-    tendermint-source read --catalog ./tendermint.catalog.json --format squash | \
-    tendermint-normalizer | \
-    target-bigquery --config $BQ_CONFIG
-done
+cat | \
+  tendermint-source read --catalog ./tendermint.catalog.json --format squash | \
+  tendermint-normalizer | \
+  target-bigquery --config $BQ_CONFIG
+
+exit $?

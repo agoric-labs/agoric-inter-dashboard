@@ -85,8 +85,8 @@ func process(ctx context.Context, subcommand []string) error {
 
 	input := calculatemissingranges.Input{
 		SyncedRanges: syncedRanges,
-		BatchSize:    1000, // TODO: read from the env
-		OutputLimit:  10,   // TODO: read from the env
+		BatchSize:    env.GetBatchSize(),
+		OutputLimit:  env.GetOutputLimit(),
 	}
 
 	roundDelay := 1 * time.Second
