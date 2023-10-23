@@ -45,10 +45,10 @@ export function InterProtocol() {
   });
 
   const vaultMetricsRes = useCubeQuery({
-    measures: ['vault_metrics.avg_total_locked_collateral_usd'],
+    measures: ['vault_managers.total_locked_collateral_usd_sum'],
     timeDimensions: [
       {
-        dimension: 'vault_metrics.date',
+        dimension: 'vault_managers.day',
         granularity: 'day',
         dateRange: 'Today',
       },
@@ -163,8 +163,8 @@ export function InterProtocol() {
   // bottom cards
   const totalReserve = reserveAllocRes.resultSet.tablePivot()[0]['reserve_allocations.amount_usd_sum'] as string;
   const reserveShortfall = reserveRes.resultSet.tablePivot()[0]['reserve.shortfall_balance_avg'] as string;
-  const vaultLocked =
-    parseFloat(vaultMetricsRes.resultSet.tablePivot()[0]['vault_metrics.avg_total_locked_collateral_usd'] as string) ||
+  const totalLockedCollateral =
+    parseFloat(vaultMetricsRes.resultSet.tablePivot()[0]['vault_managers.total_locked_collateral_usd_sum'] as string) ||
     0;
 
   return (
@@ -185,7 +185,7 @@ export function InterProtocol() {
           <div className="flex-1 grid grid-cols-2 gap-4">
             <ValueCard title="Total Reserve Assets" value={formatPrice(totalReserve)} />
             <ValueCard title="Total Minted IST" value={formatIST(totalMinted)} />
-            <ValueCard title="Total Vault Assets" value={formatPrice(vaultLocked)} />
+            <ValueCard title="Total Vault Assets" value={formatPrice(totalLockedCollateral)} />
             <ValueCard title="Minted by Vaults" value={formatIST(vaultMinted)} />
             <ValueCard title="Total PSM Assets" value={formatPrice(psmMinted)} />
             <ValueCard title="Minted by PSM" value={formatIST(psmMinted)} />
