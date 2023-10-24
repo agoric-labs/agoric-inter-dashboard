@@ -26,7 +26,8 @@ type Env struct {
 	subcommand   []string
 	commitMsg    string
 
-	tendermintURL string
+	tendermintURL   string
+	expectedNetwork string
 
 	batchSize   int64
 	outputLimit int64
@@ -60,10 +61,11 @@ func New(subcommand []string) (*Env, error) {
 	}
 
 	env := Env{
-		syncedRanges:  syncedRanges,
-		subcommand:    subcommand,
-		tendermintURL: tendermintURL,
-		commitMsg:     os.Getenv("COORDINATOR_COMMIT_MSG"),
+		syncedRanges:    syncedRanges,
+		subcommand:      subcommand,
+		tendermintURL:   tendermintURL,
+		expectedNetwork: os.Getenv("COORDINATOR_EXPECTED_NETWORK"),
+		commitMsg:       os.Getenv("COORDINATOR_COMMIT_MSG"),
 	}
 
 	env.batchSize, err = strconv.ParseInt(batchSize, 10, 64)
@@ -85,6 +87,7 @@ func New(subcommand []string) (*Env, error) {
 		Int64("COORDINATOR_BATCH_SIZE", env.batchSize).
 		Int64("COORDINATOR_OUTPUT_LIMIT", env.outputLimit).
 		Str("COORDINATOR_TENDERMINT_URL", env.tendermintURL).
+		Str("COORDINATOR_EXPECTED_NETWORK", env.expectedNetwork).
 		Msg("config")
 
 	return &env, nil

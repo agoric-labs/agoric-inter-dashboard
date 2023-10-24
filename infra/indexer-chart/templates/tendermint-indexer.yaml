@@ -1,3 +1,4 @@
+{{- if .Values.tendermint.enabled -}}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -49,7 +50,7 @@ spec:
               path: /metrics
               port: 3333
           resources:
-            {{- toYaml .Values.headIndexerResources | nindent 12 }}
+            {{- toYaml .Values.tendermint.resources | nindent 12 }}
           volumeMounts:
           - mountPath: /etc/gac
             name: gac
@@ -77,8 +78,10 @@ spec:
             value: '2'
           - name: COORDINATOR_BATCH_SIZE
             value: '200'
-          - name: COORDINATOR_OUTPUT_SIZE
-            value: '100'
+          - name: COORDINATOR_OUTPUT_LIMIT
+            value: '5'
+          - name: COORDINATOR_EXPECTED_NETWORK
+            value: '{{ .Values.tendermint.expectedNetwork }}'
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -91,3 +94,4 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+{{- end -}}

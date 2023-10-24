@@ -20,14 +20,19 @@ grpcAddr: ""
 googleCredsSecretName: "indexer-google-creds"
 projectId: "your-project-id"
 datasetId: "your-dataset-id"
-extractBlockBatchSize: 200
 decodeServiceUrl: "cloud run url"
 
-tendermintHead:
+tendermint:
   enabled: true
+  expectedNetwork: "" # see the coordinator docs
 
-tendermintTail:
-  enabled: true
+  limits:
+    limits:
+      cpu: 1
+      memory: 1Gi
+    requests:
+      cpu: 1
+      memory: 1Gi
 
 balances:
   enabled: false
@@ -85,22 +90,6 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
-
-tailIndexerResources:
-  limits:
-    cpu: 3250m
-    memory: 3.25Gi
-  requests:
-    cpu: 3250m
-    memory: 3.25Gi
-
-headIndexerResources:
-  limits:
-    cpu: 1
-    memory: 1Gi
-  requests:
-    cpu: 1
-    memory: 1Gi
 
 cronjobResources:
   limits:

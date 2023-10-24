@@ -20,6 +20,15 @@ var (
 	})
 )
 
+// UnexpectedStatusNetworkError ...
+type UnexpectedStatusNetworkError struct {
+	Value string
+}
+
+func (e *UnexpectedStatusNetworkError) Error() string {
+	return fmt.Sprintf("unexpected status network: %s", e.Value)
+}
+
 // UnexpectedStatusCodeError ...
 type UnexpectedStatusCodeError struct {
 	Code int
@@ -68,6 +77,9 @@ func (e *Env) GetTendermintRange(ctx context.Context) (*model.HeightRange, error
 
 	var data struct {
 		Result struct {
+			NodeInfo struct {
+				Network string `json:"network"`
+			} `json:"node_info"`
 			SyncInfo struct {
 				EarliestBlockHeight string `json:"earliest_block_height"`
 				LatestBlockHeight   string `json:"latest_block_height"`
@@ -78,6 +90,15 @@ func (e *Env) GetTendermintRange(ctx context.Context) (*model.HeightRange, error
 	err = json.NewDecoder(resp.Body).Decode(&data)
 	if err != nil {
 		return nil, fmt.Errorf("failed to decode the resp: %w", err)
+	}
+
+	if e.expectedNetwork == "" {
+		e.expectedNetwork = data.Result.NodeInfo.Network
+		log.Info().Str("COORDINATOR_EXPECTED_NETWORK", e.expectedNetwork).Msg("set a default value")
+	}
+
+	if e.expectedNetwork != data.Result.NodeInfo.Network {
+		return nil, &UnexpectedStatusNetworkError{data.Result.NodeInfo.Network}
 	}
 
 	earlier, err := strconv.ParseInt(data.Result.SyncInfo.EarliestBlockHeight, 10, 64)
