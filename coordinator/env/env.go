@@ -12,6 +12,7 @@ import (
 	"strconv"
 	"strings"
 	"syscall"
+	"time"
 
 	"github.com/rs/zerolog"
 )
@@ -195,9 +196,18 @@ func waitCheckpoint(stderr io.ReadCloser, cmd *exec.Cmd, commitMsg string) error
 		if strings.Contains(line, commitMsg) {
 			log.Info().Msg("checkpoint substring detected")
 
-			err := cmd.Process.Kill()
+			timer := time.AfterFunc(30*time.Second, func() {
+				err := cmd.Process.Kill()
+				if err != nil {
+					log.Error().Err(err).Msg("failed to kill the finished subprocess")
+				}
+			})
+
+			defer timer.Stop()
+
+			err = cmd.Wait()
 			if err != nil {
-				return fmt.Errorf("failed to kill: %w", err)
+				return fmt.Errorf("failed to wait: %w", err)
 			}
 
 			break

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+set -o pipefail
 
 if [[ -z "$DATASET_ID" ]]; then
   echo "DATASET_ID not set"

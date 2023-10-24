@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+set -o pipefail
 
 if [[ -z "$DATASET_ID" ]]; then
   echo "DATASET_ID not set"
@@ -43,5 +44,3 @@ cat | \
 
 # avoid "No space left on device" errors
 rm $BQ_CONFIG
-
-exit $?
