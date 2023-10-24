@@ -7,7 +7,46 @@ import (
 	"net/http"
 	"p2p-coordinator/model"
 	"strconv"
+	"time"
+
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 )
+
+var (
+	tendermintRetryCount = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "coordinator_tendermint_retry_count_total",
+		Help: "The total count of status retries",
+	})
+)
+
+// UnexpectedStatusCodeError ...
+type UnexpectedStatusCodeError struct {
+	Code int
+}
+
+func (e *UnexpectedStatusCodeError) Error() string {
+	return fmt.Sprintf("unexpected tendermint status code: %d", e.Code)
+}
+
+func doRequest(req *http.Request) (resp *http.Response, err error) {
+	for i := 0; i < 3; i++ {
+		resp, err = http.DefaultClient.Do(req)
+		if err == nil && resp.StatusCode < 500 {
+			break
+		}
+
+		delay := time.Second * 5 * time.Duration(i+1)
+
+		log.Info().Dur("delay", delay).Str("url", req.URL.String()).Msg("retry")
+
+		tendermintRetryCount.Inc()
+
+		time.Sleep(delay)
+	}
+
+	return
+}
 
 // GetTendermintRange get an available height range from the /status endpoint.
 func (e *Env) GetTendermintRange(ctx context.Context) (*model.HeightRange, error) {
@@ -16,12 +55,16 @@ func (e *Env) GetTendermintRange(ctx context.Context) (*model.HeightRange, error
 		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := doRequest(req)
 	if err != nil {
 		return nil, fmt.Errorf("failed to Get: %w", err)
 	}
 
 	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, &UnexpectedStatusCodeError{resp.StatusCode}
+	}
 
 	var data struct {
 		Result struct {
@@ -47,7 +90,8 @@ func (e *Env) GetTendermintRange(ctx context.Context) (*model.HeightRange, error
 		return nil, fmt.Errorf("failed to parse latest_block_height: %w", err)
 	}
 
-	res := model.HeightRange{Earliest: earlier, Latest: latest}
+	// avoid "could not find results for height #x" errors for fresh blocks
+	res := model.HeightRange{Earliest: earlier, Latest: latest - 1}
 
 	return &res, nil
 }

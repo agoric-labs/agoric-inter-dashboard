@@ -116,6 +116,10 @@ MainLoop:
 			roundDelay += time.Second
 		}
 
+		state.Lock()
+		state.NewRanges = append([]*model.HeightRange{}, newRanges...)
+		state.Unlock()
+
 		blockCount := int64(0)
 		batchedRanges := model.BatchHeightRanges(newRanges, input.BatchSize)
 		processedRangeCount := 0
