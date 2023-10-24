@@ -30,7 +30,7 @@ export function PSMStats() {
   const rows = resultSet.tablePivot();
 
   return (
-    <ValueCardGrid>
+    <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
       {rows.map((s: any) => (
         <Item
           data={{
@@ -43,6 +43,6 @@ export function PSMStats() {
           key={s['psm_stats.coin']}
         />
       ))}
-    </ValueCardGrid>
+    </div>
   );
 }

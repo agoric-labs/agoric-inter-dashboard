@@ -25,10 +25,13 @@ export function PSMMintedPoolBalancePie() {
     return requestView;
   }
 
-  const data = resultSet.tablePivot().map((row) => ({
-    value: parseFloat(row['psm_stats.last_minted_pool_balance'] as string),
-    label: coinLabels[row['psm_stats.coin'] as string],
-  }));
+  const data = resultSet
+    .tablePivot()
+    .map(row => ({
+      value: parseFloat(row['psm_stats.last_minted_pool_balance'] as string),
+      label: coinLabels[row['psm_stats.coin'] as string],
+    }))
+    .filter(row => row.value > 0);
 
   return (
     <Card>
