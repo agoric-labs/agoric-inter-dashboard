@@ -41,4 +41,7 @@ cat | \
   tendermint-normalizer | \
   target-bigquery --config $BQ_CONFIG
 
+# avoid "No space left on device" errors
+rm $BQ_CONFIG
+
 exit $?
