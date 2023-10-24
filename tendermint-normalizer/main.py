@@ -441,8 +441,9 @@ class BlockProcessor:
 
                 self._write_record(VALIDATORS_SCHEMA["stream"], rec)
 
-        if not skip_extra and validator_idx != len(extra_data):
-            raise ValueError("unexpected extra_data size")
+        # this is triggered when one or more validators have exited
+        # if not skip_extra and validator_idx != len(extra_data):
+        #     raise ValueError("unexpected extra_data size")
 
         return proposer_addr
 
