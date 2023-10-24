@@ -82,7 +82,7 @@ func New(subcommand []string) (*Env, error) {
 
 	log.Info().
 		Int64("COORDINATOR_BATCH_SIZE", env.batchSize).
-		Int64("COORDINATOR_OUTPUT_SIZE", env.outputLimit).
+		Int64("COORDINATOR_OUTPUT_LIMIT", env.outputLimit).
 		Str("COORDINATOR_TENDERMINT_URL", env.tendermintURL).
 		Msg("config")
 

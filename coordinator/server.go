@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -22,6 +23,19 @@ func runServer(addr string) {
 		if err != nil {
 			http.Error(writer, "internal error, check logs", http.StatusInternalServerError)
 			log.Error().Err(err).Msg("failed to writeMonitoringPage")
+		}
+	})
+
+	http.HandleFunc("/state", func(writer http.ResponseWriter, req *http.Request) {
+		writer.Header().Set("Content-Type", "application/json")
+
+		state.Lock()
+		defer state.Unlock()
+
+		err := json.NewEncoder(writer).Encode(&state)
+		if err != nil {
+			http.Error(writer, "internal error, check logs", http.StatusInternalServerError)
+			log.Error().Err(err).Msg("failed to render the state")
 		}
 	})
 

@@ -26,8 +26,8 @@ var stopped int32
 var state struct {
 	sync.Mutex
 
-	NewRanges    []*model.HeightRange
-	SyncedRanges []*model.HeightRange
+	NewRanges    []*model.HeightRange `json:"new_ranges"`
+	SyncedRanges []*model.HeightRange `json:"synced_ranges"`
 }
 
 var (
@@ -91,6 +91,10 @@ func process(ctx context.Context, subcommand []string) error {
 
 	roundDelay := 1 * time.Second
 
+	state.Lock()
+	state.SyncedRanges = append([]*model.HeightRange{}, syncedRanges...)
+	state.Unlock()
+
 MainLoop:
 	for {
 		startedAt := time.Now()
@@ -114,6 +118,7 @@ MainLoop:
 
 		blockCount := int64(0)
 		batchedRanges := model.BatchHeightRanges(newRanges, input.BatchSize)
+		processedRangeCount := 0
 
 		for _, bRanges := range batchedRanges {
 			// with ctx WriteConfig breaks writing after stopping
@@ -123,15 +128,17 @@ MainLoop:
 			}
 
 			// update state for each batched range
-			for rangeIdx, newRange := range bRanges {
+			for _, newRange := range bRanges {
 				blockCount += newRange.Size()
 				input.SyncedRanges = model.CompressHeightRanges(append(input.SyncedRanges, newRange))
 
 				// update state for the monitoring page
 				state.Lock()
-				state.NewRanges = append([]*model.HeightRange{}, newRanges[rangeIdx:]...)
+				state.NewRanges = append([]*model.HeightRange{}, newRanges[processedRangeCount+1:]...)
 				state.SyncedRanges = append([]*model.HeightRange{}, input.SyncedRanges...)
 				state.Unlock()
+
+				processedRangeCount++
 
 				// calculate metrics
 				syncedRangesCount.Set(float64(len(input.SyncedRanges)))
