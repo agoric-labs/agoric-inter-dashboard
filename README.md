@@ -592,11 +592,6 @@ helm install cubestore gadsme/cubestore --values cubestore.values.yaml
 # setup dashboard
 helm install dashboard ./infra/dashboard --values dashboard.values.yaml
 
-# extract coingeko history
-kubectl create job --from=cronjob.batch/mainnet-extractor-coingeko-atom mainnet-extractor-coingeko-atom-manual0 --dry-run -o "json" \
-  | jq ".spec.template.spec.containers[0].env += [{ \"name\": \"DEPTH\", value:\"90\" }]" \
-  | kubectl apply -f -
-
 # manual update all charts
 ls *.values.yaml | sed 's/\.values\.yaml$//' | xargs -I{} helm upgrade {} ./infra/indexer-chart --values {}.values.yaml
 

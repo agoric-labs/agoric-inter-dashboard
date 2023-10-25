@@ -39,10 +39,6 @@ balances:
   shedule: "*/10 * * * *"
   addresses: ""
 
-coingeko:
-  enabled: false
-  shedule: "0 * * * *"
-
 sloMetrics:
   enabled: false
   shedule: "30 * * * *"
