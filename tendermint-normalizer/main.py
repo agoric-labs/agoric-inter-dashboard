@@ -601,9 +601,13 @@ if __name__ == "__main__":
     print(ujson.dumps(STATE_CHANGES_SCHEMA))
 
     # create an empty table for data from previous indexer
-    old_changes_schema = STATE_CHANGES_SCHEMA.copy()
-    old_changes_schema["stream"] = "old_" + STATE_CHANGES_SCHEMA["stream"]
-    print(ujson.dumps(old_changes_schema))
+    if os.getenv("CREATE_OLD_STATE_CHANGES") is not None:
+        old_changes_schema = STATE_CHANGES_SCHEMA.copy()
+        old_changes_schema["stream"] = "old_" + STATE_CHANGES_SCHEMA["stream"]
+        print(ujson.dumps(old_changes_schema))
+
+    if os.getenv("ONLY_SCHEMA") is not None:
+        exit(0)
 
     worker_count = int(os.getenv("WORKER_COUNT", multiprocessing.cpu_count()*2))
 
