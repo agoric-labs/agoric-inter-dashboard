@@ -1,2 +1,15 @@
 [tool.black]
 line-length = 120
+
+[tool.poetry]
+name = "tendermint-normalizer"
+version = "0.1.0"
+description = "get squashed data from `tendermint-source` and convert it to the singer.io format for the target-bigquery"
+authors = ["p2p.org"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+ujson = "^5.8.0"
+requests = "^2.31.0"
+python-dateutil = "^2.8.2"
