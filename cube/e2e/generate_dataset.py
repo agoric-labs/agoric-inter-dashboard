@@ -198,7 +198,7 @@ def gen_psm_governance(token, mint_limit, block_time):
     return wrap_state_change(f"published.psm.IST.${token}.governance", rec, block_time)
 
 
-def gen_psm_metrics(token, amount, total):
+def gen_psm_metrics(token, amount, total, fee):
     rec = {
         "anchorPoolBalance": {
             "__brand": token,
@@ -208,9 +208,9 @@ def gen_psm_metrics(token, amount, total):
         },
         "feePoolBalance": {
             "__brand": "IST",
-            "__value": "0",
+            "__value": f"{fee}",
             "brand": "$1.Alleged: IST brand",
-            "value": "+0",
+            "value": f"+{fee}",
         },
         "mintedPoolBalance": {
             "__brand": "IST",
@@ -232,7 +232,206 @@ def gen_psm_metrics(token, amount, total):
         },
     }
 
-    return wrap_state_change(f"published.psm.IST.${token}.metrics", rec)
+    return wrap_state_change(f"published.psm.IST.{token}.metrics", rec)
+
+
+VAULT_GOV1 = {
+    "current": {
+        "DebtLimit": {
+            "type": "amount",
+            "value": {
+                "__brand": "IST",
+                "__value": "0",
+                "brand": "$0.Alleged: IST brand",
+                "value": "+0",
+            },
+        },
+        "InterestRate": {
+            "type": "ratio",
+            "value": {
+                "denominator": {
+                    "__brand": "IST",
+                    "__value": "100",
+                    "brand": "$0",
+                    "value": "+100",
+                },
+                "numerator": {
+                    "__brand": "IST",
+                    "__value": "1",
+                    "brand": "$0",
+                    "value": "+1",
+                },
+            },
+        },
+        "LiquidationMargin": {
+            "type": "ratio",
+            "value": {
+                "denominator": {
+                    "__brand": "IST",
+                    "__value": "100",
+                    "brand": "$0",
+                    "value": "+100",
+                },
+                "numerator": {
+                    "__brand": "IST",
+                    "__value": "150",
+                    "brand": "$0",
+                    "value": "+150",
+                },
+            },
+        },
+        "LiquidationPadding": {
+            "type": "ratio",
+            "value": {
+                "denominator": {
+                    "__brand": "IST",
+                    "__value": "100",
+                    "brand": "$0",
+                    "value": "+100",
+                },
+                "numerator": {
+                    "__brand": "IST",
+                    "__value": "25",
+                    "brand": "$0",
+                    "value": "+25",
+                },
+            },
+        },
+        "LiquidationPenalty": {
+            "type": "ratio",
+            "value": {
+                "denominator": {
+                    "__brand": "IST",
+                    "__value": "100",
+                    "brand": "$0",
+                    "value": "+100",
+                },
+                "numerator": {
+                    "__brand": "IST",
+                    "__value": "1",
+                    "brand": "$0",
+                    "value": "+1",
+                },
+            },
+        },
+        "MintFee": {
+            "type": "ratio",
+            "value": {
+                "denominator": {
+                    "__brand": "IST",
+                    "__value": "10000",
+                    "brand": "$0",
+                    "value": "+10000",
+                },
+                "numerator": {
+                    "__brand": "IST",
+                    "__value": "50",
+                    "brand": "$0",
+                    "value": "+50",
+                },
+            },
+        },
+    }
+}
+
+VAULT_GOV2 = {
+    "current": {
+        "DebtLimit": {
+            "type": "amount",
+            "value": {
+                "__brand": "IST",
+                "__value": "1000000000000",
+                "brand": "$0.Alleged: IST brand",
+                "value": "+1000000000000",
+            },
+        },
+        "InterestRate": {
+            "type": "ratio",
+            "value": {
+                "denominator": {
+                    "__brand": "IST",
+                    "__value": "10000",
+                    "brand": "$0",
+                    "value": "+10000",
+                },
+                "numerator": {
+                    "__brand": "IST",
+                    "__value": "250",
+                    "brand": "$0",
+                    "value": "+250",
+                },
+            },
+        },
+        "LiquidationMargin": {
+            "type": "ratio",
+            "value": {
+                "denominator": {
+                    "__brand": "IST",
+                    "__value": "10000",
+                    "brand": "$0",
+                    "value": "+10000",
+                },
+                "numerator": {
+                    "__brand": "IST",
+                    "__value": "19000",
+                    "brand": "$0",
+                    "value": "+19000",
+                },
+            },
+        },
+        "LiquidationPadding": {
+            "type": "ratio",
+            "value": {
+                "denominator": {
+                    "__brand": "IST",
+                    "__value": "10000",
+                    "brand": "$0",
+                    "value": "+10000",
+                },
+                "numerator": {
+                    "__brand": "IST",
+                    "__value": "1000",
+                    "brand": "$0",
+                    "value": "+1000",
+                },
+            },
+        },
+        "LiquidationPenalty": {
+            "type": "ratio",
+            "value": {
+                "denominator": {
+                    "__brand": "IST",
+                    "__value": "10000",
+                    "brand": "$0",
+                    "value": "+10000",
+                },
+                "numerator": {
+                    "__brand": "IST",
+                    "__value": "1000",
+                    "brand": "$0",
+                    "value": "+1000",
+                },
+            },
+        },
+        "MintFee": {
+            "type": "ratio",
+            "value": {
+                "denominator": {
+                    "__brand": "IST",
+                    "__value": "10000",
+                    "brand": "$0",
+                    "value": "+10000",
+                },
+                "numerator": {
+                    "__brand": "IST",
+                    "__value": "50",
+                    "brand": "$0",
+                    "value": "+50",
+                },
+            },
+        },
+    }
+}
 
 
 def token(val):
@@ -281,7 +480,7 @@ if __name__ == "__main__":
     for n in symmetric_range(token(1000), token(400000)):
         total += max(n - prev, 0)
         prev = n
-        push(gen_psm_metrics("DAI_grv", n, total))
+        push(gen_psm_metrics("DAI_grv", n, total, n * 0.01))
 
     reset_global_id()
 
@@ -294,6 +493,12 @@ if __name__ == "__main__":
     for n in symmetric_range(token(2000), token(800000)):
         total += max(n - prev, 0)
         prev = n
-        push(gen_psm_metrics("USDC_axl", n, total))
+        push(gen_psm_metrics("USDC_axl", n, total, n * 0.01))
+
+    reset_global_id()
+
+    # ATOM vaults
+    push(wrap_state_change("published.vaultFactory.managers.manager0.governance", VAULT_GOV1, start_time))
+    push(wrap_state_change("published.vaultFactory.managers.manager0.governance", VAULT_GOV2, middle_time))
 
     reset_global_id()

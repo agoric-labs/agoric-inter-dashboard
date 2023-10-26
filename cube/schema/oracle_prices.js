@@ -30,6 +30,10 @@ cube(`oracle_prices`, {
       sql: `${CUBE.rate}`,
       type: `avg`,
     },
+    rate_last: {
+      sql: `array_agg(${CUBE.rate} order by ${CUBE.day})[0]`,
+      type: `number`,
+    },
     // a fake measure for joins
     rate: {
       sql: `coalesce(type_out_amount / type_in_amount, 1)`,

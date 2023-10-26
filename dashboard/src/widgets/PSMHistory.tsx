@@ -9,7 +9,7 @@ import { formatCoinLabels } from '../coinLabels';
 export function PSMHistory() {
   const granularity = useGranularity();
   const res = useCubeQuery({
-    measures: ['psm_stats.last_total_minted_provided'],
+    measures: ['psm_stats.total_minted_provided_avg'],
     timeDimensions: [
       {
         dimension: 'psm_stats.day',

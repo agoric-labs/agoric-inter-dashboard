@@ -8,7 +8,7 @@ import { coinLabels } from '../coinLabels';
 
 export function PSMMintedPoolBalancePie() {
   const res = useCubeQuery({
-    measures: ['psm_stats.last_minted_pool_balance'],
+    measures: ['psm_stats.minted_pool_balance_avg'],
     timeDimensions: [
       {
         dimension: 'psm_stats.day',
@@ -16,7 +16,7 @@ export function PSMMintedPoolBalancePie() {
         granularity: 'day',
       },
     ],
-    order: [['psm_stats.last_minted_pool_balance', 'asc']],
+    order: [['psm_stats.minted_pool_balance_avg', 'asc']],
     dimensions: ['psm_stats.coin'],
   });
 

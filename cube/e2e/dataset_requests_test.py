@@ -21,7 +21,7 @@ def cube_request(query, dataset=DEFAULT_DATASET):
 
         raise ValueError(res["error"])
 
-    return json.dumps(res["data"])
+    return json.dumps(res["data"], indent=4)
 
 
 def test_oracle_prices(snapshot):
@@ -68,80 +68,71 @@ def test_reserve_allocations_by_key_and_brand(snapshot):
 
 def test_reserve_allocations_stats(snapshot):
     query = {
-      "measures": [
-        "reserve_allocations.amount_usd_sum"
-      ],
-      "timeDimensions": [
-        {
-          "dimension": "reserve_allocations.day",
-          "granularity": "day"
-        }
-      ],
-      "order": {
-        "reserve_allocations.day": "asc"
-      }
+        "measures": ["reserve_allocations.amount_usd_sum"],
+        "timeDimensions": [
+            {"dimension": "reserve_allocations.day", "granularity": "day"}
+        ],
+        "order": {"reserve_allocations.day": "asc"},
     }
 
     snapshot.assert_match(cube_request(query), "data.json")
+
 
 def test_psm_governance_by_coin(snapshot):
     query = {
-      "measures": [
-        "psm_governance.mint_limit_avg",
-        "psm_governance.mint_limit_sum"
-      ],
-      "timeDimensions": [
-        {
-          "dimension": "psm_governance.day",
-          "granularity": "day"
-        }
-      ],
-      "order": {
-        "psm_governance.mint_limit_avg": "desc"
-      },
-      "dimensions": [
-        "psm_governance.coin"
-      ]
+        "measures": ["psm_governance.mint_limit_avg", "psm_governance.mint_limit_sum"],
+        "timeDimensions": [{"dimension": "psm_governance.day", "granularity": "day"}],
+        "order": {"psm_governance.mint_limit_avg": "desc"},
+        "dimensions": ["psm_governance.coin"],
     }
 
     snapshot.assert_match(cube_request(query), "data.json")
+
 
 def test_psm_governance_by_coin(snapshot):
     query = {
-      "measures": [
-        "psm_governance.mint_limit_avg",
-        "psm_governance.mint_limit_sum"
-      ],
-      "timeDimensions": [
-        {
-          "dimension": "psm_governance.day",
-          "granularity": "day"
-        }
-      ],
-      "order": {
-        "psm_governance.mint_limit_avg": "desc"
-      },
-      "dimensions": [
-        "psm_governance.coin"
-      ]
+        "measures": ["psm_governance.mint_limit_avg", "psm_governance.mint_limit_sum"],
+        "timeDimensions": [{"dimension": "psm_governance.day", "granularity": "day"}],
+        "order": {"psm_governance.mint_limit_avg": "desc"},
+        "dimensions": ["psm_governance.coin"],
     }
 
     snapshot.assert_match(cube_request(query), "data.json")
+
 
 def test_psm_governance_stats(snapshot):
     query = {
-      "measures": [
-        "psm_governance.mint_limit_sum"
-      ],
-      "timeDimensions": [
-        {
-          "dimension": "psm_governance.day",
-          "granularity": "day"
-        }
-      ],
-      "order": {
-        "psm_governance.mint_limit_avg": "desc"
-      }
+        "measures": ["psm_governance.mint_limit_sum"],
+        "timeDimensions": [{"dimension": "psm_governance.day", "granularity": "day"}],
+        "order": {"psm_governance.mint_limit_avg": "desc"},
+    }
+
+    snapshot.assert_match(cube_request(query), "data.json")
+
+
+def test_psm_stats_by_coin(snapshot):
+    query = {
+        "timeDimensions": [{"dimension": "psm_stats.day", "granularity": "day"}],
+        "order": {"psm_stats.day": "asc"},
+        "dimensions": ["psm_stats.coin"],
+        "measures": [
+            "psm_stats.anchor_pool_balance_avg",
+            "psm_stats.fee_pool_balance_avg",
+            "psm_stats.minted_pool_balance_avg",
+            "psm_stats.total_minted_provided_avg",
+            "psm_stats.total_anchor_provided_avg",
+            "psm_stats.utilization_rate_avg",
+        ],
+    }
+
+    snapshot.assert_match(cube_request(query), "data.json")
+
+
+def test_psm_stats(snapshot):
+    query = {
+        "measures": ["psm_stats.minted_pool_balance_sum"],
+        "timeDimensions": [{"dimension": "psm_stats.day", "granularity": "day"}],
+        "order": {"psm_stats.day": "asc"},
     }
 
     snapshot.assert_match(cube_request(query), "data.json")

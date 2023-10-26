@@ -23,6 +23,12 @@ cube(`psm_governance`, {
       sql: `mint_limit`,
       type: `sum`,
     },
+    // a fake measure for joins
+    mint_limit: {
+      sql: `mint_limit`,
+      type: `number`,
+      public: false,
+    },
   },
 
   dimensions: {
