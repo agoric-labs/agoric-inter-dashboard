@@ -79,7 +79,7 @@ services:
       - CUBEJS_DEV_MODE=true
       - CUBEJS_DB_TYPE=bigquery
       - CUBEJS_DEFAULT_API_SCOPES=meta,data,graphql,jobs
-      - CUBEJS_ROLLUP_ONLY=true
+      # - CUBEJS_ROLLUP_ONLY=true
       - CUBEJS_DB_BQ_CREDENTIALS=${GOOGLE_CREDS_B64}
       - CUBEJS_DB_BQ_PROJECT_ID=${PROJECT_ID}
       - CUBEJS_DB_BQ_KEY_FILE=/bigquerycreds.json

@@ -48,11 +48,27 @@ def test_reserve(snapshot):
 
     snapshot.assert_match(cube_request(query), "data.json")
 
-def test_reserve_allocations(snapshot):
+
+def test_reserve_allocations_by_key_and_brand(snapshot):
+    query = {
+        "measures": [
+            "reserve_allocations.amount_avg",
+            "reserve_allocations.amount_usd_avg",
+            "reserve_allocations.amount_usd_sum",
+        ],
+        "timeDimensions": [
+            {"dimension": "reserve_allocations.day", "granularity": "day"}
+        ],
+        "dimensions": ["reserve_allocations.key", "reserve_allocations.brand"],
+        "order": [["reserve_allocations.day", "asc"]],
+    }
+
+    snapshot.assert_match(cube_request(query), "data.json")
+
+
+def test_reserve_allocations_stats(snapshot):
     query = {
       "measures": [
-        "reserve_allocations.amount_avg",
-        "reserve_allocations.amount_usd_avg",
         "reserve_allocations.amount_usd_sum"
       ],
       "timeDimensions": [
@@ -61,16 +77,71 @@ def test_reserve_allocations(snapshot):
           "granularity": "day"
         }
       ],
-      "dimensions": [
-        "reserve_allocations.key",
-        "reserve_allocations.brand"
+      "order": {
+        "reserve_allocations.day": "asc"
+      }
+    }
+
+    snapshot.assert_match(cube_request(query), "data.json")
+
+def test_psm_governance_by_coin(snapshot):
+    query = {
+      "measures": [
+        "psm_governance.mint_limit_avg",
+        "psm_governance.mint_limit_sum"
       ],
-      "order": [
-        [
-          "reserve_allocations.day",
-          "asc"
-        ]
+      "timeDimensions": [
+        {
+          "dimension": "psm_governance.day",
+          "granularity": "day"
+        }
+      ],
+      "order": {
+        "psm_governance.mint_limit_avg": "desc"
+      },
+      "dimensions": [
+        "psm_governance.coin"
       ]
+    }
+
+    snapshot.assert_match(cube_request(query), "data.json")
+
+def test_psm_governance_by_coin(snapshot):
+    query = {
+      "measures": [
+        "psm_governance.mint_limit_avg",
+        "psm_governance.mint_limit_sum"
+      ],
+      "timeDimensions": [
+        {
+          "dimension": "psm_governance.day",
+          "granularity": "day"
+        }
+      ],
+      "order": {
+        "psm_governance.mint_limit_avg": "desc"
+      },
+      "dimensions": [
+        "psm_governance.coin"
+      ]
+    }
+
+    snapshot.assert_match(cube_request(query), "data.json")
+
+def test_psm_governance_stats(snapshot):
+    query = {
+      "measures": [
+        "psm_governance.mint_limit_sum"
+      ],
+      "timeDimensions": [
+        {
+          "dimension": "psm_governance.day",
+          "granularity": "day"
+        }
+      ],
+      "order": {
+        "psm_governance.mint_limit_avg": "desc"
+      }
     }
 
     snapshot.assert_match(cube_request(query), "data.json")
