@@ -4,32 +4,31 @@ import json
 import datetime
 
 global_id = 0
-start_time = datetime.datetime(2023, 10, 25)
+day_count = 40
+eight_interval_count = day_count * 3
+start_time = datetime.datetime(2023, 10, 25) - datetime.timedelta(days=day_count)
 
 
 def push(data):
     print(json.dumps(data))
 
 
-def get_state_change_module(path):
-    return ".".join(path.split(".")[0:2])
-
-
 def wrap_state_change(path, body):
     global global_id
     global_id += 1
 
-    block_time = start_time + datetime.timedelta(hours=global_id)
+    block_time = start_time + datetime.timedelta(hours=global_id * 8)
+    module = ".".join(path.split(".")[0:2])
 
     return {
         "type": "RECORD",
         "stream": "state_changes",
         "record": {
-            "id": f"{global_id}",
+            "id": f"{global_id}:{module}",
             "block_height": global_id,
-            "block_time": block_time.strftime("%Y-%m-%d %H:%M:%S.%f"),
+            "block_time": block_time.strftime("%Y-%m-%dT%H:%M:%S.%f"),
             "path": path,
-            "module": get_state_change_module(path),
+            "module": module,
             "idx": 0,
             "slots": "[]",
             "body": json.dumps(body),
@@ -38,6 +37,10 @@ def wrap_state_change(path, body):
 
 
 def gen_reserve_metrics(fee, atom):
+    shortfall_balance = round(fee * 0.4)
+    total_fee_burned = round(fee * 0.6)
+    total_fee_minted = round(fee * 0.8)
+
     rec = {
         "allocations": {
             "ATOM": {
@@ -55,21 +58,21 @@ def gen_reserve_metrics(fee, atom):
         },
         "shortfallBalance": {
             "__brand": "token",
-            "__value": "0",
+            "__value": f"{shortfall_balance}",
             "brand": "$1",
-            "value": "+0",
+            "value": f"+{shortfall_balance}",
         },
         "totalFeeBurned": {
             "__brand": "token",
-            "__value": "0",
+            "__value": f"{total_fee_burned}",
             "brand": "$1",
-            "value": "+0",
+            "value": f"+{total_fee_burned}",
         },
         "totalFeeMinted": {
             "__brand": "token",
-            "__value": "0",
+            "__value": f"{total_fee_minted}",
             "brand": "$1",
-            "value": "+0",
+            "value": f"+{total_fee_minted}",
         },
     }
 
@@ -107,18 +110,26 @@ def token(val):
     return round(val * pow(10, 6))
 
 
-def symmetric_range(start, stop, step):
+def symmetric_range(start, stop):
+    step = round((stop - start) / (eight_interval_count / 2))
     values = list(range(start, stop, step))
     return values + values[::-1]
 
 
 if __name__ == "__main__":
     # oracle prices
-    for n in symmetric_range(token(6), token(12), token(0.1)):
-        print(n)
+    for n in symmetric_range(token(6), token(12)):
         push(gen_oracle_price_metrics("ATOM", 1000000, n))
-        push(gen_oracle_price_metrics("stATOM", 1000000, n * 1.2))
+
+    # reset
+    global_id = 0
+
+    for n in symmetric_range(token(8), token(11)):
+        push(gen_oracle_price_metrics("stATOM", 1000000, n))
+
+    # reset
+    global_id = 0
 
     # reserves
-    for n in symmetric_range(token(5000), token(25000), token(500)):
-        push(gen_reserve_metrics(n, n / pow(10, 4)))
+    for n in symmetric_range(token(5000), token(25000)):
+        push(gen_reserve_metrics(n, n / 10))

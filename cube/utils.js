@@ -43,13 +43,15 @@ exports.dailySQL = (measures, dimensions, baseSQL) => {
     ), start_days as (
       select min(day) as min_day
           ${suffix(', ', dimensions.join(', '))}
+           , max(day) as max_day
         from rows_by_days
        ${suffix('group by ', groupBy)}
     )
     select day
          ${suffix(', ', dimensions.map((name) => `sd.${name}`).join(', '))}
          , ${measures.map((name) => windowMeasure(name, dimensions)).join('\n         , ')}
-      from start_days sd, unnest(generate_timestamp_array(min_day, current_timestamp(), interval 1 day)) day
+      from start_days sd
+         , unnest(generate_timestamp_array(min_day, greatest(current_timestamp(), max_day), interval 1 day)) day
       left join rows_by_days g on g.day = day ${suffix(
         'and ',
         dimensions.map((name) => `g.${name} = sd.${name}`).join(' and '),

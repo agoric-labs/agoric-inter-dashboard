@@ -1,0 +1,76 @@
+import requests
+import json
+import os
+
+API_URL = os.getenv("API_URL", "http://localhost:4000")
+DEFAULT_DATASET = os.getenv("DATASET_ID", "agoric_test")
+
+
+def cube_request(query, dataset=DEFAULT_DATASET):
+    url = f"{API_URL}/cubejs-api/{dataset}/v1/load"
+    req = requests.post(url, json={"query": query})
+
+    if req.status_code != requests.codes.ok:
+        raise ValueError(req.status_code)
+
+    res = req.json()
+
+    if "error" in res:
+        if res["error"] == "Continue wait":
+            return cube_request(query, dataset)
+
+        raise ValueError(res["error"])
+
+    return json.dumps(res["data"])
+
+
+def test_oracle_prices(snapshot):
+    query = {
+        "measures": ["oracle_prices.rate_avg"],
+        "dimensions": ["oracle_prices.price_feed_name"],
+        "timeDimensions": [{"dimension": "oracle_prices.day", "granularity": "day"}],
+        "order": {"oracle_prices.day": "asc"},
+    }
+
+    snapshot.assert_match(cube_request(query), "data.json")
+
+
+def test_reserve(snapshot):
+    query = {
+        "measures": [
+            "reserve.shortfall_balance_avg",
+            "reserve.total_fee_minted_avg",
+            "reserve.total_fee_burned_avg",
+        ],
+        "timeDimensions": [{"dimension": "reserve.day", "granularity": "day"}],
+        "order": {"oracle_prices.day": "asc"},
+    }
+
+    snapshot.assert_match(cube_request(query), "data.json")
+
+def test_reserve_allocations(snapshot):
+    query = {
+      "measures": [
+        "reserve_allocations.amount_avg",
+        "reserve_allocations.amount_usd_avg",
+        "reserve_allocations.amount_usd_sum"
+      ],
+      "timeDimensions": [
+        {
+          "dimension": "reserve_allocations.day",
+          "granularity": "day"
+        }
+      ],
+      "dimensions": [
+        "reserve_allocations.key",
+        "reserve_allocations.brand"
+      ],
+      "order": [
+        [
+          "reserve_allocations.day",
+          "asc"
+        ]
+      ]
+    }
+
+    snapshot.assert_match(cube_request(query), "data.json")

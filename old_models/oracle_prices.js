@@ -27,14 +27,8 @@ cube(`oracle_prices`, {
       type: `avg`,
     },
     rate_avg: {
-      sql: `${CUBE.rate}`,
+      sql: `type_out_amount / type_in_amount`,
       type: `avg`,
-    },
-    // a fake measure for joins
-    rate: {
-      sql: `coalesce(type_out_amount / type_in_amount, 1)`,
-      type: `number`,
-      public: false,
     },
   },
 
@@ -60,6 +54,7 @@ cube(`oracle_prices`, {
       dimensions: [price_feed_name],
       time_dimension: day,
       granularity: `year`,
+      partition_granularity: `year`,
       refresh_key: {
         every: '1 day',
       },
@@ -69,6 +64,7 @@ cube(`oracle_prices`, {
       dimensions: [price_feed_name],
       time_dimension: day,
       granularity: `month`,
+      partition_granularity: `month`,
       refresh_key: {
         every: '1 day',
       },
@@ -78,26 +74,23 @@ cube(`oracle_prices`, {
       dimensions: [price_feed_name],
       time_dimension: day,
       granularity: `week`,
+      partition_granularity: `week`,
       refresh_key: {
         every: '1 day',
+        incremental: true,
+        update_window: `1 week`,
       },
     },
-    by_price_feed_name_day: {
+    by_price_feed_name_day1: {
       measures: [rate_avg],
       dimensions: [price_feed_name],
       time_dimension: day,
       granularity: `day`,
       partition_granularity: `day`,
       refresh_key: {
-        every: `10 minutes`,
+        every: '5 minutes',
         incremental: true,
         update_window: `1 day`,
-      },
-      build_range_start: {
-        sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.priceFeed'`,
-      },
-      build_range_end: {
-        sql: `select current_timestamp()`,
       },
     },
   },

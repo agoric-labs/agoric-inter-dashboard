@@ -10,8 +10,7 @@ cube(`reserve`, {
          , cast(json_value(body, '$.totalFeeBurned.__value') as float64) / pow(10, 6) as total_fee_burned
          , cast(json_value(body, '$.totalFeeMinted.__value') as float64) / pow(10, 6) as total_fee_minted
       from ${state_changes.sql()}
-     where module = 'published.reserve'
-       and path = 'published.reserve.metrics'
+     where path = 'published.reserve.metrics'
   `,
   ),
 
@@ -49,7 +48,7 @@ cube(`reserve`, {
       time_dimension: day,
       granularity: `year`,
       refresh_key: {
-        every: `1 day`,
+        every: `24 hour`,
       },
     },
     main_month: {
@@ -61,7 +60,7 @@ cube(`reserve`, {
       time_dimension: day,
       granularity: `month`,
       refresh_key: {
-        every: `1 day`,
+        every: `24 hour`,
       },
     },
     main_week: {
@@ -73,7 +72,7 @@ cube(`reserve`, {
       time_dimension: day,
       granularity: `week`,
       refresh_key: {
-        every: `1 day`,
+        every: `24 hour`,
       },
     },
     main_day: {
@@ -84,17 +83,8 @@ cube(`reserve`, {
       ],
       time_dimension: day,
       granularity: `day`,
-      partition_granularity: `day`,
       refresh_key: {
-        every: `10 minutes`,
-        incremental: true,
-        update_window: `1 day`,
-      },
-      build_range_start: {
-        sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.reserve'`,
-      },
-      build_range_end: {
-        sql: `select current_timestamp()`,
+        every: `1 hour`,
       },
     },
   },

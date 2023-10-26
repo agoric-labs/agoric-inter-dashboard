@@ -22,53 +22,49 @@ LANGUAGE js AS """
 
 cube(`reserve_allocations`, {
   sql: dailySQL(
-    ['amount'],
+    ['amount', 'usd_rate'],
     ['brand', 'key'],
     `
     select block_time -- for dailySQL
          , json_value(alloc, '$.data.__brand') as brand
          , json_value(alloc, '$.key') as key
          , cast(json_value(alloc, '$.data.__value') as float64) / pow(10, 6) as amount
+         , coalesce(p.type_out_amount / p.type_in_amount, 1) as usd_rate -- 1 for ist without the oracle feed
       from ${state_changes.sql()} c
       cross join unnest(agoric_mainnet.extract_allocations(to_json_string(json_query(body, '$.allocations')))) alloc
-     where module = 'published.reserve'
-       and path = 'published.reserve.metrics'
+      left join ${oracle_prices.sql()} p on p.day = date_trunc(c.block_time, day) and p.price_feed_name like concat(json_value(alloc, '$.data.__brand'), '%')
+     where path = 'published.reserve.metrics'
   `,
   ),
 
-  joins: {
-    oracle_prices: {
-      relationship: `one_to_one`,
-      sql: `${CUBE}.day = ${oracle_prices}.day and concat(${CUBE.brand}, '-USD_price_feed') = ${oracle_prices}.price_feed_name`,
-    },
-  },
-
   measures: {
+    usd_rate_avg: {
+      sql: `usd_rate`,
+      type: `avg`,
+    },
     amount_avg: {
       sql: `amount`,
       type: `avg`,
     },
     amount_usd_avg: {
-      sql: `round(amount * ${oracle_prices.rate}, 6)`,
+      sql: `amount * usd_rate`,
       type: `avg`,
       title: `Amount USD Avg`,
     },
     amount_usd_sum: {
-      sql: `round(amount * ${oracle_prices.rate}, 6)`,
+      sql: `amount * usd_rate`,
       type: `sum`,
       title: `Amount USD Sum`,
     },
   },
 
   dimensions: {
-    key: {
-      sql: `key`,
-      type: `string`,
-      primary_key: true,
-      public: true,
-    },
     brand: {
       sql: `brand`,
+      type: `string`,
+    },
+    key: {
+      sql: `key`,
       type: `string`,
     },
     day: {
@@ -78,22 +74,22 @@ cube(`reserve_allocations`, {
   },
 
   pre_aggregations: {
-    by_brand_and_key_year: {
+    main_year: {
       measures: [
+        usd_rate_avg,
         amount_avg,
         amount_usd_avg,
-        amount_usd_sum,
       ],
       dimensions: [brand, key],
       time_dimension: day,
       granularity: `year`,
       refresh_key: {
-        every: `1 day`,
+        every: `24 hour`,
       },
     },
-    by_brand_and_key_month: {
+    main_month: {
       measures: [
-        oracle_prices.rate_avg,
+        usd_rate_avg,
         amount_avg,
         amount_usd_avg,
       ],
@@ -101,42 +97,33 @@ cube(`reserve_allocations`, {
       time_dimension: day,
       granularity: `month`,
       refresh_key: {
-        every: `1 day`,
+        every: `24 hour`,
       },
     },
-    by_brand_and_key_week: {
+    main_week: {
       measures: [
+        usd_rate_avg,
         amount_avg,
         amount_usd_avg,
-        amount_usd_sum,
       ],
       dimensions: [brand, key],
       time_dimension: day,
       granularity: `week`,
       refresh_key: {
-        every: `1 day`,
+        every: `24 hour`,
       },
     },
-    by_brand_and_key_day: {
+    main_day: {
       measures: [
+        usd_rate_avg,
         amount_avg,
         amount_usd_avg,
-        amount_usd_sum,
       ],
       dimensions: [brand, key],
       time_dimension: day,
       granularity: `day`,
-      partition_granularity: `day`,
       refresh_key: {
-        every: `10 minutes`,
-        incremental: true,
-        update_window: `1 day`,
-      },
-      build_range_start: {
-        sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.reserve'`,
-      },
-      build_range_end: {
-        sql: `select current_timestamp()`,
+        every: `1 hour`,
       },
     },
     stats_year: {
@@ -144,7 +131,7 @@ cube(`reserve_allocations`, {
       time_dimension: day,
       granularity: `year`,
       refreshKey: {
-        every: `1 day`,
+        every: `24 hour`,
       },
     },
     stats_month: {
@@ -152,7 +139,7 @@ cube(`reserve_allocations`, {
       time_dimension: day,
       granularity: `month`,
       refreshKey: {
-        every: `1 day`,
+        every: `24 hour`,
       },
     },
     stats_week: {
@@ -160,24 +147,15 @@ cube(`reserve_allocations`, {
       time_dimension: day,
       granularity: `week`,
       refreshKey: {
-        every: `1 day`,
+        every: `24 hour`,
       },
     },
     stats_day: {
       measures: [amount_usd_sum],
       time_dimension: day,
       granularity: `day`,
-      partition_granularity: `day`,
-      refresh_key: {
-        every: `10 minutes`,
-        incremental: true,
-        update_window: `1 day`,
-      },
-      build_range_start: {
-        sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.reserve'`,
-      },
-      build_range_end: {
-        sql: `select current_timestamp()`,
+      refreshKey: {
+        every: `1 hour`,
       },
     },
   },

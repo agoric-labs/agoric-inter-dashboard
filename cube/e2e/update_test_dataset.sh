@@ -31,7 +31,7 @@ cat > $BQ_CONFIG << EOL
     "cluster_on_key_properties": true,
     "schema_resolver_version": 2,
     "location": "US",
-    "batch_size": 200,
+    "batch_size": 100,
     "options": {
       "storage_write_batch_mode": true
     }
@@ -41,9 +41,11 @@ EOL
 # build the target-bigquery with patches
 docker build -t $DEV_IMAGE_NAME .
 
-# generate schemas + data
-(ONLY_SCHEMA=1 python tendermint-normalizer/main.py && python cube/e2e/generate_dataset.py) | \
-  docker run --rm -i \ # write to BQ
+SCHEMA_FILTER='(blocks|balances|state_changes)'
+
+# generate and write schemas + data
+(ONLY_SCHEMA=1 python tendermint-normalizer/main.py | grep -E $SCHEMA_FILTER && python cube/e2e/generate_dataset.py) | \
+  docker run --rm -i \
     -v `pwd`/$BQ_CONFIG:/tmp/config.json \
     -v `pwd`/$GOOGLE_CREDS:/tmp/$GOOGLE_CREDS \
     $DEV_IMAGE_NAME target-bigquery --config /tmp/config.json
