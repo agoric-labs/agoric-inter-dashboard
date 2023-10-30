@@ -16,7 +16,7 @@ export function InterProtocol() {
   });
 
   const ibcRes = useCubeQuery({
-    measures: ['balances.amount_sum'],
+    dimensions: ['balances.denom', 'balances.address'],
     timeDimensions: [
       {
         dimension: 'balances.day',
@@ -31,8 +31,8 @@ export function InterProtocol() {
         values: ['uist'],
       },
       {
-        member: 'balances.denom',
-        operator: 'equals',
+        member: 'balances.address',
+        operator: 'contains',
         values: [
           'agoric1a53udazy8ayufvy0s434pfwjcedzqv34y3q6mc',
           'agoric1kq2rzz6fq2q7fsu75a9g7cpzjeanmk686c8qtz',
