@@ -49,36 +49,36 @@ cube(`balances`, {
   pre_aggregations: isDev
     ? {}
     : {
-        by_denom_year: {
+        by_denom_and_address_year: {
           measures: [amount_sum, amount_avg],
-          dimensions: [denom],
+          dimensions: [denom, address],
           time_dimension: day,
           granularity: `year`,
           refreshKey: {
             every: `24 hour`,
           },
         },
-        by_denom_month: {
+        by_denom_and_address_month: {
           measures: [amount_sum, amount_avg],
-          dimensions: [denom],
+          dimensions: [denom, address],
           time_dimension: day,
           granularity: `month`,
           refreshKey: {
             every: `24 hour`,
           },
         },
-        by_denom_week: {
+        by_denom_and_address_week: {
           measures: [amount_sum, amount_avg],
-          dimensions: [denom],
+          dimensions: [denom, address],
           time_dimension: day,
           granularity: `week`,
           refreshKey: {
             every: `24 hour`,
           },
         },
-        by_denom_day: {
+        by_denom_and_address_day: {
           measures: [amount_sum, amount_avg],
-          dimensions: [denom],
+          dimensions: [denom, address],
           time_dimension: day,
           granularity: `day`,
           partition_granularity: `day`,

@@ -3,6 +3,7 @@ import { DataTable, DataColumn } from './DataTable';
 
 export type Row = {
   token: ReactNode;
+  numActive: number;
   dayChange: ReactNode;
   oraclePrice: number;
 };
@@ -15,19 +16,25 @@ export const columns: DataColumn<Row>[] = [
   {
     accessorKey: 'token',
     type: 'markup',
-    header: 'Token',
+    header: 'Collateral Type',
     size: 200,
   },
   {
-    accessorKey: 'dayChange',
-    type: 'markupRight',
-    header: '24h change',
+    accessorKey: 'numActive',
+    type: 'number',
+    header: 'Active Vaults',
     size: 50,
   },
   {
     accessorKey: 'oraclePrice',
     type: 'usd',
     header: 'Oracle Price, USD',
+    size: 50,
+  },
+  {
+    accessorKey: 'dayChange',
+    type: 'markupRight',
+    header: '24h change',
     size: 50,
   },
 ];

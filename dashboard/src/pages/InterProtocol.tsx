@@ -30,25 +30,36 @@ export function InterProtocol() {
         operator: 'equals',
         values: ['uist'],
       },
+      {
+        member: 'balances.denom',
+        operator: 'equals',
+        values: [
+          'agoric1a53udazy8ayufvy0s434pfwjcedzqv34y3q6mc',
+          'agoric1kq2rzz6fq2q7fsu75a9g7cpzjeanmk686c8qtz',
+          'agoric12k2pyuylm9t7ugdvz67h9pg4gmmvhn5vdm8dpz',
+          'agoric17sael2kcmm8npe2pmkxj3un90xfg60vvxgxjnt',
+          'agoric1wsxce0ls59rtj70fwcrxmtmmv32vpgmgl3wen2',
+        ],
+      },
     ],
   });
 
-  const vmRes = useCubeQuery({
-    measures: ['vault_managers.ist_minting_limit_sum', 'vault_managers.total_ist_minted_sum'],
+  const vgRes = useCubeQuery({
+    measures: ['vault_factory_governance.debt_limit_sum'],
     timeDimensions: [
       {
-        dimension: 'vault_managers.day',
+        dimension: 'vault_factory_governance.day',
         granularity: 'day',
         dateRange: 'Today',
       },
     ],
   });
 
-  const vaultMetricsRes = useCubeQuery({
-    measures: ['vault_managers.total_locked_collateral_usd_sum'],
+  const vmRes = useCubeQuery({
+    measures: ['vault_factory_metrics.total_debt_sum', 'vault_factory_metrics.total_collateral_usd_sum'],
     timeDimensions: [
       {
-        dimension: 'vault_managers.day',
+        dimension: 'vault_factory_metrics.day',
         granularity: 'day',
         dateRange: 'Today',
       },
@@ -110,6 +121,10 @@ export function InterProtocol() {
     return <ErrorAlert value={vmRes.error} />;
   }
 
+  if (vgRes.error) {
+    return <ErrorAlert value={vgRes.error} />;
+  }
+
   if (psmGovRes.error) {
     return <ErrorAlert value={psmGovRes.error} />;
   }
@@ -122,10 +137,6 @@ export function InterProtocol() {
     return <ErrorAlert value={reserveRes.error} />;
   }
 
-  if (vaultMetricsRes.error) {
-    return <ErrorAlert value={vaultMetricsRes.error} />;
-  }
-
   if (
     wcRes.isLoading ||
     !wcRes.resultSet ||
@@ -133,12 +144,12 @@ export function InterProtocol() {
     !ibcRes.resultSet ||
     vmRes.isLoading ||
     !vmRes.resultSet ||
+    vgRes.isLoading ||
+    !vgRes.resultSet ||
     psmRes.isLoading ||
     !psmRes.resultSet ||
     reserveRes.isLoading ||
     !reserveRes.resultSet ||
-    vaultMetricsRes.isLoading ||
-    !vaultMetricsRes.resultSet ||
     reserveAllocRes.isLoading ||
     !reserveAllocRes.resultSet ||
     psmGovRes.isLoading ||
@@ -152,11 +163,11 @@ export function InterProtocol() {
   const walletCount = wcRes.resultSet.tablePivot()[0]['wallets.address_count'].toString();
 
   const psmMinted = parseFloat(psmRes.resultSet.tablePivot()[0]['psm_stats.minted_pool_balance_sum'] as string);
-  const vaultMinted = parseFloat(vmRes.resultSet.tablePivot()[0]['vault_managers.total_ist_minted_sum'] as string);
+  const vaultMinted = parseFloat(vmRes.resultSet.tablePivot()[0]['vault_factory_metrics.total_debt_sum'] as string);
   const totalMinted = psmMinted + vaultMinted;
 
   const vaultMintLimit =
-    parseFloat(vmRes.resultSet.tablePivot()[0]['vault_managers.ist_minting_limit_sum'] as string) || 0;
+    parseFloat(vgRes.resultSet.tablePivot()[0]['vault_managers.ist_minting_limit_sum'] as string) || 0;
   const psmMintLimit = parseFloat(psmGovRes.resultSet.tablePivot()[0]['psm_governance.mint_limit_sum'] as string) || 0;
   const totalMintLimit = vaultMintLimit + psmMintLimit;
 
@@ -164,8 +175,7 @@ export function InterProtocol() {
   const totalReserve = reserveAllocRes.resultSet.tablePivot()[0]['reserve_allocations.amount_usd_sum'] as string;
   const reserveShortfall = reserveRes.resultSet.tablePivot()[0]['reserve.shortfall_balance_avg'] as string;
   const totalLockedCollateral =
-    parseFloat(vaultMetricsRes.resultSet.tablePivot()[0]['vault_managers.total_locked_collateral_usd_sum'] as string) ||
-    0;
+    parseFloat(vmRes.resultSet.tablePivot()[0]['vault_factory_metrics.total_collateral_usd_sum'] as string) || 0;
 
   return (
     <>
