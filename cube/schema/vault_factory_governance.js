@@ -1,0 +1,375 @@
+import { dailySQL } from '../utils';
+
+cube(`vault_factory_governance`, {
+  sql: dailySQL(
+    [
+      'liquidating_collateral',
+      'liquidating_debt',
+      'locked_quote',
+      'num_active_vaults',
+      'num_liquidating_vaults',
+      'num_liquidations_aborted',
+      'num_liquidations_completed',
+      'retained_collateral',
+      'retained_collateral',
+      'total_collateral_sold',
+      'total_debt',
+      'total_overage_received',
+      'total_proceeds_received',
+      'total_shortfall_received',
+    ],
+    ['manager_idx', 'collateral_type'],
+    `
+    select block_time
+         , cast(replace(split(path, '.')[3], 'manager') as name) as manager_idx
+         , json_value('body', '$.totalCollateral.__brand') as collateral_type
+         , cast(json_value(body, '$.liquidatingCollateral.__value') as float64) / pow(10, 6) as liquidating_collateral
+         , cast(json_value(body, '$.liquidatingDebt.__value') as float64) / pow(10, 6) as liquidating_debt
+         , cast(json_value(body, '$.lockedQuote.numerator.__value') as float64) / cast(json_value(body, '$.lockedQuote.denominator.__value') as float64) as locked_quote
+         , cast(json_value(body, '$.numActiveVaults') as int) as num_active_vaults
+         , cast(json_value(body, '$.numLiquidatingVaults') as int) as num_liquidating_vaults
+         , cast(json_value(body, '$.numLiquidationsAborted') as int) as num_liquidations_aborted
+         , cast(json_value(body, '$.numLiquidationsCompleted') as int) as num_liquidations_completed
+         , cast(json_value(body, '$.retainedCollateral.__value') as int) as retained_collateral
+         , cast(json_value(body, '$.totalCollateral.__value') as int) as retained_collateral
+         , cast(json_value(body, '$.totalCollateralSold.__value') as int) as total_collateral_sold
+         , cast(json_value(body, '$.totalDebt.__value') as int) as total_debt
+         , cast(json_value(body, '$.totalOverageReceived.__value') as int) as total_overage_received
+         , cast(json_value(body, '$.totalProceedsReceived.__value') as int) as total_proceeds_received
+         , cast(json_value(body, '$.totalShortfallReceived.__value') as int) as total_shortfall_received
+     from ${state_changes.sql()}
+    where module = 'published.vaultFactory'
+      and split(path, '.')[2] = 'managers'
+      and split(path, '.')[4] = 'metrics'
+  `,
+  ),
+
+  measures: {
+    liquidating_collateral_avg: {
+      sql: 'liquidating_collateral',
+      type: 'avg',
+    },
+    liquidating_debt_avg: {
+      sql: 'liquidating_debt',
+      type: 'avg',
+    },
+    locked_quote_avg: {
+      sql: 'locked_quote',
+      type: 'avg',
+    },
+    num_active_vaults_avg: {
+      sql: 'num_active_vaults',
+      type: 'avg',
+    },
+    num_liquidating_vaults_avg: {
+      sql: 'num_liquidating_vaults',
+      type: 'avg',
+    },
+    num_liquidations_aborted_avg: {
+      sql: 'num_liquidations_aborted',
+      type: 'avg',
+    },
+    num_liquidations_completed_avg: {
+      sql: 'num_liquidations_completed',
+      type: 'avg',
+    },
+    retained_collateral_avg: {
+      sql: 'retained_collateral',
+      type: 'avg',
+    },
+    total_collateral_sold_avg: {
+      sql: 'total_collateral_sold',
+      type: 'avg',
+    },
+    total_debt_avg: {
+      sql: 'total_debt',
+      type: 'avg',
+    },
+    total_overage_received_avg: {
+      sql: 'total_overage_received',
+      type: 'avg',
+    },
+    total_proceeds_received_avg: {
+      sql: 'total_proceeds_received',
+      type: 'avg',
+    },
+    total_shortfall_received_avg: {
+      sql: 'total_shortfall_received',
+      type: 'avg',
+    },
+
+    num_active_vaults_sum: {
+      sql: 'num_active_vaults',
+      type: 'sum',
+    },
+    num_liquidating_vaults_sum: {
+      sql: 'num_liquidating_vaults',
+      type: 'sum',
+    },
+    num_liquidations_aborted_sum: {
+      sql: 'num_liquidations_aborted',
+      type: 'sum',
+    },
+    num_liquidations_completed_sum: {
+      sql: 'num_liquidations_completed',
+      type: 'sum',
+    },
+    liquidating_collateral_sum: {
+      sql: 'liquidating_collateral',
+      type: 'sum',
+    },
+    liquidating_debt_sum: {
+      sql: 'liquidating_debt',
+      type: 'sum',
+    },
+    retained_collateral_sum: {
+      sql: 'retained_collateral',
+      type: 'sum',
+    },
+    total_collateral_sold_sum: {
+      sql: 'total_collateral_sold',
+      type: 'sum',
+    },
+    total_debt_sum: {
+      sql: 'total_debt',
+      type: 'sum',
+    },
+    total_overage_received_sum: {
+      sql: 'total_overage_received',
+      type: 'sum',
+    },
+    total_proceeds_received_sum: {
+      sql: 'total_proceeds_received',
+      type: 'sum',
+    },
+    total_shortfall_received_sum: {
+      sql: 'total_shortfall_received',
+      type: 'sum',
+    },
+  },
+
+  dimensions: {
+    id: {
+      sql: `concat(manager_idx, day)`,
+      type: `string`,
+      primary_key: true,
+    },
+    manager_idx: {
+      sql: `coin`,
+      type: `number`,
+    },
+    collateral_type: {
+      sql: `collateral_type`,
+      type: `string`,
+    },
+    day: {
+      sql: `day`,
+      type: `time`,
+    },
+  },
+
+  pre_aggregations: {
+    by_manager_idx_and_collateral_type_year: {
+      measures: [
+        liquidating_collateral_avg,
+        liquidating_debt_avg,
+        locked_quote_avg,
+        num_active_vaults_avg,
+        num_liquidating_vaults_avg,
+        num_liquidations_aborted_avg,
+        num_liquidations_completed_avg,
+        retained_collateral_avg,
+        retained_collateral_avg,
+        total_collateral_sold_avg,
+        total_debt_avg,
+        total_overage_received_avg,
+        total_proceeds_received_avg,
+        total_shortfall_received_avg,
+      ],
+      dimensions: [manager_idx],
+      time_dimension: day,
+      granularity: `year`,
+      refreshKey: {
+        every: `1 day`,
+      },
+    },
+    by_manager_idx_and_collateral_type_month: {
+      measures: [
+        liquidating_collateral_avg,
+        liquidating_debt_avg,
+        locked_quote_avg,
+        num_active_vaults_avg,
+        num_liquidating_vaults_avg,
+        num_liquidations_aborted_avg,
+        num_liquidations_completed_avg,
+        retained_collateral_avg,
+        retained_collateral_avg,
+        total_collateral_sold_avg,
+        total_debt_avg,
+        total_overage_received_avg,
+        total_proceeds_received_avg,
+        total_shortfall_received_avg,
+      ],
+      dimensions: [manager_idx],
+      time_dimension: day,
+      granularity: `month`,
+      refreshKey: {
+        every: `1 day`,
+      },
+    },
+    by_manager_idx_and_collateral_type_week: {
+      measures: [
+        liquidating_collateral_avg,
+        liquidating_debt_avg,
+        locked_quote_avg,
+        num_active_vaults_avg,
+        num_liquidating_vaults_avg,
+        num_liquidations_aborted_avg,
+        num_liquidations_completed_avg,
+        retained_collateral_avg,
+        retained_collateral_avg,
+        total_collateral_sold_avg,
+        total_debt_avg,
+        total_overage_received_avg,
+        total_proceeds_received_avg,
+        total_shortfall_received_avg,
+      ],
+      dimensions: [manager_idx],
+      time_dimension: day,
+      granularity: `week`,
+      refreshKey: {
+        every: `1 day`,
+      },
+    },
+    by_manager_idx_and_collateral_type_day: {
+      measures: [
+        liquidating_collateral_avg,
+        liquidating_debt_avg,
+        locked_quote_avg,
+        num_active_vaults_avg,
+        num_liquidating_vaults_avg,
+        num_liquidations_aborted_avg,
+        num_liquidations_completed_avg,
+        retained_collateral_avg,
+        retained_collateral_avg,
+        total_collateral_sold_avg,
+        total_debt_avg,
+        total_overage_received_avg,
+        total_proceeds_received_avg,
+        total_shortfall_received_avg,
+      ],
+      dimensions: [manager_idx],
+      time_dimension: day,
+      granularity: `day`,
+      partition_granularity: `day`,
+      refresh_key: {
+        every: `10 minutes`,
+        incremental: true,
+        update_window: `1 day`,
+      },
+      build_range_start: {
+        sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.vaultFactory' and path like '%metrics'`,
+      },
+      build_range_end: {
+        sql: `select current_timestamp()`,
+      },
+    },
+    stats_year: {
+      measures: [
+        liquidating_collateral_sum,
+        liquidating_debt_sum,
+        num_active_vaults_sum,
+        num_liquidating_vaults_sum,
+        num_liquidations_aborted_sum,
+        num_liquidations_completed_sum,
+        retained_collateral_sum,
+        retained_collateral_sum,
+        total_collateral_sold_sum,
+        total_debt_sum,
+        total_overage_received_sum,
+        total_proceeds_received_sum,
+        total_shortfall_received_sum,
+      ],
+      time_dimension: day,
+      granularity: `year`,
+      refreshKey: {
+        every: `1 day`,
+      },
+    },
+    stats_month: {
+      measures: [
+        liquidating_collateral_sum,
+        liquidating_debt_sum,
+        num_active_vaults_sum,
+        num_liquidating_vaults_sum,
+        num_liquidations_aborted_sum,
+        num_liquidations_completed_sum,
+        retained_collateral_sum,
+        retained_collateral_sum,
+        total_collateral_sold_sum,
+        total_debt_sum,
+        total_overage_received_sum,
+        total_proceeds_received_sum,
+        total_shortfall_received_sum,
+      ],
+      time_dimension: day,
+      granularity: `month`,
+      refreshKey: {
+        every: `1 day`,
+      },
+    },
+    stats_week: {
+      measures: [
+        liquidating_collateral_sum,
+        liquidating_debt_sum,
+        num_active_vaults_sum,
+        num_liquidating_vaults_sum,
+        num_liquidations_aborted_sum,
+        num_liquidations_completed_sum,
+        retained_collateral_sum,
+        retained_collateral_sum,
+        total_collateral_sold_sum,
+        total_debt_sum,
+        total_overage_received_sum,
+        total_proceeds_received_sum,
+        total_shortfall_received_sum,
+      ],
+      time_dimension: day,
+      granularity: `week`,
+      refreshKey: {
+        every: `1 day`,
+      },
+    },
+    stats_day: {
+      measures: [
+        liquidating_collateral_sum,
+        liquidating_debt_sum,
+        num_active_vaults_sum,
+        num_liquidating_vaults_sum,
+        num_liquidations_aborted_sum,
+        num_liquidations_completed_sum,
+        retained_collateral_sum,
+        retained_collateral_sum,
+        total_collateral_sold_sum,
+        total_debt_sum,
+        total_overage_received_sum,
+        total_proceeds_received_sum,
+        total_shortfall_received_sum,
+      ],
+      time_dimension: day,
+      granularity: `day`,
+      partition_granularity: `day`,
+      refresh_key: {
+        every: `10 minutes`,
+        incremental: true,
+        update_window: `1 day`,
+      },
+      build_range_start: {
+        sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.vaultFactory' and path like '%metrics'`,
+      },
+      build_range_end: {
+        sql: `select current_timestamp()`,
+      },
+    },
+  },
+});
