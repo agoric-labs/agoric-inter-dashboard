@@ -37,6 +37,11 @@ cube(`vault_factory_vaults`, {
   },
 
   measures: {
+    liquidated_count: {
+      sql: `vault_idx`,
+      type: `count`,
+      filters: [{ sql: `${CUBE}.state = 'liquidated'` }],
+    },
     last_state: {
       sql: `array_agg(state order by ${CUBE}.day desc)[0]`,
       type: `string`,

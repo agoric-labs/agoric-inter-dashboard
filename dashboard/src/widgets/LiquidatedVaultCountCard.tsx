@@ -8,10 +8,10 @@ type Props = {
 
 export function LiquidatedVaultCountCard({ title = 'Total Liquidated Vaults' }: Props) {
   const res = useCubeQuery({
-    measures: ['liquidated_vaults.count'],
+    measures: ['vault_factory_vaults.liquidated_count'],
     timeDimensions: [
       {
-        dimension: 'liquidated_vaults.day',
+        dimension: 'vault_factory_vaults.day',
         dateRange: 'Today',
         granularity: 'day',
       },
@@ -33,5 +33,5 @@ export function LiquidatedVaultCountCard({ title = 'Total Liquidated Vaults' }: 
     return null;
   }
 
-  return <ValueCard title={title} value={rows[0]['liquidated_vaults.count'] as string} />;
+  return <ValueCard title={title} value={rows[0]['vault_factory_vaults.liquidated_count'] as string} />;
 }
