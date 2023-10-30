@@ -1,3 +1,5 @@
+import { isDev } from '../utils';
+
 cube(`wallets`, {
   sql: `
      select block_time
@@ -21,12 +23,14 @@ cube(`wallets`, {
     },
   },
 
-  pre_aggregations: {
-    main: {
-      measures: [address_count],
-      refreshKey: {
-        every: `1 hour`,
+  pre_aggregations: isDev
+    ? {}
+    : {
+        main: {
+          measures: [address_count],
+          refreshKey: {
+            every: `1 hour`,
+          },
+        },
       },
-    },
-  },
 });

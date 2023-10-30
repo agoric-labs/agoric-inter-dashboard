@@ -1,4 +1,4 @@
-import { dailySQL } from '../utils';
+import { dailySQL, isDev } from '../utils';
 
 /*
 
@@ -33,7 +33,7 @@ cube(`reserve_allocations`, {
       cross join unnest(agoric_mainnet.extract_allocations(to_json_string(json_query(body, '$.allocations')))) alloc
      where module = 'published.reserve'
        and path = 'published.reserve.metrics'
-       and ${FILTER_PARAMS.reserve_allocations.day.filter('block_time')}
+       -- and ${FILTER_PARAMS.reserve_allocations.day.filter('block_time')}
   `,
   ),
 
@@ -78,108 +78,94 @@ cube(`reserve_allocations`, {
     },
   },
 
-  pre_aggregations: {
-    by_brand_and_key_year: {
-      measures: [
-        amount_avg,
-        amount_usd_avg,
-        amount_usd_sum,
-      ],
-      dimensions: [brand, key],
-      time_dimension: day,
-      granularity: `year`,
-      refresh_key: {
-        every: `1 day`,
+  pre_aggregations: isDev
+    ? {}
+    : {
+        by_brand_and_key_year: {
+          measures: [amount_avg, amount_usd_avg, amount_usd_sum],
+          dimensions: [brand, key],
+          time_dimension: day,
+          granularity: `year`,
+          refresh_key: {
+            every: `1 day`,
+          },
+        },
+        by_brand_and_key_month: {
+          measures: [oracle_prices.rate_avg, amount_avg, amount_usd_avg],
+          dimensions: [brand, key],
+          time_dimension: day,
+          granularity: `month`,
+          refresh_key: {
+            every: `1 day`,
+          },
+        },
+        by_brand_and_key_week: {
+          measures: [amount_avg, amount_usd_avg, amount_usd_sum],
+          dimensions: [brand, key],
+          time_dimension: day,
+          granularity: `week`,
+          refresh_key: {
+            every: `1 day`,
+          },
+        },
+        by_brand_and_key_day: {
+          measures: [amount_avg, amount_usd_avg, amount_usd_sum],
+          dimensions: [brand, key],
+          time_dimension: day,
+          granularity: `day`,
+          partition_granularity: `day`,
+          refresh_key: {
+            every: `10 minutes`,
+            incremental: true,
+            update_window: `1 day`,
+          },
+          build_range_start: {
+            sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.reserve'`,
+          },
+          build_range_end: {
+            sql: `select current_timestamp()`,
+          },
+        },
+        stats_year: {
+          measures: [amount_usd_sum],
+          time_dimension: day,
+          granularity: `year`,
+          refreshKey: {
+            every: `1 day`,
+          },
+        },
+        stats_month: {
+          measures: [amount_usd_sum],
+          time_dimension: day,
+          granularity: `month`,
+          refreshKey: {
+            every: `1 day`,
+          },
+        },
+        stats_week: {
+          measures: [amount_usd_sum],
+          time_dimension: day,
+          granularity: `week`,
+          refreshKey: {
+            every: `1 day`,
+          },
+        },
+        stats_day: {
+          measures: [amount_usd_sum],
+          time_dimension: day,
+          granularity: `day`,
+          partition_granularity: `day`,
+          refresh_key: {
+            every: `10 minutes`,
+            incremental: true,
+            update_window: `1 day`,
+          },
+          build_range_start: {
+            sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.reserve'`,
+          },
+          build_range_end: {
+            sql: `select current_timestamp()`,
+          },
+        },
       },
-    },
-    by_brand_and_key_month: {
-      measures: [
-        oracle_prices.rate_avg,
-        amount_avg,
-        amount_usd_avg,
-      ],
-      dimensions: [brand, key],
-      time_dimension: day,
-      granularity: `month`,
-      refresh_key: {
-        every: `1 day`,
-      },
-    },
-    by_brand_and_key_week: {
-      measures: [
-        amount_avg,
-        amount_usd_avg,
-        amount_usd_sum,
-      ],
-      dimensions: [brand, key],
-      time_dimension: day,
-      granularity: `week`,
-      refresh_key: {
-        every: `1 day`,
-      },
-    },
-    by_brand_and_key_day: {
-      measures: [
-        amount_avg,
-        amount_usd_avg,
-        amount_usd_sum,
-      ],
-      dimensions: [brand, key],
-      time_dimension: day,
-      granularity: `day`,
-      partition_granularity: `day`,
-      refresh_key: {
-        every: `10 minutes`,
-        incremental: true,
-        update_window: `1 day`,
-      },
-      build_range_start: {
-        sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.reserve'`,
-      },
-      build_range_end: {
-        sql: `select current_timestamp()`,
-      },
-    },
-    stats_year: {
-      measures: [amount_usd_sum],
-      time_dimension: day,
-      granularity: `year`,
-      refreshKey: {
-        every: `1 day`,
-      },
-    },
-    stats_month: {
-      measures: [amount_usd_sum],
-      time_dimension: day,
-      granularity: `month`,
-      refreshKey: {
-        every: `1 day`,
-      },
-    },
-    stats_week: {
-      measures: [amount_usd_sum],
-      time_dimension: day,
-      granularity: `week`,
-      refreshKey: {
-        every: `1 day`,
-      },
-    },
-    stats_day: {
-      measures: [amount_usd_sum],
-      time_dimension: day,
-      granularity: `day`,
-      partition_granularity: `day`,
-      refresh_key: {
-        every: `10 minutes`,
-        incremental: true,
-        update_window: `1 day`,
-      },
-      build_range_start: {
-        sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.reserve'`,
-      },
-      build_range_end: {
-        sql: `select current_timestamp()`,
-      },
-    },
-  },
 });

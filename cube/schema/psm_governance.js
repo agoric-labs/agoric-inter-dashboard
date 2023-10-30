@@ -1,4 +1,4 @@
-import { dailySQL } from '../utils';
+import { dailySQL, isDev } from '../utils';
 
 cube(`psm_governance`, {
   sql: dailySQL(
@@ -10,7 +10,7 @@ cube(`psm_governance`, {
            , cast(json_value(body, '$.current.MintLimit.value.__value') as float64) / pow(10, 6) as mint_limit
        from ${state_changes.sql()}
       where module = 'published.psm'
-        and ${FILTER_PARAMS.psm_governance.day.filter('block_time')}
+        -- and ${FILTER_PARAMS.psm_governance.day.filter('block_time')}
         and path like 'published.psm.%.governance'
     `,
   ),
@@ -48,92 +48,94 @@ cube(`psm_governance`, {
     },
   },
 
-  pre_aggregations: {
-    by_coin_year: {
-      measures: [mint_limit_avg, mint_limit_sum],
-      dimensions: [coin],
-      time_dimension: day,
-      granularity: `year`,
-      refreshKey: {
-        every: `1 day`,
+  pre_aggregations: isDev
+    ? {}
+    : {
+        by_coin_year: {
+          measures: [mint_limit_avg, mint_limit_sum],
+          dimensions: [coin],
+          time_dimension: day,
+          granularity: `year`,
+          refreshKey: {
+            every: `1 day`,
+          },
+        },
+        by_coin_month: {
+          measures: [mint_limit_avg, mint_limit_sum],
+          dimensions: [coin],
+          time_dimension: day,
+          granularity: `month`,
+          refreshKey: {
+            every: `1 day`,
+          },
+        },
+        by_coin_week: {
+          measures: [mint_limit_avg, mint_limit_sum],
+          dimensions: [coin],
+          time_dimension: day,
+          granularity: `week`,
+          refreshKey: {
+            every: `1 day`,
+          },
+        },
+        by_coin_day: {
+          measures: [mint_limit_avg, mint_limit_sum],
+          dimensions: [coin],
+          time_dimension: day,
+          granularity: `day`,
+          partition_granularity: `day`,
+          refresh_key: {
+            every: `10 minutes`,
+            incremental: true,
+            update_window: `1 day`,
+          },
+          build_range_start: {
+            sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.psm' and path like '%governance'`,
+          },
+          build_range_end: {
+            sql: `select current_timestamp()`,
+          },
+        },
+        stats_year: {
+          measures: [mint_limit_sum],
+          time_dimension: day,
+          granularity: `year`,
+          refreshKey: {
+            every: `1 day`,
+          },
+        },
+        stats_month: {
+          measures: [mint_limit_sum],
+          time_dimension: day,
+          granularity: `month`,
+          refreshKey: {
+            every: `1 day`,
+          },
+        },
+        stats_week: {
+          measures: [mint_limit_sum],
+          time_dimension: day,
+          granularity: `week`,
+          refreshKey: {
+            every: `1 day`,
+          },
+        },
+        stats_day: {
+          measures: [mint_limit_sum],
+          time_dimension: day,
+          granularity: `day`,
+          partition_granularity: `day`,
+          refresh_key: {
+            every: `10 minutes`,
+            incremental: true,
+            update_window: `1 day`,
+          },
+          build_range_start: {
+            sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.psm' and path like '%governance'`,
+          },
+          build_range_end: {
+            sql: `select current_timestamp()`,
+          },
+        },
       },
-    },
-    by_coin_month: {
-      measures: [mint_limit_avg, mint_limit_sum],
-      dimensions: [coin],
-      time_dimension: day,
-      granularity: `month`,
-      refreshKey: {
-        every: `1 day`,
-      },
-    },
-    by_coin_week: {
-      measures: [mint_limit_avg, mint_limit_sum],
-      dimensions: [coin],
-      time_dimension: day,
-      granularity: `week`,
-      refreshKey: {
-        every: `1 day`,
-      },
-    },
-    by_coin_day: {
-      measures: [mint_limit_avg, mint_limit_sum],
-      dimensions: [coin],
-      time_dimension: day,
-      granularity: `day`,
-      partition_granularity: `day`,
-      refresh_key: {
-        every: `10 minutes`,
-        incremental: true,
-        update_window: `1 day`,
-      },
-      build_range_start: {
-        sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.psm' and path like '%governance'`,
-      },
-      build_range_end: {
-        sql: `select current_timestamp()`,
-      },
-    },
-    stats_year: {
-      measures: [mint_limit_sum],
-      time_dimension: day,
-      granularity: `year`,
-      refreshKey: {
-        every: `1 day`,
-      },
-    },
-    stats_month: {
-      measures: [mint_limit_sum],
-      time_dimension: day,
-      granularity: `month`,
-      refreshKey: {
-        every: `1 day`,
-      },
-    },
-    stats_week: {
-      measures: [mint_limit_sum],
-      time_dimension: day,
-      granularity: `week`,
-      refreshKey: {
-        every: `1 day`,
-      },
-    },
-    stats_day: {
-      measures: [mint_limit_sum],
-      time_dimension: day,
-      granularity: `day`,
-      partition_granularity: `day`,
-      refresh_key: {
-        every: `10 minutes`,
-        incremental: true,
-        update_window: `1 day`,
-      },
-      build_range_start: {
-        sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.psm' and path like '%governance'`,
-      },
-      build_range_end: {
-        sql: `select current_timestamp()`,
-      },
-    },
-  },
 });

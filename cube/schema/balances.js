@@ -1,4 +1,4 @@
-import { dailySQL, datasetId } from '../utils';
+import { dailySQL, datasetId, isDev } from '../utils';
 
 cube(`balances`, {
   sql: dailySQL(
@@ -11,7 +11,7 @@ cube(`balances`, {
           , bl.denom
       from ${datasetId()}.balances bl
       join ${datasetId()}.blocks b using (block_height)
-     where ${FILTER_PARAMS.balances.day.filter('block_time')}
+     -- where ${FILTER_PARAMS.balances.day.filter('block_time')}
   `,
   ),
 
@@ -46,51 +46,53 @@ cube(`balances`, {
     },
   },
 
-  pre_aggregations: {
-    by_denom_year: {
-      measures: [amount_sum, amount_avg],
-      dimensions: [denom],
-      time_dimension: day,
-      granularity: `year`,
-      refreshKey: {
-        every: `24 hour`,
+  pre_aggregations: isDev
+    ? {}
+    : {
+        by_denom_year: {
+          measures: [amount_sum, amount_avg],
+          dimensions: [denom],
+          time_dimension: day,
+          granularity: `year`,
+          refreshKey: {
+            every: `24 hour`,
+          },
+        },
+        by_denom_month: {
+          measures: [amount_sum, amount_avg],
+          dimensions: [denom],
+          time_dimension: day,
+          granularity: `month`,
+          refreshKey: {
+            every: `24 hour`,
+          },
+        },
+        by_denom_week: {
+          measures: [amount_sum, amount_avg],
+          dimensions: [denom],
+          time_dimension: day,
+          granularity: `week`,
+          refreshKey: {
+            every: `24 hour`,
+          },
+        },
+        by_denom_day: {
+          measures: [amount_sum, amount_avg],
+          dimensions: [denom],
+          time_dimension: day,
+          granularity: `day`,
+          partition_granularity: `day`,
+          refresh_key: {
+            every: `10 minutes`,
+            incremental: true,
+            update_window: `1 day`,
+          },
+          build_range_start: {
+            sql: `select min(_sdc_batched_at) from ${datasetId()}.balances`,
+          },
+          build_range_end: {
+            sql: `select current_timestamp()`,
+          },
+        },
       },
-    },
-    by_denom_month: {
-      measures: [amount_sum, amount_avg],
-      dimensions: [denom],
-      time_dimension: day,
-      granularity: `month`,
-      refreshKey: {
-        every: `24 hour`,
-      },
-    },
-    by_denom_week: {
-      measures: [amount_sum, amount_avg],
-      dimensions: [denom],
-      time_dimension: day,
-      granularity: `week`,
-      refreshKey: {
-        every: `24 hour`,
-      },
-    },
-    by_denom_day: {
-      measures: [amount_sum, amount_avg],
-      dimensions: [denom],
-      time_dimension: day,
-      granularity: `day`,
-      partition_granularity: `day`,
-      refresh_key: {
-        every: `10 minutes`,
-        incremental: true,
-        update_window: `1 day`,
-      },
-      build_range_start: {
-        sql: `select min(_sdc_batched_at) from ${datasetId()}.balances`,
-      },
-      build_range_end: {
-        sql: `select current_timestamp()`,
-      },
-    },
-  },
 });

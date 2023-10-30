@@ -2,6 +2,14 @@ const datasetId = () => process.env.DATASET_ID;
 
 exports.datasetId = datasetId;
 
+const environment =
+  typeof process.env.ENVIRONMENT === 'undefined'
+    ? 'dev'
+    : process.env.ENVIRONMENT.toLowerCase();
+
+exports.environment = () => environment;
+exports.isDev = () => environment === 'dev';
+
 const suffix = (s, v) => (v ? `${s}${v}` : '');
 
 const windowMeasure = (measure, dimensions) => {
