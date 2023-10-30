@@ -498,7 +498,19 @@ if __name__ == "__main__":
     reset_global_id()
 
     # ATOM vaults
-    push(wrap_state_change("published.vaultFactory.managers.manager0.governance", VAULT_GOV1, start_time))
-    push(wrap_state_change("published.vaultFactory.managers.manager0.governance", VAULT_GOV2, middle_time))
+    push(
+        wrap_state_change(
+            "published.vaultFactory.managers.manager0.governance",
+            VAULT_GOV1,
+            start_time,
+        )
+    )
+    push(
+        wrap_state_change(
+            "published.vaultFactory.managers.manager0.governance",
+            VAULT_GOV2,
+            middle_time,
+        )
+    )
 
     reset_global_id()

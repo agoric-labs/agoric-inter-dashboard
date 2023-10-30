@@ -11,6 +11,7 @@ cube(`reserve`, {
          , cast(json_value(body, '$.totalFeeMinted.__value') as float64) / pow(10, 6) as total_fee_minted
       from ${state_changes.sql()}
      where module = 'published.reserve'
+       and ${FILTER_PARAMS.reserve.day.filter('block_time')}
        and path = 'published.reserve.metrics'
   `,
   ),

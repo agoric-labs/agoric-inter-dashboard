@@ -13,6 +13,7 @@ cube(`oracle_prices`, {
           , cast(json_value(body, '$.amountOut.__value') as float64) type_out_amount
      from ${state_changes.sql()}
      where module = 'published.priceFeed'
+       and ${FILTER_PARAMS.oracle_prices.day.filter('block_time')}
        and path like 'published.priceFeed.%_price_feed'
   `,
   ),

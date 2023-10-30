@@ -324,3 +324,99 @@ def test_liquidated_vaults():
             ],
         }
     )
+
+
+def test_vault_factory_metrics_by_manager_idx_and_collateral_type():
+    request(
+        {
+            "measures": [
+                "vault_factory_metrics.liquidating_collateral_avg",
+                "vault_factory_metrics.liquidating_debt_avg",
+                "vault_factory_metrics.locked_quote_avg",
+                "vault_factory_metrics.num_active_vaults_avg",
+                "vault_factory_metrics.num_liquidating_vaults_avg",
+                "vault_factory_metrics.num_liquidations_aborted_avg",
+                "vault_factory_metrics.num_liquidations_completed_avg",
+                "vault_factory_metrics.retained_collateral_avg",
+                "vault_factory_metrics.total_collateral_sold_avg",
+                "vault_factory_metrics.total_debt_avg",
+                "vault_factory_metrics.total_overage_received_avg",
+                "vault_factory_metrics.total_proceeds_received_avg",
+                "vault_factory_metrics.total_shortfall_received_avg",
+                "vault_factory_metrics.total_collateral_avg",
+            ],
+            "timeDimensions": [
+                {"dimension": "vault_factory_metrics.day", "granularity": "day"}
+            ],
+            "order": {"vault_factory_metrics.liquidating_collateral_avg": "desc"},
+            "dimensions": [
+                "vault_factory_metrics.manager_idx",
+                "vault_factory_metrics.collateral_type",
+            ],
+        }
+    )
+
+def test_vault_factory_metrics_stats():
+    request(
+        {
+            "measures": [
+                "vault_factory_metrics.liquidating_collateral_sum",
+                "vault_factory_metrics.liquidating_debt_sum",
+                "vault_factory_metrics.num_active_vaults_sum",
+                "vault_factory_metrics.num_liquidating_vaults_sum",
+                "vault_factory_metrics.num_liquidations_aborted_sum",
+                "vault_factory_metrics.num_liquidations_completed_sum",
+                "vault_factory_metrics.retained_collateral_sum",
+                "vault_factory_metrics.total_collateral_sold_sum",
+                "vault_factory_metrics.total_debt_sum",
+                "vault_factory_metrics.total_overage_received_sum",
+                "vault_factory_metrics.total_proceeds_received_sum",
+                "vault_factory_metrics.total_shortfall_received_sum",
+                "vault_factory_metrics.total_collateral_sum",
+            ],
+            "timeDimensions": [
+                {"dimension": "vault_factory_metrics.day", "granularity": "day"}
+            ],
+            "order": {"vault_factory_metrics.liquidating_collateral_avg": "desc"},
+        }
+    )
+
+def test_vault_factory_governance_by_manager_idx():
+    request(
+        {
+          "measures": [
+            "vault_factory_governance.debt_limit_avg",
+            "vault_factory_governance.interest_rate_avg",
+            "vault_factory_governance.liquidation_margin_avg",
+            "vault_factory_governance.liquidation_padding_avg",
+            "vault_factory_governance.mint_fee_avg"
+          ],
+          "timeDimensions": [
+            {
+              "dimension": "vault_factory_governance.day",
+              "granularity": "day"
+            }
+          ],
+          "order": {
+            "vault_factory_governance.debt_limit_avg": "desc"
+          },
+          "dimensions": [
+            "vault_factory_governance.manager_idx"
+          ]
+        }
+    )
+
+def test_vault_factory_governance_stats():
+    request(
+        {
+          "measures": [
+            "vault_factory_governance.debt_limit_sum",
+          ],
+          "timeDimensions": [
+            {
+              "dimension": "vault_factory_governance.day",
+              "granularity": "day"
+            }
+          ]
+        }
+    )

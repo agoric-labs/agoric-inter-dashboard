@@ -3,188 +3,82 @@ import { dailySQL } from '../utils';
 cube(`vault_factory_governance`, {
   sql: dailySQL(
     [
-      'liquidating_collateral',
-      'liquidating_debt',
-      'locked_quote',
-      'num_active_vaults',
-      'num_liquidating_vaults',
-      'num_liquidations_aborted',
-      'num_liquidations_completed',
-      'retained_collateral',
-      'retained_collateral',
-      'total_collateral_sold',
-      'total_debt',
-      'total_overage_received',
-      'total_proceeds_received',
-      'total_shortfall_received',
+      'debt_limit',
+      'interest_rate',
+      'liquidation_margin',
+      'liquidation_padding',
+      'liquidation_penalty',
+      'mint_fee',
     ],
-    ['manager_idx', 'collateral_type'],
+    ['manager_idx'],
     `
-    select block_time
-         , cast(replace(split(path, '.')[3], 'manager') as name) as manager_idx
-         , json_value('body', '$.totalCollateral.__brand') as collateral_type
-         , cast(json_value(body, '$.liquidatingCollateral.__value') as float64) / pow(10, 6) as liquidating_collateral
-         , cast(json_value(body, '$.liquidatingDebt.__value') as float64) / pow(10, 6) as liquidating_debt
-         , cast(json_value(body, '$.lockedQuote.numerator.__value') as float64) / cast(json_value(body, '$.lockedQuote.denominator.__value') as float64) as locked_quote
-         , cast(json_value(body, '$.numActiveVaults') as int) as num_active_vaults
-         , cast(json_value(body, '$.numLiquidatingVaults') as int) as num_liquidating_vaults
-         , cast(json_value(body, '$.numLiquidationsAborted') as int) as num_liquidations_aborted
-         , cast(json_value(body, '$.numLiquidationsCompleted') as int) as num_liquidations_completed
-         , cast(json_value(body, '$.retainedCollateral.__value') as int) as retained_collateral
-         , cast(json_value(body, '$.totalCollateral.__value') as int) as retained_collateral
-         , cast(json_value(body, '$.totalCollateralSold.__value') as int) as total_collateral_sold
-         , cast(json_value(body, '$.totalDebt.__value') as int) as total_debt
-         , cast(json_value(body, '$.totalOverageReceived.__value') as int) as total_overage_received
-         , cast(json_value(body, '$.totalProceedsReceived.__value') as int) as total_proceeds_received
-         , cast(json_value(body, '$.totalShortfallReceived.__value') as int) as total_shortfall_received
-     from ${state_changes.sql()}
-    where module = 'published.vaultFactory'
-      and split(path, '.')[2] = 'managers'
-      and split(path, '.')[4] = 'metrics'
-  `,
+      select block_time
+           , replace(split(path, '.')[3], 'manager', '') as manager_idx
+           , cast(json_value(body, '$.current.DebtLimit.value.__value') as float64) / pow(10, 6) as debt_limit
+           , cast(json_value(body, '$.current.InterestRate.value.numerator.__value') as float64) / cast(json_value(body, '$.current.InterestRate.value.denominator.__value') as float64) as interest_rate
+           , cast(json_value(body, '$.current.LiquidationMargin.value.numerator.__value') as float64) / cast(json_value(body, '$.current.LiquidationMargin.value.denominator.__value') as float64) as liquidation_margin
+           , cast(json_value(body, '$.current.LiquidationPadding.value.numerator.__value') as float64) / cast(json_value(body, '$.current.LiquidationPadding.value.denominator.__value') as float64) as liquidation_padding
+           , cast(json_value(body, '$.current.LiquidationPenalty.value.numerator.__value') as float64) / cast(json_value(body, '$.current.LiquidationPenalty.value.denominator.__value') as float64) as liquidation_penalty
+           , cast(json_value(body, '$.current.MintFee.numerator.value.__value') as float64) / cast(json_value(body, '$.current.MintFee.value.denominator.__value') as float64) as mint_fee
+       from ${state_changes.sql()}
+      where module = 'published.vaultFactory'
+        and ${FILTER_PARAMS.vault_factory_governance.day.filter('block_time')}
+        and split(path, '.')[safe_offset(2)] = 'managers'
+        and split(path, '.')[safe_offset(4)] = 'governance'
+    `,
   ),
 
   measures: {
-    liquidating_collateral_avg: {
-      sql: 'liquidating_collateral',
+    debt_limit_avg: {
+      sql: 'debt_limit',
       type: 'avg',
     },
-    liquidating_debt_avg: {
-      sql: 'liquidating_debt',
+    interest_rate_avg: {
+      sql: 'interest_rate',
       type: 'avg',
     },
-    locked_quote_avg: {
-      sql: 'locked_quote',
+    liquidation_margin_avg: {
+      sql: 'liquidation_margin',
       type: 'avg',
     },
-    num_active_vaults_avg: {
-      sql: 'num_active_vaults',
+    liquidation_padding_avg: {
+      sql: 'liquidation_padding',
       type: 'avg',
     },
-    num_liquidating_vaults_avg: {
-      sql: 'num_liquidating_vaults',
+    liquidation_penalty_avg: {
+      sql: 'liquidation_penalty',
       type: 'avg',
     },
-    num_liquidations_aborted_avg: {
-      sql: 'num_liquidations_aborted',
+    mint_fee_avg: {
+      sql: 'mint_fee',
       type: 'avg',
     },
-    num_liquidations_completed_avg: {
-      sql: 'num_liquidations_completed',
+    debt_limit_sum: {
+      sql: 'debt_limit',
       type: 'avg',
-    },
-    retained_collateral_avg: {
-      sql: 'retained_collateral',
-      type: 'avg',
-    },
-    total_collateral_sold_avg: {
-      sql: 'total_collateral_sold',
-      type: 'avg',
-    },
-    total_debt_avg: {
-      sql: 'total_debt',
-      type: 'avg',
-    },
-    total_overage_received_avg: {
-      sql: 'total_overage_received',
-      type: 'avg',
-    },
-    total_proceeds_received_avg: {
-      sql: 'total_proceeds_received',
-      type: 'avg',
-    },
-    total_shortfall_received_avg: {
-      sql: 'total_shortfall_received',
-      type: 'avg',
-    },
-
-    num_active_vaults_sum: {
-      sql: 'num_active_vaults',
-      type: 'sum',
-    },
-    num_liquidating_vaults_sum: {
-      sql: 'num_liquidating_vaults',
-      type: 'sum',
-    },
-    num_liquidations_aborted_sum: {
-      sql: 'num_liquidations_aborted',
-      type: 'sum',
-    },
-    num_liquidations_completed_sum: {
-      sql: 'num_liquidations_completed',
-      type: 'sum',
-    },
-    liquidating_collateral_sum: {
-      sql: 'liquidating_collateral',
-      type: 'sum',
-    },
-    liquidating_debt_sum: {
-      sql: 'liquidating_debt',
-      type: 'sum',
-    },
-    retained_collateral_sum: {
-      sql: 'retained_collateral',
-      type: 'sum',
-    },
-    total_collateral_sold_sum: {
-      sql: 'total_collateral_sold',
-      type: 'sum',
-    },
-    total_debt_sum: {
-      sql: 'total_debt',
-      type: 'sum',
-    },
-    total_overage_received_sum: {
-      sql: 'total_overage_received',
-      type: 'sum',
-    },
-    total_proceeds_received_sum: {
-      sql: 'total_proceeds_received',
-      type: 'sum',
-    },
-    total_shortfall_received_sum: {
-      sql: 'total_shortfall_received',
-      type: 'sum',
     },
   },
 
   dimensions: {
-    id: {
-      sql: `concat(manager_idx, day)`,
-      type: `string`,
-      primary_key: true,
-    },
-    manager_idx: {
-      sql: `coin`,
-      type: `number`,
-    },
-    collateral_type: {
-      sql: `collateral_type`,
-      type: `string`,
-    },
     day: {
       sql: `day`,
       type: `time`,
     },
+    manager_idx: {
+      sql: `manager_idx`,
+      type: `number`,
+    },
   },
 
   pre_aggregations: {
-    by_manager_idx_and_collateral_type_year: {
+    by_manager_idx_year: {
       measures: [
-        liquidating_collateral_avg,
-        liquidating_debt_avg,
-        locked_quote_avg,
-        num_active_vaults_avg,
-        num_liquidating_vaults_avg,
-        num_liquidations_aborted_avg,
-        num_liquidations_completed_avg,
-        retained_collateral_avg,
-        retained_collateral_avg,
-        total_collateral_sold_avg,
-        total_debt_avg,
-        total_overage_received_avg,
-        total_proceeds_received_avg,
-        total_shortfall_received_avg,
+        debt_limit_avg,
+        interest_rate_avg,
+        liquidation_margin_avg,
+        liquidation_padding_avg,
+        liquidation_penalty_avg,
+        mint_fee_avg,
       ],
       dimensions: [manager_idx],
       time_dimension: day,
@@ -193,22 +87,14 @@ cube(`vault_factory_governance`, {
         every: `1 day`,
       },
     },
-    by_manager_idx_and_collateral_type_month: {
+    by_manager_idx_month: {
       measures: [
-        liquidating_collateral_avg,
-        liquidating_debt_avg,
-        locked_quote_avg,
-        num_active_vaults_avg,
-        num_liquidating_vaults_avg,
-        num_liquidations_aborted_avg,
-        num_liquidations_completed_avg,
-        retained_collateral_avg,
-        retained_collateral_avg,
-        total_collateral_sold_avg,
-        total_debt_avg,
-        total_overage_received_avg,
-        total_proceeds_received_avg,
-        total_shortfall_received_avg,
+        debt_limit_avg,
+        interest_rate_avg,
+        liquidation_margin_avg,
+        liquidation_padding_avg,
+        liquidation_penalty_avg,
+        mint_fee_avg,
       ],
       dimensions: [manager_idx],
       time_dimension: day,
@@ -217,22 +103,14 @@ cube(`vault_factory_governance`, {
         every: `1 day`,
       },
     },
-    by_manager_idx_and_collateral_type_week: {
+    by_manager_idx_week: {
       measures: [
-        liquidating_collateral_avg,
-        liquidating_debt_avg,
-        locked_quote_avg,
-        num_active_vaults_avg,
-        num_liquidating_vaults_avg,
-        num_liquidations_aborted_avg,
-        num_liquidations_completed_avg,
-        retained_collateral_avg,
-        retained_collateral_avg,
-        total_collateral_sold_avg,
-        total_debt_avg,
-        total_overage_received_avg,
-        total_proceeds_received_avg,
-        total_shortfall_received_avg,
+        debt_limit_avg,
+        interest_rate_avg,
+        liquidation_margin_avg,
+        liquidation_padding_avg,
+        liquidation_penalty_avg,
+        mint_fee_avg,
       ],
       dimensions: [manager_idx],
       time_dimension: day,
@@ -241,22 +119,14 @@ cube(`vault_factory_governance`, {
         every: `1 day`,
       },
     },
-    by_manager_idx_and_collateral_type_day: {
+    by_manager_idx_day: {
       measures: [
-        liquidating_collateral_avg,
-        liquidating_debt_avg,
-        locked_quote_avg,
-        num_active_vaults_avg,
-        num_liquidating_vaults_avg,
-        num_liquidations_aborted_avg,
-        num_liquidations_completed_avg,
-        retained_collateral_avg,
-        retained_collateral_avg,
-        total_collateral_sold_avg,
-        total_debt_avg,
-        total_overage_received_avg,
-        total_proceeds_received_avg,
-        total_shortfall_received_avg,
+        debt_limit_sum,
+        interest_rate_avg,
+        liquidation_margin_avg,
+        liquidation_padding_avg,
+        liquidation_penalty_avg,
+        mint_fee_avg,
       ],
       dimensions: [manager_idx],
       time_dimension: day,
@@ -268,7 +138,7 @@ cube(`vault_factory_governance`, {
         update_window: `1 day`,
       },
       build_range_start: {
-        sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.vaultFactory' and path like '%metrics'`,
+        sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.vaultFactory' and path like '%governance'`,
       },
       build_range_end: {
         sql: `select current_timestamp()`,
@@ -276,19 +146,7 @@ cube(`vault_factory_governance`, {
     },
     stats_year: {
       measures: [
-        liquidating_collateral_sum,
-        liquidating_debt_sum,
-        num_active_vaults_sum,
-        num_liquidating_vaults_sum,
-        num_liquidations_aborted_sum,
-        num_liquidations_completed_sum,
-        retained_collateral_sum,
-        retained_collateral_sum,
-        total_collateral_sold_sum,
-        total_debt_sum,
-        total_overage_received_sum,
-        total_proceeds_received_sum,
-        total_shortfall_received_sum,
+        debt_limit_sum,
       ],
       time_dimension: day,
       granularity: `year`,
@@ -298,19 +156,7 @@ cube(`vault_factory_governance`, {
     },
     stats_month: {
       measures: [
-        liquidating_collateral_sum,
-        liquidating_debt_sum,
-        num_active_vaults_sum,
-        num_liquidating_vaults_sum,
-        num_liquidations_aborted_sum,
-        num_liquidations_completed_sum,
-        retained_collateral_sum,
-        retained_collateral_sum,
-        total_collateral_sold_sum,
-        total_debt_sum,
-        total_overage_received_sum,
-        total_proceeds_received_sum,
-        total_shortfall_received_sum,
+        debt_limit_sum,
       ],
       time_dimension: day,
       granularity: `month`,
@@ -320,19 +166,7 @@ cube(`vault_factory_governance`, {
     },
     stats_week: {
       measures: [
-        liquidating_collateral_sum,
-        liquidating_debt_sum,
-        num_active_vaults_sum,
-        num_liquidating_vaults_sum,
-        num_liquidations_aborted_sum,
-        num_liquidations_completed_sum,
-        retained_collateral_sum,
-        retained_collateral_sum,
-        total_collateral_sold_sum,
-        total_debt_sum,
-        total_overage_received_sum,
-        total_proceeds_received_sum,
-        total_shortfall_received_sum,
+        debt_limit_sum,
       ],
       time_dimension: day,
       granularity: `week`,
@@ -342,19 +176,7 @@ cube(`vault_factory_governance`, {
     },
     stats_day: {
       measures: [
-        liquidating_collateral_sum,
-        liquidating_debt_sum,
-        num_active_vaults_sum,
-        num_liquidating_vaults_sum,
-        num_liquidations_aborted_sum,
-        num_liquidations_completed_sum,
-        retained_collateral_sum,
-        retained_collateral_sum,
-        total_collateral_sold_sum,
-        total_debt_sum,
-        total_overage_received_sum,
-        total_proceeds_received_sum,
-        total_shortfall_received_sum,
+        debt_limit_sum,
       ],
       time_dimension: day,
       granularity: `day`,
@@ -365,7 +187,7 @@ cube(`vault_factory_governance`, {
         update_window: `1 day`,
       },
       build_range_start: {
-        sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.vaultFactory' and path like '%metrics'`,
+        sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.vaultFactory' and path like '%governance'`,
       },
       build_range_end: {
         sql: `select current_timestamp()`,

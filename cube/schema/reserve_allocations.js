@@ -33,6 +33,7 @@ cube(`reserve_allocations`, {
       cross join unnest(agoric_mainnet.extract_allocations(to_json_string(json_query(body, '$.allocations')))) alloc
      where module = 'published.reserve'
        and path = 'published.reserve.metrics'
+       and ${FILTER_PARAMS.reserve_allocations.day.filter('block_time')}
   `,
   ),
 

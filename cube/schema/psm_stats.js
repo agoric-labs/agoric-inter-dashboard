@@ -19,7 +19,9 @@ cube(`psm_stats`, {
            , cast(json_value(body, '$.totalAnchorProvided.__value') as float64) / pow(10, 6) as  total_anchor_provided
            , cast(json_value(body, '$.totalMintedProvided.__value') as float64) / pow(10, 6) as total_minted_provided
        from ${state_changes.sql()}
-      where path like 'published.psm.%.metrics'
+      where module = 'published.psm'
+        and ${FILTER_PARAMS.psm_stats.day.filter('block_time')}
+        and path like 'published.psm.%.metrics'
     `,
   ),
 

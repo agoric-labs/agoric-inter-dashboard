@@ -5,13 +5,14 @@ cube(`psm_governance`, {
     ['mint_limit'],
     ['coin'],
     `
-    select block_time
-         , split(path, '.')[3] as coin
-         , cast(json_value(body, '$.current.MintLimit.value.__value') as float64) / pow(10, 6) as mint_limit
-     from ${state_changes.sql()}
-    where module = 'published.psm'
-      and path like 'published.psm.%.governance'
-  `,
+      select block_time
+           , split(path, '.')[3] as coin
+           , cast(json_value(body, '$.current.MintLimit.value.__value') as float64) / pow(10, 6) as mint_limit
+       from ${state_changes.sql()}
+      where module = 'published.psm'
+        and ${FILTER_PARAMS.psm_governance.day.filter('block_time')}
+        and path like 'published.psm.%.governance'
+    `,
   ),
 
   measures: {
