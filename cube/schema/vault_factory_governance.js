@@ -57,9 +57,25 @@ cube(`vault_factory_governance`, {
       sql: 'debt_limit',
       type: 'avg',
     },
+    // a fake measure for joins
+    debt_limit: {
+      sql: 'debt_limit',
+      type: 'number',
+      public: false,
+    },
+    liquidation_margin: {
+      sql: 'liquidation_margin',
+      type: 'number',
+      public: false,
+    },
   },
 
   dimensions: {
+    id: {
+      sql: `concat(manager_idx, day)`,
+      type: `string`,
+      primary_key: true,
+    },
     day: {
       sql: `day`,
       type: `time`,

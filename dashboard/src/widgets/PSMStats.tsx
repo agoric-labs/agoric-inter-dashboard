@@ -5,11 +5,7 @@ import { coinLabels } from '../coinLabels';
 
 export function PSMStats() {
   const res = useCubeQuery({
-    measures: [
-      'psm_stats.minted_pool_balance_avg',
-      'psm_stats.utilization_rate_avg',
-      'psm_governance.mint_limit_avg',
-    ],
+    measures: ['psm_stats.minted_pool_balance_avg', 'psm_stats.utilization_rate_avg', 'psm_governance.mint_limit_avg'],
     timeDimensions: [
       {
         dimension: 'psm_stats.day',

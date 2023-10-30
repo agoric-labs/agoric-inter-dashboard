@@ -30,6 +30,11 @@ cube(`psm_governance`, {
       type: `number`,
       public: false,
     },
+    liquidation_margin: {
+      sql: `liquidation_margin`,
+      type: `number`,
+      public: false,
+    },
   },
 
   dimensions: {

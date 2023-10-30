@@ -33,7 +33,7 @@ export function OraclePriceCards({ title = 'Smart Wallets Provisioned' }: Props)
 
   return (
     <>
-      {resultSet.tablePivot().map((row) => {
+      {resultSet.tablePivot().map(row => {
         const rawLabel = row['oracle_prices.price_feed_name'].toString();
         const value = row['oracle_prices.rate_avg'].toString();
 

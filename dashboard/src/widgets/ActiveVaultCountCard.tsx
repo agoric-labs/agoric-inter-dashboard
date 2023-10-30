@@ -8,11 +8,15 @@ type Props = {
 
 export function ActiveVaultCountCard({ title = 'Total Active Vaults' }: Props) {
   const res = useCubeQuery({
-    measures: ['open_vaults.count'],
-    dimensions: ['open_vaults.debt_type', 'open_vaults.collateral_type'],
+    measures: ['vault_factory_metrics.num_active_vaults_last'],
+    dimensions: [
+      'vault_factory_metrics.collateral_type',
+      'vault_factory_metrics.manager_idx',
+      'vault_factory_metrics.debt_type',
+    ],
     timeDimensions: [
       {
-        dimension: 'open_vaults.day',
+        dimension: 'vault_factory_metrics.day',
         dateRange: 'Today',
         granularity: 'day',
       },
@@ -38,9 +42,9 @@ export function ActiveVaultCountCard({ title = 'Total Active Vaults' }: Props) {
     <>
       {rows.map(r => (
         <ValueCard
-          key={r['open_vaults.debt_type'] as string}
-          title={`${title} (${r['open_vaults.collateral_type']})`}
-          value={r['open_vaults.count'] as string}
+          key={r['vault_factory_metrics.collateral_type'] as string}
+          title={`${title} (${r['vault_factory_metrics.collateral_type']})`}
+          value={r['vault_factory_metrics.num_active_vaults_last'] as string}
         />
       ))}
     </>

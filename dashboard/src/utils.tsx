@@ -6,7 +6,8 @@ import { ErrorAlert } from '@/components/ErrorAlert';
 import { Loading } from '@/components/Loading';
 
 export const formatDay = (v: string) => format(parseISO(v), 'MM/dd');
-export const formatDayAndTime = (v: string) => format(parseISO(v), 'MM/dd HH:mm');
+export const formatDayAndTime = (v: string) =>
+  format(parseISO(v), 'MM/dd HH:mm');
 
 export const getCubeQueryView = ({
   resultSet,
@@ -85,7 +86,10 @@ export const formatIST = makeCoinFormatter(formatISTRaw);
 export const formatPercent = (v: any) => `${roundPrice(v * 100)}%`;
 
 export const toTitleCase = (str: string) =>
-  str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+  str.replace(
+    /\w\S*/g,
+    txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(),
+  );
 
 export const formatSecondsToHumanReadable = (seconds: number) => {
   if (seconds < 60) {

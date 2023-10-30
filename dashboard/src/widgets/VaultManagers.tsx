@@ -10,24 +10,28 @@ type Props = {
 export function VaultManagers({ title = 'Collateral Type' }: Props) {
   const res = useCubeQuery({
     measures: [
-      'vault_managers.total_locked_collateral_avg',
-      'vault_managers.total_locked_collateral_usd_avg',
-      'vault_managers.total_ist_minted_avg',
-      'vault_managers.colletarization_ratio_avg',
-      'vault_managers.ist_minting_limit_avg',
-      'vault_managers.utilization_rate_avg',
+      'vault_factory_metrics.total_collateral_avg',
+      'vault_factory_metrics.total_collateral_usd_avg',
+      'vault_factory_metrics.total_debt_avg',
+      'vault_factory_metrics.colletarization_ratio_avg',
+      'vault_factory_governance.debt_limit_avg',
+      'vault_factory_metrics.utilization_rate_avg',
     ],
     timeDimensions: [
       {
-        dimension: 'vault_managers.day',
+        dimension: 'vault_factory_metrics.day',
         dateRange: 'Today',
         granularity: 'day',
       },
     ],
     order: {
-      'vault_managers.collateral_type': 'desc',
+      'vault_factory_metrics.manager_idx': 'asc',
     },
-    dimensions: ['vault_managers.collateral_type', 'vault_managers.debt_type'],
+    dimensions: [
+      'vault_factory_metrics.collateral_type',
+      'vault_factory_metrics.debt_type',
+      'vault_factory_metrics.manager_idx',
+    ],
   });
 
   if (res.isLoading || !res.resultSet) {
@@ -47,8 +51,13 @@ export function VaultManagers({ title = 'Collateral Type' }: Props) {
   const rows = resultSet.tablePivot().map((row: any) => {
     const newRow: any = {};
 
-    Object.keys(row).forEach((key) => {
-      newRow[key.replace('vault_managers.', '').replace('_avg', '')] = row[key];
+    Object.keys(row).forEach(key => {
+      newRow[
+        key
+          .replace('vault_factory_metrics.', '')
+          .replace('vault_factory_governance.', '')
+          .replace('_avg', '')
+      ] = row[key];
     });
 
     return newRow;

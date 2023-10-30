@@ -57,7 +57,7 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults' }: Props) {
   const rows = resultSet.tablePivot().map((row: any) => {
     const newRow: any = {};
 
-    Object.keys(row).forEach((key) => {
+    Object.keys(row).forEach(key => {
       newRow[key.replace('liquidated_vaults.', '')] = row[key];
     });
 
