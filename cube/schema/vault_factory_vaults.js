@@ -43,7 +43,7 @@ cube(`vault_factory_vaults`, {
       filters: [{ sql: `${CUBE}.state = 'liquidated'` }],
     },
     last_state: {
-      sql: `array_agg(state order by ${CUBE}.day desc)[0]`,
+      sql: `array_agg(${CUBE}.state order by ${CUBE}.day desc)[0]`,
       type: `string`,
     },
     collateral_amount_avg: {
