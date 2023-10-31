@@ -1,5 +1,6 @@
 import { useCubeQuery } from '@cubejs-client/react';
 import { format } from 'date-fns';
+import { Skeleton } from '@/components/ui/skeleton';
 import { LiquidatedVaultsTable } from '@/components/LiquidatedVaultsTable';
 import { SectionHeader } from '@/components/SectionHeader';
 import { getCubeQueryView, formatSecondsToHumanReadable } from '@/utils';
@@ -50,7 +51,7 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults' }: Props) {
     return (
       <>
         <SectionHeader>{title}</SectionHeader>
-        <div>Loading...</div>
+        <Skeleton className="w-max-64 h-[50px] rounded mb-2" />
       </>
     );
   }

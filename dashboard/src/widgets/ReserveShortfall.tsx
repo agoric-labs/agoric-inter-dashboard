@@ -1,8 +1,13 @@
 import { useCubeQuery } from '@cubejs-client/react';
+import { Skeleton } from '@/components/ui/skeleton';
 import { ValueCard } from '@/components/ValueCard';
 import { formatPrice, getCubeQueryView } from '@/utils';
 
-export function ReserveShortfall() {
+type Props = {
+  title?: string;
+};
+
+export function ReserveShortfall({ title = 'Reserve Shortfall' }: Props) {
   const res = useCubeQuery({
     measures: ['reserve.shortfall_balance_avg'],
     timeDimensions: [{ dimension: 'reserve.day', granularity: 'day' }],
@@ -11,6 +16,10 @@ export function ReserveShortfall() {
     },
     limit: 1,
   });
+
+  if (res.isLoading || !res.resultSet) {
+    return <ValueCard title={title} value={<Skeleton className="w-[100px] h-[32px] rounded-full" />} />;
+  }
 
   const [resultSet, requestView] = getCubeQueryView(res);
   if (!resultSet) {
@@ -22,5 +31,5 @@ export function ReserveShortfall() {
     return <div>Nothing to show</div>;
   }
 
-  return <ValueCard title="Reserve Shortfall" value={formatPrice(latest['reserve.shortfall_balance_avg'] || 0)} />;
+  return <ValueCard title={title} value={formatPrice(latest['reserve.shortfall_balance_avg'] || 0)} />;
 }

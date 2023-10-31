@@ -1,20 +1,44 @@
 import { useCubeQuery } from '@cubejs-client/react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { useGranularity } from '@/components/CubeProvider';
 import { getCubeQueryView, formatDay } from '@/utils';
 import { colors } from '@/components/palette';
 
-export function ReserveHistory() {
+type Props = {
+  title?: string;
+};
+
+export function ReserveHistory({ title = 'History' }) {
   const granularity = useGranularity();
   const res = useCubeQuery({
     measures: ['reserve_allocations.amount_usd_avg'],
     dimensions: ['reserve_allocations.key', 'reserve_allocations.brand'],
-    timeDimensions: [{ dimension: 'reserve_allocations.day', granularity }],
+    timeDimensions: [
+      {
+        dimension: 'reserve_allocations.day',
+        granularity,
+        dateRange: granularity === 'day' ? 'Last 90 days' : undefined,
+      },
+    ],
     order: {
       'reserve_allocations.day': 'asc',
     },
   });
+
+  if (res.isLoading) {
+    return (
+      <Card className="my-4 mb-4">
+        <CardHeader>
+          <CardTitle>{title}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="w-max-64 h-[50px] rounded" />
+        </CardContent>
+      </Card>
+    );
+  }
 
   const [resultSet, requestView] = getCubeQueryView(res);
   if (!resultSet) {
@@ -50,7 +74,7 @@ export function ReserveHistory() {
   return (
     <Card className="my-4 mb-4">
       <CardHeader>
-        <CardTitle>History</CardTitle>
+        <CardTitle>{title}</CardTitle>
       </CardHeader>
       <CardContent>{barChart}</CardContent>
     </Card>
