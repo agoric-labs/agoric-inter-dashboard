@@ -607,7 +607,7 @@ if __name__ == "__main__":
     # create an empty table for data from previous indexer
     if os.getenv("CREATE_OLD_STATE_CHANGES") is not None:
         old_changes_schema = STATE_CHANGES_SCHEMA.copy()
-        old_changes_schema["stream"] = "old_" + STATE_CHANGES_SCHEMA["stream"]
+        old_changes_schema["stream"] = f"old_{STATE_CHANGES_SCHEMA['stream']}"
         print(ujson.dumps(old_changes_schema))
 
     if os.getenv("ONLY_SCHEMA") is not None:
