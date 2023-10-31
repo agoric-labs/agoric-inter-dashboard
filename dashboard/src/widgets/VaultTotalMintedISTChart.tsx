@@ -57,7 +57,7 @@ export function VaultTotalMintedISTChart({ title = 'Total Minted IST' }: Props) 
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="x" stroke="#666" tickFormatter={formatDay} />
-        <YAxis stroke="#666" tickFormatter={v => formatIST(v)} />
+        <YAxis stroke="#666" tickFormatter={(v) => formatIST(v)} />
         <YAxis />
         <Tooltip />
         <Legend />

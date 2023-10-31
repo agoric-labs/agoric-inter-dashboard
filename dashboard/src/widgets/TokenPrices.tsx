@@ -87,7 +87,7 @@ export function TokenPrices({ title = 'Summary' }: Props) {
 
   const rows: Row[] = [];
 
-  Object.keys(tokenData).forEach(feed => {
+  Object.keys(tokenData).forEach((feed) => {
     if (tokenData[feed].length === 0) {
       return;
     }

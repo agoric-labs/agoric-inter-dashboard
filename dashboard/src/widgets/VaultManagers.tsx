@@ -51,13 +51,9 @@ export function VaultManagers({ title = 'Collateral Type' }: Props) {
   const rows = resultSet.tablePivot().map((row: any) => {
     const newRow: any = {};
 
-    Object.keys(row).forEach(key => {
-      newRow[
-        key
-          .replace('vault_factory_metrics.', '')
-          .replace('vault_factory_governance.', '')
-          .replace('_avg', '')
-      ] = row[key];
+    Object.keys(row).forEach((key) => {
+      newRow[key.replace('vault_factory_metrics.', '').replace('vault_factory_governance.', '').replace('_avg', '')] =
+        row[key];
     });
 
     return newRow;

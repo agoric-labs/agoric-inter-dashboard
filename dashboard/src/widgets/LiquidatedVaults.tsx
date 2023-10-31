@@ -65,7 +65,7 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults' }: Props) {
   const rows = resultSet.tablePivot().map((row: any) => {
     const newRow: any = {};
 
-    Object.keys(row).forEach(key => {
+    Object.keys(row).forEach((key) => {
       newRow[key.replace('vault_factory_liquidate_vaults.', '').replace('vault_factory_governance.', '')] = row[key];
     });
 
@@ -73,7 +73,7 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults' }: Props) {
 
     // const starting = new Date(row['vault_factory_liquidate_vaults.liquidating_enter_time'] * 1000);
     const starting = new Date(row['vault_factory_liquidate_vaults.liquidating_enter_time'] * 1000);
-    console.log(starting, row['vault_factory_liquidate_vaults.liquidating_enter_time'])
+    console.log(starting, row['vault_factory_liquidate_vaults.liquidating_enter_time']);
     newRow.liquidationStartTime = format(starting, 'MM/dd/yyyy HH:mm');
 
     if (row['vault_factory_liquidate_vaults.liquidated_enter_time']) {

@@ -27,11 +27,11 @@ export function PSMMintedPoolBalancePie() {
 
   const data = resultSet
     .tablePivot()
-    .map(row => ({
+    .map((row) => ({
       value: parseFloat(row['psm_stats.minted_pool_balance_avg'] as string),
       label: coinLabels[row['psm_stats.coin'] as string],
     }))
-    .filter(row => row.value > 0);
+    .filter((row) => row.value > 0);
 
   return (
     <Card>

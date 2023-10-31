@@ -25,12 +25,12 @@ export function PSMUtilizedPie() {
     return requestView;
   }
 
-  let data: any[] = resultSet.tablePivot().map(row => ({
+  let data: any[] = resultSet.tablePivot().map((row) => ({
     value: parseFloat(row['psm_stats.last_utilization_rate'] as string),
     label: coinLabels[row['psm_stats.coin'] as string],
   }));
 
-  if (data.every(r => r.value === 0)) {
+  if (data.every((r) => r.value === 0)) {
     data = data.map(() => ({ value: 1 }));
   }
 

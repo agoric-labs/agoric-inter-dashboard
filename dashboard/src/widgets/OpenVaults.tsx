@@ -66,7 +66,7 @@ export function OpenVaults({ title = 'Open Vaults' }: Props) {
   const rows = resultSet.tablePivot().map((row: any) => {
     const newRow: any = {};
 
-    Object.keys(row).forEach(key => {
+    Object.keys(row).forEach((key) => {
       newRow[
         key
           .replace('vault_factory_vaults.', '')

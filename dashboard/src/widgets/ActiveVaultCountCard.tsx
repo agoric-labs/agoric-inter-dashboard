@@ -32,10 +32,5 @@ export function ActiveVaultCountCard({ title = 'Total Active Vaults' }: Props) {
     return null;
   }
 
-  return (
-    <ValueCard
-      title={`${title}`}
-      value={rows[0]['vault_factory_metrics.num_active_vaults_sum'] as string}
-    />
-  );
+  return <ValueCard title={`${title}`} value={rows[0]['vault_factory_metrics.num_active_vaults_sum'] as string} />;
 }

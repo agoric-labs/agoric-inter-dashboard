@@ -21,9 +21,7 @@ export function ReserveCosmosSummary() {
       {
         member: 'balances.address',
         operator: 'contains',
-        values: [
-          'agoric1ae0lmtzlgrcnla9xjkpaarq5d5dfez63h3nucl',
-        ],
+        values: ['agoric1ae0lmtzlgrcnla9xjkpaarq5d5dfez63h3nucl'],
       },
     ],
   });
