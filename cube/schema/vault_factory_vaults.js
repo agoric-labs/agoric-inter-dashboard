@@ -117,7 +117,7 @@ cube(`vault_factory_vaults`, {
       dimensions: [debt_type, vault_idx, manager_idx, collateral_type],
       time_dimension: day,
       granularity: `year`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -135,7 +135,7 @@ cube(`vault_factory_vaults`, {
       dimensions: [debt_type, vault_idx, manager_idx, collateral_type],
       time_dimension: day,
       granularity: `month`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -153,7 +153,7 @@ cube(`vault_factory_vaults`, {
       dimensions: [debt_type, vault_idx, manager_idx, collateral_type],
       time_dimension: day,
       granularity: `week`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -171,7 +171,8 @@ cube(`vault_factory_vaults`, {
       dimensions: [debt_type, vault_idx, manager_idx, collateral_type],
       time_dimension: day,
       granularity: `day`,
-      refreshKey: {
+      partition_granularity: `day`,
+      refresh_key: {
         every: `30 minutes`,
         incremental: true,
       },
@@ -180,7 +181,7 @@ cube(`vault_factory_vaults`, {
       measures: [liquidated_count],
       time_dimension: day,
       granularity: `year`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -188,7 +189,7 @@ cube(`vault_factory_vaults`, {
       measures: [liquidated_count],
       time_dimension: day,
       granularity: `month`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -196,7 +197,7 @@ cube(`vault_factory_vaults`, {
       measures: [liquidated_count],
       time_dimension: day,
       granularity: `week`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -204,7 +205,8 @@ cube(`vault_factory_vaults`, {
       measures: [liquidated_count],
       time_dimension: day,
       granularity: `day`,
-      refreshKey: {
+      partition_granularity: `day`,
+      refresh_key: {
         every: `30 minutes`,
         incremental: true,
       },

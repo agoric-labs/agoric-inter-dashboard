@@ -47,49 +47,49 @@ cube(`balances`, {
   },
 
   pre_aggregations: {
-        by_denom_and_address_year: {
-          measures: [amount_sum, amount_avg],
-          dimensions: [denom, address],
-          time_dimension: day,
-          granularity: `year`,
-          refreshKey: {
-            every: `24 hour`,
-          },
-        },
-        by_denom_and_address_month: {
-          measures: [amount_sum, amount_avg],
-          dimensions: [denom, address],
-          time_dimension: day,
-          granularity: `month`,
-          refreshKey: {
-            every: `24 hour`,
-          },
-        },
-        by_denom_and_address_week: {
-          measures: [amount_sum, amount_avg],
-          dimensions: [denom, address],
-          time_dimension: day,
-          granularity: `week`,
-          refreshKey: {
-            every: `24 hour`,
-          },
-        },
-        by_denom_and_address_day: {
-          measures: [amount_sum, amount_avg],
-          dimensions: [denom, address],
-          time_dimension: day,
-          granularity: `day`,
-          partition_granularity: `month`,
-          refresh_key: {
-            every: `30 minutes`,
-            incremental: true,
-          },
-          build_range_start: {
-            sql: `select min(_sdc_batched_at) from ${datasetId()}.balances`,
-          },
-          build_range_end: {
-            sql: `select current_timestamp()`,
-          },
-        },
+    by_denom_and_address_year: {
+      measures: [amount_sum, amount_avg],
+      dimensions: [denom, address],
+      time_dimension: day,
+      granularity: `year`,
+      refresh_key: {
+        every: `24 hour`,
       },
+    },
+    by_denom_and_address_month: {
+      measures: [amount_sum, amount_avg],
+      dimensions: [denom, address],
+      time_dimension: day,
+      granularity: `month`,
+      refresh_key: {
+        every: `24 hour`,
+      },
+    },
+    by_denom_and_address_week: {
+      measures: [amount_sum, amount_avg],
+      dimensions: [denom, address],
+      time_dimension: day,
+      granularity: `week`,
+      refresh_key: {
+        every: `24 hour`,
+      },
+    },
+    by_denom_and_address_day: {
+      measures: [amount_sum, amount_avg],
+      dimensions: [denom, address],
+      time_dimension: day,
+      granularity: `day`,
+      partition_granularity: `day`,
+      refresh_key: {
+        every: `30 minutes`,
+        incremental: true,
+      },
+      build_range_start: {
+        sql: `select min(_sdc_batched_at) from ${datasetId()}.balances`,
+      },
+      build_range_end: {
+        sql: `select current_timestamp()`,
+      },
+    },
+  },
 });

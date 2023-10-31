@@ -40,7 +40,7 @@ cube(`vault_states`, {
       dimensions: [state],
       timeDimension: day,
       granularity: `year`,
-      refreshKey: {
+      refresh_key: {
         every: `24 hour`,
       },
     },
@@ -49,7 +49,7 @@ cube(`vault_states`, {
       dimensions: [state],
       timeDimension: day,
       granularity: `month`,
-      refreshKey: {
+      refresh_key: {
         every: `24 hour`,
       },
     },
@@ -58,7 +58,7 @@ cube(`vault_states`, {
       dimensions: [state],
       timeDimension: day,
       granularity: `month`,
-      refreshKey: {
+      refresh_key: {
         every: `24 hour`,
       },
     },

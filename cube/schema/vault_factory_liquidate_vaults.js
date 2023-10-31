@@ -215,7 +215,7 @@ cube(`vault_factory_liquidate_vaults`, {
       dimensions: [manager_idx, vault_idx, debt_type, collateral_type],
       time_dimension: day,
       granularity: `year`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -234,7 +234,7 @@ cube(`vault_factory_liquidate_vaults`, {
       dimensions: [manager_idx, vault_idx, debt_type, collateral_type],
       time_dimension: day,
       granularity: `month`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -253,7 +253,7 @@ cube(`vault_factory_liquidate_vaults`, {
       dimensions: [manager_idx, vault_idx, debt_type, collateral_type],
       time_dimension: day,
       granularity: `week`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },

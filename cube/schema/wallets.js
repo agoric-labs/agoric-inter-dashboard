@@ -24,7 +24,7 @@ cube(`wallets`, {
   pre_aggregations: {
     main: {
       measures: [address_count],
-      refreshKey: {
+      refresh_key: {
         every: `1 hour`,
       },
     },

@@ -90,11 +90,12 @@ cube(`psm_stats`, {
         total_minted_provided_avg,
         total_anchor_provided_avg,
         utilization_rate_avg,
+        psm_governance.mint_limit_avg,
       ],
       dimensions: [psm_stats.coin],
       time_dimension: psm_stats.day,
       granularity: `year`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -107,11 +108,12 @@ cube(`psm_stats`, {
         total_minted_provided_avg,
         total_anchor_provided_avg,
         utilization_rate_avg,
+        psm_governance.mint_limit_avg,
       ],
       dimensions: [psm_stats.coin],
       time_dimension: psm_stats.day,
       granularity: `month`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -124,11 +126,12 @@ cube(`psm_stats`, {
         total_minted_provided_avg,
         total_anchor_provided_avg,
         utilization_rate_avg,
+        psm_governance.mint_limit_avg,
       ],
       dimensions: [psm_stats.coin],
       time_dimension: psm_stats.day,
       granularity: `week`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -141,6 +144,7 @@ cube(`psm_stats`, {
         total_minted_provided_avg,
         total_anchor_provided_avg,
         utilization_rate_avg,
+        psm_governance.mint_limit_avg,
       ],
       dimensions: [psm_stats.coin],
       time_dimension: psm_stats.day,
@@ -161,7 +165,7 @@ cube(`psm_stats`, {
       measures: [minted_pool_balance_sum],
       time_dimension: psm_stats.day,
       granularity: `year`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -169,7 +173,7 @@ cube(`psm_stats`, {
       measures: [minted_pool_balance_sum],
       time_dimension: psm_stats.day,
       granularity: `month`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -177,7 +181,7 @@ cube(`psm_stats`, {
       measures: [minted_pool_balance_sum],
       time_dimension: psm_stats.day,
       granularity: `week`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },

@@ -226,7 +226,6 @@ cube(`vault_factory_metrics`, {
         num_liquidations_aborted_last,
         num_liquidations_completed_last,
         retained_collateral_avg,
-        retained_collateral_avg,
         total_collateral_avg,
         total_collateral_sold_avg,
         total_debt_avg,
@@ -239,7 +238,7 @@ cube(`vault_factory_metrics`, {
       dimensions: [manager_idx, collateral_type, debt_type],
       time_dimension: day,
       granularity: `year`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -253,7 +252,6 @@ cube(`vault_factory_metrics`, {
         num_liquidations_aborted_last,
         num_liquidations_completed_last,
         retained_collateral_avg,
-        retained_collateral_avg,
         total_collateral_avg,
         total_collateral_sold_avg,
         total_debt_avg,
@@ -266,7 +264,7 @@ cube(`vault_factory_metrics`, {
       dimensions: [manager_idx, collateral_type, debt_type],
       time_dimension: day,
       granularity: `month`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -280,7 +278,6 @@ cube(`vault_factory_metrics`, {
         num_liquidations_aborted_last,
         num_liquidations_completed_last,
         retained_collateral_avg,
-        retained_collateral_avg,
         total_collateral_avg,
         total_collateral_sold_avg,
         total_debt_avg,
@@ -293,7 +290,7 @@ cube(`vault_factory_metrics`, {
       dimensions: [manager_idx, collateral_type, debt_type],
       time_dimension: day,
       granularity: `week`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -306,7 +303,6 @@ cube(`vault_factory_metrics`, {
         num_liquidating_vaults_last,
         num_liquidations_aborted_last,
         num_liquidations_completed_last,
-        retained_collateral_avg,
         retained_collateral_avg,
         total_collateral_avg,
         total_collateral_sold_avg,
@@ -342,7 +338,6 @@ cube(`vault_factory_metrics`, {
         num_liquidations_aborted_sum,
         num_liquidations_completed_sum,
         retained_collateral_sum,
-        retained_collateral_sum,
         total_collateral_usd_sum,
         total_collateral_sold_usd_sum,
         total_debt_sum,
@@ -352,7 +347,7 @@ cube(`vault_factory_metrics`, {
       ],
       time_dimension: day,
       granularity: `year`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -366,7 +361,6 @@ cube(`vault_factory_metrics`, {
         num_liquidations_aborted_sum,
         num_liquidations_completed_sum,
         retained_collateral_sum,
-        retained_collateral_sum,
         total_collateral_usd_sum,
         total_collateral_sold_usd_sum,
         total_debt_sum,
@@ -376,7 +370,7 @@ cube(`vault_factory_metrics`, {
       ],
       time_dimension: day,
       granularity: `month`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -390,7 +384,6 @@ cube(`vault_factory_metrics`, {
         num_liquidations_aborted_sum,
         num_liquidations_completed_sum,
         retained_collateral_sum,
-        retained_collateral_sum,
         total_collateral_usd_sum,
         total_collateral_sold_usd_sum,
         total_debt_sum,
@@ -400,7 +393,7 @@ cube(`vault_factory_metrics`, {
       ],
       time_dimension: day,
       granularity: `week`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -413,7 +406,6 @@ cube(`vault_factory_metrics`, {
         num_liquidating_vaults_sum,
         num_liquidations_aborted_sum,
         num_liquidations_completed_sum,
-        retained_collateral_sum,
         retained_collateral_sum,
         total_collateral_usd_sum,
         total_collateral_sold_usd_sum,

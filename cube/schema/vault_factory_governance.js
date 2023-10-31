@@ -92,7 +92,7 @@ cube(`vault_factory_governance`, {
       dimensions: [manager_idx],
       time_dimension: day,
       granularity: `year`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -108,7 +108,7 @@ cube(`vault_factory_governance`, {
       dimensions: [manager_idx],
       time_dimension: day,
       granularity: `month`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -124,7 +124,7 @@ cube(`vault_factory_governance`, {
       dimensions: [manager_idx],
       time_dimension: day,
       granularity: `week`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -156,7 +156,7 @@ cube(`vault_factory_governance`, {
       measures: [debt_limit_sum],
       time_dimension: day,
       granularity: `year`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -164,7 +164,7 @@ cube(`vault_factory_governance`, {
       measures: [debt_limit_sum],
       time_dimension: day,
       granularity: `month`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -172,7 +172,7 @@ cube(`vault_factory_governance`, {
       measures: [debt_limit_sum],
       time_dimension: day,
       granularity: `week`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },

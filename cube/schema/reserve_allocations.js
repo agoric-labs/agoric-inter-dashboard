@@ -127,7 +127,7 @@ cube(`reserve_allocations`, {
       measures: [amount_usd_sum],
       time_dimension: day,
       granularity: `year`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -135,7 +135,7 @@ cube(`reserve_allocations`, {
       measures: [amount_usd_sum],
       time_dimension: day,
       granularity: `month`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -143,7 +143,7 @@ cube(`reserve_allocations`, {
       measures: [amount_usd_sum],
       time_dimension: day,
       granularity: `week`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },

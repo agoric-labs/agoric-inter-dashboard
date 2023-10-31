@@ -59,7 +59,7 @@ cube(`psm_governance`, {
       dimensions: [coin],
       time_dimension: day,
       granularity: `year`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -68,7 +68,7 @@ cube(`psm_governance`, {
       dimensions: [coin],
       time_dimension: day,
       granularity: `month`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -77,7 +77,7 @@ cube(`psm_governance`, {
       dimensions: [coin],
       time_dimension: day,
       granularity: `week`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -102,7 +102,7 @@ cube(`psm_governance`, {
       measures: [mint_limit_sum],
       time_dimension: day,
       granularity: `year`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -110,7 +110,7 @@ cube(`psm_governance`, {
       measures: [mint_limit_sum],
       time_dimension: day,
       granularity: `month`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
@@ -118,7 +118,7 @@ cube(`psm_governance`, {
       measures: [mint_limit_sum],
       time_dimension: day,
       granularity: `week`,
-      refreshKey: {
+      refresh_key: {
         every: `1 day`,
       },
     },
