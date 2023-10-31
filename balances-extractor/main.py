@@ -101,6 +101,9 @@ def get_current_height(rpc_url):
 if __name__ == "__main__":
     print(ujson.dumps(BALANCES_SCHEMA))
 
+    if os.getenv("ONLY_SCHEMA") is not None:
+        exit(0)
+
     height = os.getenv("BLOCK_HEIGHT")
     if height is None:
         height = get_current_height(os.environ["RPC_URL"]) - 1

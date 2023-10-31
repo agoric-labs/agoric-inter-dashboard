@@ -12,27 +12,41 @@ export function OpenVaults({ title = 'Open Vaults' }: Props) {
   const granularity = useGranularity();
   const res = useCubeQuery({
     measures: [
-      'open_vaults.collateral_amount',
-      'open_vaults.current_collateral_price',
-      'open_vaults.collateral_oracle_usd_value',
-      'open_vaults.ist_debt_amount',
-      'open_vaults.liquidation_margin',
-      'open_vaults.liquidation_price',
-      'open_vaults.liquidation_cushion',
-      'open_vaults.collateralization_ratio',
+      'vault_factory_vaults.collateral_amount_avg',
+      'oracle_prices.rate_avg',
+      'vault_factory_vaults.collateral_amount_usd_avg',
+      'vault_factory_vaults.debt_amount_avg',
+      'vault_factory_governance.liquidation_margin_avg',
+      'vault_factory_vaults.liquidation_price_avg',
+      'vault_factory_vaults.liquidation_cushion_avg',
+      'vault_factory_vaults.collateralization_ratio_avg',
     ],
     timeDimensions: [
       {
-        dimension: 'open_vaults.day',
+        dimension: 'vault_factory_vaults.day',
         granularity,
         dateRange: 'Today',
       },
     ],
     order: {
-      'open_vaults.debt_type': 'asc',
-      'open_vaults.vault_ix': 'asc',
+      'vault_factory_vaults.manager_idx': 'asc',
+      'vault_factory_vaults.vault_idx': 'asc',
     },
-    dimensions: ['open_vaults.debt_type', 'open_vaults.vault_ix', 'open_vaults.collateral_type'],
+    dimensions: [
+      'vault_factory_vaults.debt_type',
+      'vault_factory_vaults.vault_idx',
+      'vault_factory_vaults.manager_idx',
+      'vault_factory_vaults.collateral_type',
+    ],
+    filters: [
+      {
+        member: 'vault_factory_vaults.last_state',
+        operator: 'equals',
+        // cubestore supports only integers
+        // select FARM_FINGERPRINT('active')
+        values: ['5907958362119427434'],
+      },
+    ],
   });
 
   if (res.isLoading || !res.resultSet) {
@@ -53,11 +67,14 @@ export function OpenVaults({ title = 'Open Vaults' }: Props) {
     const newRow: any = {};
 
     Object.keys(row).forEach((key) => {
-      newRow[key.replace('open_vaults.', '')] = row[key];
+      newRow[
+        key
+          .replace('vault_factory_vaults.', '')
+          .replace('vault_factory_governance.', '')
+          .replace('oracle_prices.', '')
+          .replace('_avg', '')
+      ] = row[key];
     });
-
-    // published.vaultFactory.managers.manager0.vaults.vault10 -> 10
-    newRow.vault_ix = newRow.vault_ix.replace(/.*?(\d+)$/, '$1');
 
     return newRow;
   });

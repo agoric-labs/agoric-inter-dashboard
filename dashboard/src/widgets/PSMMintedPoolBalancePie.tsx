@@ -8,7 +8,7 @@ import { coinLabels } from '../coinLabels';
 
 export function PSMMintedPoolBalancePie() {
   const res = useCubeQuery({
-    measures: ['psm_stats.last_minted_pool_balance'],
+    measures: ['psm_stats.minted_pool_balance_avg'],
     timeDimensions: [
       {
         dimension: 'psm_stats.day',
@@ -16,7 +16,7 @@ export function PSMMintedPoolBalancePie() {
         granularity: 'day',
       },
     ],
-    order: [['psm_stats.last_minted_pool_balance', 'asc']],
+    order: [['psm_stats.minted_pool_balance_avg', 'asc']],
     dimensions: ['psm_stats.coin'],
   });
 
@@ -27,11 +27,11 @@ export function PSMMintedPoolBalancePie() {
 
   const data = resultSet
     .tablePivot()
-    .map(row => ({
-      value: parseFloat(row['psm_stats.last_minted_pool_balance'] as string),
+    .map((row) => ({
+      value: parseFloat(row['psm_stats.minted_pool_balance_avg'] as string),
       label: coinLabels[row['psm_stats.coin'] as string],
     }))
-    .filter(row => row.value > 0);
+    .filter((row) => row.value > 0);
 
   return (
     <Card>

@@ -30,6 +30,23 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: v2-cube-mainnet-nodeport
+spec:
+  type: NodePort
+  selector:
+    app.kubernetes.io/component: api
+    app.kubernetes.io/instance: v2-cube-mainnet
+    app.kubernetes.io/name: cube
+  ports:
+  - name: http
+    port: 4000
+    protocol: TCP
+    targetPort: http
+
+---
+apiVersion: v1
+kind: Service
+metadata:
   name: cube-ollinet-nodeport
   annotations:
     cloud.google.com/backend-config: '{"ports":{"4000":"cloudflare-only"}}'
@@ -146,5 +163,29 @@ spec:
             backend:
               service:
                 name: cube-devnet-nodeport
+                port:
+                  name: http
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: v2-cube-gke
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: agoric-dashboard-staging
+spec:
+  defaultBackend:
+    service:
+      name: v2-info-dashboard
+      port:
+        name: http
+  rules:
+    - http:
+        paths:
+          - path: /cubejs-api/agoric_mainnet/v1/load
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: v2-cube-mainnet-nodeport
                 port:
                   name: http

@@ -83,6 +83,5 @@ COPY --from=fullstorydev/grpcurl:v1.8.7-alpine /bin/grpcurl /app/bin/
 COPY --from=build-bqreader /app/bin/* /app/bin/
 COPY tendermint-normalizer/main.py /app/bin/tendermint-normalizer
 COPY balances-extractor/main.py /app/bin/balances-extractor
-COPY coingeko-extractor/main.py /app/bin/coingeko-extractor
 COPY *.catalog.json ./
 COPY extract-* ./

@@ -18,8 +18,8 @@ const icons: { [key: string]: string } = {
   unknown,
 };
 
-export function TokenPrices({ title = 'Token Prices' }: Props) {
-  const res = useCubeQuery({
+export function TokenPrices({ title = 'Summary' }: Props) {
+  const priceRes = useCubeQuery({
     measures: ['oracle_prices.rate_avg'],
     timeDimensions: [
       {
@@ -32,7 +32,23 @@ export function TokenPrices({ title = 'Token Prices' }: Props) {
     dimensions: ['oracle_prices.price_feed_name'],
   });
 
-  if (res.isLoading || !res.resultSet) {
+  const numRes = useCubeQuery({
+    measures: ['vault_factory_metrics.num_active_vaults_last'],
+    dimensions: [
+      'vault_factory_metrics.collateral_type',
+      'vault_factory_metrics.manager_idx',
+      'vault_factory_metrics.debt_type',
+    ],
+    timeDimensions: [
+      {
+        dimension: 'vault_factory_metrics.day',
+        dateRange: 'Today',
+        granularity: 'day',
+      },
+    ],
+  });
+
+  if (priceRes.isLoading || !priceRes.resultSet || numRes.isLoading || !numRes.resultSet) {
     return (
       <>
         <SectionHeader>{title}</SectionHeader>
@@ -41,10 +57,21 @@ export function TokenPrices({ title = 'Token Prices' }: Props) {
     );
   }
 
-  const [resultSet, requestView] = getCubeQueryView(res);
+  const [resultSet, requestView] = getCubeQueryView(priceRes);
   if (!resultSet) {
     return requestView;
   }
+
+  const [resultNumSet, requestNumView] = getCubeQueryView(numRes);
+  if (!resultNumSet) {
+    return requestNumView;
+  }
+
+  const nums: { [key: string]: number } = {};
+
+  resultNumSet.tablePivot().forEach((row: any) => {
+    nums[row['vault_factory_metrics.collateral_type']] = row['vault_factory_metrics.num_active_vaults_last'];
+  });
 
   const tokenData: { [key: string]: number[] } = {};
 
@@ -77,6 +104,7 @@ export function TokenPrices({ title = 'Token Prices' }: Props) {
           <span className="flex-1 ml-2">{label}</span>
         </span>
       ),
+      numActive: nums[label],
       dayChange:
         changeValue >= 0 ? (
           <div className="text-right text-green-500">+{changeValue}%</div>

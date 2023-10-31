@@ -5,7 +5,13 @@ import { formatPrice, getCubeQueryView } from '@/utils';
 export function ReserveSummary() {
   const res = useCubeQuery({
     measures: ['reserve_allocations.amount_usd_sum'],
-    timeDimensions: [{ dimension: 'reserve_allocations.day', granularity: 'day', dateRange: 'Today' }],
+    timeDimensions: [
+      {
+        dimension: 'reserve_allocations.day',
+        granularity: 'day',
+        dateRange: 'Today',
+      },
+    ],
     order: {
       'reserve_allocations.day': 'desc',
     },

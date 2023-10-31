@@ -19,7 +19,7 @@ type Props = {
 
 export const columns: DataColumn<Row>[] = [
   {
-    accessorKey: 'vault_ix',
+    accessorKey: 'vault_idx',
     type: 'text',
     header: 'ID',
   },
@@ -39,17 +39,17 @@ export const columns: DataColumn<Row>[] = [
     header: 'Collateral Amount',
   },
   {
-    accessorKey: 'current_collateral_price',
+    accessorKey: 'rate',
     type: 'usd',
     header: 'Current Collateral Price',
   },
   {
-    accessorKey: 'collateral_oracle_usd_value',
+    accessorKey: 'collateral_amount_usd',
     type: 'usd',
     header: 'Collateral Value ($USD)',
   },
   {
-    accessorKey: 'ist_debt_amount',
+    accessorKey: 'debt_amount',
     type: 'number',
     header: 'IST Debt Amount',
   },

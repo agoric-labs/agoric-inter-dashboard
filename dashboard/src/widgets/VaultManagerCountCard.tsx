@@ -8,13 +8,10 @@ type Props = {
 
 export function VaultManagerCountCard({ title = 'Total Collateral Types' }: Props) {
   const res = useCubeQuery({
-    measures: ['vault_managers.count'],
-    order: {
-      'vault_managers.count': 'desc',
-    },
+    measures: ['vault_factory_metrics.manager_idx_count'],
     timeDimensions: [
       {
-        dimension: 'vault_managers.day',
+        dimension: 'vault_factory_metrics.day',
         granularity: 'day',
         dateRange: 'Today',
       },
@@ -35,5 +32,5 @@ export function VaultManagerCountCard({ title = 'Total Collateral Types' }: Prop
     return null;
   }
 
-  return <ValueCard title={title} value={rows[0]['vault_managers.count'] as string} />;
+  return <ValueCard title={title} value={rows[0]['vault_factory_metrics.manager_idx_count'] as string} />;
 }

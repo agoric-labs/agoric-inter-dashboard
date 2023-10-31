@@ -3,40 +3,48 @@ import { format } from 'date-fns';
 import { LiquidatedVaultsTable } from '@/components/LiquidatedVaultsTable';
 import { SectionHeader } from '@/components/SectionHeader';
 import { useGranularity } from '@/components/CubeProvider';
-import { getCubeQueryView, toTitleCase, formatSecondsToHumanReadable } from '@/utils';
+import { getCubeQueryView, formatSecondsToHumanReadable } from '@/utils';
 
 type Props = {
   title?: string;
+};
+
+const states: { [key: string]: string } = {
+  // FARM_FINGERPRINT('liquidating')
+  '5264610956617764810': 'Liquidated',
+  '159334985254996322': 'Liquidating',
 };
 
 export function LiquidatedVaults({ title = 'Liquidated Vaults' }: Props) {
   const granularity = useGranularity();
   const res = useCubeQuery({
     measures: [
-      'liquidated_vaults.liquidating_locked_value',
-      'liquidated_vaults.liquidation_token_price',
-      'liquidated_vaults.current_collateral_price',
-      'liquidated_vaults.liquidating_debt_amount',
-      'liquidated_vaults.liquidation_margin',
-      'liquidated_vaults.liquidating_start_time',
-      'liquidated_vaults.liquidated_time',
+      'vault_factory_liquidate_vaults.liquidating_collateral_amount_avg',
+      'vault_factory_liquidate_vaults.liquidating_debt_amount_avg',
+      'vault_factory_liquidate_vaults.liquidating_enter_time',
+      'vault_factory_liquidate_vaults.liquidated_enter_time',
+      'vault_factory_liquidate_vaults.liquidating_rate',
+      'vault_factory_liquidate_vaults.last_state',
+      'vault_factory_liquidate_vaults.liquidated_return_amount_avg',
+      'vault_factory_liquidate_vaults.liquidated_return_amount_usd_avg',
+      'vault_factory_governance.liquidation_margin_avg',
     ],
     timeDimensions: [
       {
-        dimension: 'liquidated_vaults.day',
+        dimension: 'vault_factory_liquidate_vaults.day',
         granularity,
         dateRange: 'Today',
       },
     ],
     order: {
-      'liquidated_vaults.debt_type': 'asc',
-      'liquidated_vaults.vault_ix': 'asc',
+      'vault_factory_liquidate_vaults.manager_idx': 'asc',
+      'vault_factory_liquidate_vaults.vault_idx': 'asc',
     },
     dimensions: [
-      'liquidated_vaults.debt_type',
-      'liquidated_vaults.vault_ix',
-      'liquidated_vaults.collateral_type',
-      'liquidated_vaults.vault_state',
+      'vault_factory_liquidate_vaults.manager_idx',
+      'vault_factory_liquidate_vaults.vault_idx',
+      'vault_factory_liquidate_vaults.debt_type',
+      'vault_factory_liquidate_vaults.collateral_type',
     ],
   });
 
@@ -58,20 +66,21 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults' }: Props) {
     const newRow: any = {};
 
     Object.keys(row).forEach((key) => {
-      newRow[key.replace('liquidated_vaults.', '')] = row[key];
+      newRow[key.replace('vault_factory_liquidate_vaults.', '').replace('vault_factory_governance.', '')] = row[key];
     });
 
-    // published.vaultFactory.managers.manager0.vaults.vault10 -> 10
-    newRow.vault_ix = newRow.vault_ix.replace(/.*?(\d+)$/, '$1');
-    newRow.vault_state = toTitleCase(newRow.vault_state);
-    newRow.liquidating_locked_value_usd = newRow.liquidating_locked_value * newRow.liquidation_token_price;
+    newRow.state = states[newRow.last_state];
 
-    const starting = new Date(row['liquidated_vaults.liquidating_start_time'] * 1000);
+    // const starting = new Date(row['vault_factory_liquidate_vaults.liquidating_enter_time'] * 1000);
+    const starting = new Date(row['vault_factory_liquidate_vaults.liquidating_enter_time'] * 1000);
+    console.log(starting, row['vault_factory_liquidate_vaults.liquidating_enter_time']);
     newRow.liquidationStartTime = format(starting, 'MM/dd/yyyy HH:mm');
 
-    if (row['liquidated_vaults.liquidated_time']) {
-      const diff = row['liquidated_vaults.liquidated_time'] - row['liquidated_vaults.liquidating_start_time'];
-      newRow.liquidationTime = formatSecondsToHumanReadable(diff);
+    if (row['vault_factory_liquidate_vaults.liquidated_enter_time']) {
+      newRow.liquidationTime = formatSecondsToHumanReadable(
+        row['vault_factory_liquidate_vaults.liquidated_enter_time'] -
+          row['vault_factory_liquidate_vaults.liquidating_enter_time'],
+      );
     } else {
       newRow.liquidationTime = '—';
     }

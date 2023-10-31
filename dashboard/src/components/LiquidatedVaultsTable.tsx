@@ -1,12 +1,12 @@
 import { DataTable, DataColumn } from './DataTable';
 
 type Row = {
-  vault_ix: string;
+  vault_idx: string;
   collateral_type: string;
-  vault_state: string;
+  state: string;
   liquidationStartTime: string;
   liquidationTime: string;
-  liquidating_debt_amount: number;
+  liquidating_debt_amount_avg: number;
   liquidating_locked_value: number;
   ist_debt_amount: number;
   liquidating_locked_value_usd: number;
@@ -20,7 +20,7 @@ type Props = {
 
 export const columns: DataColumn<Row>[] = [
   {
-    accessorKey: 'vault_ix',
+    accessorKey: 'vault_idx',
     type: 'text',
     header: 'ID',
     size: 50,
@@ -32,7 +32,7 @@ export const columns: DataColumn<Row>[] = [
     size: 300,
   },
   {
-    accessorKey: 'vault_state',
+    accessorKey: 'state',
     type: 'text',
     header: 'State',
   },
@@ -47,27 +47,27 @@ export const columns: DataColumn<Row>[] = [
     header: 'Liquidation Time',
   },
   {
-    accessorKey: 'liquidating_debt_amount',
+    accessorKey: 'liquidating_debt_amount_avg',
     type: 'number',
     header: 'IST Debt Amount',
   },
   {
-    accessorKey: 'liquidation_margin',
+    accessorKey: 'liquidation_margin_avg',
     type: 'percent',
     header: 'Liquidation Ratio',
   },
   {
-    accessorKey: 'liquidation_token_price',
+    accessorKey: 'liquidating_rate',
     type: 'usd',
     header: 'Liquidation Price',
   },
   {
-    accessorKey: 'liquidating_locked_value',
+    accessorKey: 'liquidated_return_amount_avg',
     type: 'number',
     header: 'Collateral Returned Amount',
   },
   {
-    accessorKey: 'liquidating_locked_value_usd',
+    accessorKey: 'liquidated_return_amount_usd_avg',
     type: 'usd',
     header: 'Collateral Returned ($USD)',
   },

@@ -12,14 +12,14 @@ type Props = {
 export function VaultStatesChart({ title = 'Vault States' }: Props) {
   const granularity = useGranularity();
   const res = useCubeQuery({
-    measures: ['vaults.count'],
+    measures: ['vault_states.count'],
     timeDimensions: [
       {
-        dimension: 'vaults.day',
+        dimension: 'vault_states.day',
         granularity,
       },
     ],
-    dimensions: ['vaults.state'],
+    dimensions: ['vault_states.state'],
   });
 
   if (res.isLoading || !res.resultSet) {

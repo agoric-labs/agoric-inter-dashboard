@@ -592,11 +592,6 @@ helm install cubestore gadsme/cubestore --values cubestore.values.yaml
 # setup dashboard
 helm install dashboard ./infra/dashboard --values dashboard.values.yaml
 
-# extract coingeko history
-kubectl create job --from=cronjob.batch/mainnet-extractor-coingeko-atom mainnet-extractor-coingeko-atom-manual0 --dry-run -o "json" \
-  | jq ".spec.template.spec.containers[0].env += [{ \"name\": \"DEPTH\", value:\"90\" }]" \
-  | kubectl apply -f -
-
 # manual update all charts
 ls *.values.yaml | sed 's/\.values\.yaml$//' | xargs -I{} helm upgrade {} ./infra/indexer-chart --values {}.values.yaml
 
@@ -613,6 +608,27 @@ Set log alerts for `failed` and `fatal` keywords
 resource.type="k8s_container" AND
 resource.labels.container_name="extractor" AND
 (textPayload:"failed" OR textPayload:"fatal")
+```
+
+## Rebuild all cubes
+
+```
+kubectl get pods | grep cube-mainnet # get the pod name
+kubectl port-forward cube-mainnet-worker-5f774c448f-8xl88 4000:4000 # get access to the internal API
+```
+
+```
+curl \                                                                                                                                                                                   alexes@pc
+  -d '{
+    "action": "post",
+    "selector": {
+      "contexts": [{ "securityContext": {} }],
+      "timezones": ["UTC"], "cubes": ["balances","oracle_prices","psm_governance","psm_stats","reserve_allocations","reserve","vault_factory_governance","vault_factory_liquidate_vaults","vault_factory_metrics","vault_factory_vaults","vault_states","wallets"]
+    }
+  }' \
+  -H "Content-Type: application/json" \
+  -X POST \
+  http://localhost:4000/cubejs-api/agoric_mainnet/v1/pre-aggregations/jobs
 ```
 
 # Development

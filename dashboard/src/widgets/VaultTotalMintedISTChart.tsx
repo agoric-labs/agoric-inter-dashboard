@@ -12,14 +12,18 @@ type Props = {
 export function VaultTotalMintedISTChart({ title = 'Total Minted IST' }: Props) {
   const granularity = useGranularity();
   const res = useCubeQuery({
-    measures: ['vault_managers.total_ist_minted_sum'],
+    measures: ['vault_factory_metrics.total_debt_avg'],
     timeDimensions: [
       {
-        dimension: 'vault_managers.day',
+        dimension: 'vault_factory_metrics.day',
         granularity,
       },
     ],
-    dimensions: ['vault_managers.collateral_type', 'vault_managers.debt_type'],
+    dimensions: [
+      'vault_factory_metrics.collateral_type',
+      'vault_factory_metrics.manager_idx',
+      'vault_factory_metrics.debt_type',
+    ],
   });
 
   if (res.isLoading || !res.resultSet) {
@@ -58,7 +62,13 @@ export function VaultTotalMintedISTChart({ title = 'Total Minted IST' }: Props) 
         <Tooltip />
         <Legend />
         {resultSet.seriesNames().map((col, idx) => (
-          <Bar key={col.key} stackId="a" dataKey={col.key} name={col.shortTitle} fill={colors[idx % colors.length]} />
+          <Bar
+            key={col.key}
+            stackId="a"
+            dataKey={col.key}
+            name={col.shortTitle.replace(/, \d+,/, '') /* hide manager numbers */}
+            fill={colors[idx % colors.length]}
+          />
         ))}
       </BarChart>
     </ResponsiveContainer>
