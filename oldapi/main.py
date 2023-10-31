@@ -1,9 +1,16 @@
 import requests
 import os
 
+from flask_caching import Cache  # type: ignore
 from flask import Flask, jsonify
+from waitress import serve
+
+config = {"CACHE_TYPE": "SimpleCache", "CACHE_DEFAULT_TIMEOUT": 600}
 
 app = Flask(__name__)
+app.config.from_mapping(config)
+
+cache = Cache(app)
 
 API_URL = os.getenv("API_URL", "http://localhost:4000")
 
@@ -642,3 +649,7 @@ def data(dataset, granularity):
     }
 
     return jsonify(result)
+
+
+if __name__ == "__main__":
+    serve(app, listen="*:80")

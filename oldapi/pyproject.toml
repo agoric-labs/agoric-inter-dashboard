@@ -12,6 +12,8 @@ line-length = 120
 python = "^3.9"
 requests = "^2.31.0"
 flask = "^3.0.0"
+flask-caching = "^2.1.0"
+waitress = "^2.1.2"
 
 
 [build-system]
