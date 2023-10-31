@@ -2,7 +2,6 @@ import { useCubeQuery } from '@cubejs-client/react';
 import { format } from 'date-fns';
 import { LiquidatedVaultsTable } from '@/components/LiquidatedVaultsTable';
 import { SectionHeader } from '@/components/SectionHeader';
-import { useGranularity } from '@/components/CubeProvider';
 import { getCubeQueryView, formatSecondsToHumanReadable } from '@/utils';
 
 type Props = {
