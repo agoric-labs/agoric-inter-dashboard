@@ -5,7 +5,6 @@ import sys
 import ujson
 import re
 import os
-import dateutil
 import multiprocessing
 
 from multiprocessing.pool import ThreadPool

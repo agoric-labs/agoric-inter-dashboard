@@ -1,4 +1,3 @@
-import json
 import subprocess
 
 from main import resolve_brand_names_and_values, extract_storage_path, to_datetime, get_state_change_module
