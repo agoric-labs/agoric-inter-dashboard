@@ -2,7 +2,6 @@ import { useCubeQuery } from '@cubejs-client/react';
 import { format } from 'date-fns';
 import { LiquidatedVaultsTable } from '@/components/LiquidatedVaultsTable';
 import { SectionHeader } from '@/components/SectionHeader';
-import { useGranularity } from '@/components/CubeProvider';
 import { getCubeQueryView, formatSecondsToHumanReadable } from '@/utils';
 
 type Props = {
@@ -16,7 +15,6 @@ const states: { [key: string]: string } = {
 };
 
 export function LiquidatedVaults({ title = 'Liquidated Vaults' }: Props) {
-  const granularity = useGranularity();
   const res = useCubeQuery({
     measures: [
       'vault_factory_liquidate_vaults.liquidating_collateral_amount_avg',
@@ -32,7 +30,7 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults' }: Props) {
     timeDimensions: [
       {
         dimension: 'vault_factory_liquidate_vaults.day',
-        granularity,
+        granularity: 'day',
         dateRange: 'Today',
       },
     ],
