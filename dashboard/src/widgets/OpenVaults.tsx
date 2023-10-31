@@ -41,8 +41,10 @@ export function OpenVaults({ title = 'Open Vaults' }: Props) {
     filters: [
       {
         member: 'vault_factory_vaults.last_state',
-        operator: 'contains',
-        values: ['active'],
+        operator: 'equals',
+        // cubestore supports only integers
+        // select FARM_FINGERPRINT('active')
+        values: ['5907958362119427434'],
       },
     ],
   });

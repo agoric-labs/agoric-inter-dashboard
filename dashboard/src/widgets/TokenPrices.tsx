@@ -33,7 +33,7 @@ export function TokenPrices({ title = 'Summary' }: Props) {
   });
 
   const numRes = useCubeQuery({
-    measures: ['vault_factory_metrics.num_active_vaults_sum'],
+    measures: ['vault_factory_metrics.num_active_vaults_last'],
     dimensions: [
       'vault_factory_metrics.collateral_type',
       'vault_factory_metrics.manager_idx',
@@ -70,7 +70,7 @@ export function TokenPrices({ title = 'Summary' }: Props) {
   const nums: { [key: string]: number } = {};
 
   resultNumSet.tablePivot().forEach((row: any) => {
-    nums[row['vault_factory_metrics.collateral_type']] = row['vault_factory_metrics.num_active_vaults_sum'];
+    nums[row['vault_factory_metrics.collateral_type']] = row['vault_factory_metrics.num_active_vaults_last'];
   });
 
   const tokenData: { [key: string]: number[] } = {};

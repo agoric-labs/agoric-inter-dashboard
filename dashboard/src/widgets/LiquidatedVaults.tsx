@@ -1,12 +1,18 @@
 import { useCubeQuery } from '@cubejs-client/react';
-import { format, parseISO, differenceInSeconds } from 'date-fns';
+import { format } from 'date-fns';
 import { LiquidatedVaultsTable } from '@/components/LiquidatedVaultsTable';
 import { SectionHeader } from '@/components/SectionHeader';
 import { useGranularity } from '@/components/CubeProvider';
-import { getCubeQueryView, toTitleCase, formatSecondsToHumanReadable } from '@/utils';
+import { getCubeQueryView, formatSecondsToHumanReadable } from '@/utils';
 
 type Props = {
   title?: string;
+};
+
+const states: { [key: string]: string } = {
+  // FARM_FINGERPRINT('liquidating')
+  '5264610956617764810': 'Liquidated',
+  '159334985254996322': 'Liquidating',
 };
 
 export function LiquidatedVaults({ title = 'Liquidated Vaults' }: Props) {
@@ -63,15 +69,18 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults' }: Props) {
       newRow[key.replace('vault_factory_liquidate_vaults.', '').replace('vault_factory_governance.', '')] = row[key];
     });
 
-    newRow.state = toTitleCase(newRow.last_state);
+    newRow.state = states[newRow.last_state];
 
     // const starting = new Date(row['vault_factory_liquidate_vaults.liquidating_enter_time'] * 1000);
-    const starting = parseISO(row['vault_factory_liquidate_vaults.liquidating_enter_time']);
+    const starting = new Date(row['vault_factory_liquidate_vaults.liquidating_enter_time'] * 1000);
+    console.log(starting, row['vault_factory_liquidate_vaults.liquidating_enter_time'])
     newRow.liquidationStartTime = format(starting, 'MM/dd/yyyy HH:mm');
 
     if (row['vault_factory_liquidate_vaults.liquidated_enter_time']) {
-      const liquidated = parseISO(row['vault_factory_liquidate_vaults.liquidated_enter_time']);
-      newRow.liquidationTime = formatSecondsToHumanReadable(differenceInSeconds(liquidated, starting));
+      newRow.liquidationTime = formatSecondsToHumanReadable(
+        row['vault_factory_liquidate_vaults.liquidated_enter_time'] -
+          row['vault_factory_liquidate_vaults.liquidating_enter_time'],
+      );
     } else {
       newRow.liquidationTime = '—';
     }

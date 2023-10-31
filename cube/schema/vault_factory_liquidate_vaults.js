@@ -95,12 +95,12 @@ cube(`vault_factory_liquidate_vaults`, {
       type: `number`,
     },
     liquidating_enter_time: {
-      sql: `array_agg(liquidating_enter_time order by ${CUBE}.day desc)[0]`,
-      type: `time`,
+      sql: `unix_seconds(min(liquidating_enter_time))`,
+      type: `number`,
     },
     liquidated_enter_time: {
-      sql: `array_agg(liquidated_enter_time order by ${CUBE}.day desc)[0]`,
-      type: `time`,
+      sql: `unix_seconds(min(liquidated_enter_time))`,
+      type: `number`,
     },
     liquidating_duration: {
       sql: `array_agg(liquidating_duration order by ${CUBE}.day desc)[0]`,
@@ -120,8 +120,9 @@ cube(`vault_factory_liquidate_vaults`, {
       filters: [{ sql: `${CUBE}.state = 'liquidated'` }],
     },
     last_state: {
-      sql: `array_agg(${CUBE}.state order by ${CUBE}.day desc)[0]`,
-      type: `string`,
+      // cubestore supports only integers
+      sql: `FARM_FINGERPRINT(array_agg(${CUBE}.state order by ${CUBE}.day desc)[0])`,
+      type: `number`,
     },
     active_collateral_amount_avg: {
       sql: `active_collateral_amount`,
