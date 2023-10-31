@@ -16,6 +16,13 @@ coin_labels = {
     "USDC_grv": "IST ↔ USDC (Gravity)",
 }
 
+vault_states = {
+    # FARM_FINGERPRINT('liquidated')
+    "5264610956617764810": "liquidated",
+    # FARM_FINGERPRINT('liquidating')
+    "159334985254996322": "liquidating",
+}
+
 
 def cube_request(dataset, query):
     url = f"{API_URL}/cubejs-api/agoric_{dataset}/v1/load"
@@ -543,11 +550,70 @@ def get_psm_total_minted_ist(dataset, granularity):
     rows = []
 
     for row in res:
-        rows.append({
-            "coin": row["coin"],
-            "f0_": row["date"],
-            "avg_total_minted_provided": row["minted_pool_balance"],
-        })
+        rows.append(
+            {
+                "coin": row["coin"],
+                "f0_": row["date"],
+                "avg_total_minted_provided": row["minted_pool_balance"],
+            }
+        )
+
+    return rows
+
+
+def get_liquidated_vaults(dataset):
+    res = cube_request(
+        dataset,
+        {
+            "measures": [
+                "vault_factory_liquidate_vaults.liquidating_collateral_amount_avg",
+                "vault_factory_liquidate_vaults.liquidating_debt_amount_avg",
+                "vault_factory_liquidate_vaults.liquidating_enter_time",
+                "vault_factory_liquidate_vaults.liquidated_enter_time",
+                "vault_factory_liquidate_vaults.liquidating_rate",
+                "vault_factory_liquidate_vaults.last_state",
+                "vault_factory_liquidate_vaults.liquidated_return_amount_avg",
+                "vault_factory_liquidate_vaults.liquidated_return_amount_usd_avg",
+                "vault_factory_governance.liquidation_margin_avg",
+            ],
+            "timeDimensions": [
+                {
+                    "dimension": "vault_factory_liquidate_vaults.day",
+                    "granularity": "day",
+                    "dateRange": "Today",
+                },
+            ],
+            "order": {
+                "vault_factory_liquidate_vaults.manager_idx": "asc",
+                "vault_factory_liquidate_vaults.vault_idx": "asc",
+            },
+            "dimensions": [
+                "vault_factory_liquidate_vaults.manager_idx",
+                "vault_factory_liquidate_vaults.vault_idx",
+                "vault_factory_liquidate_vaults.debt_type",
+                "vault_factory_liquidate_vaults.collateral_type",
+            ],
+        },
+    )
+
+    rows = []
+
+    for row in res:
+        new_row = {}
+
+        for key in row:
+            new_key = key.replace("vault_factory_liquidate_vaults.", "").replace("vault_factory_governance.", "")
+
+            if "_avg" in new_key or "_rate" in new_key:
+                new_row[new_key] = float(row[key])
+            elif "_time" in new_key:
+                new_row[new_key] = int(row[key])
+            else:
+                new_row[new_key] = row[key]
+
+        new_row["last_state"] = vault_states.get(new_row["last_state"], "???")
+
+        rows.append(new_row)
 
     return rows
 
@@ -572,6 +638,7 @@ def data(dataset, granularity):
         "vault_total_assets": get_vault_total_locked_assets(dataset, granularity),
         "vault_total_minted": get_vault_total_minted(dataset),
         "vaults_metrics": get_vaults_metrics(dataset, granularity),
+        "liquidated_vaults": get_liquidated_vaults(dataset),
     }
 
     return jsonify(result)
