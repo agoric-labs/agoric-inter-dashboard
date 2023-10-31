@@ -39,7 +39,10 @@ export function VaultManagers({ title = 'Collateral Type' }: Props) {
     return (
       <>
         <SectionHeader>{title}</SectionHeader>
-        <Skeleton className="w-max-64 h-[50px] rounded mb-2" />
+        <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+        <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+        <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+        <Skeleton className="w-full h-[20px] rounded-full mb-2" />
       </>
     );
   }

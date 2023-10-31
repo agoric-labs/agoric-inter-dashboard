@@ -33,7 +33,10 @@ export function PSMHistory({ title = 'Total Minted IST' }: Props) {
           <CardTitle>{title}</CardTitle>
         </CardHeader>
         <CardContent>
-          <Skeleton className="w-max-64 h-[50px] rounded" />
+          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
         </CardContent>
       </Card>
     );
