@@ -10,7 +10,7 @@ type Props = {
   title?: string;
 };
 
-export function ReserveHistory({ title = 'History' }) {
+export function ReserveHistory({ title = 'History' }: Props) {
   const granularity = useGranularity();
   const res = useCubeQuery({
     measures: ['reserve_allocations.amount_usd_avg'],

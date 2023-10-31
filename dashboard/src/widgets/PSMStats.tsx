@@ -24,7 +24,7 @@ export function PSMStats() {
   if (!res.resultSet || res.isLoading) {
     return (
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        {[...new Array(6)].map(n => (
+        {[...new Array(6)].map((n) => (
           <Skeleton key={n} />
         ))}
       </div>

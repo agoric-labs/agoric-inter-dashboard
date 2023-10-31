@@ -72,7 +72,6 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults' }: Props) {
 
     // const starting = new Date(row['vault_factory_liquidate_vaults.liquidating_enter_time'] * 1000);
     const starting = new Date(row['vault_factory_liquidate_vaults.liquidating_enter_time'] * 1000);
-    console.log(starting, row['vault_factory_liquidate_vaults.liquidating_enter_time']);
     newRow.liquidationStartTime = format(starting, 'MM/dd/yyyy HH:mm');
 
     if (row['vault_factory_liquidate_vaults.liquidated_enter_time']) {

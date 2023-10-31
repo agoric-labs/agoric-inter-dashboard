@@ -169,7 +169,7 @@ export function InterProtocol() {
         <PageHeader title="Summary" />
         <PageContent>
           <ValueCardGrid>
-            {firstCards.map(title => (
+            {firstCards.map((title) => (
               <ValueCard title={title} key={title} value={<Skeleton className="w-[100px] h-[32px] rounded-full" />} />
             ))}
           </ValueCardGrid>
