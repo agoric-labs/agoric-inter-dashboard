@@ -1,4 +1,5 @@
 import { useCubeQuery } from '@cubejs-client/react';
+import { Skeleton } from '@/components/ui/skeleton';
 import { VaultManagersTable } from '@/components/VaultManagersTable';
 import { SectionHeader } from '@/components/SectionHeader';
 import { getCubeQueryView } from '@/utils';
@@ -38,7 +39,7 @@ export function VaultManagers({ title = 'Collateral Type' }: Props) {
     return (
       <>
         <SectionHeader>{title}</SectionHeader>
-        <div>Loading...</div>
+        <Skeleton className="w-max-64 h-[50px] rounded mb-2" />
       </>
     );
   }
