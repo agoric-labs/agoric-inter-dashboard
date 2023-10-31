@@ -274,9 +274,8 @@ cube(`vault_factory_liquidate_vaults`, {
       granularity: `day`,
       partition_granularity: `day`,
       refresh_key: {
-        every: `10 minutes`,
+        every: `30 minutes`,
         incremental: true,
-        update_window: `1 day`,
       },
       build_range_start: {
         sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.vaultFactory' and path like '%.vault%'`,

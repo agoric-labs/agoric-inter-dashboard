@@ -177,7 +177,7 @@ spec:
   rules:
     - http:
         paths:
-          - path: /cubejs-api/agoric_mainnet/*
+          - path: /cubejs-api/agoric_mainnet/v1/load
             pathType: ImplementationSpecific
             backend:
               service:

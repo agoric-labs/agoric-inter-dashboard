@@ -79,11 +79,10 @@ cube(`balances`, {
           dimensions: [denom, address],
           time_dimension: day,
           granularity: `day`,
-          partition_granularity: `day`,
+          partition_granularity: `month`,
           refresh_key: {
-            every: `10 minutes`,
+            every: `30 minutes`,
             incremental: true,
-            update_window: `1 day`,
           },
           build_range_start: {
             sql: `select min(_sdc_batched_at) from ${datasetId()}.balances`,

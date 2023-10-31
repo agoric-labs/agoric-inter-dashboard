@@ -2,11 +2,7 @@ import { dailySQL } from '../utils';
 
 cube(`vault_factory_vaults`, {
   sql: dailySQL(
-    [
-      'state',
-      'collateral_amount',
-      'debt_amount',
-    ],
+    ['state', 'collateral_amount', 'debt_amount'],
     ['manager_idx', 'vault_idx', 'collateral_type', 'debt_type'],
     `
       select block_time
@@ -103,6 +99,115 @@ cube(`vault_factory_vaults`, {
     day: {
       sql: `day`,
       type: `time`,
+    },
+  },
+
+  pre_aggregations: {
+    by_manager_idx_and_vault_idx_and_collateral_type_and_debt_type_year: {
+      measures: [
+        oracle_prices.rate_avg,
+        vault_factory_governance.liquidation_margin_avg,
+        collateral_amount_avg,
+        collateral_amount_usd_avg,
+        debt_amount_avg,
+        liquidation_price_avg,
+        liquidation_cushion_avg,
+        collateralization_ratio_avg,
+      ],
+      dimensions: [debt_type, vault_idx, manager_idx, collateral_type],
+      time_dimension: day,
+      granularity: `year`,
+      refreshKey: {
+        every: `1 day`,
+      },
+    },
+    by_manager_idx_and_vault_idx_and_collateral_type_and_debt_type_month: {
+      measures: [
+        oracle_prices.rate_avg,
+        vault_factory_governance.liquidation_margin_avg,
+        collateral_amount_avg,
+        collateral_amount_usd_avg,
+        debt_amount_avg,
+        liquidation_price_avg,
+        liquidation_cushion_avg,
+        collateralization_ratio_avg,
+      ],
+      dimensions: [debt_type, vault_idx, manager_idx, collateral_type],
+      time_dimension: day,
+      granularity: `month`,
+      refreshKey: {
+        every: `1 day`,
+      },
+    },
+    by_manager_idx_and_vault_idx_and_collateral_type_and_debt_type_week: {
+      measures: [
+        oracle_prices.rate_avg,
+        vault_factory_governance.liquidation_margin_avg,
+        collateral_amount_avg,
+        collateral_amount_usd_avg,
+        debt_amount_avg,
+        liquidation_price_avg,
+        liquidation_cushion_avg,
+        collateralization_ratio_avg,
+      ],
+      dimensions: [debt_type, vault_idx, manager_idx, collateral_type],
+      time_dimension: day,
+      granularity: `week`,
+      refreshKey: {
+        every: `1 day`,
+      },
+    },
+    by_manager_idx_and_vault_idx_and_collateral_type_and_debt_type_day: {
+      measures: [
+        oracle_prices.rate_avg,
+        vault_factory_governance.liquidation_margin_avg,
+        collateral_amount_avg,
+        collateral_amount_usd_avg,
+        debt_amount_avg,
+        liquidation_price_avg,
+        liquidation_cushion_avg,
+        collateralization_ratio_avg,
+      ],
+      dimensions: [debt_type, vault_idx, manager_idx, collateral_type],
+      time_dimension: day,
+      granularity: `day`,
+      refreshKey: {
+        every: `30 minutes`,
+        incremental: true,
+      },
+    },
+    stats_year: {
+      measures: [liquidated_count],
+      time_dimension: day,
+      granularity: `year`,
+      refreshKey: {
+        every: `1 day`,
+      },
+    },
+    stats_month: {
+      measures: [liquidated_count],
+      time_dimension: day,
+      granularity: `month`,
+      refreshKey: {
+        every: `1 day`,
+      },
+    },
+    stats_week: {
+      measures: [liquidated_count],
+      time_dimension: day,
+      granularity: `week`,
+      refreshKey: {
+        every: `1 day`,
+      },
+    },
+    stats_day: {
+      measures: [liquidated_count],
+      time_dimension: day,
+      granularity: `day`,
+      refreshKey: {
+        every: `30 minutes`,
+        incremental: true,
+      },
     },
   },
 });

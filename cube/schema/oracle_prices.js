@@ -60,50 +60,49 @@ cube(`oracle_prices`, {
   },
 
   pre_aggregations: {
-        by_price_feed_name_year: {
-          measures: [rate_avg],
-          dimensions: [price_feed_name],
-          time_dimension: day,
-          granularity: `year`,
-          refresh_key: {
-            every: '1 day',
-          },
-        },
-        by_price_feed_name_month: {
-          measures: [rate_avg],
-          dimensions: [price_feed_name],
-          time_dimension: day,
-          granularity: `month`,
-          refresh_key: {
-            every: '1 day',
-          },
-        },
-        by_price_feed_name_week: {
-          measures: [rate_avg],
-          dimensions: [price_feed_name],
-          time_dimension: day,
-          granularity: `week`,
-          refresh_key: {
-            every: '1 day',
-          },
-        },
-        by_price_feed_name_day: {
-          measures: [rate_avg],
-          dimensions: [price_feed_name],
-          time_dimension: day,
-          granularity: `day`,
-          partition_granularity: `day`,
-          refresh_key: {
-            every: `10 minutes`,
-            incremental: true,
-            update_window: `1 day`,
-          },
-          build_range_start: {
-            sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.priceFeed'`,
-          },
-          build_range_end: {
-            sql: `select current_timestamp()`,
-          },
-        },
+    by_price_feed_name_year: {
+      measures: [rate_avg],
+      dimensions: [price_feed_name],
+      time_dimension: day,
+      granularity: `year`,
+      refresh_key: {
+        every: '1 day',
       },
+    },
+    by_price_feed_name_month: {
+      measures: [rate_avg],
+      dimensions: [price_feed_name],
+      time_dimension: day,
+      granularity: `month`,
+      refresh_key: {
+        every: '1 day',
+      },
+    },
+    by_price_feed_name_week: {
+      measures: [rate_avg],
+      dimensions: [price_feed_name],
+      time_dimension: day,
+      granularity: `week`,
+      refresh_key: {
+        every: '1 day',
+      },
+    },
+    by_price_feed_name_day: {
+      measures: [rate_avg],
+      dimensions: [price_feed_name],
+      time_dimension: day,
+      granularity: `day`,
+      partition_granularity: `day`,
+      refresh_key: {
+        every: `30 minutes`,
+        incremental: true,
+      },
+      build_range_start: {
+        sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.priceFeed'`,
+      },
+      build_range_end: {
+        sql: `select current_timestamp()`,
+      },
+    },
+  },
 });
