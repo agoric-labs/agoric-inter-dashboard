@@ -160,11 +160,11 @@ def get_open_vaults(dataset, granularity):
     return rows
 
 
-def get_vault_total_assets(dataset, granularity):
+def get_vault_total_locked_assets(dataset, granularity):
     res = cube_request(
         dataset,
         {
-            "measures": ["vault_factory_metrics.total_debt_sum"],
+            "measures": ["vault_factory_metrics.total_collateral_usd_sum"],
             "timeDimensions": [
                 {
                     "dimension": "vault_factory_metrics.day",
@@ -175,7 +175,7 @@ def get_vault_total_assets(dataset, granularity):
         },
     )
 
-    return [{"value": float(res[0]["vault_factory_metrics.total_debt_sum"])}]
+    return [{"value": float(res[0]["vault_factory_metrics.total_collateral_usd_sum"])}]
 
 
 def get_vaults_metrics(dataset, granularity):
@@ -293,7 +293,7 @@ def get_reserve_assets(dataset, granularity):
     return rows
 
 
-def get_ist_balances(dataset, granularity):
+def get_ibc_balances(dataset, granularity):
     res = cube_request(
         dataset,
         {
@@ -326,7 +326,7 @@ def get_ist_balances(dataset, granularity):
         },
     )
 
-    return [{"value": float(res[0]["balances.amount_sum"])}]
+    return [{"total": float(res[0]["balances.amount_sum"])}]
 
 
 def get_psm_mint_limit(dataset):
@@ -555,7 +555,7 @@ def get_psm_total_minted_ist(dataset, granularity):
 @app.route("/data/<dataset>-<granularity>.json")
 def data(dataset, granularity):
     result = {
-        "ibc_balances": get_ist_balances(dataset, granularity),
+        "ibc_balances": get_ibc_balances(dataset, granularity),
         "managers": get_vault_managers(dataset),
         "open_vaults": get_open_vaults(dataset, granularity),
         "oracle_prices": get_oracle_prices(dataset),
@@ -569,7 +569,7 @@ def data(dataset, granularity):
         "smart_wallet_provisioned": get_smart_wallet_provisioned(dataset),
         "total_minted_ist": get_total_minted(dataset),
         "total_reserve_assets": get_total_reserve_assets(dataset, granularity),
-        "vault_total_assets": get_vault_total_assets(dataset, granularity),
+        "vault_total_assets": get_vault_total_locked_assets(dataset, granularity),
         "vault_total_minted": get_vault_total_minted(dataset),
         "vaults_metrics": get_vaults_metrics(dataset, granularity),
     }
