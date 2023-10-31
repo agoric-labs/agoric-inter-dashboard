@@ -1,5 +1,6 @@
 import { useCubeQuery } from '@cubejs-client/react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { getCubeQueryView, formatDay, toTitleCase } from '@/utils';
 import { useGranularity } from '@/components/CubeProvider';
@@ -17,6 +18,7 @@ export function VaultStatesChart({ title = 'Vault States' }: Props) {
       {
         dimension: 'vault_states.day',
         granularity,
+        dateRange: granularity === 'day' ? 'Last 90 days' : undefined,
       },
     ],
     dimensions: ['vault_states.state'],
@@ -28,7 +30,9 @@ export function VaultStatesChart({ title = 'Vault States' }: Props) {
         <CardHeader>
           <CardTitle>{title}</CardTitle>
         </CardHeader>
-        <CardContent>Loading...</CardContent>
+        <CardContent>
+          <Skeleton className="w-max-64 h-[50px] rounded" />
+        </CardContent>
       </Card>
     );
   }
