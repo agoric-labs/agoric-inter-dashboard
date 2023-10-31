@@ -1,4 +1,4 @@
-import { dailySQL, isDev } from '../utils';
+import { dailySQL } from '../utils';
 
 cube(`vault_states`, {
   sql: dailySQL(
@@ -34,53 +34,51 @@ cube(`vault_states`, {
     },
   },
 
-  pre_aggregations: isDev
-    ? {}
-    : {
-        stats_year: {
-          measures: [count],
-          dimensions: [state],
-          timeDimension: day,
-          granularity: `year`,
-          refreshKey: {
-            every: `24 hour`,
-          },
-        },
-        stats_month: {
-          measures: [count],
-          dimensions: [state],
-          timeDimension: day,
-          granularity: `month`,
-          refreshKey: {
-            every: `24 hour`,
-          },
-        },
-        stats_week: {
-          measures: [count],
-          dimensions: [state],
-          timeDimension: day,
-          granularity: `month`,
-          refreshKey: {
-            every: `24 hour`,
-          },
-        },
-        stats_day: {
-          measures: [count],
-          dimensions: [state],
-          timeDimension: day,
-          granularity: `day`,
-          partition_granularity: `day`,
-          refresh_key: {
-            every: `10 minutes`,
-            incremental: true,
-            update_window: `1 day`,
-          },
-          build_range_start: {
-            sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.vaultFactory' and path like 'published.vaultFactory.managers.manager%'`,
-          },
-          build_range_end: {
-            sql: `select current_timestamp()`,
-          },
-        },
+  pre_aggregations: {
+    stats_year: {
+      measures: [count],
+      dimensions: [state],
+      timeDimension: day,
+      granularity: `year`,
+      refreshKey: {
+        every: `24 hour`,
       },
+    },
+    stats_month: {
+      measures: [count],
+      dimensions: [state],
+      timeDimension: day,
+      granularity: `month`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    stats_week: {
+      measures: [count],
+      dimensions: [state],
+      timeDimension: day,
+      granularity: `month`,
+      refreshKey: {
+        every: `24 hour`,
+      },
+    },
+    stats_day: {
+      measures: [count],
+      dimensions: [state],
+      timeDimension: day,
+      granularity: `day`,
+      partition_granularity: `day`,
+      refresh_key: {
+        every: `10 minutes`,
+        incremental: true,
+        update_window: `1 day`,
+      },
+      build_range_start: {
+        sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.vaultFactory' and path like 'published.vaultFactory.managers.manager%'`,
+      },
+      build_range_end: {
+        sql: `select current_timestamp()`,
+      },
+    },
+  },
 });

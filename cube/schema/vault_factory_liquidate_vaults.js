@@ -198,4 +198,92 @@ cube(`vault_factory_liquidate_vaults`, {
       type: `time`,
     },
   },
+
+  pre_aggregations: {
+    by_manager_idx_and_vault_idx_and_collateral_type_and_debt_type_year: {
+      measures: [
+        liquidating_collateral_amount_avg,
+        liquidating_debt_amount_avg,
+        liquidating_enter_time,
+        liquidated_enter_time,
+        liquidating_rate,
+        last_state,
+        liquidated_return_amount_avg,
+        liquidated_return_amount_usd_avg,
+        vault_factory_governance.liquidation_margin_avg,
+      ],
+      dimensions: [manager_idx, vault_idx, debt_type, collateral_type],
+      time_dimension: day,
+      granularity: `year`,
+      refreshKey: {
+        every: `1 day`,
+      },
+    },
+    by_manager_idx_and_vault_idx_and_collateral_type_and_debt_type_month: {
+      measures: [
+        liquidating_collateral_amount_avg,
+        liquidating_debt_amount_avg,
+        liquidating_enter_time,
+        liquidated_enter_time,
+        liquidating_rate,
+        last_state,
+        liquidated_return_amount_avg,
+        liquidated_return_amount_usd_avg,
+        vault_factory_governance.liquidation_margin_avg,
+      ],
+      dimensions: [manager_idx, vault_idx, debt_type, collateral_type],
+      time_dimension: day,
+      granularity: `month`,
+      refreshKey: {
+        every: `1 day`,
+      },
+    },
+    by_manager_idx_and_vault_idx_and_collateral_type_and_debt_type_week: {
+      measures: [
+        liquidating_collateral_amount_avg,
+        liquidating_debt_amount_avg,
+        liquidating_enter_time,
+        liquidated_enter_time,
+        liquidating_rate,
+        last_state,
+        liquidated_return_amount_avg,
+        liquidated_return_amount_usd_avg,
+        vault_factory_governance.liquidation_margin_avg,
+      ],
+      dimensions: [manager_idx, vault_idx, debt_type, collateral_type],
+      time_dimension: day,
+      granularity: `week`,
+      refreshKey: {
+        every: `1 day`,
+      },
+    },
+    by_manager_idx_and_vault_idx_and_collateral_type_and_debt_type_day: {
+      measures: [
+        liquidating_collateral_amount_avg,
+        liquidating_debt_amount_avg,
+        liquidating_enter_time,
+        liquidated_enter_time,
+        liquidating_rate,
+        last_state,
+        liquidated_return_amount_avg,
+        liquidated_return_amount_usd_avg,
+        vault_factory_governance.liquidation_margin_avg,
+      ],
+      dimensions: [manager_idx, vault_idx, debt_type, collateral_type],
+      time_dimension: day,
+      granularity: `day`,
+      partition_granularity: `day`,
+      refresh_key: {
+        every: `10 minutes`,
+        incremental: true,
+        update_window: `1 day`,
+      },
+      build_range_start: {
+        sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.vaultFactory' and path like '%.vault%'`,
+      },
+      build_range_end: {
+        sql: `select current_timestamp()`,
+      },
+    },
+  },
 });

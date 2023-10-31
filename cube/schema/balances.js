@@ -1,4 +1,4 @@
-import { dailySQL, datasetId, isDev } from '../utils';
+import { dailySQL, datasetId } from '../utils';
 
 cube(`balances`, {
   sql: dailySQL(
@@ -46,9 +46,7 @@ cube(`balances`, {
     },
   },
 
-  pre_aggregations: isDev
-    ? {}
-    : {
+  pre_aggregations: {
         by_denom_and_address_year: {
           measures: [amount_sum, amount_avg],
           dimensions: [denom, address],

@@ -39,5 +39,5 @@ export function ReserveCosmosSummary() {
     return <div>Nothing to show</div>;
   }
 
-  return <ValueCard title="Total Reserve Assets" value={formatPrice(latest['balances.amount_sum'])} />;
+  return <ValueCard title="Total Reserve Assets (Cosmos Layer)" value={formatPrice(latest['balances.amount_sum'])} />;
 }

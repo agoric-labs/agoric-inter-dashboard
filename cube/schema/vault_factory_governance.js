@@ -1,15 +1,8 @@
-import { dailySQL, isDev } from '../utils';
+import { dailySQL } from '../utils';
 
 cube(`vault_factory_governance`, {
   sql: dailySQL(
-    [
-      'debt_limit',
-      'interest_rate',
-      'liquidation_margin',
-      'liquidation_padding',
-      'liquidation_penalty',
-      'mint_fee',
-    ],
+    ['debt_limit', 'interest_rate', 'liquidation_margin', 'liquidation_padding', 'liquidation_penalty', 'mint_fee'],
     ['manager_idx'],
     `
       select block_time
@@ -86,122 +79,120 @@ cube(`vault_factory_governance`, {
     },
   },
 
-  pre_aggregations: isDev
-    ? {}
-    : {
-        by_manager_idx_year: {
-          measures: [
-            debt_limit_avg,
-            interest_rate_avg,
-            liquidation_margin_avg,
-            liquidation_padding_avg,
-            liquidation_penalty_avg,
-            mint_fee_avg,
-          ],
-          dimensions: [manager_idx],
-          time_dimension: day,
-          granularity: `year`,
-          refreshKey: {
-            every: `1 day`,
-          },
-        },
-        by_manager_idx_month: {
-          measures: [
-            debt_limit_avg,
-            interest_rate_avg,
-            liquidation_margin_avg,
-            liquidation_padding_avg,
-            liquidation_penalty_avg,
-            mint_fee_avg,
-          ],
-          dimensions: [manager_idx],
-          time_dimension: day,
-          granularity: `month`,
-          refreshKey: {
-            every: `1 day`,
-          },
-        },
-        by_manager_idx_week: {
-          measures: [
-            debt_limit_avg,
-            interest_rate_avg,
-            liquidation_margin_avg,
-            liquidation_padding_avg,
-            liquidation_penalty_avg,
-            mint_fee_avg,
-          ],
-          dimensions: [manager_idx],
-          time_dimension: day,
-          granularity: `week`,
-          refreshKey: {
-            every: `1 day`,
-          },
-        },
-        by_manager_idx_day: {
-          measures: [
-            debt_limit_sum,
-            interest_rate_avg,
-            liquidation_margin_avg,
-            liquidation_padding_avg,
-            liquidation_penalty_avg,
-            mint_fee_avg,
-          ],
-          dimensions: [manager_idx],
-          time_dimension: day,
-          granularity: `day`,
-          partition_granularity: `day`,
-          refresh_key: {
-            every: `10 minutes`,
-            incremental: true,
-            update_window: `1 day`,
-          },
-          build_range_start: {
-            sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.vaultFactory' and path like '%governance'`,
-          },
-          build_range_end: {
-            sql: `select current_timestamp()`,
-          },
-        },
-        stats_year: {
-          measures: [debt_limit_sum],
-          time_dimension: day,
-          granularity: `year`,
-          refreshKey: {
-            every: `1 day`,
-          },
-        },
-        stats_month: {
-          measures: [debt_limit_sum],
-          time_dimension: day,
-          granularity: `month`,
-          refreshKey: {
-            every: `1 day`,
-          },
-        },
-        stats_week: {
-          measures: [debt_limit_sum],
-          time_dimension: day,
-          granularity: `week`,
-          refreshKey: {
-            every: `1 day`,
-          },
-        },
-        stats_day: {
-          measures: [debt_limit_sum],
-          time_dimension: day,
-          granularity: `day`,
-          partition_granularity: `day`,
-          refresh_key: {
-            every: `10 minutes`,
-            incremental: true,
-            update_window: `1 day`,
-          },
-          build_range_start: {
-            sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.vaultFactory' and path like '%governance'`,
-          },
-          build_range_end: {
-            sql: `select current_timestamp()`,
-          },
-        },
+  pre_aggregations: {
+    by_manager_idx_year: {
+      measures: [
+        debt_limit_avg,
+        interest_rate_avg,
+        liquidation_margin_avg,
+        liquidation_padding_avg,
+        liquidation_penalty_avg,
+        mint_fee_avg,
+      ],
+      dimensions: [manager_idx],
+      time_dimension: day,
+      granularity: `year`,
+      refreshKey: {
+        every: `1 day`,
       },
+    },
+    by_manager_idx_month: {
+      measures: [
+        debt_limit_avg,
+        interest_rate_avg,
+        liquidation_margin_avg,
+        liquidation_padding_avg,
+        liquidation_penalty_avg,
+        mint_fee_avg,
+      ],
+      dimensions: [manager_idx],
+      time_dimension: day,
+      granularity: `month`,
+      refreshKey: {
+        every: `1 day`,
+      },
+    },
+    by_manager_idx_week: {
+      measures: [
+        debt_limit_avg,
+        interest_rate_avg,
+        liquidation_margin_avg,
+        liquidation_padding_avg,
+        liquidation_penalty_avg,
+        mint_fee_avg,
+      ],
+      dimensions: [manager_idx],
+      time_dimension: day,
+      granularity: `week`,
+      refreshKey: {
+        every: `1 day`,
+      },
+    },
+    by_manager_idx_day: {
+      measures: [
+        debt_limit_sum,
+        interest_rate_avg,
+        liquidation_margin_avg,
+        liquidation_padding_avg,
+        liquidation_penalty_avg,
+        mint_fee_avg,
+      ],
+      dimensions: [manager_idx],
+      time_dimension: day,
+      granularity: `day`,
+      partition_granularity: `day`,
+      refresh_key: {
+        every: `10 minutes`,
+        incremental: true,
+        update_window: `1 day`,
+      },
+      build_range_start: {
+        sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.vaultFactory' and path like '%governance'`,
+      },
+      build_range_end: {
+        sql: `select current_timestamp()`,
+      },
+    },
+    stats_year: {
+      measures: [debt_limit_sum],
+      time_dimension: day,
+      granularity: `year`,
+      refreshKey: {
+        every: `1 day`,
+      },
+    },
+    stats_month: {
+      measures: [debt_limit_sum],
+      time_dimension: day,
+      granularity: `month`,
+      refreshKey: {
+        every: `1 day`,
+      },
+    },
+    stats_week: {
+      measures: [debt_limit_sum],
+      time_dimension: day,
+      granularity: `week`,
+      refreshKey: {
+        every: `1 day`,
+      },
+    },
+    stats_day: {
+      measures: [debt_limit_sum],
+      time_dimension: day,
+      granularity: `day`,
+      partition_granularity: `day`,
+      refresh_key: {
+        every: `10 minutes`,
+        incremental: true,
+        update_window: `1 day`,
+      },
+      build_range_start: {
+        sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.vaultFactory' and path like '%governance'`,
+      },
+      build_range_end: {
+        sql: `select current_timestamp()`,
+      },
+    },
+  },
 });

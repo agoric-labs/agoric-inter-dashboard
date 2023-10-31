@@ -1,4 +1,4 @@
-import { dailySQL, isDev, datasetId } from '../utils';
+import { dailySQL, datasetId } from '../utils';
 
 cube(`oracle_prices`, {
   sql: dailySQL(
@@ -59,9 +59,7 @@ cube(`oracle_prices`, {
     },
   },
 
-  pre_aggregations: isDev
-    ? {}
-    : {
+  pre_aggregations: {
         by_price_feed_name_year: {
           measures: [rate_avg],
           dimensions: [price_feed_name],
