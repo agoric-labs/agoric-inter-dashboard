@@ -1,5 +1,6 @@
 import { useCubeQuery } from '@cubejs-client/react';
 import { ValueCard } from '@/components/ValueCard';
+import { Skeleton } from '@/components/ui/skeleton';
 import { getCubeQueryView } from '@/utils';
 
 type Props = {
@@ -19,7 +20,7 @@ export function VaultManagerCountCard({ title = 'Total Collateral Types' }: Prop
   });
 
   if (res.isLoading || !res.resultSet) {
-    return <ValueCard title={title} value="Loading..." />;
+    return <ValueCard title={title} value={<Skeleton className="w-[50px] h-[32px] rounded-full" />} />;
   }
 
   const [resultSet, requestView] = getCubeQueryView(res);

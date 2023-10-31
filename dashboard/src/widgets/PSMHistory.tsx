@@ -1,12 +1,17 @@
 import { useCubeQuery } from '@cubejs-client/react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { getCubeQueryView, formatDay } from '@/utils';
 import { colors } from '@/components/palette';
 import { useGranularity } from '@/components/CubeProvider';
 import { formatCoinLabels } from '../coinLabels';
 
-export function PSMHistory() {
+type Props = {
+  title?: string;
+};
+
+export function PSMHistory({ title = 'Total Minted IST' }: Props) {
   const granularity = useGranularity();
   const res = useCubeQuery({
     measures: ['psm_stats.total_minted_provided_avg'],
@@ -14,11 +19,25 @@ export function PSMHistory() {
       {
         dimension: 'psm_stats.day',
         granularity,
+        dateRange: granularity === 'day' ? 'Last 90 days' : undefined,
       },
     ],
     order: [['psm_stats.coin', 'asc']],
     dimensions: ['psm_stats.coin'],
   });
+
+  if (res.isLoading) {
+    return (
+      <Card className="my-4">
+        <CardHeader>
+          <CardTitle>{title}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="w-max-64 h-[50px] rounded" />
+        </CardContent>
+      </Card>
+    );
+  }
 
   const [resultSet, requestView] = getCubeQueryView(res);
   if (!resultSet) {

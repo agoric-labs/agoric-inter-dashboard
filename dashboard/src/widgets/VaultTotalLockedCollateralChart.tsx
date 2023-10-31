@@ -1,5 +1,6 @@
 import { useCubeQuery } from '@cubejs-client/react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { getCubeQueryView, formatDay } from '@/utils';
 import { useGranularity } from '@/components/CubeProvider';
@@ -17,6 +18,7 @@ export function VaultTotalLockedCollateralChart({ title = 'Total Locked Collater
       {
         dimension: 'vault_factory_metrics.day',
         granularity,
+        dateRange: granularity === 'day' ? 'Last 90 days' : undefined,
       },
     ],
     dimensions: [
@@ -32,7 +34,9 @@ export function VaultTotalLockedCollateralChart({ title = 'Total Locked Collater
         <CardHeader>
           <CardTitle>{title}</CardTitle>
         </CardHeader>
-        <CardContent>Loading...</CardContent>
+        <CardContent>
+          <Skeleton className="w-max-64 h-[50px] rounded" />
+        </CardContent>
       </Card>
     );
   }

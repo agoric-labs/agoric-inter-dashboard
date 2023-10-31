@@ -1,5 +1,6 @@
 import { useCubeQuery } from '@cubejs-client/react';
 import { PieChart, Pie, Cell, Tooltip } from 'recharts';
+import { Skeleton } from '@/components/ui/skeleton';
 import { SectionHeader } from '@/components/SectionHeader';
 import { ValueCard } from '@/components/ValueCard';
 import { ValueCardGrid } from '@/components/ValueCardGrid';
@@ -7,8 +8,16 @@ import { PageHeader } from '@/components/PageHeader';
 import { PageContent } from '@/components/PageContent';
 import { colors } from '@/components/palette';
 import { formatPercent, roundPrice, formatPrice, formatIST } from '@/utils';
-import { Loading } from '@/components/Loading';
 import { ErrorAlert } from '@/components/ErrorAlert';
+
+const firstCards = [
+  'IST in Circulation',
+  'Total Mint Limit',
+  'Total Mint Limit Utilized',
+  'Total Interchain IST',
+  '% of Interchain IST',
+  'Smart Wallets Provisioned',
+];
 
 export function InterProtocol() {
   const wcRes = useCubeQuery({
@@ -155,7 +164,20 @@ export function InterProtocol() {
     psmGovRes.isLoading ||
     !psmGovRes.resultSet
   ) {
-    return <Loading />;
+    return (
+      <>
+        <PageHeader title="Summary" />
+        <PageContent>
+          <ValueCardGrid>
+            {firstCards.map(title => (
+              <ValueCard title={title} key={title} value={<Skeleton className="w-[100px] h-[32px] rounded-full" />} />
+            ))}
+          </ValueCardGrid>
+          <SectionHeader>Balances</SectionHeader>
+          <Skeleton className="w-max-64 h-[50px] rounded mb-2" />
+        </PageContent>
+      </>
+    );
   }
 
   // top cards

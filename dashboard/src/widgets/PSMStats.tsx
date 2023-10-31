@@ -1,6 +1,6 @@
 import { useCubeQuery } from '@cubejs-client/react';
-import { PSMStats as Item } from '@/components/PSMStats';
-import { getCubeQueryView } from '@/utils';
+import { PSMStats as Item, Skeleton } from '@/components/PSMStats';
+import { ErrorAlert } from '@/components/ErrorAlert';
 import { coinLabels } from '../coinLabels';
 
 export function PSMStats() {
@@ -17,12 +17,21 @@ export function PSMStats() {
     dimensions: ['psm_stats.coin'],
   });
 
-  const [resultSet, requestView] = getCubeQueryView(res);
-  if (!resultSet) {
-    return requestView;
+  if (res.error) {
+    return <ErrorAlert value={res.error} title="Request Error" />;
   }
 
-  const rows = resultSet.tablePivot();
+  if (!res.resultSet || res.isLoading) {
+    return (
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+        {[...new Array(6)].map(n => (
+          <Skeleton key={n} />
+        ))}
+      </div>
+    );
+  }
+
+  const rows = res.resultSet.tablePivot();
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
