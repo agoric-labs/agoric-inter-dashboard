@@ -59,7 +59,7 @@ cube(`vault_factory_vaults`, {
       type: `avg`,
     },
     collateralization_ratio_avg: {
-      sql: `safe_divide(collateral_amount * ${oracle_prices.rate}, debt_amount)`,
+      sql: `coalesce(safe_divide(collateral_amount * ${oracle_prices.rate}, debt_amount), 0)`,
       type: `avg`,
     },
     collateral_amount_usd_avg: {
