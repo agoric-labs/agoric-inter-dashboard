@@ -16,7 +16,7 @@ export function InterProtocol() {
   });
 
   const ibcRes = useCubeQuery({
-    dimensions: ['balances.denom', 'balances.address'],
+    measures: ['balances.amount_sum'],
     timeDimensions: [
       {
         dimension: 'balances.day',
@@ -167,7 +167,7 @@ export function InterProtocol() {
   const totalMinted = psmMinted + vaultMinted;
 
   const vaultMintLimit =
-    parseFloat(vgRes.resultSet.tablePivot()[0]['vault_managers.ist_minting_limit_sum'] as string) || 0;
+    parseFloat(vgRes.resultSet.tablePivot()[0]['vault_factory_governance.debt_limit_sum'] as string) || 0;
   const psmMintLimit = parseFloat(psmGovRes.resultSet.tablePivot()[0]['psm_governance.mint_limit_sum'] as string) || 0;
   const totalMintLimit = vaultMintLimit + psmMintLimit;
 

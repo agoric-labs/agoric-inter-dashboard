@@ -5,7 +5,6 @@ import { formatPrice, getCubeQueryView } from '@/utils';
 export function ReserveCosmosSummary() {
   const res = useCubeQuery({
     measures: ['balances.amount_sum'],
-    dimensions: ['balances.denom', 'balances.address'],
     timeDimensions: [
       {
         dimension: 'balances.day',

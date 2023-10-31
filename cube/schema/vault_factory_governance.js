@@ -48,7 +48,7 @@ cube(`vault_factory_governance`, {
     },
     debt_limit_sum: {
       sql: 'debt_limit',
-      type: 'avg',
+      type: 'sum',
     },
     // a fake measure for joins
     debt_limit: {
