@@ -47,6 +47,57 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  name: v2-cube-ollinet-nodeport
+spec:
+  type: NodePort
+  selector:
+    app.kubernetes.io/component: api
+    app.kubernetes.io/instance: v2-cube-ollinet
+    app.kubernetes.io/name: cube
+  ports:
+  - name: http
+    port: 4000
+    protocol: TCP
+    targetPort: http
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: v2-cube-emerynet-nodeport
+spec:
+  type: NodePort
+  selector:
+    app.kubernetes.io/component: api
+    app.kubernetes.io/instance: v2-cube-emerynet
+    app.kubernetes.io/name: cube
+  ports:
+  - name: http
+    port: 4000
+    protocol: TCP
+    targetPort: http
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: v2-cube-devnet-nodeport
+spec:
+  type: NodePort
+  selector:
+    app.kubernetes.io/component: api
+    app.kubernetes.io/instance: v2-cube-devnet
+    app.kubernetes.io/name: cube
+  ports:
+  - name: http
+    port: 4000
+    protocol: TCP
+    targetPort: http
+
+---
+apiVersion: v1
+kind: Service
+metadata:
   name: cube-ollinet-nodeport
   annotations:
     cloud.google.com/backend-config: '{"ports":{"4000":"cloudflare-only"}}'
@@ -182,10 +233,42 @@ spec:
   rules:
     - http:
         paths:
+          - path: /data/*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: oldapi
+                port:
+                  name: http
+
           - path: /cubejs-api/agoric_mainnet/v1/load
             pathType: ImplementationSpecific
             backend:
               service:
                 name: v2-cube-mainnet-nodeport
+                port:
+                  name: http
+
+          - path: /cubejs-api/agoric_emerynet/load
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: v2-cube-emerynet-nodeport
+                port:
+                  name: http
+
+          - path: /cubejs-api/agoric_ollinet/load
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: v2-cube-ollinet-nodeport
+                port:
+                  name: http
+
+          - path: /cubejs-api/agoric_devnet/load
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: v2-cube-devnet-nodeport
                 port:
                   name: http

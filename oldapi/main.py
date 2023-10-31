@@ -126,7 +126,7 @@ def get_open_vaults(dataset, granularity):
             "timeDimensions": [
                 {
                     "dimension": "vault_factory_vaults.day",
-                    "granularity": granularity,
+                    "granularity": "day",
                     "dateRange": "Today",
                 },
             ],
@@ -651,5 +651,15 @@ def data(dataset, granularity):
     return jsonify(result)
 
 
+@app.route("/healthz")
+def healthz():
+    return 'ok'
+
+
+@app.route("/")
+def index():
+    return 'oldapi'
+
+
 if __name__ == "__main__":
-    serve(app, listen="*:80")
+    serve(app, listen="0.0.0.0:80")
