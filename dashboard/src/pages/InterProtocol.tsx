@@ -19,6 +19,25 @@ const firstCards = [
   'Smart Wallets Provisioned',
 ];
 
+const RADIAN = Math.PI / 180;
+
+const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, payload }: any) => {
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.4;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN) - 5;
+
+  return (
+    <>
+      <text x={x} y={y - 8} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+        {payload.name}
+      </text>
+      <text x={x} y={y + 8} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+        {`${(percent * 100).toFixed(0)}%`}
+      </text>
+    </>
+  );
+};
+
 export function InterProtocol() {
   const wcRes = useCubeQuery({
     measures: ['wallets.address_count'],
@@ -239,7 +258,8 @@ export function InterProtocol() {
                 ]}
                 outerRadius={100}
                 fill="green"
-                label={false}
+                labelLine={false}
+                label={renderCustomizedLabel}
               >
                 <Cell fill={colors[0]} />
                 <Cell fill={colors[1]} />
