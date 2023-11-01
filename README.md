@@ -610,6 +610,81 @@ resource.labels.container_name="extractor" AND
 (textPayload:"failed" OR textPayload:"fatal")
 ```
 
+## Required alerts
+
+If something is broken and triggers an alert:
+
+```sql
+select 1 / count(column) ...
+```
+
+Check block updates:
+```sql
+select 1/count(_sdc_batched_at)
+  from $DATASET_ID.blocks
+ where _sdc_batched_at > timestamp_sub(current_timestamp(), interval 30 MINUTE)
+```
+
+Check balance updates:
+```
+select 1/count(_sdc_batched_at)
+  from v2_agoric_mainnet.balances
+ where _sdc_batched_at > timestamp_sub(current_timestamp(), interval 20 MINUTE)
+```
+
+Check missing blocks:
+
+```sql
+with all_heights as (
+  select block_height
+    from $DATASET_ID.blocks
+   where block_height >= 11591560
+), height_diffs as (
+  select block_height - lag(block_height) over (order by block_height) as diff
+    from all_heights
+)
+select 1 / cast(count(diff) = 0 as int) from height_diffs where diff > 1
+```
+
+Check duplicate blocks:
+
+```sql
+select 1 / cast(count(block_height) = count(distinct block_height) as int)
+  from $DATASET_ID.blocks
+```
+
+Check event consistency:
+
+```sql
+with events as (
+  select block_height, count(block_height) as count
+    from $DATASET_ID.events
+  group by 1
+)
+select 1 / cast(count(b.block_height) = 0 as int)
+  from $DATASET_ID.blocks b
+  left join events e using (block_height)
+ where b.event_count != e.count
+```
+
+All state_change events have state_change records:
+
+```sql
+with state_change_event_heights as (
+  select distinct block_height
+    from $DATASET_ID.events
+   where event_type = 'state_change'
+), state_change_heights as (
+  select distinct block_height
+    from $DATASET_ID.state_changes
+   where block_height >= (select min(block_height) from $DATASET_ID.events)
+)
+select *
+  from state_change_event_heights
+  left join state_change_heights sc using (block_height)
+ where sc.block_height is null
+```
+
 ## Rebuild all cubes
 
 ```
@@ -618,7 +693,7 @@ kubectl port-forward cube-mainnet-worker-5f774c448f-8xl88 4000:4000 # get access
 ```
 
 ```
-curl \                                                                                                                                                                                   alexes@pc
+curl \
   -d '{
     "action": "post",
     "selector": {
