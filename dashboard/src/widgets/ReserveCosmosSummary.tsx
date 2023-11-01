@@ -1,8 +1,13 @@
 import { useCubeQuery } from '@cubejs-client/react';
+import { Skeleton } from '@/components/ui/skeleton';
 import { ValueCard } from '@/components/ValueCard';
 import { formatPrice, getCubeQueryView } from '@/utils';
 
-export function ReserveCosmosSummary() {
+type Props = {
+  title?: string;
+};
+
+export function ReserveCosmosSummary({ title = 'Cosmos Reserve' }: Props) {
   const res = useCubeQuery({
     measures: ['balances.amount_sum'],
     timeDimensions: [
@@ -26,6 +31,10 @@ export function ReserveCosmosSummary() {
     ],
   });
 
+  if (res.isLoading || !res.resultSet) {
+    return <ValueCard title={title} value={<Skeleton className="w-[120px] h-[32px] rounded-full" />} />;
+  }
+
   const [resultSet, requestView] = getCubeQueryView(res);
   if (!resultSet) {
     return requestView;
@@ -36,5 +45,5 @@ export function ReserveCosmosSummary() {
     return <div>Nothing to show</div>;
   }
 
-  return <ValueCard title="Total Reserve Assets (Cosmos Layer)" value={formatPrice(latest['balances.amount_sum'])} />;
+  return <ValueCard title={title} value={formatPrice(latest['balances.amount_sum'])} />;
 }

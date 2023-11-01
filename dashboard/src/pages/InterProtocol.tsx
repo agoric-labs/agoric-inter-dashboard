@@ -1,5 +1,6 @@
 import { useCubeQuery } from '@cubejs-client/react';
 import { PieChart, Pie, Cell, Tooltip } from 'recharts';
+import { Skeleton } from '@/components/ui/skeleton';
 import { SectionHeader } from '@/components/SectionHeader';
 import { ValueCard } from '@/components/ValueCard';
 import { ValueCardGrid } from '@/components/ValueCardGrid';
@@ -7,8 +8,35 @@ import { PageHeader } from '@/components/PageHeader';
 import { PageContent } from '@/components/PageContent';
 import { colors } from '@/components/palette';
 import { formatPercent, roundPrice, formatPrice, formatIST } from '@/utils';
-import { Loading } from '@/components/Loading';
 import { ErrorAlert } from '@/components/ErrorAlert';
+
+const firstCards = [
+  'IST in Circulation',
+  'Total Mint Limit',
+  'Total Mint Limit Utilized',
+  'Total Interchain IST',
+  '% of Interchain IST',
+  'Smart Wallets Provisioned',
+];
+
+const RADIAN = Math.PI / 180;
+
+const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, payload }: any) => {
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.4;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN) - 5;
+
+  return (
+    <>
+      <text x={x} y={y - 8} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+        {payload.name}
+      </text>
+      <text x={x} y={y + 8} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+        {`${(percent * 100).toFixed(0)}%`}
+      </text>
+    </>
+  );
+};
 
 export function InterProtocol() {
   const wcRes = useCubeQuery({
@@ -155,7 +183,23 @@ export function InterProtocol() {
     psmGovRes.isLoading ||
     !psmGovRes.resultSet
   ) {
-    return <Loading />;
+    return (
+      <>
+        <PageHeader title="Summary" />
+        <PageContent>
+          <ValueCardGrid>
+            {firstCards.map((title) => (
+              <ValueCard title={title} key={title} value={<Skeleton className="w-[100px] h-[32px] rounded-full" />} />
+            ))}
+          </ValueCardGrid>
+          <SectionHeader>Balances</SectionHeader>
+          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+        </PageContent>
+      </>
+    );
   }
 
   // top cards
@@ -217,7 +261,8 @@ export function InterProtocol() {
                 ]}
                 outerRadius={100}
                 fill="green"
-                label={false}
+                labelLine={false}
+                label={renderCustomizedLabel}
               >
                 <Cell fill={colors[0]} />
                 <Cell fill={colors[1]} />

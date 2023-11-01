@@ -1,4 +1,5 @@
 import { useCubeQuery } from '@cubejs-client/react';
+import { Skeleton } from '@/components/ui/skeleton';
 import { OpenVaultsTable } from '@/components/OpenVaultsTable';
 import { SectionHeader } from '@/components/SectionHeader';
 import { useGranularity } from '@/components/CubeProvider';
@@ -53,7 +54,10 @@ export function OpenVaults({ title = 'Open Vaults' }: Props) {
     return (
       <>
         <SectionHeader>{title}</SectionHeader>
-        <div>Loading...</div>
+        <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+        <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+        <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+        <Skeleton className="w-full h-[20px] rounded-full mb-2" />
       </>
     );
   }

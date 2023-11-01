@@ -2,11 +2,16 @@ import { useCubeQuery } from '@cubejs-client/react';
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { RadianTooltip } from '@/components/RadianTooltip';
+import { Skeleton } from '@/components/ui/skeleton';
 import { colors } from '@/components/palette';
 import { getCubeQueryView } from '@/utils';
 import { coinLabels } from '../coinLabels';
 
-export function PSMMintedPoolBalancePie() {
+type Props = {
+  title?: string;
+};
+
+export function PSMMintedPoolBalancePie({ title = 'Total Minted IST Per Anchor' }: Props) {
   const res = useCubeQuery({
     measures: ['psm_stats.minted_pool_balance_avg'],
     timeDimensions: [
@@ -19,6 +24,22 @@ export function PSMMintedPoolBalancePie() {
     order: [['psm_stats.minted_pool_balance_avg', 'asc']],
     dimensions: ['psm_stats.coin'],
   });
+
+  if (res.isLoading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>{title}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+        </CardContent>
+      </Card>
+    );
+  }
 
   const [resultSet, requestView] = getCubeQueryView(res);
   if (!resultSet) {
@@ -36,7 +57,7 @@ export function PSMMintedPoolBalancePie() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Total Minted IST Per Anchor</CardTitle>
+        <CardTitle>{title}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="w-full h-[400px]">

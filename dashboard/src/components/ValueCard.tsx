@@ -1,7 +1,8 @@
+import { ReactNode } from 'react';
 import { Card, CardHeader, CardContent, CardTitle } from './ui/card';
 
 type Props = {
-  value: string;
+  value: string | ReactNode;
   title: string;
   className?: string;
 };

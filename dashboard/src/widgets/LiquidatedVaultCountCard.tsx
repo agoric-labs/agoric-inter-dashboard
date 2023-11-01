@@ -1,4 +1,5 @@
 import { useCubeQuery } from '@cubejs-client/react';
+import { Skeleton } from '@/components/ui/skeleton';
 import { ValueCard } from '@/components/ValueCard';
 import { getCubeQueryView } from '@/utils';
 
@@ -18,6 +19,10 @@ export function LiquidatedVaultCountCard({ title = 'Total Liquidated Vaults' }: 
     ],
     order: {},
   });
+
+  if (res.isLoading || !res.resultSet) {
+    return <ValueCard title={title} value={<Skeleton className="w-[50px] h-[32px] rounded-full" />} />;
+  }
 
   if (res.isLoading || !res.resultSet) {
     return <ValueCard title={title} value="Loading..." />;
