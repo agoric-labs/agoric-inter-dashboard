@@ -328,7 +328,7 @@ cube(`vault_factory_metrics`, {
       dimensions: [manager_idx, collateral_type, debt_type],
       time_dimension: day,
       granularity: `day`,
-      partition_granularity: `day`,
+      partition_granularity: `month`,
       refresh_key: {
         every: `30 minutes`,
         incremental: true,
@@ -428,7 +428,7 @@ cube(`vault_factory_metrics`, {
       ],
       time_dimension: day,
       granularity: `day`,
-      partition_granularity: `day`,
+      partition_granularity: `month`,
       refresh_key: {
         every: `30 minutes`,
         incremental: true,

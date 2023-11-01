@@ -86,7 +86,7 @@ cube(`psm_governance`, {
       dimensions: [coin],
       time_dimension: day,
       granularity: `day`,
-      partition_granularity: `day`,
+      partition_granularity: `month`,
       refresh_key: {
         every: `30 minutes`,
         incremental: true,
@@ -126,7 +126,7 @@ cube(`psm_governance`, {
       measures: [mint_limit_sum],
       time_dimension: day,
       granularity: `day`,
-      partition_granularity: `day`,
+      partition_granularity: `month`,
       refresh_key: {
         every: `10 minutes`,
         incremental: true,

@@ -273,7 +273,7 @@ cube(`vault_factory_liquidate_vaults`, {
       dimensions: [manager_idx, vault_idx, debt_type, collateral_type],
       time_dimension: day,
       granularity: `day`,
-      partition_granularity: `day`,
+      partition_granularity: `month`,
       refresh_key: {
         every: `30 minutes`,
         incremental: true,

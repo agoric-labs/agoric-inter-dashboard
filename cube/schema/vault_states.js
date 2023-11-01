@@ -67,7 +67,7 @@ cube(`vault_states`, {
       dimensions: [state],
       timeDimension: day,
       granularity: `day`,
-      partition_granularity: `day`,
+      partition_granularity: `month`,
       refresh_key: {
         every: `30 minutes`,
         incremental: true,

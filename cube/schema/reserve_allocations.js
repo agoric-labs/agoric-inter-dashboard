@@ -111,7 +111,7 @@ cube(`reserve_allocations`, {
       dimensions: [brand, key],
       time_dimension: day,
       granularity: `day`,
-      partition_granularity: `day`,
+      partition_granularity: `month`,
       refresh_key: {
         every: `30 minutes`,
         incremental: true,
@@ -151,7 +151,7 @@ cube(`reserve_allocations`, {
       measures: [amount_usd_sum],
       time_dimension: day,
       granularity: `day`,
-      partition_granularity: `day`,
+      partition_granularity: `month`,
       refresh_key: {
         every: `30 minutes`,
         incremental: true,

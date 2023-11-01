@@ -140,7 +140,7 @@ cube(`vault_factory_governance`, {
       dimensions: [manager_idx],
       time_dimension: day,
       granularity: `day`,
-      partition_granularity: `day`,
+      partition_granularity: `month`,
       refresh_key: {
         every: `30 minutes`,
         incremental: true,
@@ -180,7 +180,7 @@ cube(`vault_factory_governance`, {
       measures: [debt_limit_sum],
       time_dimension: day,
       granularity: `day`,
-      partition_granularity: `day`,
+      partition_granularity: `month`,
       refresh_key: {
         every: `30 minutes`,
         incremental: true,

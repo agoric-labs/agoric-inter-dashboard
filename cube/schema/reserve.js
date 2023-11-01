@@ -69,7 +69,7 @@ cube(`reserve`, {
       measures: [shortfall_balance_avg, total_fee_minted_avg, total_fee_burned_avg],
       time_dimension: day,
       granularity: `day`,
-      partition_granularity: `day`,
+      partition_granularity: `month`,
       refresh_key: {
         every: `30 minutes`,
         incremental: true,
