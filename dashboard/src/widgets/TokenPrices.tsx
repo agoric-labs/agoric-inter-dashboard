@@ -26,7 +26,7 @@ export function TokenPrices({ title = 'Summary' }: Props) {
       {
         dimension: 'oracle_prices.day',
         granularity: 'day',
-        dateRange: 'Last 7 days',
+        dateRange: 'Last 2 days',
       },
     ],
     order: [['oracle_prices.day', 'desc']],
@@ -104,7 +104,7 @@ export function TokenPrices({ title = 'Summary' }: Props) {
     rows.push({
       token: (
         <span className="flex">
-          <img src={icons[label] || icons.unknown} alt={label} width="w-4 h-4" />{' '}
+          <img src={icons[label] || icons.unknown} alt={label} className="w-4 h-4" />{' '}
           <span className="flex-1 ml-2">{label}</span>
         </span>
       ),
