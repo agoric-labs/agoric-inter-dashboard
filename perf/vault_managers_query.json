@@ -1,1 +1,27 @@
-{"query":{"measures":["vault_managers.count"],"order":{"vault_managers.count":"desc"},"timeDimensions":[{"dimension":"vault_managers.day","granularity":"day","dateRange":"Today"}]}}
+{
+  "query": {
+    "measures": [
+      "vault_factory_metrics.total_collateral_avg",
+      "vault_factory_metrics.total_collateral_usd_avg",
+      "vault_factory_metrics.total_debt_avg",
+      "vault_factory_metrics.colletarization_ratio_avg",
+      "vault_factory_governance.debt_limit_avg",
+      "vault_factory_metrics.utilization_rate_avg"
+    ],
+    "timeDimensions": [
+      {
+        "dimension": "vault_factory_metrics.day",
+        "dateRange": "Today",
+        "granularity": "day"
+      }
+    ],
+    "order": {
+      "vault_factory_metrics.manager_idx": "asc"
+    },
+    "dimensions": [
+      "vault_factory_metrics.collateral_type",
+      "vault_factory_metrics.debt_type",
+      "vault_factory_metrics.manager_idx"
+    ]
+  }
+}

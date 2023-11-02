@@ -1,1 +1,0 @@
-{"query":{"measures":["psm_stats.last_utilization_rate"],"timeDimensions":[{"dimension":"psm_stats.day","dateRange":"Today","granularity":"day"}],"order":[["psm_stats.last_utilization_rate","asc"]],"dimensions":["psm_stats.coin"]}}

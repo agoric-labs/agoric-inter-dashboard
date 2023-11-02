@@ -1,0 +1,14 @@
+{
+  "query": {
+    "measures": ["oracle_prices.rate_avg"],
+    "timeDimensions": [
+      {
+        "dimension": "oracle_prices.day",
+        "granularity": "day",
+        "dateRange": "Last 7 days"
+      }
+    ],
+    "order": [["oracle_prices.day", "desc"]],
+    "dimensions": ["oracle_prices.price_feed_name"]
+  }
+}

@@ -1,11 +1,11 @@
-POST https://info.inter.trade/cubejs-api/agoric_mainnet/v1/load
+POST http://34.149.103.139/cubejs-api/agoric_mainnet/v1/load
 Content-Type: application/json
 @perf/vault_managers_query.json
 
-POST https://info.inter.trade/cubejs-api/agoric_mainnet/v1/load
+POST http://34.149.103.139/cubejs-api/agoric_mainnet/v1/load
 Content-Type: application/json
-@perf/psm_stats_query.json
+@perf/oracle_prices.json
 
-POST https://info.inter.trade/cubejs-api/agoric_mainnet/v1/load
+POST http://34.149.103.139/cubejs-api/agoric_mainnet/v1/load
 Content-Type: application/json
 @perf/reserve_query.json
