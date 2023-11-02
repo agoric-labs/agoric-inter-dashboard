@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useCubeQuery } from '@cubejs-client/react';
 import { ErrorAlert } from '@/components/ErrorAlert';
+import { CubeProvider } from '@/components/CubeProvider';
 import { ValueCard } from '@/components/ValueCard';
 import { ValueCardGrid } from '@/components/ValueCardGrid';
 import { PageHeader } from '@/components/PageHeader';
@@ -11,7 +12,7 @@ function Timer() {
 
   useEffect(() => {
     const t = setInterval(() => {
-      setS(v => v + 1);
+      setS((v) => v + 1);
     }, 1000);
 
     return () => clearInterval(t);
@@ -20,17 +21,10 @@ function Timer() {
   return <ValueCard title="Last Refresh" value={`${s}s ago`} />;
 }
 
-export function DebugPage() {
+export function Content() {
   const res = useCubeQuery(
     {
       measures: ['blocks.block_height_max'],
-      timeDimensions: [
-        {
-          dimension: 'blocks.block_time',
-          granularity: 'day',
-          dateRange: 'Today',
-        },
-      ],
     },
     {
       subscribe: true,
@@ -67,5 +61,13 @@ export function DebugPage() {
         </ValueCardGrid>
       </PageContent>
     </>
+  );
+}
+
+export function DebugPage() {
+  return (
+    <CubeProvider withWebsockets>
+      <Content />
+    </CubeProvider>
   );
 }

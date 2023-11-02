@@ -18,7 +18,7 @@ EOL
 
 echo "Addresses: $ADDRESSES"
 
-echo "\"$ADDRESSES\"" |
-  jq -c '. | split(",") | map({address: . | gsub("^\\s+|\\s+$";"")}) | .[]' |
-  balances-extractor "$@" | # Note: --plaintext is an additional argument for grpcurl
+echo "\"$ADDRESSES\"" | \
+  jq -c '. | split(",") | map({address: . | gsub("^\\s+|\\s+$";"")}) | .[]' | \
+  balances-extractor "$@" | \
   target-bigquery --config /tmp/bigquery_config.json
