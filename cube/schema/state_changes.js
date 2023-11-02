@@ -1,11 +1,7 @@
 import { datasetId } from '../utils';
 
 cube(`state_changes`, {
-  sql: `
-    select * from ${datasetId()}.old_state_changes
-    union all
-    select * from ${datasetId()}.state_changes
-  `,
+  sql: `select * from ${datasetId()}.state_changes`,
 
   measures: {
     count: {
@@ -34,24 +30,24 @@ cube(`state_changes`, {
     },
   },
 
-  pre_aggregations: {
-    group_by_path: {
-      measures: [count],
-      dimensions: [path],
-      time_dimension: blockTime,
-      granularity: `day`,
-      refreshKey: {
-        every: `10 minutes`,
-      },
-    },
-    group_by_path_without_addresses: {
-      measures: [count],
-      dimensions: [path_without_wallet_addresses],
-      time_dimension: blockTime,
-      granularity: `day`,
-      refreshKey: {
-        every: `10 minutes`,
-      },
-    },
-  },
+  // pre_aggregations: {
+  //   group_by_path: {
+  //     measures: [count],
+  //     dimensions: [path],
+  //     time_dimension: blockTime,
+  //     granularity: `day`,
+  //     refreshKey: {
+  //       every: `1 hour`,
+  //     },
+  //   },
+  //   group_by_path_without_addresses: {
+  //     measures: [count],
+  //     dimensions: [path_without_wallet_addresses],
+  //     time_dimension: blockTime,
+  //     granularity: `day`,
+  //     refreshKey: {
+  //       every: `1 hour`,
+  //     },
+  //   },
+  // },
 });

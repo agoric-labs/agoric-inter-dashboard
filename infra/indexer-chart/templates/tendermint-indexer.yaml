@@ -1,10 +1,9 @@
-{{- define "tendermint-extractor" -}}
-{{- with .root }}
+{{- if .Values.tendermint.enabled -}}
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "deploy.fullname" . }}-tendermint-{{ $.mode }}
+  name: {{ include "deploy.fullname" . }}-tendermint-head
   labels:
     {{- include "deploy.labels" . | nindent 4 }}
 spec:
@@ -45,13 +44,13 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["tendermint-trigger", "{{ $.mode }}", "./extract-tendermint.sh"]
+          command: ["./extract-missing-blocks.sh"]
           livenessProbe:
             httpGet:
               path: /metrics
               port: 3333
           resources:
-            {{- toYaml $.resources | nindent 12 }}
+            {{- toYaml .Values.tendermint.resources | nindent 12 }}
           volumeMounts:
           - mountPath: /etc/gac
             name: gac
@@ -61,24 +60,28 @@ spec:
           ports:
           - containerPort: 3333
           env:
-          - name: TENDERMINT_TRIGGER_RPC_URL
+          - name: COORDINATOR_TENDERMINT_URL
             value: "{{ .Values.rpcUrl }}"
-          - name: TENDERMINT_TRIGGER_PROJECT_ID
+          - name: PROJECT_ID
             value: "{{ .Values.projectId }}"
-          - name: TENDERMINT_TRIGGER_DATASET_ID
+          - name: DATASET_ID
             value: "{{ .Values.datasetId }}"
-          - name: TENDERMINT_TRIGGER_BATCH_SIZE
-            value: "{{ .Values.extractBlockBatchSize }}"
-          - name: TENDERMINT_TRIGGER_MAX_WRITE_COUNT
-            value: "99999"
           - name: GOOGLE_APPLICATION_CREDENTIALS
             value: "/etc/gac/content"
           - name: DECODE_SERVICE_URL
             value: "{{ .Values.decodeServiceUrl }}"
-          - name: TENDERMINT_TRIGGER_BASE_CONFIG
+          - name: COORDINATOR_BASE_CONFIG
             value: '{"rpc_url":"{{ .Values.rpcUrl }}","batch_size":32,"thread_count":8}'
-          - name: TENDERMINT_TRIGGER_ADDR
+          - name: COORDINATOR_ADDR
             value: ':3333'
+          - name: WORKER_COUNT
+            value: '2'
+          - name: COORDINATOR_BATCH_SIZE
+            value: '200'
+          - name: COORDINATOR_OUTPUT_LIMIT
+            value: '5'
+          - name: COORDINATOR_EXPECTED_NETWORK
+            value: '{{ .Values.tendermint.expectedNetwork }}'
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -91,13 +94,4 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-{{- end }}
-{{- end }}
-
-{{- if .Values.tendermintTail.enabled }}
-{{- include "tendermint-extractor" (dict "root" . "mode" "tail" "resources" .Values.tailIndexerResources) }}
-{{- end }}
-
-{{- if .Values.tendermintHead.enabled }}
-{{- include "tendermint-extractor" (dict "root" . "mode" "head" "resources" .Values.headIndexerResources) }}
-{{- end }}
+{{- end -}}

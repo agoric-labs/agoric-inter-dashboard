@@ -1,29 +1,46 @@
 #!/bin/bash
 
 set -e
+set -o pipefail
 
-cat > /tmp/bigquery_config.json << EOL
+if [[ -z "$DATASET_ID" ]]; then
+  echo "DATASET_ID not set"
+  exit 1
+fi
+
+if [[ -z "$PROJECT_ID" ]]; then
+  echo "PROJECT_ID not set"
+  exit 1
+fi
+
+if [[ -z "$GOOGLE_APPLICATION_CREDENTIALS" ]]; then
+  echo "GOOGLE_APPLICATION_CREDENTIALS not set"
+  exit 1
+fi
+
+BQ_CONFIG=$(mktemp -q)
+
+cat > $BQ_CONFIG << EOL
   {
-    "project": "$TENDERMINT_TRIGGER_PROJECT_ID",
-    "dataset": "$TENDERMINT_TRIGGER_DATASET_ID",
+    "project": "$PROJECT_ID",
+    "dataset": "$DATASET_ID",
     "method": "storage_write_api",
     "denormalized": true,
     "credentials_path": "$GOOGLE_APPLICATION_CREDENTIALS",
     "cluster_on_key_properties": true,
     "schema_resolver_version": 2,
     "location": "US",
-    "batch_size": 250,
+    "batch_size": 200,
     "options": {
       "storage_write_batch_mode": true
     }
   }
 EOL
 
-export TENDERMINT_TRIGGER_BASE_CONFIG="{\"rpc_url\":\"$TENDERMINT_TRIGGER_RPC_URL\",\"batch_size\":32,\"thread_count\":24}"
+cat | \
+  tendermint-source read --catalog ./tendermint.catalog.json --format squash | \
+  tendermint-normalizer | \
+  target-bigquery --config $BQ_CONFIG
 
-while read line; do
-  echo $line | \
-    tendermint-source read --catalog ./tendermint.catalog.json --format squash | \
-    tendermint-normalizer | \
-    target-bigquery --config /tmp/bigquery_config.json
-done
+# avoid "No space left on device" errors
+rm $BQ_CONFIG

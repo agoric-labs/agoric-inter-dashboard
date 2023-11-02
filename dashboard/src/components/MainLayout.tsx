@@ -27,7 +27,7 @@ const menuItems = [
     to: '/vaults',
   },
   {
-    label: 'Liquidated',
+    label: 'Liquidations',
     icon: <Table2 />,
     to: '/liquidated',
   },
@@ -94,36 +94,38 @@ export function MainLayout({ children }: Props) {
               );
             })}
           </div>
-          <Select onValueChange={handleChainChange}>
-            <SelectTrigger className="w-[180px] text-gray-700 border-gray-700 m-8 my-4 bg-transparent">
-              <SelectValue placeholder={chains[chain]} />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.keys(chains).map((c) => (
-                <SelectItem key={c} value={c}>
-                  {chains[c]}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select onValueChange={handleRangeChange}>
-            <SelectTrigger className="w-[180px] text-gray-700 border-gray-700 m-8 my-4 bg-transparent">
-              <SelectValue placeholder={ranges[range]} />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.keys(ranges).map((c) => (
-                <SelectItem key={c} value={c}>
-                  {ranges[c]}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="flex lg:block w-full px-2">
+            <Select onValueChange={handleChainChange}>
+              <SelectTrigger className="w-full max-w-[170px] text-gray-700 border-gray-700 mx-4 my-4 bg-transparent flex-1">
+                <SelectValue placeholder={chains[chain]} />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.keys(chains).map((c) => (
+                  <SelectItem key={c} value={c}>
+                    {chains[c]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select onValueChange={handleRangeChange}>
+              <SelectTrigger className="w-full max-w-[170px] text-gray-700 border-gray-700 mx-4 my-4 bg-transparent flex-1">
+                <SelectValue placeholder={ranges[range]} />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.keys(ranges).map((c) => (
+                  <SelectItem key={c} value={c}>
+                    {ranges[c]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
         <div className="hidden lg:block">
           <Footer />
         </div>
       </div>
-      <div className="flex-1 bg-white rounded-3xl lg:rounded-r-none">{children || <Outlet />}</div>
+      <div className="flex-1 bg-white min-h-[300px] rounded-3xl lg:rounded-r-none">{children || <Outlet />}</div>
       <div className="lg:hidden block">
         <Footer />
       </div>

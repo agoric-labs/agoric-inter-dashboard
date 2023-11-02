@@ -22,17 +22,17 @@ COPY ./http-processor .
 RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 \
  go build -ldflags="-w -s" -o "bin/http-processor" .
 
-# tendermint-trigger
-FROM golang:1.20 as build-tendermint-trigger
+# coordinator
+FROM golang:1.20 as build-coordinator
 
 WORKDIR /app
 
-COPY tendermint-trigger/go.* .
+COPY coordinator/go.* .
 RUN go mod download && go mod verify
 
-COPY ./tendermint-trigger .
+COPY ./coordinator .
 RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 \
- go build -ldflags="-w -s" -o "bin/tendermint-trigger" .
+ go build -ldflags="-w -s" -o "bin/coordinator" .
 
 # bqreader
 FROM golang:1.20 as build-bqreader
@@ -78,11 +78,10 @@ RUN apt update \
 COPY --from=agoric /go/agoric-sdk/golang/cosmos/build/agd /app/bin/agd
 COPY --from=build-tendermint-source /app/bin/* /app/bin/
 COPY --from=build-http-processor /app/bin/* /app/bin/
-COPY --from=build-tendermint-trigger /app/bin/* /app/bin/
+COPY --from=build-coordinator /app/bin/* /app/bin/
 COPY --from=fullstorydev/grpcurl:v1.8.7-alpine /bin/grpcurl /app/bin/
 COPY --from=build-bqreader /app/bin/* /app/bin/
 COPY tendermint-normalizer/main.py /app/bin/tendermint-normalizer
 COPY balances-extractor/main.py /app/bin/balances-extractor
-COPY coingeko-extractor/main.py /app/bin/coingeko-extractor
 COPY *.catalog.json ./
 COPY extract-* ./

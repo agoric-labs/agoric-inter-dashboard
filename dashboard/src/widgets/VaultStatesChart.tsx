@@ -1,5 +1,6 @@
 import { useCubeQuery } from '@cubejs-client/react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { getCubeQueryView, formatDay, toTitleCase } from '@/utils';
 import { useGranularity } from '@/components/CubeProvider';
@@ -12,14 +13,15 @@ type Props = {
 export function VaultStatesChart({ title = 'Vault States' }: Props) {
   const granularity = useGranularity();
   const res = useCubeQuery({
-    measures: ['vaults.count'],
+    measures: ['vault_states.count'],
     timeDimensions: [
       {
-        dimension: 'vaults.day',
+        dimension: 'vault_states.day',
         granularity,
+        dateRange: granularity === 'day' ? 'Last 90 days' : undefined,
       },
     ],
-    dimensions: ['vaults.state'],
+    dimensions: ['vault_states.state'],
   });
 
   if (res.isLoading || !res.resultSet) {
@@ -28,7 +30,12 @@ export function VaultStatesChart({ title = 'Vault States' }: Props) {
         <CardHeader>
           <CardTitle>{title}</CardTitle>
         </CardHeader>
-        <CardContent>Loading...</CardContent>
+        <CardContent>
+          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+        </CardContent>
       </Card>
     );
   }

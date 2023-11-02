@@ -5,7 +5,6 @@ import sys
 import ujson
 import re
 import os
-import dateutil
 import multiprocessing
 
 from multiprocessing.pool import ThreadPool
@@ -139,9 +138,9 @@ VALIDATORS_SCHEMA = {
 STATE_CHANGES_SCHEMA = {
     "type": "SCHEMA",
     "stream": "state_changes",
-    "key_properties": ["path"],
+    "key_properties": ["module"],
     "schema": {
-        "required": ["id", "block_height", "block_time", "path", "idx", "body", "slots"],
+        "required": ["id", "block_height", "block_time", "path", "module", "idx", "body", "slots"],
         "type": "object",
         "additionalProperties": False,
         "time_property": "block_time",
@@ -150,6 +149,7 @@ STATE_CHANGES_SCHEMA = {
             "block_height": {"type": "integer"},
             "block_time": {"type": "string", "format": "date-time"},
             "path": {"type": "string"},
+            "module": {"type": "string"},
             "idx": {"type": "integer"},
             "slots": {"type": "object"},
             "body": {"type": "object"},
@@ -160,7 +160,7 @@ STATE_CHANGES_SCHEMA = {
 
 def to_datetime(val):
     # However, Python's datetime also supports only up to microseconds precision.
-    val = val[:-4] + "Z"
+    val = re.sub(r"\.(\d+)Z$", lambda m: f".{m.group(1)[0:4]}Z", val)
     return datetime.strptime(val, "%Y-%m-%dT%H:%M:%S.%fZ").strftime("%Y-%m-%dT%H:%M:%S.%f")
 
 
@@ -288,6 +288,10 @@ def get_tx_id(height, hash):
     return f"{height}:{hash}"
 
 
+def get_state_change_module(path):
+    return ".".join(path.split(".")[0:2])
+
+
 class BlockProcessor:
     def __init__(self):
         self.output_records = []
@@ -410,11 +414,19 @@ class BlockProcessor:
         for page in pages:
             for val in page["validators"]:
                 if skip_extra:
-                    extra = { "proposer_reward": 0, "rewards": 0, "commission": 0, "valoper_addr": "unknown" }
+                    extra = {"proposer_reward": 0, "rewards": 0, "commission": 0, "valoper_addr": "unknown"}
                 else:
-                    extra = extra_data[validator_idx]
-
-                validator_idx += 1
+                    # cosmoshub: 10096340
+                    if len(extra_data) > validator_idx:
+                        extra = extra_data[validator_idx]
+                        validator_idx += 1
+                    else:
+                        extra = {
+                            "valoper_addr": "new",
+                            "rewards": 0,
+                            "commission": 0,
+                            "proposer_reward": 0,
+                        }
 
                 rec = {
                     "id": f"{page['block_height']}:{val['address']}:{validator_idx}",
@@ -431,14 +443,19 @@ class BlockProcessor:
 
                 self._write_record(VALIDATORS_SCHEMA["stream"], rec)
 
-        if not skip_extra and validator_idx != len(extra_data):
-            raise ValueError("unexpected extra_data size")
+        # this is triggered when one or more validators have exited
+        # if not skip_extra and validator_idx != len(extra_data):
+        #     raise ValueError("unexpected extra_data size")
 
         return proposer_addr
 
     def _write_state_change(self, event, block_meta):
         # emerynet.rpc.agoric.net, block: 71573
         if "store" not in event["attributes"]:
+            return
+
+        # mainnet, block: 11877417
+        if "value" not in event["attributes"]:
             return
 
         if event["attributes"]["store"] != "vstorage":
@@ -456,6 +473,7 @@ class BlockProcessor:
             rec = {
                 "id": f"{event['id']}:0",
                 "path": path,
+                "module": get_state_change_module(path),
                 "idx": 0,
                 "slots": "[]",
                 "body": ujson.dumps(event["attributes"]["value"]),
@@ -473,6 +491,10 @@ class BlockProcessor:
             return
 
         for idx, change_raw in enumerate(body["values"]):
+            # empty values in the 11872248 block
+            if change_raw == "":
+                continue
+
             change_body = ujson.loads(change_raw)
             payload = ujson.loads(re.sub(r"^#", "", change_body["body"]))  # trim # at start
 
@@ -481,6 +503,7 @@ class BlockProcessor:
             rec = {
                 "id": f"{event['id']}:{idx}",
                 "path": path,
+                "module": get_state_change_module(path),
                 "idx": idx,
                 "slots": ujson.dumps(change_body["slots"]),
                 "body": ujson.dumps(payload),
@@ -582,10 +605,15 @@ if __name__ == "__main__":
     print(ujson.dumps(STATE_CHANGES_SCHEMA))
 
     # create an empty table for data from previous indexer
-    STATE_CHANGES_SCHEMA["stream"] = "old_" + STATE_CHANGES_SCHEMA["stream"]
-    print(ujson.dumps(STATE_CHANGES_SCHEMA))
+    if os.getenv("CREATE_OLD_STATE_CHANGES") is not None:
+        old_changes_schema = STATE_CHANGES_SCHEMA.copy()
+        old_changes_schema["stream"] = f"old_{STATE_CHANGES_SCHEMA['stream']}"
+        print(ujson.dumps(old_changes_schema))
 
-    worker_count = int(os.getenv("WORKER_COUNT", multiprocessing.cpu_count()*2))
+    if os.getenv("ONLY_SCHEMA") is not None:
+        exit(0)
+
+    worker_count = int(os.getenv("WORKER_COUNT", multiprocessing.cpu_count() * 2))
 
     with multiprocessing.Pool(worker_count) as p:
         for output_records in p.imap(BlockProcessor().run, sys.stdin):

@@ -1,19 +1,33 @@
-import json
 import subprocess
 
-from main import resolve_brand_names_and_values, extract_storage_path
+from main import resolve_brand_names_and_values, extract_storage_path, to_datetime, get_state_change_module
 
 
 def test_e2e():
     with open("output_test.json", "r") as f:
         expected_output = f.read()
 
-    command = "cat input_test.json | DECODE_SERVICE_URL=skip_for_tests python main.py"
-    process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    env = {"DECODE_SERVICE_URL": "skip_for_tests"}
+    input = open("input_test.json", "r")
+
+    process = subprocess.Popen(["python", "main.py"], stdout=subprocess.PIPE, stdin=input, env=env)
     stdout, stderr = process.communicate()
     actual_output = stdout.decode("utf-8")
 
     assert actual_output == expected_output
+
+
+def test_get_state_change_module():
+    assert get_state_change_module("") == ""
+    assert get_state_change_module("published") == "published"
+    assert get_state_change_module("published.reserve") == "published.reserve"
+    assert get_state_change_module("published.reserve.metrics") == "published.reserve"
+
+
+def test_to_datetime():
+    assert to_datetime("2023-10-23T02:04:15.499906859Z") == "2023-10-23T02:04:15.499900"
+    assert to_datetime("2022-06-28T09:00:36.769Z") == "2022-06-28T09:00:36.769000"
+    assert to_datetime("2022-06-28T09:00:43.270903042Z") == "2022-06-28T09:00:43.270900"
 
 
 def test_extract_storage_path():

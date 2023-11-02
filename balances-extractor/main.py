@@ -62,7 +62,7 @@ def process(height, extra_args, grpc_addr, jsonline):
 
             if "context deadline exceeded" in err_text and retry_idx < 10:
                 retry_idx += 1
-                print(f"retry after timeout", file=sys.stderr)
+                print("retry after timeout", file=sys.stderr)
                 time.sleep(retry_idx * 10)
                 continue
 
@@ -100,6 +100,9 @@ def get_current_height(rpc_url):
 
 if __name__ == "__main__":
     print(ujson.dumps(BALANCES_SCHEMA))
+
+    if os.getenv("ONLY_SCHEMA") is not None:
+        exit(0)
 
     height = os.getenv("BLOCK_HEIGHT")
     if height is None:

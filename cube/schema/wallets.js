@@ -1,11 +1,10 @@
-import { datasetId } from '../utils';
-
 cube(`wallets`, {
   sql: `
      select block_time
           , split(path, '.')[2] as address
       from ${state_changes.sql()}
-     where path like 'published.wallet%'and path like '%current'
+     where module = 'published.wallet'
+       and path like '%current'
   `,
 
   measures: {
@@ -23,10 +22,10 @@ cube(`wallets`, {
   },
 
   pre_aggregations: {
-    main1: {
+    main: {
       measures: [address_count],
-      refreshKey: {
-        every: `10 minutes`,
+      refresh_key: {
+        every: `1 hour`,
       },
     },
   },

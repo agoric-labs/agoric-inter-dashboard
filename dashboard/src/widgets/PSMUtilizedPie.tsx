@@ -25,8 +25,9 @@ export function PSMUtilizedPie() {
     return requestView;
   }
 
-  let data = resultSet.tablePivot().map((row) => ({
+  let data: any[] = resultSet.tablePivot().map((row) => ({
     value: parseFloat(row['psm_stats.last_utilization_rate'] as string),
+    label: coinLabels[row['psm_stats.coin'] as string],
   }));
 
   if (data.every((r) => r.value === 0)) {
@@ -54,8 +55,8 @@ export function PSMUtilizedPie() {
                 labelLine={false}
                 label={RadianTooltip}
               >
-                {Object.keys(coinLabels).map((key, idx) => (
-                  <Cell fill={colors[idx % colors.length]} key={key} name={coinLabels[key]} />
+                {data.map((item, idx) => (
+                  <Cell fill={colors[idx % colors.length]} key={item.label} name={item.label} />
                 ))}
               </Pie>
               <Tooltip />

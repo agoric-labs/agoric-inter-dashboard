@@ -11,6 +11,7 @@ cube(`balances`, {
           , bl.denom
       from ${datasetId()}.balances bl
       join ${datasetId()}.blocks b using (block_height)
+     -- where ${FILTER_PARAMS.balances.day.filter('block_time')}
   `,
   ),
 
@@ -46,40 +47,48 @@ cube(`balances`, {
   },
 
   pre_aggregations: {
-    main_year: {
+    by_denom_and_address_year: {
       measures: [amount_sum, amount_avg],
-      dimensions: [denom],
+      dimensions: [denom, address],
       time_dimension: day,
       granularity: `year`,
-      refreshKey: {
+      refresh_key: {
         every: `24 hour`,
       },
     },
-    main_month: {
+    by_denom_and_address_month: {
       measures: [amount_sum, amount_avg],
-      dimensions: [denom],
+      dimensions: [denom, address],
       time_dimension: day,
       granularity: `month`,
-      refreshKey: {
+      refresh_key: {
         every: `24 hour`,
       },
     },
-    main_week: {
+    by_denom_and_address_week: {
       measures: [amount_sum, amount_avg],
-      dimensions: [denom],
+      dimensions: [denom, address],
       time_dimension: day,
       granularity: `week`,
-      refreshKey: {
+      refresh_key: {
         every: `24 hour`,
       },
     },
-    main_day: {
+    by_denom_and_address_day: {
       measures: [amount_sum, amount_avg],
-      dimensions: [denom],
+      dimensions: [denom, address],
       time_dimension: day,
       granularity: `day`,
-      refreshKey: {
-        every: `10 minutes`,
+      partition_granularity: `month`,
+      refresh_key: {
+        every: `30 minutes`,
+        incremental: true,
+      },
+      build_range_start: {
+        sql: `select min(_sdc_batched_at) from ${datasetId()}.balances`,
+      },
+      build_range_end: {
+        sql: `select current_timestamp()`,
       },
     },
   },

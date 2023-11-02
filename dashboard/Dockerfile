@@ -6,6 +6,10 @@ COPY package.json yarn.lock ./
 RUN yarn
 
 COPY . .
+
+ARG VITE_BASE_URL
+ENV VITE_BASE_URL $VITE_BASE_URL
+
 RUN yarn build --mode production
 
 FROM nginx:1.25-alpine

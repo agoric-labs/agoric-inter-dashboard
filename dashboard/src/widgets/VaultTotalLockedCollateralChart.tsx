@@ -1,5 +1,6 @@
 import { useCubeQuery } from '@cubejs-client/react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { getCubeQueryView, formatDay } from '@/utils';
 import { useGranularity } from '@/components/CubeProvider';
@@ -12,14 +13,19 @@ type Props = {
 export function VaultTotalLockedCollateralChart({ title = 'Total Locked Collateral' }: Props) {
   const granularity = useGranularity();
   const res = useCubeQuery({
-    measures: ['vault_metrics.avg_total_locked_collateral_usd'],
+    measures: ['vault_factory_metrics.total_collateral_usd_sum'],
     timeDimensions: [
       {
-        dimension: 'vault_metrics.date',
+        dimension: 'vault_factory_metrics.day',
         granularity,
+        dateRange: granularity === 'day' ? 'Last 90 days' : undefined,
       },
     ],
-    dimensions: ['vault_metrics.collateral_type', 'vault_metrics.debt_type'],
+    dimensions: [
+      'vault_factory_metrics.collateral_type',
+      'vault_factory_metrics.manager_idx',
+      'vault_factory_metrics.debt_type',
+    ],
   });
 
   if (res.isLoading || !res.resultSet) {
@@ -28,7 +34,12 @@ export function VaultTotalLockedCollateralChart({ title = 'Total Locked Collater
         <CardHeader>
           <CardTitle>{title}</CardTitle>
         </CardHeader>
-        <CardContent>Loading...</CardContent>
+        <CardContent>
+          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+        </CardContent>
       </Card>
     );
   }
@@ -54,11 +65,16 @@ export function VaultTotalLockedCollateralChart({ title = 'Total Locked Collater
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="x" stroke="#666" tickFormatter={formatDay} />
         <YAxis stroke="#666" />
-        <YAxis />
         <Tooltip />
         <Legend />
         {resultSet.seriesNames().map((col, idx) => (
-          <Bar key={col.key} stackId="a" dataKey={col.key} name={col.shortTitle} fill={colors[idx % colors.length]} />
+          <Bar
+            key={col.key}
+            stackId="a"
+            dataKey={col.key}
+            name={col.shortTitle.replace(/, \d+,/, '') /* hide manager numbers */}
+            fill={colors[idx % colors.length]}
+          />
         ))}
       </BarChart>
     </ResponsiveContainer>

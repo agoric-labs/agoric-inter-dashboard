@@ -1,5 +1,6 @@
 import { useCubeQuery } from '@cubejs-client/react';
 import { PieChart, Pie, Cell, Tooltip } from 'recharts';
+import { Skeleton } from '@/components/ui/skeleton';
 import { SectionHeader } from '@/components/SectionHeader';
 import { ValueCard } from '@/components/ValueCard';
 import { ValueCardGrid } from '@/components/ValueCardGrid';
@@ -7,8 +8,35 @@ import { PageHeader } from '@/components/PageHeader';
 import { PageContent } from '@/components/PageContent';
 import { colors } from '@/components/palette';
 import { formatPercent, roundPrice, formatPrice, formatIST } from '@/utils';
-import { Loading } from '@/components/Loading';
 import { ErrorAlert } from '@/components/ErrorAlert';
+
+const firstCards = [
+  'IST in Circulation',
+  'Total Mint Limit',
+  'Total Mint Limit Utilized',
+  'Total Interchain IST',
+  '% of Interchain IST',
+  'Smart Wallets Provisioned',
+];
+
+const RADIAN = Math.PI / 180;
+
+const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, payload }: any) => {
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.4;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN) - 5;
+
+  return (
+    <>
+      <text x={x} y={y - 8} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+        {payload.name}
+      </text>
+      <text x={x} y={y + 8} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+        {`${(percent * 100).toFixed(0)}%`}
+      </text>
+    </>
+  );
+};
 
 export function InterProtocol() {
   const wcRes = useCubeQuery({
@@ -30,25 +58,36 @@ export function InterProtocol() {
         operator: 'equals',
         values: ['uist'],
       },
+      {
+        member: 'balances.address',
+        operator: 'contains',
+        values: [
+          'agoric1a53udazy8ayufvy0s434pfwjcedzqv34y3q6mc',
+          'agoric1kq2rzz6fq2q7fsu75a9g7cpzjeanmk686c8qtz',
+          'agoric12k2pyuylm9t7ugdvz67h9pg4gmmvhn5vdm8dpz',
+          'agoric17sael2kcmm8npe2pmkxj3un90xfg60vvxgxjnt',
+          'agoric1wsxce0ls59rtj70fwcrxmtmmv32vpgmgl3wen2',
+        ],
+      },
     ],
   });
 
-  const vmRes = useCubeQuery({
-    measures: ['vault_managers.ist_minting_limit_sum', 'vault_managers.total_ist_minted_sum'],
+  const vgRes = useCubeQuery({
+    measures: ['vault_factory_governance.debt_limit_sum'],
     timeDimensions: [
       {
-        dimension: 'vault_managers.day',
+        dimension: 'vault_factory_governance.day',
         granularity: 'day',
         dateRange: 'Today',
       },
     ],
   });
 
-  const vaultMetricsRes = useCubeQuery({
-    measures: ['vault_metrics.avg_total_locked_collateral_usd'],
+  const vmRes = useCubeQuery({
+    measures: ['vault_factory_metrics.total_debt_sum', 'vault_factory_metrics.total_collateral_usd_sum'],
     timeDimensions: [
       {
-        dimension: 'vault_metrics.date',
+        dimension: 'vault_factory_metrics.day',
         granularity: 'day',
         dateRange: 'Today',
       },
@@ -110,6 +149,10 @@ export function InterProtocol() {
     return <ErrorAlert value={vmRes.error} />;
   }
 
+  if (vgRes.error) {
+    return <ErrorAlert value={vgRes.error} />;
+  }
+
   if (psmGovRes.error) {
     return <ErrorAlert value={psmGovRes.error} />;
   }
@@ -122,10 +165,6 @@ export function InterProtocol() {
     return <ErrorAlert value={reserveRes.error} />;
   }
 
-  if (vaultMetricsRes.error) {
-    return <ErrorAlert value={vaultMetricsRes.error} />;
-  }
-
   if (
     wcRes.isLoading ||
     !wcRes.resultSet ||
@@ -133,18 +172,34 @@ export function InterProtocol() {
     !ibcRes.resultSet ||
     vmRes.isLoading ||
     !vmRes.resultSet ||
+    vgRes.isLoading ||
+    !vgRes.resultSet ||
     psmRes.isLoading ||
     !psmRes.resultSet ||
     reserveRes.isLoading ||
     !reserveRes.resultSet ||
-    vaultMetricsRes.isLoading ||
-    !vaultMetricsRes.resultSet ||
     reserveAllocRes.isLoading ||
     !reserveAllocRes.resultSet ||
     psmGovRes.isLoading ||
     !psmGovRes.resultSet
   ) {
-    return <Loading />;
+    return (
+      <>
+        <PageHeader title="Summary" />
+        <PageContent>
+          <ValueCardGrid>
+            {firstCards.map((title) => (
+              <ValueCard title={title} key={title} value={<Skeleton className="w-[100px] h-[32px] rounded-full" />} />
+            ))}
+          </ValueCardGrid>
+          <SectionHeader>Balances</SectionHeader>
+          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
+        </PageContent>
+      </>
+    );
   }
 
   // top cards
@@ -152,20 +207,19 @@ export function InterProtocol() {
   const walletCount = wcRes.resultSet.tablePivot()[0]['wallets.address_count'].toString();
 
   const psmMinted = parseFloat(psmRes.resultSet.tablePivot()[0]['psm_stats.minted_pool_balance_sum'] as string);
-  const vaultMinted = parseFloat(vmRes.resultSet.tablePivot()[0]['vault_managers.total_ist_minted_sum'] as string);
+  const vaultMinted = parseFloat(vmRes.resultSet.tablePivot()[0]['vault_factory_metrics.total_debt_sum'] as string);
   const totalMinted = psmMinted + vaultMinted;
 
   const vaultMintLimit =
-    parseFloat(vmRes.resultSet.tablePivot()[0]['vault_managers.ist_minting_limit_sum'] as string) || 0;
+    parseFloat(vgRes.resultSet.tablePivot()[0]['vault_factory_governance.debt_limit_sum'] as string) || 0;
   const psmMintLimit = parseFloat(psmGovRes.resultSet.tablePivot()[0]['psm_governance.mint_limit_sum'] as string) || 0;
   const totalMintLimit = vaultMintLimit + psmMintLimit;
 
   // bottom cards
   const totalReserve = reserveAllocRes.resultSet.tablePivot()[0]['reserve_allocations.amount_usd_sum'] as string;
   const reserveShortfall = reserveRes.resultSet.tablePivot()[0]['reserve.shortfall_balance_avg'] as string;
-  const vaultLocked =
-    parseFloat(vaultMetricsRes.resultSet.tablePivot()[0]['vault_metrics.avg_total_locked_collateral_usd'] as string) ||
-    0;
+  const totalLockedCollateral =
+    parseFloat(vmRes.resultSet.tablePivot()[0]['vault_factory_metrics.total_collateral_usd_sum'] as string) || 0;
 
   return (
     <>
@@ -185,10 +239,10 @@ export function InterProtocol() {
           <div className="flex-1 grid grid-cols-2 gap-4">
             <ValueCard title="Total Reserve Assets" value={formatPrice(totalReserve)} />
             <ValueCard title="Total Minted IST" value={formatIST(totalMinted)} />
-            <ValueCard title="Total Vault Assets" value={formatPrice(vaultLocked)} />
-            <ValueCard title="Minted by Vaults" value={formatIST(vaultMinted)} />
+            <ValueCard title="Total Collateral Value Locked" value={formatPrice(totalLockedCollateral)} />
+            <ValueCard title="IST minted by Vaults" value={formatIST(vaultMinted)} />
             <ValueCard title="Total PSM Assets" value={formatPrice(psmMinted)} />
-            <ValueCard title="Minted by PSM" value={formatIST(psmMinted)} />
+            <ValueCard title="IST minted by PSM" value={formatIST(psmMinted)} />
             <ValueCard title="Reserve Shortfall" value={formatPrice(reserveShortfall)} className="col-span-2" />
           </div>
           <div className="w-[400px] ml-5">
@@ -207,7 +261,8 @@ export function InterProtocol() {
                 ]}
                 outerRadius={100}
                 fill="green"
-                label={false}
+                labelLine={false}
+                label={renderCustomizedLabel}
               >
                 <Cell fill={colors[0]} />
                 <Cell fill={colors[1]} />

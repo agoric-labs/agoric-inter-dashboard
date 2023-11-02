@@ -4,8 +4,10 @@ services:
   dashboard:
     build:
       context: ./dashboard
+      args:
+        - VITE_BASE_URL=http://localhost:4000
     ports:
-      - 8080:80
+      - 5173:80
 
   txdecode:
     build:
@@ -17,43 +19,33 @@ services:
       - "agd"
       - "txdecode"
 
-  # Extracts data from current block to future, listening all new blocks
-  head-indexer: &indexer
+  indexer:
     restart: always
     stop_grace_period: 600s
     depends_on:
       - "txdecode"
     build:
       context: .
+    ports:
+      - 3333:3333
     environment:
-      TENDERMINT_TRIGGER_RPC_URL: "${TENDERMINT_RPC_URL}"
-      TENDERMINT_TRIGGER_PROJECT_ID: "${PROJECT_ID}"
-      TENDERMINT_TRIGGER_DATASET_ID: "${DATASET_ID}"
-      TENDERMINT_TRIGGER_BATCH_SIZE: 100
-      TENDERMINT_TRIGGER_MAX_WRITE_COUNT: 100
-      TENDERMINT_TRIGGER_BASE_CONFIG: '{"rpc_url":"${TENDERMINT_RPC_URL}","batch_size":32,"thread_count":24}'
+      PROJECT_ID: "${PROJECT_ID}"
+      DATASET_ID: "${DATASET_ID}"
+      COORDINATOR_TENDERMINT_URL: "${TENDERMINT_RPC_URL}"
+      COORDINATOR_BASE_CONFIG: '{"rpc_url":"${TENDERMINT_RPC_URL}","batch_size":32,"thread_count":24}'
+      COORDINATOR_ADDR: ":3333"
       GOOGLE_APPLICATION_CREDENTIALS: "/bigquerycreds.json"
       DECODE_SERVICE_URL: "http://txdecode:8081"
+      COORDINATOR_BATCH_SIZE: 10
+      COORDINATOR_OUTPUT_LIMIT: 2
     volumes:
       - "${GOOGLE_CREDS}:/bigquerycreds.json"
       - "/tmp:/tmp"
     entrypoint:
-      - "tendermint-trigger"
-      - "head"
-      - "./extract-tendermint.sh"
+      - "./extract-missing-blocks.sh"
 
-  # Extracts data from current block to the past, extracting historic data only
-  tail-indexer:
-    <<: *indexer
-    entrypoint:
-      - "tendermint-trigger"
-      - "tail"
-      - "./extract-tendermint.sh"
-    ports:
-      - 3333:3333
-
-  balances-extractor: &grpc-extractor
-    restart: on-failure
+  balances-extractor:
+    restart: no
     build:
       context: .
     environment:
@@ -61,26 +53,12 @@ services:
       GRPC_ADDR: "${GRPC_ADDR}"
       PROJECT_ID: "${PROJECT_ID}"
       DATASET_ID: "${DATASET_ID}"
-      GOOGLE_APPLICATION_CREDENTIALS: "/bigquerycreds.json"
       ADDRESSES: "${BALANCE_ADDRESSES}"
+      GOOGLE_APPLICATION_CREDENTIALS: "/bigquerycreds.json"
     volumes:
       - "${GOOGLE_CREDS}:/bigquerycreds.json"
     entrypoint:
       - "./extract-balances.sh"
-
-  coingeko-extractor:
-    restart: on-failure
-    build:
-      context: .
-    environment:
-      COIN_ID: cosmos
-      PROJECT_ID: "${PROJECT_ID}"
-      DATASET_ID: "${DATASET_ID}"
-      GOOGLE_APPLICATION_CREDENTIALS: "/bigquerycreds.json"
-    volumes:
-      - "${GOOGLE_CREDS}:/bigquerycreds.json"
-    entrypoint:
-      - "./extract-coingeko.sh"
 
   cubejs:
     image: cubejs/cube:v0.33.38
@@ -92,6 +70,8 @@ services:
       - DATASET_ID=${DATASET_ID}
       - CUBEJS_DEV_MODE=true
       - CUBEJS_DB_TYPE=bigquery
+      - CUBEJS_WEB_SOCKETS=true
+      - CUBEJS_DEFAULT_API_SCOPES=meta,data,graphql,jobs
       - CUBEJS_ROLLUP_ONLY=true
       - CUBEJS_DB_BQ_CREDENTIALS=${GOOGLE_CREDS_B64}
       - CUBEJS_DB_BQ_PROJECT_ID=${PROJECT_ID}

@@ -2,6 +2,13 @@
 
 Output format: https://hub.meltano.com/singer/spec/
 
+## Settings
+
+ - `WORKER_COUNT`: This script processes stdin lines in parallel mode, and the variable sets the count of them.
+ - `DECODE_SERVICE_URL`: This links to a service that decodes transactions.
+ - `CREATE_OLD_STATE_CHANGES=1`: This emits a schema for the old_state_changes table with the state_changes schema.
+ - `ONLY_SCHEMA=1`: This emits only SCHEMA records for target-bigquery (like migrations).
+
 ## Typical Usage
 
 ```

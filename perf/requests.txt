@@ -1,0 +1,11 @@
+POST http://34.149.103.139/cubejs-api/agoric_mainnet/v1/load
+Content-Type: application/json
+@perf/vault_managers_query.json
+
+POST http://34.149.103.139/cubejs-api/agoric_mainnet/v1/load
+Content-Type: application/json
+@perf/oracle_prices.json
+
+POST http://34.149.103.139/cubejs-api/agoric_mainnet/v1/load
+Content-Type: application/json
+@perf/reserve_query.json

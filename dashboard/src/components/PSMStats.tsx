@@ -1,4 +1,5 @@
 import { formatPrice, formatPercent } from '@/utils';
+import { Skeleton as SkeletonEl } from '@/components/ui/skeleton';
 import { Card, CardDescription, CardContent, CardHeader, CardTitle } from './ui/card';
 
 type Props = {
@@ -14,7 +15,11 @@ type Props = {
 export const PSMStats = ({ data }: Props) => (
   <Card>
     <CardHeader className="flex flex-row items-center justify-between space-y-0">
-      <CardTitle className="font-bold">{data.label}</CardTitle>
+      {data.label ? (
+        <CardTitle className="font-bold">{data.label}</CardTitle>
+      ) : (
+        <SkeletonEl className="w-[150px] h-[24px] rounded-full" />
+      )}
     </CardHeader>
     <CardContent className="flex-none md:flex flex-row items-center justify-between">
       <div className="text-2xl tracking-tight mt-4">
@@ -30,4 +35,16 @@ export const PSMStats = ({ data }: Props) => (
       </div>
     </CardContent>
   </Card>
+);
+
+export const Skeleton = () => (
+  <PSMStats
+    data={{
+      coin: 'token',
+      label: '',
+      mint_limit: 0,
+      minted_pool_balance: 0,
+      utilized: 0,
+    }}
+  />
 );

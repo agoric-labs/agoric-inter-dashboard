@@ -2,11 +2,11 @@ import { DataTable, DataColumn } from './DataTable';
 
 type Row = {
   collateral_type: string;
-  total_locked_collateral: number;
-  total_locked_collateral_usd: number;
-  total_ist_minted: number;
+  total_collateral: number;
+  total_collateral_usd: number;
+  total_debt: number;
   colletarization_ratio: number;
-  ist_minting_limit: number;
+  debt_limit: number;
   utilization_rate: number;
 };
 
@@ -26,17 +26,17 @@ export const columns: DataColumn<Row>[] = [
     header: 'Debt Type',
   },
   {
-    accessorKey: 'total_locked_collateral',
+    accessorKey: 'total_collateral',
     type: 'number',
-    header: 'Total Locked Collateral (ATOM)',
+    header: 'Total Locked Collateral',
   },
   {
-    accessorKey: 'total_locked_collateral_usd',
+    accessorKey: 'total_collateral_usd',
     type: 'usd',
     header: 'Total Locked Collateral Value ($USD)',
   },
   {
-    accessorKey: 'total_ist_minted',
+    accessorKey: 'total_debt',
     type: 'number',
     header: 'Total IST Minted',
   },
@@ -46,7 +46,7 @@ export const columns: DataColumn<Row>[] = [
     header: 'Colletarization Ratio',
   },
   {
-    accessorKey: 'ist_minting_limit',
+    accessorKey: 'debt_limit',
     type: 'number',
     header: 'IST Minting Limit',
   },

@@ -1,4 +1,5 @@
 import { useCubeQuery } from '@cubejs-client/react';
+import { Skeleton } from '@/components/ui/skeleton';
 import { ValueCard } from '@/components/ValueCard';
 import { formatPrice, getCubeQueryView } from '@/utils';
 
@@ -8,10 +9,10 @@ type Props = {
 
 export function VaultTotalLockedCollateralValueCard({ title = 'Total Locked Collateral Value' }: Props) {
   const res = useCubeQuery({
-    measures: ['vault_managers.total_locked_collateral_usd_avg'],
+    measures: ['vault_factory_metrics.total_collateral_usd_sum'],
     timeDimensions: [
       {
-        dimension: 'vault_managers.day',
+        dimension: 'vault_factory_metrics.day',
         granularity: 'day',
         dateRange: 'Today',
       },
@@ -19,7 +20,7 @@ export function VaultTotalLockedCollateralValueCard({ title = 'Total Locked Coll
   });
 
   if (res.isLoading || !res.resultSet) {
-    return <ValueCard title={title} value="Loading..." />;
+    return <ValueCard title={title} value={<Skeleton className="w-[50px] h-[32px] rounded-full" />} />;
   }
 
   const [resultSet, requestView] = getCubeQueryView(res);
@@ -33,6 +34,6 @@ export function VaultTotalLockedCollateralValueCard({ title = 'Total Locked Coll
   }
 
   return (
-    <ValueCard title={title} value={formatPrice(rows[0]['vault_managers.total_locked_collateral_usd_avg'] as string)} />
+    <ValueCard title={title} value={formatPrice(rows[0]['vault_factory_metrics.total_collateral_usd_sum'] as string)} />
   );
 }
