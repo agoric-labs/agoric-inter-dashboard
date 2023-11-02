@@ -62,7 +62,7 @@ RUN curl -s https://deb.nodesource.com/setup_18.x | bash \
  && make build-chain
 
 # final image
-FROM python:3.9.18
+FROM python:3.11.6
 
 ENV PATH="/app/bin:$PATH"
 WORKDIR /app
