@@ -15,6 +15,7 @@ module.exports = {
   preAggregationsSchema: () => `pre_aggregations_${dataset}_${paPrefix}`,
 
   basePath: `/cubejs-api/${process.env.DATASET_ID.replace('v2_', '')}`,
+  webSocketsBasePath: `/cubejs-api/${process.env.DATASET_ID.replace('v2_', '')}/v1/load/websocket`,
 
   scheduledRefreshContexts: async () => [{}],
 };

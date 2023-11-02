@@ -78,6 +78,7 @@ services:
       - DATASET_ID=${DATASET_ID}
       - CUBEJS_DEV_MODE=true
       - CUBEJS_DB_TYPE=bigquery
+      - CUBEJS_WEB_SOCKETS=true
       - CUBEJS_DEFAULT_API_SCOPES=meta,data,graphql,jobs
       - CUBEJS_ROLLUP_ONLY=true
       - CUBEJS_DB_BQ_CREDENTIALS=${GOOGLE_CREDS_B64}

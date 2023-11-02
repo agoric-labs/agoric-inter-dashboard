@@ -8,7 +8,7 @@ import { Vaults } from './pages/Vaults';
 import { InterProtocol } from './pages/InterProtocol';
 import { PSM } from './pages/PSM';
 import { Reserve } from './pages/Reserve';
-import { Internal } from './pages/Internal';
+import { DebugPage } from './pages/Debug';
 import { Liquidated } from './pages/Liquidated';
 
 const MainLayoutWithCoube = ({ children }: { children?: ReactNode }) => (
@@ -45,8 +45,8 @@ const router = createBrowserRouter([
         element: <Liquidated />,
       },
       {
-        path: '/internal',
-        element: <Internal />,
+        path: '/__debug',
+        element: <DebugPage />,
       },
     ],
   },
