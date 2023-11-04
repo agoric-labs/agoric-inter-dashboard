@@ -12,7 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@cubejs-client/core": "^0.33.47",
+    "@cubejs-client/core": "^0.34.2",
     "@cubejs-client/react": "^0.33.47",
     "@cubejs-client/ws-transport": "^0.34.9",
     "@radix-ui/react-select": "^1.2.2",

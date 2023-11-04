@@ -1342,7 +1342,7 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@cubejs-client/core@^0.33.47", "@cubejs-client/core@^0.33.59":
+"@cubejs-client/core@^0.33.59":
   version "0.33.59"
   resolved "https://registry.yarnpkg.com/@cubejs-client/core/-/core-0.33.59.tgz#985ec795ff94411f508a4c28b0f92347f1eaafc6"
   integrity sha512-BNJnxDPYrLjiZU+OAp+qL/twHVdjKPH8aeVDx3oxrk8GR7hA9xN2bjoJxScdGqUNwtyXn9a9iu/tzsXcut0IBQ==
@@ -1355,7 +1355,7 @@
     url-search-params-polyfill "^7.0.0"
     uuid "^8.3.2"
 
-"@cubejs-client/core@^0.34.9":
+"@cubejs-client/core@^0.34.2", "@cubejs-client/core@^0.34.9":
   version "0.34.9"
   resolved "https://registry.yarnpkg.com/@cubejs-client/core/-/core-0.34.9.tgz#a402450b08e52ef7b87d44a6044910d94218783b"
   integrity sha512-F1+VHnhZt3t+709PoFzaNdqKiQ1QaLAiDcU/S5/yZlohU4pYOL4I57nA/AaFqg9XTJd2/cUPCkvrxBtft3xoJA==
