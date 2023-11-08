@@ -67,10 +67,10 @@ cube(`vault_states`, {
       dimensions: [state],
       timeDimension: day,
       granularity: `day`,
-      partition_granularity: `month`,
+      // partition_granularity: `month`,
       refresh_key: {
         every: `30 minutes`,
-        incremental: true,
+        // incremental: true
       },
       build_range_start: {
         sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.vaultFactory' and path like 'published.vaultFactory.managers.manager%'`,

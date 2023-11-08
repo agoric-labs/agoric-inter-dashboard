@@ -328,10 +328,10 @@ cube(`vault_factory_metrics`, {
       dimensions: [manager_idx, collateral_type, debt_type],
       time_dimension: day,
       granularity: `day`,
-      partition_granularity: `month`,
+      // partition_granularity: `month`,
       refresh_key: {
         every: `30 minutes`,
-        incremental: true,
+        // incremental: true
       },
       build_range_start: {
         sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.vaultFactory' and path like '%metrics'`,
@@ -428,10 +428,10 @@ cube(`vault_factory_metrics`, {
       ],
       time_dimension: day,
       granularity: `day`,
-      partition_granularity: `month`,
+      // partition_granularity: `month`,
       refresh_key: {
         every: `30 minutes`,
-        incremental: true,
+        // incremental: true
       },
       build_range_start: {
         sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.vaultFactory' and path like '%metrics'`,

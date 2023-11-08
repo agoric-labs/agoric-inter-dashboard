@@ -149,10 +149,10 @@ cube(`psm_stats`, {
       dimensions: [psm_stats.coin],
       time_dimension: psm_stats.day,
       granularity: `day`,
-      partition_granularity: `month`,
+      // partition_granularity: `month`,
       refresh_key: {
-        every: `10 minutes`,
-        incremental: true,
+        every: `30 minutes`,
+        // incremental: true
       },
       build_range_start: {
         sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.psm'`,
@@ -189,10 +189,10 @@ cube(`psm_stats`, {
       measures: [minted_pool_balance_sum],
       time_dimension: psm_stats.day,
       granularity: `day`,
-      partition_granularity: `month`,
+      // partition_granularity: `month`,
       refresh_key: {
         every: `30 minutes`,
-        incremental: true,
+        // incremental: true
       },
       build_range_start: {
         sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.psm'`,

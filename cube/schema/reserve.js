@@ -69,10 +69,10 @@ cube(`reserve`, {
       measures: [shortfall_balance_avg, total_fee_minted_avg, total_fee_burned_avg],
       time_dimension: day,
       granularity: `day`,
-      partition_granularity: `month`,
+      // partition_granularity: `month`,
       refresh_key: {
         every: `30 minutes`,
-        incremental: true,
+        // incremental: true
       },
       build_range_start: {
         sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.reserve'`,

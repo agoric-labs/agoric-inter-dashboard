@@ -140,10 +140,10 @@ cube(`vault_factory_governance`, {
       dimensions: [manager_idx],
       time_dimension: day,
       granularity: `day`,
-      partition_granularity: `month`,
+      // partition_granularity: `month`,
       refresh_key: {
         every: `30 minutes`,
-        incremental: true,
+        // incremental: true
       },
       build_range_start: {
         sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.vaultFactory' and path like '%governance'`,
@@ -180,10 +180,10 @@ cube(`vault_factory_governance`, {
       measures: [debt_limit_sum],
       time_dimension: day,
       granularity: `day`,
-      partition_granularity: `month`,
+      // partition_granularity: `month`,
       refresh_key: {
         every: `30 minutes`,
-        incremental: true,
+        // incremental: true
       },
       build_range_start: {
         sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.vaultFactory' and path like '%governance'`,

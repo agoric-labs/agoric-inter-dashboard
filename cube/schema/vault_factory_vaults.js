@@ -175,10 +175,10 @@ cube(`vault_factory_vaults`, {
       dimensions: [debt_type, vault_idx, manager_idx, collateral_type],
       time_dimension: day,
       granularity: `day`,
-      partition_granularity: `month`,
+      // partition_granularity: `month`,
       refresh_key: {
         every: `30 minutes`,
-        incremental: true,
+        // incremental: true
       },
     },
     stats_year: {
@@ -209,10 +209,10 @@ cube(`vault_factory_vaults`, {
       measures: [liquidated_count],
       time_dimension: day,
       granularity: `day`,
-      partition_granularity: `month`,
+      // partition_granularity: `month`,
       refresh_key: {
         every: `30 minutes`,
-        incremental: true,
+        // incremental: true
       },
     },
   },

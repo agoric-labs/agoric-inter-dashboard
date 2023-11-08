@@ -86,10 +86,10 @@ cube(`psm_governance`, {
       dimensions: [coin],
       time_dimension: day,
       granularity: `day`,
-      partition_granularity: `month`,
+      // partition_granularity: `month`,
       refresh_key: {
         every: `30 minutes`,
-        incremental: true,
+        // incremental: true
       },
       build_range_start: {
         sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.psm' and path like '%governance'`,
@@ -126,10 +126,10 @@ cube(`psm_governance`, {
       measures: [mint_limit_sum],
       time_dimension: day,
       granularity: `day`,
-      partition_granularity: `month`,
+      // partition_granularity: `month`,
       refresh_key: {
-        every: `10 minutes`,
-        incremental: true,
+        every: `30 minutes`,
+        // incremental: true
       },
       build_range_start: {
         sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.psm' and path like '%governance'`,

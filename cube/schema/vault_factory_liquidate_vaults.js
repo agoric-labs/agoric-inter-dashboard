@@ -273,10 +273,10 @@ cube(`vault_factory_liquidate_vaults`, {
       dimensions: [manager_idx, vault_idx, debt_type, collateral_type],
       time_dimension: day,
       granularity: `day`,
-      partition_granularity: `month`,
+      // partition_granularity: `month`,
       refresh_key: {
         every: `30 minutes`,
-        incremental: true,
+        // incremental: true
       },
       build_range_start: {
         sql: `select min(block_time) from ${state_changes.sql()} where module = 'published.vaultFactory' and path like '%.vault%'`,
