@@ -3,6 +3,7 @@ package env
 import (
 	"bufio"
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -121,7 +122,10 @@ func (e *Env) WriteConfig(ranges []*model.HeightRange) error {
 
 	log.Info().Strs("cmd", e.subcommand).Msg("start the subcommand and push next config")
 
-	cmd := exec.Command(e.subcommand[0], e.subcommand[1:]...) //nolint:gosec
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
+	defer cancel()
+
+	cmd := exec.CommandContext(ctx, e.subcommand[0], e.subcommand[1:]...) //nolint:gosec
 	cmd.Stdin = bytes.NewBuffer(rawConfig)
 	cmd.Stdout = os.Stdout
 	// request the OS to assign process group to the new process,
