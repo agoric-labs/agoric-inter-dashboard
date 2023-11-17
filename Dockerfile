@@ -72,7 +72,7 @@ COPY patches/target-bigquery.patch /target-bigquery.patch
 RUN apt update \
  && apt install -y jq curl git \
  && pip install requests z3-target-bigquery ujson \
- && cd /usr/local/lib/python3.11/site-packages # \
+ && cd /usr/local/lib/python3.11/site-packages \
  && git apply /target-bigquery.patch
 
 COPY --from=agoric /go/agoric-sdk/golang/cosmos/build/agd /app/bin/agd

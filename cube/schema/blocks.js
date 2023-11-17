@@ -23,7 +23,7 @@ cube(`blocks`, {
       time_dimension: block_time,
       granularity: `day`,
       refresh_key: {
-        every: `1 minute`,
+        every: `15 minute`,
       },
     },
   },

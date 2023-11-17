@@ -122,7 +122,9 @@ func (e *Env) WriteConfig(ranges []*model.HeightRange) error {
 
 	log.Info().Strs("cmd", e.subcommand).Msg("start the subcommand and push next config")
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
+	timeout := 10 * time.Hour
+
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
 	cmd := exec.CommandContext(ctx, e.subcommand[0], e.subcommand[1:]...) //nolint:gosec
@@ -142,6 +144,27 @@ func (e *Env) WriteConfig(ranges []*model.HeightRange) error {
 	if err != nil {
 		return fmt.Errorf("failed to run: %w %+v", err, e.subcommand)
 	}
+
+	go func() {
+		select {
+		case <-time.After(timeout):
+			err := cmd.Process.Kill()
+			if err != nil {
+				log.Warn().Err(err).Msg("failed to kill process")
+				return
+			}
+
+			log.Info().Msg("process killed as timeout reached")
+
+		case <-ctx.Done():
+			if err != nil {
+				log.Warn().Err(err).Msg("failed finished with error")
+				return
+			}
+
+			log.Info().Msg("process finished successfully")
+		}
+	}()
 
 	if e.commitMsg != "" {
 		log.Info().Str("msg", e.commitMsg).Msg("wait a commit msg")
@@ -236,6 +259,18 @@ func (e *Env) GetSyncedRanges() ([]*model.HeightRange, error) {
 
 func readStdinRanges() ([]*model.HeightRange, error) {
 	syncedRanges := []*model.HeightRange{}
+
+	fileInfo, err := os.Stdin.Stat()
+	if err != nil {
+		return nil, fmt.Errorf("failed to get stdin stat: %w", err)
+	}
+
+	if (fileInfo.Mode() & os.ModeCharDevice) != 0 {
+		return syncedRanges, nil
+	}
+
+	log.Info().Msg("wait stdin ranges...")
+
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for scanner.Scan() {
@@ -251,7 +286,7 @@ func readStdinRanges() ([]*model.HeightRange, error) {
 		syncedRanges = append(syncedRanges, &lineRange)
 	}
 
-	err := scanner.Err()
+	err = scanner.Err()
 	if err != nil {
 		return nil, fmt.Errorf("failed to read from stdin: %w", err)
 	}
