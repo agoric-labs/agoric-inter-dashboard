@@ -16,11 +16,11 @@ This approach helps avoid issues that occur after 00:00 and before the pre-aggre
       {
         dimension: 'reserve_allocations.day',
         granularity: 'day',
-        dateRange: 'from 1 days ago to now',
+        dateRange: 'from 1 days ago to now', // important!
       },
     ],
     order: {
-      'reserve_allocations.day': 'desc',
+      'reserve_allocations.day': 'desc', // important!
     },
   });
 ```

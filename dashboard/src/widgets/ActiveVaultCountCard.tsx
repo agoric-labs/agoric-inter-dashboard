@@ -17,6 +17,9 @@ export function ActiveVaultCountCard({ title = 'Total Active Vaults' }: Props) {
         granularity: 'day',
       },
     ],
+    order: {
+      'vault_factory_metrics.day': 'desc',
+    },
   });
 
   if (res.isLoading || !res.resultSet) {

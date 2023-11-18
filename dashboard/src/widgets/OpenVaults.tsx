@@ -29,10 +29,11 @@ export function OpenVaults({ title = 'Open Vaults' }: Props) {
         dateRange: 'from 1 days ago to now',
       },
     ],
-    order: {
-      'vault_factory_vaults.manager_idx': 'asc',
-      'vault_factory_vaults.vault_idx': 'asc',
-    },
+    order: [
+      ['vault_factory_vaults.day', 'desc'],
+      ['vault_factory_vaults.manager_idx', 'asc'],
+      ['vault_factory_vaults.vault_idx', 'asc'],
+    ],
     dimensions: [
       'vault_factory_vaults.debt_type',
       'vault_factory_vaults.vault_idx',
@@ -67,21 +68,26 @@ export function OpenVaults({ title = 'Open Vaults' }: Props) {
     return requestView;
   }
 
-  const rows = resultSet.tablePivot().map((row: any) => {
-    const newRow: any = {};
+  const firstDay = resultSet.tablePivot()[0]['vault_factory_vaults.day.day'];
 
-    Object.keys(row).forEach((key) => {
-      newRow[
-        key
-          .replace('vault_factory_vaults.', '')
-          .replace('vault_factory_governance.', '')
-          .replace('oracle_prices.', '')
-          .replace('_avg', '')
-      ] = row[key];
+  const rows = resultSet
+    .tablePivot()
+    .filter((row) => row['vault_factory_vaults.day.day'] === firstDay)
+    .map((row: any) => {
+      const newRow: any = {};
+
+      Object.keys(row).forEach((key) => {
+        newRow[
+          key
+            .replace('vault_factory_vaults.', '')
+            .replace('vault_factory_governance.', '')
+            .replace('oracle_prices.', '')
+            .replace('_avg', '')
+        ] = row[key];
+      });
+
+      return newRow;
     });
-
-    return newRow;
-  });
 
   return (
     <>

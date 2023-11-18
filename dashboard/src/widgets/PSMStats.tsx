@@ -13,7 +13,7 @@ export function PSMStats() {
         granularity: 'day',
       },
     ],
-    order: [['psm_stats.coin', 'asc']],
+    order: [['psm_stats.day', 'asc']],
     dimensions: ['psm_stats.coin'],
   });
 

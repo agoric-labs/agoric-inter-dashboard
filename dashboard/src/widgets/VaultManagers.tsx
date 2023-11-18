@@ -25,9 +25,10 @@ export function VaultManagers({ title = 'Collateral Type' }: Props) {
         granularity: 'day',
       },
     ],
-    order: {
-      'vault_factory_metrics.manager_idx': 'asc',
-    },
+    order: [
+      ['vault_factory_metrics.day', 'desc'],
+      ['vault_factory_metrics.manager_idx', 'asc'],
+    ],
     dimensions: [
       'vault_factory_metrics.collateral_type',
       'vault_factory_metrics.debt_type',
@@ -52,16 +53,21 @@ export function VaultManagers({ title = 'Collateral Type' }: Props) {
     return requestView;
   }
 
-  const rows = resultSet.tablePivot().map((row: any) => {
-    const newRow: any = {};
+  const firstDay = resultSet.tablePivot()[0]['vault_factory_metrics.day.day'];
 
-    Object.keys(row).forEach((key) => {
-      newRow[key.replace('vault_factory_metrics.', '').replace('vault_factory_governance.', '').replace('_avg', '')] =
-        row[key];
+  const rows = resultSet
+    .tablePivot()
+    .filter((row) => row['psm_stats.day.day'] === firstDay)
+    .map((row: any) => {
+      const newRow: any = {};
+
+      Object.keys(row).forEach((key) => {
+        newRow[key.replace('vault_factory_metrics.', '').replace('vault_factory_governance.', '').replace('_avg', '')] =
+          row[key];
+      });
+
+      return newRow;
     });
-
-    return newRow;
-  });
 
   return (
     <>

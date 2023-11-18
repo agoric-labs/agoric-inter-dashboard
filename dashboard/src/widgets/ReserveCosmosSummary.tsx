@@ -29,6 +29,9 @@ export function ReserveCosmosSummary({ title = 'Cosmos Reserve' }: Props) {
         values: ['agoric1ae0lmtzlgrcnla9xjkpaarq5d5dfez63h3nucl'],
       },
     ],
+    order: {
+      'balances.day': 'desc',
+    },
   });
 
   if (res.isLoading || !res.resultSet) {

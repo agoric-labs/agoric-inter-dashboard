@@ -35,10 +35,11 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults' }: Props) {
         dateRange: 'from 1 days ago to now',
       },
     ],
-    order: {
-      'vault_factory_liquidate_vaults.manager_idx': 'asc',
-      'vault_factory_liquidate_vaults.vault_idx': 'asc',
-    },
+    order: [
+      ['vault_factory_liquidate_vaults.day', 'desc'],
+      ['vault_factory_liquidate_vaults.manager_idx', 'asc'],
+      ['vault_factory_liquidate_vaults.vault_idx', 'asc'],
+    ],
     dimensions: [
       'vault_factory_liquidate_vaults.manager_idx',
       'vault_factory_liquidate_vaults.vault_idx',
@@ -64,30 +65,35 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults' }: Props) {
     return requestView;
   }
 
-  const rows = resultSet.tablePivot().map((row: any) => {
-    const newRow: any = {};
+  const firstDay = resultSet.tablePivot()[0]['vault_factory_liquidate_vaults.day.day'];
 
-    Object.keys(row).forEach((key) => {
-      newRow[key.replace('vault_factory_liquidate_vaults.', '').replace('vault_factory_governance.', '')] = row[key];
+  const rows = resultSet
+    .tablePivot()
+    .filter((row) => row['vault_factory_liquidate_vaults.day.day'] === firstDay)
+    .map((row: any) => {
+      const newRow: any = {};
+
+      Object.keys(row).forEach((key) => {
+        newRow[key.replace('vault_factory_liquidate_vaults.', '').replace('vault_factory_governance.', '')] = row[key];
+      });
+
+      newRow.state = states[newRow.last_state];
+
+      // const starting = new Date(row['vault_factory_liquidate_vaults.liquidating_enter_time'] * 1000);
+      const starting = new Date(row['vault_factory_liquidate_vaults.liquidating_enter_time'] * 1000);
+      newRow.liquidationStartTime = format(starting, 'MM/dd/yyyy HH:mm');
+
+      if (row['vault_factory_liquidate_vaults.liquidated_enter_time']) {
+        newRow.liquidationTime = formatSecondsToHumanReadable(
+          row['vault_factory_liquidate_vaults.liquidated_enter_time'] -
+            row['vault_factory_liquidate_vaults.liquidating_enter_time'],
+        );
+      } else {
+        newRow.liquidationTime = '—';
+      }
+
+      return newRow;
     });
-
-    newRow.state = states[newRow.last_state];
-
-    // const starting = new Date(row['vault_factory_liquidate_vaults.liquidating_enter_time'] * 1000);
-    const starting = new Date(row['vault_factory_liquidate_vaults.liquidating_enter_time'] * 1000);
-    newRow.liquidationStartTime = format(starting, 'MM/dd/yyyy HH:mm');
-
-    if (row['vault_factory_liquidate_vaults.liquidated_enter_time']) {
-      newRow.liquidationTime = formatSecondsToHumanReadable(
-        row['vault_factory_liquidate_vaults.liquidated_enter_time'] -
-          row['vault_factory_liquidate_vaults.liquidating_enter_time'],
-      );
-    } else {
-      newRow.liquidationTime = '—';
-    }
-
-    return newRow;
-  });
 
   return (
     <>

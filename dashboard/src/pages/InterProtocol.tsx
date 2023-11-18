@@ -52,6 +52,7 @@ export function InterProtocol() {
         dateRange: 'from 1 days ago to now',
       },
     ],
+    order: [['balances.day', 'desc']],
     filters: [
       {
         member: 'balances.denom',
@@ -81,6 +82,7 @@ export function InterProtocol() {
         dateRange: 'from 1 days ago to now',
       },
     ],
+    order: [['vault_factory_governance.day', 'desc']],
   });
 
   const vmRes = useCubeQuery({
@@ -92,6 +94,7 @@ export function InterProtocol() {
         dateRange: 'from 1 days ago to now',
       },
     ],
+    order: [['vault_factory_metrics.day', 'desc']],
   });
 
   const psmGovRes = useCubeQuery({
@@ -103,6 +106,7 @@ export function InterProtocol() {
         dateRange: 'from 1 days ago to now',
       },
     ],
+    order: [['psm_governance.day', 'desc']],
   });
 
   const psmRes = useCubeQuery({
@@ -114,6 +118,7 @@ export function InterProtocol() {
         dateRange: 'from 1 days ago to now',
       },
     ],
+    order: [['psm_stats.day', 'desc']],
   });
 
   const reserveRes = useCubeQuery({

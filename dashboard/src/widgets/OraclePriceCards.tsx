@@ -17,7 +17,7 @@ export function OraclePriceCards({ title = 'Smart Wallets Provisioned' }: Props)
       },
     ],
     order: {
-      'oracle_prices.rate_avg': 'desc',
+      'oracle_prices.day': 'desc',
     },
     dimensions: ['oracle_prices.price_feed_name'],
   });

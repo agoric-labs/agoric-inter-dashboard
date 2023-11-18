@@ -17,7 +17,9 @@ export function LiquidatedVaultCountCard({ title = 'Total Liquidated Vaults' }: 
         granularity: 'day',
       },
     ],
-    order: {},
+    order: {
+      'vault_factory_vaults.day': 'desc',
+    },
   });
 
   if (res.isLoading || !res.resultSet) {

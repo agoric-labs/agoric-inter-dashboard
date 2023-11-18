@@ -16,7 +16,10 @@ export function PSMUtilizedPie() {
         granularity: 'day',
       },
     ],
-    order: [['psm_stats.last_utilization_rate', 'asc']],
+    order: [
+      ['psm_stats.day', 'desc'],
+      ['psm_stats.last_utilization_rate', 'asc'],
+    ],
     dimensions: ['psm_stats.coin'],
   });
 
@@ -25,10 +28,15 @@ export function PSMUtilizedPie() {
     return requestView;
   }
 
-  let data: any[] = resultSet.tablePivot().map((row) => ({
-    value: parseFloat(row['psm_stats.last_utilization_rate'] as string),
-    label: coinLabels[row['psm_stats.coin'] as string],
-  }));
+  const firstDay = resultSet.tablePivot()[0]['psm_stats.day.day'];
+
+  let data: any[] = resultSet
+    .tablePivot()
+    .filter((row) => row['psm_stats.day.day'] === firstDay)
+    .map((row) => ({
+      value: parseFloat(row['psm_stats.last_utilization_rate'] as string),
+      label: coinLabels[row['psm_stats.coin'] as string],
+    }));
 
   if (data.every((r) => r.value === 0)) {
     data = data.map(() => ({ value: 1 }));

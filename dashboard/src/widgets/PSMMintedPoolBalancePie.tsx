@@ -21,7 +21,10 @@ export function PSMMintedPoolBalancePie({ title = 'Total Minted IST Per Anchor' 
         granularity: 'day',
       },
     ],
-    order: [['psm_stats.minted_pool_balance_avg', 'asc']],
+    order: [
+      ['psm_stats.day', 'desc'],
+      ['psm_stats.minted_pool_balance_avg', 'asc'],
+    ],
     dimensions: ['psm_stats.coin'],
   });
 
@@ -46,8 +49,11 @@ export function PSMMintedPoolBalancePie({ title = 'Total Minted IST Per Anchor' 
     return requestView;
   }
 
-  const data = resultSet
+  const firstDay = resultSet.tablePivot()[0]['psm_stats.day.day'];
+
+  const data: any[] = resultSet
     .tablePivot()
+    .filter((row) => row['psm_stats.day.day'] === firstDay)
     .map((row) => ({
       value: parseFloat(row['psm_stats.minted_pool_balance_avg'] as string),
       label: coinLabels[row['psm_stats.coin'] as string],
