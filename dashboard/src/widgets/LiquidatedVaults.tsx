@@ -32,7 +32,7 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults' }: Props) {
       {
         dimension: 'vault_factory_liquidate_vaults.day',
         granularity: 'day',
-        dateRange: 'Today',
+        dateRange: 'from 1 days ago to now',
       },
     ],
     order: {

@@ -14,7 +14,7 @@ export function VaultManagerCountCard({ title = 'Total Collateral Types' }: Prop
       {
         dimension: 'vault_factory_metrics.day',
         granularity: 'day',
-        dateRange: 'Today',
+        dateRange: 'from 1 days ago to now',
       },
     ],
   });

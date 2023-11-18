@@ -14,7 +14,7 @@ export function ReserveSummary({ title = 'Total Reserve Assets' }: Props) {
       {
         dimension: 'reserve_allocations.day',
         granularity: 'day',
-        dateRange: 'Today',
+        dateRange: 'from 1 days ago to now',
       },
     ],
     order: {

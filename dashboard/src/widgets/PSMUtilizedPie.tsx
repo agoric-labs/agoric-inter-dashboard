@@ -12,7 +12,7 @@ export function PSMUtilizedPie() {
     timeDimensions: [
       {
         dimension: 'psm_stats.day',
-        dateRange: 'Today',
+        dateRange: 'from 1 days ago to now',
         granularity: 'day',
       },
     ],

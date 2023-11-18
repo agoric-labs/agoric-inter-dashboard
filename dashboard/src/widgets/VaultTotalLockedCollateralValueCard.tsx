@@ -14,7 +14,7 @@ export function VaultTotalLockedCollateralValueCard({ title = 'Total Locked Coll
       {
         dimension: 'vault_factory_metrics.day',
         granularity: 'day',
-        dateRange: 'Today',
+        dateRange: 'from 1 days ago to now',
       },
     ],
   });

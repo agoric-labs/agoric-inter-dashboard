@@ -13,7 +13,7 @@ export function ActiveVaultCountCard({ title = 'Total Active Vaults' }: Props) {
     timeDimensions: [
       {
         dimension: 'vault_factory_metrics.day',
-        dateRange: 'Today',
+        dateRange: 'from 1 days ago to now',
         granularity: 'day',
       },
     ],

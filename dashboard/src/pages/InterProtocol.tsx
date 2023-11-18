@@ -49,7 +49,7 @@ export function InterProtocol() {
       {
         dimension: 'balances.day',
         granularity: 'day',
-        dateRange: 'Today',
+        dateRange: 'from 1 days ago to now',
       },
     ],
     filters: [
@@ -78,7 +78,7 @@ export function InterProtocol() {
       {
         dimension: 'vault_factory_governance.day',
         granularity: 'day',
-        dateRange: 'Today',
+        dateRange: 'from 1 days ago to now',
       },
     ],
   });
@@ -89,7 +89,7 @@ export function InterProtocol() {
       {
         dimension: 'vault_factory_metrics.day',
         granularity: 'day',
-        dateRange: 'Today',
+        dateRange: 'from 1 days ago to now',
       },
     ],
   });
@@ -100,7 +100,7 @@ export function InterProtocol() {
       {
         dimension: 'psm_governance.day',
         granularity: 'day',
-        dateRange: 'Today',
+        dateRange: 'from 1 days ago to now',
       },
     ],
   });
@@ -111,7 +111,7 @@ export function InterProtocol() {
       {
         dimension: 'psm_stats.day',
         granularity: 'day',
-        dateRange: 'Today',
+        dateRange: 'from 1 days ago to now',
       },
     ],
   });
@@ -127,7 +127,7 @@ export function InterProtocol() {
 
   const reserveAllocRes = useCubeQuery({
     measures: ['reserve_allocations.amount_usd_sum'],
-    timeDimensions: [{ dimension: 'reserve_allocations.day', granularity: 'day', dateRange: 'Today' }],
+    timeDimensions: [{ dimension: 'reserve_allocations.day', granularity: 'day', dateRange: 'from 1 days ago to now' }],
     order: {
       'reserve_allocations.day': 'desc',
     },

@@ -13,7 +13,7 @@ export function LiquidatedVaultCountCard({ title = 'Total Liquidated Vaults' }: 
     timeDimensions: [
       {
         dimension: 'vault_factory_vaults.day',
-        dateRange: 'Today',
+        dateRange: 'from 1 days ago to now',
         granularity: 'day',
       },
     ],

@@ -14,7 +14,7 @@ export function ReserveCosmosSummary({ title = 'Cosmos Reserve' }: Props) {
       {
         dimension: 'balances.day',
         granularity: 'day',
-        dateRange: 'Today',
+        dateRange: 'from 1 days ago to now',
       },
     ],
     filters: [

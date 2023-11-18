@@ -26,7 +26,7 @@ export function OpenVaults({ title = 'Open Vaults' }: Props) {
       {
         dimension: 'vault_factory_vaults.day',
         granularity,
-        dateRange: 'Today',
+        dateRange: 'from 1 days ago to now',
       },
     ],
     order: {

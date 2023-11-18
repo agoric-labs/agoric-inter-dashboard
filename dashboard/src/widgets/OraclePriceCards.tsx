@@ -13,7 +13,7 @@ export function OraclePriceCards({ title = 'Smart Wallets Provisioned' }: Props)
       {
         dimension: 'oracle_prices.day',
         granularity: 'day',
-        dateRange: 'Today',
+        dateRange: 'from 1 days ago to now',
       },
     ],
     order: {
