@@ -662,4 +662,6 @@ def index():
 
 
 if __name__ == "__main__":
-    serve(app, listen="0.0.0.0:8080")
+    addr = os.getenv("ADDR", "0.0.0.0:80")
+    print("linten", addr)
+    serve(app, listen=addr)
