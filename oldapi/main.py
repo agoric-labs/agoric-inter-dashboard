@@ -611,9 +611,9 @@ def get_liquidated_vaults(dataset):
         for key in row:
             new_key = key.replace("vault_factory_liquidate_vaults.", "").replace("vault_factory_governance.", "")
 
-            if "_avg" in new_key or "_rate" in new_key:
+            if ("_avg" in new_key or "_rate" in new_key) and row[key] is not None:
                 new_row[new_key] = float(row[key])
-            elif "_time" in new_key:
+            elif "_time" in new_key and row[key] is not None:
                 new_row[new_key] = int(row[key])
             else:
                 new_row[new_key] = row[key]
@@ -662,4 +662,4 @@ def index():
 
 
 if __name__ == "__main__":
-    serve(app, listen="0.0.0.0:80")
+    serve(app, listen="0.0.0.0:8080")
