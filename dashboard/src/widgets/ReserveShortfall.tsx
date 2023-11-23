@@ -1,7 +1,7 @@
 import { useCubeQuery } from '@cubejs-client/react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ValueCard } from '@/components/ValueCard';
-import { formatPrice, getCubeQueryView } from '@/utils';
+import { formatPrice, getCubeQueryView, extractFirstFloat } from '@/utils';
 
 type Props = {
   title?: string;
@@ -26,10 +26,7 @@ export function ReserveShortfall({ title = 'Reserve Shortfall' }: Props) {
     return requestView;
   }
 
-  const latest = resultSet.tablePivot()[0];
-  if (!latest) {
-    return <div>Nothing to show</div>;
-  }
+  const latest = extractFirstFloat(res, 'reserve.shortfall_balance_avg');
 
-  return <ValueCard title={title} value={formatPrice(latest['reserve.shortfall_balance_avg'] || 0)} />;
+  return <ValueCard title={title} value={formatPrice(latest)} />;
 }

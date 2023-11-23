@@ -3,7 +3,7 @@ import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { RadianTooltip } from '@/components/RadianTooltip';
 import { colors } from '@/components/palette';
-import { getCubeQueryView } from '@/utils';
+import { getCubeQueryView, extractFirst } from '@/utils';
 import { coinLabels } from '../coinLabels';
 
 export function PSMUtilizedPie() {
@@ -28,7 +28,7 @@ export function PSMUtilizedPie() {
     return requestView;
   }
 
-  const firstDay = resultSet.tablePivot()[0]['psm_stats.day.day'];
+  const firstDay = extractFirst(res, 'psm_stats.day.day');
 
   let data: any[] = resultSet
     .tablePivot()

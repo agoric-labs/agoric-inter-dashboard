@@ -46,10 +46,21 @@ cube(`balances`, {
     },
   },
 
+  segments: {
+    // agoric1ae0lmtzlgrcnla9xjkpaarq5d5dfez63h3nucl is a cosmos level reserves account
+    interchain_ist: {
+      sql: `${CUBE}.denom = 'uist' and ${CUBE}.address != 'agoric1ae0lmtzlgrcnla9xjkpaarq5d5dfez63h3nucl'`,
+    },
+    cosmos_reserve: {
+      sql: `${CUBE}.denom = 'uist' and ${CUBE}.address = 'agoric1ae0lmtzlgrcnla9xjkpaarq5d5dfez63h3nucl'`,
+    },
+  },
+
   pre_aggregations: {
     by_denom_and_address_year: {
       measures: [amount_sum, amount_avg],
       dimensions: [denom, address],
+      segments: [interchain_ist, cosmos_reserve],
       time_dimension: day,
       granularity: `year`,
       refresh_key: {
@@ -59,6 +70,7 @@ cube(`balances`, {
     by_denom_and_address_month: {
       measures: [amount_sum, amount_avg],
       dimensions: [denom, address],
+      segments: [interchain_ist, cosmos_reserve],
       time_dimension: day,
       granularity: `month`,
       refresh_key: {
@@ -68,6 +80,7 @@ cube(`balances`, {
     by_denom_and_address_week: {
       measures: [amount_sum, amount_avg],
       dimensions: [denom, address],
+      segments: [interchain_ist, cosmos_reserve],
       time_dimension: day,
       granularity: `week`,
       refresh_key: {
@@ -77,6 +90,7 @@ cube(`balances`, {
     by_denom_and_address_day: {
       measures: [amount_sum, amount_avg],
       dimensions: [denom, address],
+      segments: [interchain_ist, cosmos_reserve],
       time_dimension: day,
       granularity: `day`,
       // partition_granularity: `month`,

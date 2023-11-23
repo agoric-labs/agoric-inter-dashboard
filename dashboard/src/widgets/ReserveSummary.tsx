@@ -1,7 +1,7 @@
 import { useCubeQuery } from '@cubejs-client/react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ValueCard } from '@/components/ValueCard';
-import { formatPrice, getCubeQueryView } from '@/utils';
+import { formatPrice, getCubeQueryView, extractFirstFloat } from '@/utils';
 
 type Props = {
   title?: string;
@@ -31,10 +31,7 @@ export function ReserveSummary({ title = 'Total Reserve Assets' }: Props) {
     return requestView;
   }
 
-  const latest = resultSet.tablePivot()[0];
-  if (!latest) {
-    return <div>Nothing to show</div>;
-  }
+  const latest = extractFirstFloat(res, 'reserve_allocations.amount_usd_sum');
 
-  return <ValueCard title={title} value={formatPrice(latest['reserve_allocations.amount_usd_sum'])} />;
+  return <ValueCard title={title} value={formatPrice(latest)} />;
 }

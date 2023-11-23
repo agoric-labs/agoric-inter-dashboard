@@ -51,8 +51,8 @@ spec:
               value: /etc/gac/content
             - name: WORKER_COUNT
               value: "8"
-            - name: ADDRESSES
-              value: "{{ .Values.balances.addresses }}"
+            - name: EXTRA_ADDRESSES
+              value: "{{ .Values.balances.extraAddresses }}"
             volumeMounts:
             - mountPath: /etc/gac
               name: gac

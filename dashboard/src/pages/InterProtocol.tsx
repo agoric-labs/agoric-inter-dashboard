@@ -7,7 +7,7 @@ import { ValueCardGrid } from '@/components/ValueCardGrid';
 import { PageHeader } from '@/components/PageHeader';
 import { PageContent } from '@/components/PageContent';
 import { colors } from '@/components/palette';
-import { formatPercent, roundPrice, formatPrice, formatIST } from '@/utils';
+import { formatPercent, roundPrice, formatPrice, formatIST, extractFirstFloat } from '@/utils';
 import { ErrorAlert } from '@/components/ErrorAlert';
 
 const firstCards = [
@@ -52,25 +52,8 @@ export function InterProtocol() {
         dateRange: 'from 1 days ago to now',
       },
     ],
-    order: [['balances.day', 'desc']],
-    filters: [
-      {
-        member: 'balances.denom',
-        operator: 'equals',
-        values: ['uist'],
-      },
-      {
-        member: 'balances.address',
-        operator: 'contains',
-        values: [
-          'agoric1a53udazy8ayufvy0s434pfwjcedzqv34y3q6mc',
-          'agoric1kq2rzz6fq2q7fsu75a9g7cpzjeanmk686c8qtz',
-          'agoric12k2pyuylm9t7ugdvz67h9pg4gmmvhn5vdm8dpz',
-          'agoric17sael2kcmm8npe2pmkxj3un90xfg60vvxgxjnt',
-          'agoric1wsxce0ls59rtj70fwcrxmtmmv32vpgmgl3wen2',
-        ],
-      },
-    ],
+    order: { 'balances.day': 'desc' },
+    segments: ['balances.interchain_ist'],
   });
 
   const vgRes = useCubeQuery({
@@ -193,7 +176,7 @@ export function InterProtocol() {
         <PageHeader title="Summary" />
         <PageContent>
           <ValueCardGrid>
-            {firstCards.map((title) => (
+            {firstCards.map(title => (
               <ValueCard title={title} key={title} value={<Skeleton className="w-[100px] h-[32px] rounded-full" />} />
             ))}
           </ValueCardGrid>
@@ -208,23 +191,21 @@ export function InterProtocol() {
   }
 
   // top cards
-  const ibcBalance = parseFloat(ibcRes.resultSet.tablePivot()[0]['balances.amount_sum'] as string) || 0;
-  const walletCount = wcRes.resultSet.tablePivot()[0]['wallets.address_count'].toString();
+  const ibcBalance = extractFirstFloat(ibcRes, 'balances.amount_sum');
+  const walletCount = extractFirstFloat(wcRes, 'wallets.address_count');
 
-  const psmMinted = parseFloat(psmRes.resultSet.tablePivot()[0]['psm_stats.minted_pool_balance_sum'] as string);
-  const vaultMinted = parseFloat(vmRes.resultSet.tablePivot()[0]['vault_factory_metrics.total_debt_sum'] as string);
+  const psmMinted = extractFirstFloat(psmRes, 'psm_stats.minted_pool_balance_sum');
+  const vaultMinted = extractFirstFloat(vmRes, 'vault_factory_metrics.total_debt_sum');
   const totalMinted = psmMinted + vaultMinted;
 
-  const vaultMintLimit =
-    parseFloat(vgRes.resultSet.tablePivot()[0]['vault_factory_governance.debt_limit_sum'] as string) || 0;
-  const psmMintLimit = parseFloat(psmGovRes.resultSet.tablePivot()[0]['psm_governance.mint_limit_sum'] as string) || 0;
+  const vaultMintLimit = extractFirstFloat(vgRes, 'vault_factory_governance.debt_limit_sum');
+  const psmMintLimit = extractFirstFloat(psmGovRes, 'psm_governance.mint_limit_sum');
   const totalMintLimit = vaultMintLimit + psmMintLimit;
 
   // bottom cards
-  const totalReserve = reserveAllocRes.resultSet.tablePivot()[0]['reserve_allocations.amount_usd_sum'] as string;
-  const reserveShortfall = reserveRes.resultSet.tablePivot()[0]['reserve.shortfall_balance_avg'] as string;
-  const totalLockedCollateral =
-    parseFloat(vmRes.resultSet.tablePivot()[0]['vault_factory_metrics.total_collateral_usd_sum'] as string) || 0;
+  const totalReserve = extractFirstFloat(reserveAllocRes, 'reserve_allocations.amount_usd_sum');
+  const reserveShortfall = extractFirstFloat(reserveRes, 'reserve.shortfall_balance_avg');
+  const totalLockedCollateral = extractFirstFloat(vmRes, 'vault_factory_metrics.total_collateral_usd_sum');
 
   return (
     <>

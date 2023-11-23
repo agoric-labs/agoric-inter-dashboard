@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
 import { LiquidatedVaultsTable } from '@/components/LiquidatedVaultsTable';
 import { SectionHeader } from '@/components/SectionHeader';
-import { getCubeQueryView, formatSecondsToHumanReadable } from '@/utils';
+import { getCubeQueryView, formatSecondsToHumanReadable, extractFirst } from '@/utils';
 
 type Props = {
   title?: string;
@@ -65,7 +65,7 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults' }: Props) {
     return requestView;
   }
 
-  const firstDay = resultSet.tablePivot()[0]['vault_factory_liquidate_vaults.day.day'];
+  const firstDay = extractFirst(res, 'vault_factory_liquidate_vaults.day.day');
 
   const rows = resultSet
     .tablePivot()

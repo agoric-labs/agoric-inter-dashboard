@@ -3,7 +3,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { OpenVaultsTable } from '@/components/OpenVaultsTable';
 import { SectionHeader } from '@/components/SectionHeader';
 import { useGranularity } from '@/components/CubeProvider';
-import { getCubeQueryView } from '@/utils';
+import { getCubeQueryView, extractFirst } from '@/utils';
 
 type Props = {
   title?: string;
@@ -68,7 +68,7 @@ export function OpenVaults({ title = 'Open Vaults' }: Props) {
     return requestView;
   }
 
-  const firstDay = resultSet.tablePivot()[0]['vault_factory_vaults.day.day'];
+  const firstDay = extractFirst(res, 'vault_factory_vaults.day.day');
 
   const rows = resultSet
     .tablePivot()

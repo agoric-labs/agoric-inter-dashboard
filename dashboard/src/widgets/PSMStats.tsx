@@ -2,6 +2,7 @@ import { useCubeQuery } from '@cubejs-client/react';
 import { PSMStats as Item, Skeleton } from '@/components/PSMStats';
 import { ErrorAlert } from '@/components/ErrorAlert';
 import { coinLabels } from '../coinLabels';
+import { extractFirst } from '@/utils';
 
 export function PSMStats() {
   const res = useCubeQuery({
@@ -13,7 +14,7 @@ export function PSMStats() {
         granularity: 'day',
       },
     ],
-    order: [['psm_stats.day', 'asc']],
+    order: [['psm_stats.day', 'desc']],
     dimensions: ['psm_stats.coin'],
   });
 
@@ -31,7 +32,8 @@ export function PSMStats() {
     );
   }
 
-  const rows = res.resultSet.tablePivot();
+  const firstDay = extractFirst(res, 'psm_stats.day.day');
+  const rows = res.resultSet.tablePivot().filter((s: any) => s['psm_stats.day.day'] === firstDay);
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">

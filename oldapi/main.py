@@ -319,24 +319,7 @@ def get_ibc_balances(dataset, granularity):
                     "dateRange": "Today",
                 },
             ],
-            "filters": [
-                {
-                    "member": "balances.denom",
-                    "operator": "equals",
-                    "values": ["uist"],
-                },
-                {
-                    "member": "balances.address",
-                    "operator": "contains",
-                    "values": [
-                        "agoric1a53udazy8ayufvy0s434pfwjcedzqv34y3q6mc",
-                        "agoric1kq2rzz6fq2q7fsu75a9g7cpzjeanmk686c8qtz",
-                        "agoric12k2pyuylm9t7ugdvz67h9pg4gmmvhn5vdm8dpz",
-                        "agoric17sael2kcmm8npe2pmkxj3un90xfg60vvxgxjnt",
-                        "agoric1wsxce0ls59rtj70fwcrxmtmmv32vpgmgl3wen2",
-                    ],
-                },
-            ],
+            "segments": ["balances.interchain_ist"],
         },
     )
 

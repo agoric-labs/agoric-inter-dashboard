@@ -2,7 +2,7 @@ import { useCubeQuery } from '@cubejs-client/react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { VaultManagersTable } from '@/components/VaultManagersTable';
 import { SectionHeader } from '@/components/SectionHeader';
-import { getCubeQueryView } from '@/utils';
+import { getCubeQueryView, extractFirst } from '@/utils';
 
 type Props = {
   title?: string;
@@ -53,7 +53,7 @@ export function VaultManagers({ title = 'Collateral Type' }: Props) {
     return requestView;
   }
 
-  const firstDay = resultSet.tablePivot()[0]['vault_factory_metrics.day.day'];
+  const firstDay = extractFirst(res, 'vault_factory_metrics.day.day');
 
   const rows = resultSet
     .tablePivot()

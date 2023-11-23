@@ -105,3 +105,15 @@ export const formatSecondsToHumanReadable = (seconds: number) => {
   const days = Math.floor(seconds / 86400);
   return `${days} day${days !== 1 ? 's' : ''}`;
 };
+
+export const extractFirst = (res: any, key: string) => {
+  const { results } = res.resultSet.loadResponse;
+  if (results.length === 0 || results[0].data.length === 0) {
+    return 0;
+  }
+
+  return results[0].data[0][key] as string;
+};
+
+export const extractFirstFloat = (res: any, key: string) =>
+  parseFloat(extractFirst(res, key) || '0');

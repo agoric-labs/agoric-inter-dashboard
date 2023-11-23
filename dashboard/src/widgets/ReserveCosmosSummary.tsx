@@ -1,7 +1,7 @@
 import { useCubeQuery } from '@cubejs-client/react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ValueCard } from '@/components/ValueCard';
-import { formatPrice, getCubeQueryView } from '@/utils';
+import { formatPrice, getCubeQueryView, extractFirstFloat } from '@/utils';
 
 type Props = {
   title?: string;
@@ -17,18 +17,7 @@ export function ReserveCosmosSummary({ title = 'Cosmos Reserve' }: Props) {
         dateRange: 'from 1 days ago to now',
       },
     ],
-    filters: [
-      {
-        member: 'balances.denom',
-        operator: 'equals',
-        values: ['uist'],
-      },
-      {
-        member: 'balances.address',
-        operator: 'contains',
-        values: ['agoric1ae0lmtzlgrcnla9xjkpaarq5d5dfez63h3nucl'],
-      },
-    ],
+    segments: ['balances.cosmos_reserve'],
     order: {
       'balances.day': 'desc',
     },
@@ -43,10 +32,7 @@ export function ReserveCosmosSummary({ title = 'Cosmos Reserve' }: Props) {
     return requestView;
   }
 
-  const latest = resultSet.tablePivot()[0];
-  if (!latest) {
-    return <div>Nothing to show</div>;
-  }
+  const latest = extractFirstFloat(res, 'balances.amount_sum');
 
-  return <ValueCard title={title} value={formatPrice(latest['balances.amount_sum'])} />;
+  return <ValueCard title={title} value={formatPrice(latest)} />;
 }

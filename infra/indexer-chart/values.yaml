@@ -37,7 +37,7 @@ tendermint:
 balances:
   enabled: false
   shedule: "*/10 * * * *"
-  addresses: ""
+  extraAddresses: ""
 
 sloMetrics:
   enabled: false
