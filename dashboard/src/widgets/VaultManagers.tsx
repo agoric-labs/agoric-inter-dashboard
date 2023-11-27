@@ -57,7 +57,7 @@ export function VaultManagers({ title = 'Collateral Type' }: Props) {
 
   const rows = resultSet
     .tablePivot()
-    .filter((row) => row['psm_stats.day.day'] === firstDay)
+    .filter((row) => row['vault_factory_metrics.day.day'] === firstDay)
     .map((row: any) => {
       const newRow: any = {};
 
