@@ -115,5 +115,4 @@ export const extractFirst = (res: any, key: string) => {
   return results[0].data[0][key] as string;
 };
 
-export const extractFirstFloat = (res: any, key: string) =>
-  parseFloat(extractFirst(res, key) || '0');
+export const extractFirstFloat = (res: any, key: string) => parseFloat(extractFirst(res, key) || '0');
