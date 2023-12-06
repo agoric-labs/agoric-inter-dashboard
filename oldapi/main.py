@@ -1,9 +1,11 @@
 import requests
 import os
+import time
 
 from flask_caching import Cache  # type: ignore
 from flask import Flask, jsonify
 from waitress import serve
+from tenacity import retry, stop_after_attempt, wait_exponential
 
 config = {"CACHE_TYPE": "SimpleCache", "CACHE_DEFAULT_TIMEOUT": 600}
 
@@ -31,18 +33,20 @@ vault_states = {
 }
 
 
+@retry(stop=stop_after_attempt(5), wait=wait_exponential(multiplier=1, max=30))
 def cube_request(dataset, query):
     url = f"{API_URL}/cubejs-api/agoric_{dataset}/v1/load"
-    req = requests.post(url, json={"query": query})
+    req = requests.post(url, json={"query": query}, timeout=30)
 
-    if req.status_code != requests.codes.ok:
+    if not req.ok:
         raise ValueError(req.status_code)
 
     res = req.json()
 
     if "error" in res:
         if res["error"] == "Continue wait":
-            return cube_request(query, dataset)
+            time.sleep(10)
+            return cube_request(dataset, query)
 
         raise ValueError(res["error"])
 
