@@ -38,7 +38,5 @@ export function VaultTotalLockedCollateralValueCard({ title = 'Total Locked Coll
 
   const latest = extractFirstFloat(res, 'vault_factory_metrics.total_collateral_usd_sum');
 
-  return (
-    <ValueCard title={title} value={formatPrice(latest)} />
-  );
+  return <ValueCard title={title} value={formatPrice(latest)} />;
 }
