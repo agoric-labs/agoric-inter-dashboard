@@ -1,7 +1,7 @@
 import { useCubeQuery } from '@cubejs-client/react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ValueCard } from '@/components/ValueCard';
-import { formatPrice, getCubeQueryView } from '@/utils';
+import { formatPrice, getCubeQueryView, extractFirstFloat } from '@/utils';
 
 type Props = {
   title?: string;
@@ -36,7 +36,9 @@ export function VaultTotalLockedCollateralValueCard({ title = 'Total Locked Coll
     return null;
   }
 
+  const latest = extractFirstFloat(res, 'vault_factory_metrics.total_collateral_usd_sum');
+
   return (
-    <ValueCard title={title} value={formatPrice(rows[0]['vault_factory_metrics.total_collateral_usd_sum'] as string)} />
+    <ValueCard title={title} value={formatPrice(latest)} />
   );
 }
