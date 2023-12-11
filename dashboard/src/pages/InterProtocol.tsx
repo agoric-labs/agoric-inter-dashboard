@@ -93,10 +93,7 @@ export function InterProtocol() {
   });
 
   const psmRes = useCubeQuery({
-    measures: [
-      'psm_stats.minted_pool_balance_sum',
-      'psm_stats.anchor_pool_balance_sum',
-    ],
+    measures: ['psm_stats.minted_pool_balance_sum', 'psm_stats.anchor_pool_balance_sum'],
     timeDimensions: [
       {
         dimension: 'psm_stats.day',
