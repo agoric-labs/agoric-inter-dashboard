@@ -93,7 +93,10 @@ export function InterProtocol() {
   });
 
   const psmRes = useCubeQuery({
-    measures: ['psm_stats.minted_pool_balance_sum'],
+    measures: [
+      'psm_stats.minted_pool_balance_sum',
+      'psm_stats.anchor_pool_balance_sum',
+    ],
     timeDimensions: [
       {
         dimension: 'psm_stats.day',
@@ -195,6 +198,7 @@ export function InterProtocol() {
   const walletCount = extractFirstFloat(wcRes, 'wallets.address_count');
 
   const psmMinted = extractFirstFloat(psmRes, 'psm_stats.minted_pool_balance_sum');
+  const psmAnchor = extractFirstFloat(psmRes, 'psm_stats.anchor_pool_balance_sum');
   const vaultMinted = extractFirstFloat(vmRes, 'vault_factory_metrics.total_debt_sum');
   const totalMinted = psmMinted + vaultMinted;
 
@@ -227,7 +231,7 @@ export function InterProtocol() {
             <ValueCard title="Total Minted IST" value={formatIST(totalMinted)} />
             <ValueCard title="Total Collateral Value Locked" value={formatPrice(totalLockedCollateral)} />
             <ValueCard title="IST minted by Vaults" value={formatIST(vaultMinted)} />
-            <ValueCard title="Total PSM Assets" value={formatPrice(psmMinted)} />
+            <ValueCard title="Total PSM Assets" value={formatPrice(psmAnchor)} />
             <ValueCard title="IST minted by PSM" value={formatIST(psmMinted)} />
             <ValueCard title="Reserve Shortfall" value={formatPrice(reserveShortfall)} className="col-span-2" />
           </div>

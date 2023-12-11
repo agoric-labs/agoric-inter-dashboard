@@ -13,12 +13,18 @@ cube(`psm_stats`, {
     `
       select block_time
            , split(path, '.')[3] as coin
-           , cast(json_value(body, '$.anchorPoolBalance.__value') as float64) / pow(10, 6) as anchor_pool_balance
+           , cast(json_value(body, '$.anchorPoolBalance.__value') as float64) / pow(10, coalesce(decimal_places, 6)) as anchor_pool_balance
            , cast(json_value(body, '$.feePoolBalance.__value') as float64) / pow(10, 6) as fee_pool_balance
            , cast(json_value(body, '$.mintedPoolBalance.__value') as float64) / pow(10, 6) as  minted_pool_balance
-           , cast(json_value(body, '$.totalAnchorProvided.__value') as float64) / pow(10, 6) as  total_anchor_provided
+           , cast(json_value(body, '$.totalAnchorProvided.__value') as float64) / pow(10, coalesce(decimal_places, 6)) as  total_anchor_provided
            , cast(json_value(body, '$.totalMintedProvided.__value') as float64) / pow(10, 6) as total_minted_provided
        from ${state_changes.sql()}
+       left join (
+         select json_value(body, '$.allegedName') as name
+              , cast(json_value(body, '$.displayInfo.decimalPlaces') as int64) decimal_places
+           from v2_agoric_mainnet.state_changes
+          where module = 'published.boardAux'
+       ) board on board.name = split(path, '.')[3]
       where module = 'published.psm'
         -- and ${FILTER_PARAMS.psm_stats.day.filter('block_time')}
         and path like 'published.psm.%.metrics'
@@ -47,6 +53,10 @@ cube(`psm_stats`, {
     },
     minted_pool_balance_sum: {
       sql: `minted_pool_balance`,
+      type: `sum`,
+    },
+    anchor_pool_balance_sum: {
+      sql: `anchor_pool_balance`,
       type: `sum`,
     },
     total_minted_provided_avg: {
@@ -162,7 +172,7 @@ cube(`psm_stats`, {
       },
     },
     stats_year: {
-      measures: [minted_pool_balance_sum],
+      measures: [minted_pool_balance_sum, anchor_pool_balance_sum],
       time_dimension: psm_stats.day,
       granularity: `year`,
       refresh_key: {
@@ -170,7 +180,7 @@ cube(`psm_stats`, {
       },
     },
     stats_month: {
-      measures: [minted_pool_balance_sum],
+      measures: [minted_pool_balance_sum, anchor_pool_balance_sum],
       time_dimension: psm_stats.day,
       granularity: `month`,
       refresh_key: {
@@ -178,7 +188,7 @@ cube(`psm_stats`, {
       },
     },
     stats_week: {
-      measures: [minted_pool_balance_sum],
+      measures: [minted_pool_balance_sum, anchor_pool_balance_sum],
       time_dimension: psm_stats.day,
       granularity: `week`,
       refresh_key: {
@@ -186,7 +196,7 @@ cube(`psm_stats`, {
       },
     },
     stats_day: {
-      measures: [minted_pool_balance_sum],
+      measures: [minted_pool_balance_sum, anchor_pool_balance_sum],
       time_dimension: psm_stats.day,
       granularity: `day`,
       // partition_granularity: `month`,

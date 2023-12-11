@@ -274,7 +274,7 @@ metadata:
 spec:
   defaultBackend:
     service:
-      name: v2-info-dashboard
+      name: info-dashboard
       port:
         name: http
   rules:
