@@ -33,7 +33,6 @@ vault_states = {
 }
 
 
-@retry(stop=stop_after_attempt(5), wait=wait_exponential(multiplier=1, max=30))
 def cube_request(dataset, query):
     url = f"{API_URL}/cubejs-api/agoric_{dataset}/v1/load"
     req = requests.post(url, json={"query": query}, timeout=30)
@@ -612,9 +611,9 @@ def get_liquidated_vaults(dataset):
     return rows
 
 
-@app.route("/data/<dataset>-<granularity>.json")
-def data(dataset, granularity):
-    result = {
+@retry(stop=stop_after_attempt(5), wait=wait_exponential(multiplier=2, max=120, min=10))
+def request_all(dataset, granularity):
+    return {
         "ibc_balances": get_ibc_balances(dataset, granularity),
         "managers": get_vault_managers(dataset),
         "open_vaults": get_open_vaults(dataset, granularity),
@@ -635,7 +634,10 @@ def data(dataset, granularity):
         "liquidated_vaults": get_liquidated_vaults(dataset),
     }
 
-    return jsonify(result)
+
+@app.route("/data/<dataset>-<granularity>.json")
+def data(dataset, granularity):
+    return jsonify(request_all(dataset, granularity))
 
 
 @app.route("/healthz")
@@ -650,5 +652,5 @@ def index():
 
 if __name__ == "__main__":
     addr = os.getenv("ADDR", "0.0.0.0:80")
-    print("linten", addr)
-    serve(app, listen=addr)
+    print("listen", addr)
+    serve(app, listen=addr, threads=1)
