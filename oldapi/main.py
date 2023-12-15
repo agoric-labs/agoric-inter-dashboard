@@ -653,4 +653,4 @@ def index():
 if __name__ == "__main__":
     addr = os.getenv("ADDR", "0.0.0.0:80")
     print("listen", addr)
-    serve(app, listen=addr, threads=1)
+    serve(app, listen=addr)
