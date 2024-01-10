@@ -54,7 +54,7 @@ COPY patches/0001-feat-add-a-txdecode-command.patch /patch.patch
 RUN curl -s https://deb.nodesource.com/setup_18.x | bash \
  && apt update && apt install -y nodejs \
  && npm install -g yarn \
- && git clone --branch mainnet1B-rc3 https://github.com/Agoric/agoric-sdk \
+ && git clone --branch agoric-upgrade-13 https://github.com/Agoric/agoric-sdk \
  && cd agoric-sdk \
  && git apply /patch.patch \
  && yarn && yarn build \
