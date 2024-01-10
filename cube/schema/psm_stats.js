@@ -22,7 +22,7 @@ cube(`psm_stats`, {
        left join (
          select json_value(body, '$.allegedName') as name
               , cast(json_value(body, '$.displayInfo.decimalPlaces') as int64) decimal_places
-           from v2_agoric_mainnet.state_changes
+           from ${state_changes.sql()}
           where module = 'published.boardAux'
        ) board on board.name = split(path, '.')[3]
       where module = 'published.psm'
