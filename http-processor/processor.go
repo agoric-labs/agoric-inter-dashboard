@@ -47,7 +47,7 @@ func (p *processor) run(writer http.ResponseWriter, req *http.Request) error {
 	errText := buf.String()
 
 	if err != nil {
-		log.Info().Str("data", string(data)).Msg("failed data")
+		log.Info().Str("data", string(data)).Str("err", errText).Msg("failed data")
 
 		if strings.Contains(errText, knownParseErr) {
 			log.Warn().Str("stderr", errText).Msg("failed to parse")

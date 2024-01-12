@@ -20,13 +20,13 @@ grpcAddr: ""
 googleCredsSecretName: "indexer-google-creds"
 projectId: "your-project-id"
 datasetId: "your-dataset-id"
-decodeServiceUrl: "cloud run url"
+decodeServiceUrl: "http://txdecoder:8080"
 
 tendermint:
   enabled: true
   expectedNetwork: "" # see the coordinator docs
 
-  limits:
+  resources:
     limits:
       cpu: 1
       memory: 1Gi
