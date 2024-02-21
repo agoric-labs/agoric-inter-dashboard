@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "VITE_DATA_BASE_URL=https://info.inter.trade/data vite",
+    "dev": "vite",
+    "dev-info": "VITE_BASE_URL=https://info.inter.trade vite",
     "build": "tsc && vite build",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx --fix",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",

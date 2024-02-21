@@ -7,15 +7,23 @@ import { getCubeQueryView } from '@/utils';
 import atom from '../icons/atom.svg';
 import statom from '../icons/statom.svg';
 import unknown from '../icons/unknown.svg';
+import osmosis from '../icons/osmosis.svg';
+import sttia from '../icons/sttia.svg';
+import stkdydx from '../icons/stkdydx.svg';
+import stkatom from '../icons/stkatom.svg';
 
 type Props = {
   title?: string;
 };
 
 const icons: { [key: string]: string } = {
-  ATOM: atom,
-  STATOM1: atom,
-  stATOM: statom,
+  atom,
+  statom1: atom,
+  statom,
+  stosmo: osmosis,
+  sttia,
+  stkatom,
+  stkdydx,
   unknown,
 };
 
@@ -104,7 +112,7 @@ export function TokenPrices({ title = 'Summary' }: Props) {
     rows.push({
       token: (
         <span className="flex">
-          <img src={icons[label] || icons.unknown} alt={label} className="w-4 h-4" />{' '}
+          <img src={icons[label.toLowerCase()] || icons.unknown} alt={label} className="w-4 h-4" />{' '}
           <span className="flex-1 ml-2">{label}</span>
         </span>
       ),
