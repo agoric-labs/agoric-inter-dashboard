@@ -4,6 +4,7 @@ type Row = {
   collateral_type: string;
   total_collateral: number;
   total_collateral_usd: number;
+  total_collateral_current_usd: number;
   total_debt: number;
   colletarization_ratio: number;
   debt_limit: number;
@@ -31,7 +32,7 @@ export const columns: DataColumn<Row>[] = [
     header: 'Total Locked Collateral',
   },
   {
-    accessorKey: 'total_collateral_usd',
+    accessorKey: 'total_collateral_current_usd',
     type: 'usd',
     header: 'Total Locked Collateral Value ($USD)',
   },

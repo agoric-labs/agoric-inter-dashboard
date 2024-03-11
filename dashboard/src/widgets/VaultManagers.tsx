@@ -3,12 +3,15 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { VaultManagersTable } from '@/components/VaultManagersTable';
 import { SectionHeader } from '@/components/SectionHeader';
 import { getCubeQueryView, extractFirst } from '@/utils';
+import { useGetTokenPrice } from '@/components/OraclePrices';
 
 type Props = {
   title?: string;
 };
 
 export function VaultManagers({ title = 'Collateral Type' }: Props) {
+  const getTokenPrice = useGetTokenPrice();
+
   const res = useCubeQuery({
     measures: [
       'vault_factory_metrics.total_collateral_avg',
@@ -65,6 +68,8 @@ export function VaultManagers({ title = 'Collateral Type' }: Props) {
         newRow[key.replace('vault_factory_metrics.', '').replace('vault_factory_governance.', '').replace('_avg', '')] =
           row[key];
       });
+
+      newRow.total_collateral_current_usd = getTokenPrice(newRow.collateral_type, newRow.total_collateral);
 
       return newRow;
     });

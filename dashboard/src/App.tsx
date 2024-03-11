@@ -1,6 +1,7 @@
 import { StrictMode, ReactNode } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { CubeProvider } from '@/components/CubeProvider';
+import { OraclePriceProvider } from '@/components/OraclePrices';
 
 import { ErrorPage } from './pages/ErrorPage';
 import { MainLayout } from './components/MainLayout';
@@ -13,7 +14,9 @@ import { Liquidated } from './pages/Liquidated';
 
 const MainLayoutWithCoube = ({ children }: { children?: ReactNode }) => (
   <CubeProvider>
-    <MainLayout>{children}</MainLayout>
+    <OraclePriceProvider>
+      <MainLayout>{children}</MainLayout>
+    </OraclePriceProvider>
   </CubeProvider>
 );
 

@@ -6,6 +6,7 @@ type Row = {
   collateral_amount: number;
   current_collateral_price: number;
   collateral_oracle_usd_value: number;
+  collateral_amount_current_usd: number;
   ist_debt_amount: number;
   liquidation_margin: number;
   liquidation_price: number;
@@ -44,7 +45,7 @@ export const columns: DataColumn<Row>[] = [
     header: 'Current Collateral Price',
   },
   {
-    accessorKey: 'collateral_amount_usd',
+    accessorKey: 'collateral_amount_current_usd',
     type: 'usd',
     header: 'Collateral Value ($USD)',
   },

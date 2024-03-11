@@ -4,13 +4,16 @@ import { OpenVaultsTable } from '@/components/OpenVaultsTable';
 import { SectionHeader } from '@/components/SectionHeader';
 import { useGranularity } from '@/components/CubeProvider';
 import { getCubeQueryView, extractFirst } from '@/utils';
+import { useGetTokenPrice } from '@/components/OraclePrices';
 
 type Props = {
   title?: string;
 };
 
 export function OpenVaults({ title = 'Open Vaults' }: Props) {
+  const getTokenPrice = useGetTokenPrice();
   const granularity = useGranularity();
+
   const res = useCubeQuery({
     measures: [
       'vault_factory_vaults.collateral_amount_avg',
@@ -85,6 +88,8 @@ export function OpenVaults({ title = 'Open Vaults' }: Props) {
             .replace('_avg', '')
         ] = row[key];
       });
+
+      newRow.collateral_amount_current_usd = getTokenPrice(newRow.collateral_type, newRow.collateral_amount);
 
       return newRow;
     });

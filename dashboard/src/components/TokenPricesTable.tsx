@@ -3,6 +3,7 @@ import { DataTable, DataColumn } from './DataTable';
 
 export type Row = {
   token: ReactNode;
+  name: string;
   numActive: number;
   dayChange: ReactNode;
   oraclePrice: number;
