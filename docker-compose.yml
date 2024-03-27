@@ -45,7 +45,7 @@ services:
       - "./extract-missing-blocks.sh"
 
   balances-extractor:
-    restart: no
+    restart: "no"
     build:
       context: .
     environment:
