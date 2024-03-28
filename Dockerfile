@@ -1,87 +1,19 @@
-# tendermint-source
-FROM golang:1.20 as build-tendermint-source
+FROM node:16-alpine as build
 
 WORKDIR /app
 
-COPY tendermint-source/go.* .
-RUN go mod download && go mod verify
+COPY package.json yarn.lock ./
+RUN yarn
 
-COPY ./tendermint-source .
-RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 \
- go build -ldflags="-w -s" -o "bin/tendermint-source" .
+COPY . .
 
-# http-processor
-FROM golang:1.20 as build-http-processor
+ARG VITE_BASE_URL
+ENV VITE_BASE_URL $VITE_BASE_URL
 
+RUN yarn build --mode production
+
+FROM nginx:1.25-alpine
 WORKDIR /app
-
-COPY http-processor/go.* .
-RUN go mod download && go mod verify
-
-COPY ./http-processor .
-RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 \
- go build -ldflags="-w -s" -o "bin/http-processor" .
-
-# coordinator
-FROM golang:1.20 as build-coordinator
-
-WORKDIR /app
-
-COPY coordinator/go.* .
-RUN go mod download && go mod verify
-
-COPY ./coordinator .
-RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 \
- go build -ldflags="-w -s" -o "bin/coordinator" .
-
-# bqreader
-FROM golang:1.20 as build-bqreader
-
-WORKDIR /app
-
-COPY bqreader/go.* .
-RUN go mod download && go mod verify
-
-COPY ./bqreader .
-RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 \
- go build -ldflags="-w -s" -o "bin/bqreader" .
-
-# build agd for Agoric with a txdecode command
-FROM golang:1.20 as agoric
-
-COPY patches/0001-feat-add-a-txdecode-command.patch /patch.patch
-
-RUN curl -s https://deb.nodesource.com/setup_18.x | bash \
- && apt update && apt install -y nodejs \
- && npm install -g yarn \
- && git clone --branch agoric-upgrade-13 https://github.com/Agoric/agoric-sdk \
- && cd agoric-sdk \
- && git apply /patch.patch \
- && yarn && yarn build \
- && cd packages/cosmic-swingset \
- && make build-chain
-
-# final image
-FROM python:3.11.6
-
-ENV PATH="/app/bin:$PATH"
-WORKDIR /app
-
-COPY patches/target-bigquery.patch /target-bigquery.patch
-
-RUN apt update \
- && apt install -y jq curl git \
- && pip install requests z3-target-bigquery ujson \
- && cd /usr/local/lib/python3.11/site-packages \
- && git apply /target-bigquery.patch
-
-COPY --from=agoric /go/agoric-sdk/golang/cosmos/build/agd /app/bin/agd
-COPY --from=build-tendermint-source /app/bin/* /app/bin/
-COPY --from=build-http-processor /app/bin/* /app/bin/
-COPY --from=build-coordinator /app/bin/* /app/bin/
-COPY --from=fullstorydev/grpcurl:v1.8.7-alpine /bin/grpcurl /app/bin/
-COPY --from=build-bqreader /app/bin/* /app/bin/
-COPY tendermint-normalizer/main.py /app/bin/tendermint-normalizer
-COPY balances-extractor/main.py /app/bin/balances-extractor
-COPY *.catalog.json ./
-COPY extract-* ./
+COPY nginx-boot.sh /sbin/nginx-boot
+COPY --from=build /app/dist /usr/share/nginx/html
+CMD [ "/sbin/nginx-boot" ]
