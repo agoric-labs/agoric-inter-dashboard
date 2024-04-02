@@ -1,6 +1,6 @@
-.cubestore*
+node_modules
+yarn-error.log
+public/data
+.husky
+bigquerycreds.json
 .env
-.venv
-*__pycache__*
-/*.json
-*.values.yaml
