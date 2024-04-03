@@ -1,34 +1,18 @@
-import { useCubeQuery } from '@cubejs-client/react';
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { RadianTooltip } from '@/components/RadianTooltip';
 import { Skeleton } from '@/components/ui/skeleton';
 import { colors } from '@/components/palette';
-import { getCubeQueryView, extractFirst } from '@/utils';
 import { coinLabels } from '../coinLabels';
 
 type Props = {
   title?: string;
+  data: object;
+  isLoading: boolean;
 };
 
-export function PSMMintedPoolBalancePie({ title = 'Total Minted IST Per Anchor' }: Props) {
-  const res = useCubeQuery({
-    measures: ['psm_stats.minted_pool_balance_avg'],
-    timeDimensions: [
-      {
-        dimension: 'psm_stats.day',
-        dateRange: 'from 1 days ago to now',
-        granularity: 'day',
-      },
-    ],
-    order: [
-      ['psm_stats.day', 'desc'],
-      ['psm_stats.minted_pool_balance_avg', 'asc'],
-    ],
-    dimensions: ['psm_stats.coin'],
-  });
-
-  if (res.isLoading) {
+export function PSMMintedPoolBalancePie({ title = 'Total Minted IST Per Anchor', data, isLoading }: Props) {
+  if (isLoading) {
     return (
       <Card>
         <CardHeader>
@@ -44,19 +28,10 @@ export function PSMMintedPoolBalancePie({ title = 'Total Minted IST Per Anchor' 
     );
   }
 
-  const [resultSet, requestView] = getCubeQueryView(res);
-  if (!resultSet) {
-    return requestView;
-  }
-
-  const firstDay = extractFirst(res, 'psm_stats.day.day');
-
-  const data: any[] = resultSet
-    .tablePivot()
-    .filter((row) => row['psm_stats.day.day'] === firstDay)
-    .map((row) => ({
-      value: parseFloat(row['psm_stats.minted_pool_balance_avg'] as string),
-      label: coinLabels[row['psm_stats.coin'] as string],
+  const pieChartData = Object.entries(data)
+    .map(([coinName, coinData]) => ({
+      value: parseFloat(coinData.mintedPoolBalance),
+      label: coinLabels[coinName],
     }))
     .filter((row) => row.value > 0);
 
@@ -71,7 +46,7 @@ export function PSMMintedPoolBalancePie({ title = 'Total Minted IST Per Anchor' 
             <PieChart width={400} height={400}>
               <Pie
                 dataKey="value"
-                data={data}
+                data={pieChartData}
                 innerRadius={70}
                 outerRadius={100}
                 fill="green"
@@ -81,7 +56,7 @@ export function PSMMintedPoolBalancePie({ title = 'Total Minted IST Per Anchor' 
                 labelLine={false}
                 label={RadianTooltip}
               >
-                {data.map((item, idx) => (
+                {pieChartData.map((item, idx) => (
                   <Cell fill={colors[idx % colors.length]} key={item.label} name={item.label} />
                 ))}
               </Pie>

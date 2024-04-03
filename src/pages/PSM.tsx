@@ -1,20 +1,45 @@
+import { useMemo } from 'react';
+import useSWR from 'swr';
+import { AxiosError, AxiosResponse } from 'axios';
 import { PageHeader } from '@/components/PageHeader';
 import { PageContent } from '@/components/PageContent';
 import { PSMStats } from '@/widgets/PSMStats';
 import { PSMHistory } from '@/widgets/PSMHistory';
 import { PSMMintedPoolBalancePie } from '@/widgets/PSMMintedPoolBalancePie';
+import { subQueryFetcher } from '@/utils';
+import { PSM_DASHBOARD_QUERY } from '@/queries';
 
-export const PSM = () => (
-  <>
-    <PageHeader title="PSM" />
-    <PageContent>
-      <div className="grid gap-4 grid-cols-1 2xl:grid-cols-2">
-        <div>
-          <PSMStats />
+export const PSM = () => {
+  const { data, error, isLoading } = useSWR<AxiosResponse, AxiosError>(
+    'https://api.subquery.network/sq/agoric-labs/agoric-mainnet-v2__YWdvc',
+    subQueryFetcher(PSM_DASHBOARD_QUERY),
+  );
+  const response = data?.data?.data;
+  const queryData = useMemo(() => {
+    const formattedQueryData: { [key: string]: object } = {};
+
+    response?.psmMetrics?.nodes?.forEach((node: { token: string }) => {
+      formattedQueryData[node.token] = node;
+    });
+    response?.psmGovernances?.nodes?.forEach((node: { token: string }) => {
+      if (node.token in formattedQueryData)
+        formattedQueryData[node.token] = { ...formattedQueryData[node.token], ...node };
+    });
+    return formattedQueryData;
+  }, [response]);
+
+  return (
+    <>
+      <PageHeader title="PSM" />
+      <PageContent>
+        <div className="grid gap-4 grid-cols-1 2xl:grid-cols-2">
+          <div>
+            <PSMStats data={queryData} error={error} isLoading={isLoading} />
+          </div>
+          <PSMMintedPoolBalancePie data={queryData} isLoading={isLoading} />
         </div>
-        <PSMMintedPoolBalancePie />
-      </div>
-      <PSMHistory />
-    </PageContent>
-  </>
-);
+        <PSMHistory />
+      </PageContent>
+    </>
+  );
+};
