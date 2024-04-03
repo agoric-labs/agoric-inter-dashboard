@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import useSWR from 'swr';
 import { AxiosError, AxiosResponse } from 'axios';
 import { PageHeader } from '@/components/PageHeader';
@@ -15,18 +14,14 @@ export const PSM = () => {
     subQueryFetcher(PSM_DASHBOARD_QUERY),
   );
   const response = data?.data?.data;
-  const queryData = useMemo(() => {
-    const formattedQueryData: { [key: string]: object } = {};
+  const queryData: { [key: string]: object } = {};
 
-    response?.psmMetrics?.nodes?.forEach((node: { token: string }) => {
-      formattedQueryData[node.token] = node;
-    });
-    response?.psmGovernances?.nodes?.forEach((node: { token: string }) => {
-      if (node.token in formattedQueryData)
-        formattedQueryData[node.token] = { ...formattedQueryData[node.token], ...node };
-    });
-    return formattedQueryData;
-  }, [response]);
+  response?.psmMetrics?.nodes?.forEach((node: { token: string }) => {
+    queryData[node.token] = node;
+  });
+  response?.psmGovernances?.nodes?.forEach((node: { token: string }) => {
+    if (node.token in queryData) queryData[node.token] = { ...queryData[node.token], ...node };
+  });
 
   return (
     <>
