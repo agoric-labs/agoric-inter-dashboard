@@ -12,7 +12,7 @@ import stkatom from '../icons/stkatom.svg';
 
 const Context = createContext<Row[] | null>(null);
 
-const icons: { [key: string]: string } = {
+export const icons: { [key: string]: string } = {
   atom,
   statom1: atom,
   statom,

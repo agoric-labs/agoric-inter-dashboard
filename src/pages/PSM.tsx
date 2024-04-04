@@ -9,10 +9,7 @@ import { subQueryFetcher } from '@/utils';
 import { PSM_DASHBOARD_QUERY } from '@/queries';
 
 export const PSM = () => {
-  const { data, error, isLoading } = useSWR<AxiosResponse, AxiosError>(
-    'https://api.subquery.network/sq/agoric-labs/agoric-mainnet-v2__YWdvc',
-    subQueryFetcher(PSM_DASHBOARD_QUERY),
-  );
+  const { data, error, isLoading } = useSWR<AxiosResponse, AxiosError>(PSM_DASHBOARD_QUERY, subQueryFetcher);
   const response = data?.data?.data;
   const queryData: { [key: string]: object } = {};
 

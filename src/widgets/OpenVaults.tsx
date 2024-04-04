@@ -1,60 +1,16 @@
-import { useCubeQuery } from '@cubejs-client/react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { OpenVaultsTable } from '@/components/OpenVaultsTable';
 import { SectionHeader } from '@/components/SectionHeader';
-import { useGranularity } from '@/components/CubeProvider';
-import { getCubeQueryView, extractFirst } from '@/utils';
-import { useGetTokenPrice } from '@/components/OraclePrices';
+import { OpenVaultsData } from '@/pages/Vaults';
 
 type Props = {
   title?: string;
+  data: OpenVaultsData;
+  isLoading: boolean;
 };
 
-export function OpenVaults({ title = 'Open Vaults' }: Props) {
-  const getTokenPrice = useGetTokenPrice();
-  const granularity = useGranularity();
-
-  const res = useCubeQuery({
-    measures: [
-      'vault_factory_vaults.collateral_amount_avg',
-      'oracle_prices.rate_avg',
-      'vault_factory_vaults.collateral_amount_usd_avg',
-      'vault_factory_vaults.debt_amount_avg',
-      'vault_factory_governance.liquidation_margin_avg',
-      'vault_factory_vaults.liquidation_price_avg',
-      'vault_factory_vaults.liquidation_cushion_avg',
-      'vault_factory_vaults.collateralization_ratio_avg',
-    ],
-    timeDimensions: [
-      {
-        dimension: 'vault_factory_vaults.day',
-        granularity,
-        dateRange: 'from 1 days ago to now',
-      },
-    ],
-    order: [
-      ['vault_factory_vaults.day', 'desc'],
-      ['vault_factory_vaults.manager_idx', 'asc'],
-      ['vault_factory_vaults.vault_idx', 'asc'],
-    ],
-    dimensions: [
-      'vault_factory_vaults.debt_type',
-      'vault_factory_vaults.vault_idx',
-      'vault_factory_vaults.manager_idx',
-      'vault_factory_vaults.collateral_type',
-    ],
-    filters: [
-      {
-        member: 'vault_factory_vaults.last_state',
-        operator: 'equals',
-        // cubestore supports only integers
-        // select FARM_FINGERPRINT('active')
-        values: ['5907958362119427434'],
-      },
-    ],
-  });
-
-  if (res.isLoading || !res.resultSet) {
+export function OpenVaults({ title = 'Open Vaults', data, isLoading }: Props) {
+  if (isLoading || !data) {
     return (
       <>
         <SectionHeader>{title}</SectionHeader>
@@ -66,33 +22,29 @@ export function OpenVaults({ title = 'Open Vaults' }: Props) {
     );
   }
 
-  const [resultSet, requestView] = getCubeQueryView(res);
-  if (!resultSet) {
-    return requestView;
-  }
-
-  const firstDay = extractFirst(res, 'vault_factory_vaults.day.day');
-
-  const rows = resultSet
-    .tablePivot()
-    .filter((row) => row['vault_factory_vaults.day.day'] === firstDay)
-    .map((row: any) => {
-      const newRow: any = {};
-
-      Object.keys(row).forEach((key) => {
-        newRow[
-          key
-            .replace('vault_factory_vaults.', '')
-            .replace('vault_factory_governance.', '')
-            .replace('oracle_prices.', '')
-            .replace('_avg', '')
-        ] = row[key];
-      });
-
-      newRow.collateral_amount_current_usd = getTokenPrice(newRow.collateral_type, newRow.collateral_amount);
-
-      return newRow;
-    });
+  const rows = data.map((vaultData) => {
+    const vaultIdx = vaultData.id.split('.').at(-1)?.split('vault')[1] || '';
+    const collateralValueUsd = ((vaultData.typeOutAmount / 1_000_000) * vaultData.balance) / 1_000_000;
+    const liquidationRatio = vaultData.liquidationMarginNumerator / vaultData.liquidationMarginDenominator;
+    const istDebtAmount = vaultData.debt / 1_000_000;
+    const collateralAmount = vaultData.balance / 1_000_000;
+    const liquidationPrice = (istDebtAmount * liquidationRatio) / collateralAmount;
+    const currentCollateralPrice = vaultData.typeOutAmount / 1_000_000;
+    return {
+      vault_idx: vaultIdx,
+      collateral_type: vaultData.token,
+      debt_type: 'IST',
+      collateral_amount: collateralAmount,
+      current_collateral_price: currentCollateralPrice,
+      collateral_oracle_usd_value: vaultData.typeOutAmount / 1_000_000,
+      collateral_amount_current_usd: collateralValueUsd,
+      debt_amount: istDebtAmount,
+      liquidation_margin: liquidationRatio,
+      liquidation_price: liquidationPrice,
+      liquidation_cushion: currentCollateralPrice / (liquidationPrice - 1),
+      collateralization_ratio: collateralValueUsd / (vaultData.debt / 1_000_000),
+    };
+  });
 
   return (
     <>

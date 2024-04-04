@@ -17,3 +17,56 @@ query {
         }
     }
 }`;
+
+export const VAULTS_DASHBOARD_QUERY = `
+query {
+    vaultManagerMetrics {
+        nodes {
+            id
+            numActiveVaults
+            totalCollateral
+            totalDebt
+            liquidatingCollateralBrand
+        }
+    }
+    oraclePrices {
+        nodes {
+            priceFeedName
+            typeOutAmount
+            typeInAmount
+        }
+    }
+    boardAuxes {
+        nodes {
+            allegedName
+            decimalPlaces
+        }
+    }
+}`;
+
+export const OPEN_VAULTS_QUERY = `
+query {
+    vaults {
+        nodes {
+            id
+            token
+            balance
+            state
+            debt
+        }
+    }
+    oraclePrices {
+        nodes {
+            priceFeedName
+            typeOutAmount
+            typeInAmount
+        }
+    }
+    vaultManagerGovernances {
+        nodes {
+            id
+            liquidationMarginNumerator
+            liquidationMarginDenominator
+        }
+    }
+}`;

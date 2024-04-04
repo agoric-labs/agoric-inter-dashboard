@@ -32,12 +32,12 @@ export const columns: DataColumn<Row>[] = [
     header: 'Oracle Price, USD',
     size: 50,
   },
-  {
-    accessorKey: 'dayChange',
-    type: 'markupRight',
-    header: '24h Change',
-    size: 50,
-  },
+  // {
+  //   accessorKey: 'dayChange',
+  //   type: 'markupRight',
+  //   header: '24h Change',
+  //   size: 50,
+  // },
 ];
 
 export function TokenPricesTable({ data }: Props) {
