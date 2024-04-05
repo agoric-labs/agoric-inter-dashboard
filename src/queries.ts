@@ -101,3 +101,62 @@ query {
         }
     }
 }`
+
+export const INTER_DASHBOARD_QUERY = `
+query {
+    psmMetrics {
+        nodes {
+            token
+            mintedPoolBalance
+            anchorPoolBalance
+            mintedPoolBalance
+        }
+    }
+    psmGovernances {
+        nodes {
+            token
+            mintLimit
+        }
+    }
+    vaultManagerMetrics {
+        nodes {
+            id
+            liquidatingCollateralBrand
+            liquidatingDebtBrand
+            totalDebt
+            totalCollateral
+        }
+    }
+    vaultManagerGovernances {
+        nodes {
+            id
+            debtLimit
+        }
+    }
+    reserveMetrics {
+        nodes {
+            totalFeeBurned
+            shortfallBalance
+            allocations {
+                nodes {
+                    id
+                    token
+                    value
+                }
+            }
+        }
+    }
+    wallets {
+        totalCount
+    }
+    oraclePrices {
+        nodes {
+            id
+            typeInName
+            typeOutName
+            typeInAmount
+            typeOutAmount
+            priceFeedName
+        }
+    }
+}`
