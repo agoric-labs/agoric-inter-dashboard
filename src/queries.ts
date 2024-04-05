@@ -76,3 +76,28 @@ query {
         }
     }
 }`;
+
+export const RESERVE_DASHBOARD_QUERY = `
+query {
+    reserveMetrics {
+        nodes {
+            shortfallBalance
+            allocations {
+                nodes {
+                    id
+                    token
+                    value
+                }
+            }
+        }
+    }
+    oraclePrices {
+        nodes {
+            id
+            typeInName
+            typeOutName
+            typeInAmount
+            typeOutAmount
+        }
+    }
+}`
