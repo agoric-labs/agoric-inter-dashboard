@@ -1,13 +1,14 @@
 import { DataTable, DataColumn } from './DataTable';
 
 type Row = {
-  vault_ix: string;
+  vault_idx: string;
   collateral_type: string;
+  debt_type: string;
   collateral_amount: number;
   current_collateral_price: number;
   collateral_oracle_usd_value: number;
   collateral_amount_current_usd: number;
-  ist_debt_amount: number;
+  debt_amount: number;
   liquidation_margin: number;
   liquidation_price: number;
   liquidation_cushion: number;
@@ -40,7 +41,7 @@ export const columns: DataColumn<Row>[] = [
     header: 'Collateral Amount',
   },
   {
-    accessorKey: 'rate',
+    accessorKey: 'current_collateral_price',
     type: 'usd',
     header: 'Current Collateral Price',
   },

@@ -2,8 +2,8 @@ import { DataTable, DataColumn } from './DataTable';
 
 type Row = {
   collateral_type: string;
+  debt_type: string;
   total_collateral: number;
-  total_collateral_usd: number;
   total_collateral_current_usd: number;
   total_debt: number;
   colletarization_ratio: number;

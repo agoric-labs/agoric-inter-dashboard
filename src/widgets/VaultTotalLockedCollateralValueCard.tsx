@@ -1,42 +1,27 @@
-import { useCubeQuery } from '@cubejs-client/react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ValueCard } from '@/components/ValueCard';
-import { formatPrice, getCubeQueryView, extractFirstFloat } from '@/utils';
+import { formatPrice } from '@/utils';
+import { VaultsDashboardData } from '@/pages/Vaults';
 
 type Props = {
   title?: string;
+  data: VaultsDashboardData;
+  isLoading: boolean;
 };
 
-export function VaultTotalLockedCollateralValueCard({ title = 'Total Locked Collateral Value' }: Props) {
-  const res = useCubeQuery({
-    measures: ['vault_factory_metrics.total_collateral_usd_sum'],
-    timeDimensions: [
-      {
-        dimension: 'vault_factory_metrics.day',
-        granularity: 'day',
-        dateRange: 'from 1 days ago to now',
-      },
-    ],
-    order: {
-      'vault_factory_metrics.day': 'desc',
-    },
-  });
-
-  if (res.isLoading || !res.resultSet) {
+export function VaultTotalLockedCollateralValueCard({
+  title = 'Total Locked Collateral Value',
+  data,
+  isLoading,
+}: Props) {
+  if (isLoading || !data) {
     return <ValueCard title={title} value={<Skeleton className="w-[50px] h-[32px] rounded-full" />} />;
   }
 
-  const [resultSet, requestView] = getCubeQueryView(res);
-  if (!resultSet) {
-    return requestView;
-  }
-
-  const rows = resultSet.tablePivot();
-  if (rows.length === 0) {
-    return null;
-  }
-
-  const latest = extractFirstFloat(res, 'vault_factory_metrics.total_collateral_usd_sum');
-
-  return <ValueCard title={title} value={formatPrice(latest)} />;
+  const totalCollateralLocked = Object.values(data).reduce(
+    (totalCount, tokenData) =>
+      totalCount + (tokenData.totalCollateral / 1_000_000) * (tokenData.typeOutAmount / 1_000_000),
+    0,
+  );
+  return <ValueCard title={title} value={formatPrice(totalCollateralLocked)} />;
 }

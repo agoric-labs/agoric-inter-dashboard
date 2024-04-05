@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 import { ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { parseISO, format } from 'date-fns';
@@ -119,9 +118,9 @@ export const extractFirst = (res: any, key: string) => {
 
 export const extractFirstFloat = (res: any, key: string) => parseFloat(extractFirst(res, key) || '0');
 
-export const subQueryFetcher = (query: string) => (url: string) =>
+export const subQueryFetcher = (query: string) =>
   axios.post(
-    url,
+    'https://api.subquery.network/sq/agoric-labs/agoric-mainnet-v2__YWdvc',
     { query },
     {
       headers: {
