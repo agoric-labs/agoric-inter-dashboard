@@ -34,6 +34,10 @@ type VaultManagerGovernancesNode = {
   liquidationMarginDenominator: number;
   liquidationMarginNumerator: number;
 };
+type VaultDashboardManagerGovernancesNode = {
+  id: string;
+  debtLimit: number;
+};
 
 type VaultsDashboardResponse = {
   boardAuxes: { nodes: Array<{ allegedName: string; decimalPlaces: number }> };
@@ -41,6 +45,7 @@ type VaultsDashboardResponse = {
   vaultManagerMetrics: {
     nodes: Array<VaultManagerMetricsNode>;
   };
+  vaultManagerGovernances: { nodes: Array<VaultDashboardManagerGovernancesNode> };
 };
 
 type OpenVaultsResponse = {
@@ -52,7 +57,7 @@ type OpenVaultsResponse = {
 };
 
 export type VaultsDashboardData = {
-  [key: string]: VaultManagerMetricsNode & OraclePriceNode;
+  [key: string]: VaultManagerMetricsNode & OraclePriceNode & VaultDashboardManagerGovernancesNode;
 };
 export type OpenVaultsData = Array<VaultsNode & OraclePriceNode & VaultManagerGovernancesNode>;
 
@@ -76,11 +81,32 @@ export function Vaults() {
       const tokenName = nameSegments[0];
       return { ...agg, [tokenName]: node };
     }, {});
+
+  const vaultsDashboardManagerGovernances: { [key: string]: VaultDashboardManagerGovernancesNode } =
+    vaultsDashboardResponse?.vaultManagerGovernances?.nodes?.reduce((agg, node) => {
+      const idSegments = node.id.split('.');
+      if (idSegments.length < 4) {
+        throw new Error(`Node ID does not contain enough segments: ${node.id}`);
+      }
+      const managerName = idSegments.slice(0, 4).join('.');
+      return { ...agg, [managerName]: node };
+    }, {});
   const vaultsDashboardQueryData: VaultsDashboardData = vaultsDashboardResponse?.vaultManagerMetrics?.nodes?.reduce(
-    (agg, node) => ({
-      ...agg,
-      [node.liquidatingCollateralBrand]: { ...node, ...vaultDashboardOraclePrices[node.liquidatingCollateralBrand] },
-    }),
+    (agg, node) => {
+      const idSegments = node.id.split('.');
+      if (idSegments.length < 4) {
+        throw new Error(`Node ID does not contain enough segments: ${node.id}`);
+      }
+      const managerName = idSegments.slice(0, 4).join('.');
+      return {
+        ...agg,
+        [node.liquidatingCollateralBrand]: {
+          ...vaultsDashboardManagerGovernances[managerName],
+          ...vaultDashboardOraclePrices[node.liquidatingCollateralBrand],
+          ...node,
+        },
+      };
+    },
     {},
   );
 

@@ -42,6 +42,12 @@ query {
             decimalPlaces
         }
     }
+    vaultManagerGovernances {
+        nodes {
+            id
+            debtLimit
+        }
+    }
 }`;
 
 export const OPEN_VAULTS_QUERY = `

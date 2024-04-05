@@ -28,6 +28,7 @@ export function VaultManagers({ title = 'Collateral Type', data, isLoading }: Pr
     const totalCollateralUsd = totalCollateral * oraclePrice;
     const totalIstMinted = coinData.totalDebt / 1_000_000;
     const colletarizationRatio = totalCollateralUsd / totalIstMinted;
+    const debtLimit = coinData.debtLimit / 1_000_000;
     return {
       collateral_type: coinName,
       debt_type: 'IST',
@@ -35,8 +36,8 @@ export function VaultManagers({ title = 'Collateral Type', data, isLoading }: Pr
       total_collateral_current_usd: totalCollateralUsd,
       total_debt: totalIstMinted,
       colletarization_ratio: colletarizationRatio,
-      debt_limit: 0,
-      utilization_rate: 0,
+      debt_limit: debtLimit,
+      utilization_rate: totalIstMinted / debtLimit,
     };
   });
 
