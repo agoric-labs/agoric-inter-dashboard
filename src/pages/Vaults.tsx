@@ -69,7 +69,11 @@ export function Vaults() {
   const vaultsDashboardResponse: VaultsDashboardResponse = vaultsDashboardData?.data?.data;
   const vaultDashboardOraclePrices: { [key: string]: OraclePriceNode } =
     vaultsDashboardResponse?.oraclePrices?.nodes?.reduce((agg, node) => {
-      const tokenName = node.priceFeedName.split('-')[0];
+      const nameSegments = node.priceFeedName.split('-');
+      if (nameSegments.length !== 2) {
+        throw new Error(`Invalid priceFeedName: ${node.priceFeedName}`);
+      }
+      const tokenName = nameSegments[0];
       return { ...agg, [tokenName]: node };
     }, {});
   const vaultsDashboardQueryData: VaultsDashboardData = vaultsDashboardResponse?.vaultManagerMetrics?.nodes?.reduce(
@@ -83,18 +87,30 @@ export function Vaults() {
   const openVaultsResponse: OpenVaultsResponse = openVaultsData?.data?.data;
   const oraclePrices: { [key: string]: OraclePriceNode } = openVaultsResponse?.oraclePrices?.nodes?.reduce(
     (agg, node) => {
-      const tokenName = node.priceFeedName.split('-')[0];
+      const nameSegments = node.priceFeedName.split('-');
+      if (nameSegments.length !== 2) {
+        throw new Error(`Invalid priceFeedName: ${node.priceFeedName}`);
+      }
+      const tokenName = nameSegments[0];
       return { ...agg, [tokenName]: node };
     },
     {},
   );
   const vaultManagerGovernances: { [key: string]: VaultManagerGovernancesNode } =
     openVaultsResponse?.vaultManagerGovernances?.nodes?.reduce((agg, node) => {
-      const managerName = node.id.split('.').slice(0, 4).join('.');
+      const idSegments = node.id.split('.');
+      if (idSegments.length < 4) {
+        throw new Error(`Node ID does not contain enough segments: ${node.id}`);
+      }
+      const managerName = idSegments.slice(0, 4).join('.');
       return { ...agg, [managerName]: node };
     }, {});
   const openVaultsQueryData: OpenVaultsData = openVaultsResponse?.vaults?.nodes?.map((vaultNode) => {
-    const managerName = vaultNode.id.split('.').slice(0, 4).join('.');
+    const idSegments = vaultNode.id.split('.');
+    if (idSegments.length < 4) {
+      throw new Error(`Node ID does not contain enough segments: ${vaultNode.id}`);
+    }
+    const managerName = idSegments.slice(0, 4).join('.');
     return {
       ...oraclePrices[vaultNode.token],
       ...vaultManagerGovernances[managerName],
