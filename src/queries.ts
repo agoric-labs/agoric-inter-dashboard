@@ -160,3 +160,35 @@ query {
         }
     }
 }`
+
+export const LIQUIDATIONS_DASHBOARD = `
+query {
+    vaultManagerMetrics {
+        nodes {
+            id
+            numLiquidationsCompleted
+            liquidatingCollateralValue
+            numActiveVaults
+            numLiquidationsCompleted
+            numLiquidationsAborted
+            numLiquidatingVaults
+        }
+    }
+    vaultManagerGovernances  {
+        nodes {
+            id
+            liquidationMarginNumerator
+            liquidationMarginDenominator
+        }
+    }
+
+    vaults (filter: {state: {equalTo: "liquidated"}}) {
+        nodes {
+            id
+            token
+            debt
+            state
+            balance
+        }
+    } 
+}`;

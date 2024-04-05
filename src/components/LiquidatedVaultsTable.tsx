@@ -7,11 +7,8 @@ type Row = {
   liquidationStartTime: string;
   liquidationTime: string;
   liquidating_debt_amount_avg: number;
-  liquidating_locked_value: number;
-  ist_debt_amount: number;
-  liquidating_locked_value_usd: number;
-  liquidation_margin: number;
-  liquidation_token_price: number;
+  liquidation_margin_avg: number;
+  liquidating_rate: number;
 };
 
 type Props = {
@@ -36,16 +33,16 @@ export const columns: DataColumn<Row>[] = [
     type: 'text',
     header: 'State',
   },
-  {
-    accessorKey: 'liquidationStartTime',
-    type: 'text',
-    header: 'Liquidation Start Time',
-  },
-  {
-    accessorKey: 'liquidationTime',
-    type: 'text',
-    header: 'Liquidation Time',
-  },
+  // {
+  //   accessorKey: 'liquidationStartTime',
+  //   type: 'text',
+  //   header: 'Liquidation Start Time',
+  // },
+  // {
+  //   accessorKey: 'liquidationTime',
+  //   type: 'text',
+  //   header: 'Liquidation Time',
+  // },
   {
     accessorKey: 'liquidating_debt_amount_avg',
     type: 'number',
@@ -61,16 +58,16 @@ export const columns: DataColumn<Row>[] = [
     type: 'usd',
     header: 'Liquidation Price',
   },
-  {
-    accessorKey: 'liquidated_return_amount_avg',
-    type: 'number',
-    header: 'Collateral Returned Amount',
-  },
-  {
-    accessorKey: 'liquidated_return_amount_usd_avg',
-    type: 'usd',
-    header: 'Collateral Returned ($USD)',
-  },
+  // {
+  //   accessorKey: 'liquidated_return_amount_avg',
+  //   type: 'number',
+  //   header: 'Collateral Returned Amount',
+  // },
+  // {
+  //   accessorKey: 'liquidated_return_amount_usd_avg',
+  //   type: 'usd',
+  //   header: 'Collateral Returned ($USD)',
+  // },
 ];
 
 export function LiquidatedVaultsTable({ data }: Props) {
