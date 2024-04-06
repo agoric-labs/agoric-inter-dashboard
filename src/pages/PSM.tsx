@@ -60,17 +60,33 @@ export const PSM = () => {
     tokenDataList?.nodes.forEach((dailyTokenMetrics) => {
       graphDataMap[dailyTokenMetrics.dateKey] = {
         ...graphDataMap[dailyTokenMetrics.dateKey],
-        x: dailyTokenMetrics.blockTimeLast,
+        x: dailyTokenMetrics.blockTimeLast.split('T')[0],
         key: dailyTokenMetrics.dateKey,
         [dailyTokenMetrics.token]: Number(dailyTokenMetrics.totalMintedProvidedLast) / 1_000_000,
       };
     });
   });
   const sortedGraphDataList = Object.values(graphDataMap).toSorted((a, b) => a.key - b.key);
-  let prevValue = {};
+  let prevValue: GraphData = sortedGraphDataList[0];
   const graphDataList: Array<GraphData> = sortedGraphDataList.reduce(
     (aggArray: Array<GraphData>, graphData: GraphData) => {
-      const newAggArray = [...aggArray, { ...prevValue, ...graphData }];
+      // filling in missing days
+      const prevDay = new Date(prevValue.x);
+      const nextDay = new Date(graphData.x);
+      const timeDiff = nextDay.getTime() - prevDay.getTime();
+      const diffDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+      const missingDays =
+        diffDays > 1
+          ? Array.from(Array(diffDays - 1).keys()).map((idx) => {
+              const newDate = new Date(prevDay);
+              newDate.setDate(prevDay.getDate() + 1 + idx);
+              const newDateString = newDate.toISOString().slice(0, 10);
+              const dateKey = Number(newDateString.replaceAll('-', ''));
+              return { ...prevValue, x: newDateString, key: dateKey };
+            })
+          : [];
+
+      const newAggArray = [...aggArray, ...missingDays, { ...prevValue, ...graphData }];
       prevValue = { ...prevValue, ...graphData };
       return newAggArray;
     },
