@@ -1,4 +1,5 @@
-import { useCubeQuery } from '@cubejs-client/react';
+import useSWR from 'swr';
+import { AxiosError, AxiosResponse } from 'axios';
 import { PieChart, Pie, Cell, Tooltip } from 'recharts';
 import { Skeleton } from '@/components/ui/skeleton';
 import { SectionHeader } from '@/components/SectionHeader';
@@ -7,8 +8,9 @@ import { ValueCardGrid } from '@/components/ValueCardGrid';
 import { PageHeader } from '@/components/PageHeader';
 import { PageContent } from '@/components/PageContent';
 import { colors } from '@/components/palette';
-import { formatPercent, roundPrice, formatPrice, formatIST, extractFirstFloat } from '@/utils';
+import { formatPercent, roundPrice, formatPrice, formatIST, subQueryFetcher } from '@/utils';
 import { ErrorAlert } from '@/components/ErrorAlert';
+import { INTER_DASHBOARD_QUERY } from '@/queries';
 
 const firstCards = [
   'IST in Circulation',
@@ -38,139 +40,62 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
   );
 };
 
+type OraclePriceNode = {
+  priceFeedName: string;
+  typeInAmount: number;
+  typeOutAmount: number;
+  typeInName: string;
+  typeOutName: string;
+  id: string;
+};
+type PsmGovernancesNode = { token: string; mintLimit: number };
+type PsmMetricsNode = { token: string; anchorPoolBalance: number; mintedPoolBalance: number };
+type AllocationsNode = { id: string; token: string; value: number };
+type ReserveMetricsNode = {
+  allocations: { nodes: Array<AllocationsNode> };
+  shortfallBalance: number;
+  totalFeeBurned: number;
+};
+type VaultManagerGovernancesNode = {
+  id: string;
+  debtLimit: number;
+};
+type VaultManagerMetricsNode = {
+  id: string;
+  liquidatingCollateralBrand: string;
+  liquidatingDebtBrand: string;
+  totalCollateral: number;
+  totalDebt: number;
+};
+
+type InterProtocolResponse = {
+  oraclePrices: { nodes: Array<OraclePriceNode> };
+  psmGovernances: { nodes: Array<PsmGovernancesNode> };
+  psmMetrics: { nodes: Array<PsmMetricsNode> };
+  reserveMetrics: { nodes: Array<ReserveMetricsNode> };
+  vaultManagerGovernances: {
+    nodes: Array<VaultManagerGovernancesNode>;
+  };
+  vaultManagerMetrics: {
+    nodes: Array<VaultManagerMetricsNode>;
+  };
+  wallets: { totalCount: number };
+};
+
 export function InterProtocol() {
-  const wcRes = useCubeQuery({
-    measures: ['wallets.address_count'],
-  });
+  const { data, error, isLoading } = useSWR<AxiosResponse, AxiosError>(INTER_DASHBOARD_QUERY, subQueryFetcher);
 
-  const ibcRes = useCubeQuery({
-    measures: ['balances.amount_sum'],
-    timeDimensions: [
-      {
-        dimension: 'balances.day',
-        granularity: 'day',
-        dateRange: 'from 1 days ago to now',
-      },
-    ],
-    order: { 'balances.day': 'desc' },
-    segments: ['balances.interchain_ist'],
-  });
+  const response: InterProtocolResponse = data?.data?.data;
 
-  const vgRes = useCubeQuery({
-    measures: ['vault_factory_governance.debt_limit_sum'],
-    timeDimensions: [
-      {
-        dimension: 'vault_factory_governance.day',
-        granularity: 'day',
-        dateRange: 'from 1 days ago to now',
-      },
-    ],
-    order: [['vault_factory_governance.day', 'desc']],
-  });
+  const oraclePrices: { [key: string]: OraclePriceNode } = response?.oraclePrices?.nodes?.reduce(
+    (agg, node) => ({ ...agg, [node.typeInName]: node }),
+    {},
+  );
 
-  const vmRes = useCubeQuery({
-    measures: ['vault_factory_metrics.total_debt_sum', 'vault_factory_metrics.total_collateral_usd_sum'],
-    timeDimensions: [
-      {
-        dimension: 'vault_factory_metrics.day',
-        granularity: 'day',
-        dateRange: 'from 1 days ago to now',
-      },
-    ],
-    order: [['vault_factory_metrics.day', 'desc']],
-  });
-
-  const psmGovRes = useCubeQuery({
-    measures: ['psm_governance.mint_limit_sum'],
-    timeDimensions: [
-      {
-        dimension: 'psm_governance.day',
-        granularity: 'day',
-        dateRange: 'from 1 days ago to now',
-      },
-    ],
-    order: [['psm_governance.day', 'desc']],
-  });
-
-  const psmRes = useCubeQuery({
-    measures: ['psm_stats.minted_pool_balance_sum', 'psm_stats.anchor_pool_balance_sum'],
-    timeDimensions: [
-      {
-        dimension: 'psm_stats.day',
-        granularity: 'day',
-        dateRange: 'from 1 days ago to now',
-      },
-    ],
-    order: [['psm_stats.day', 'desc']],
-  });
-
-  const reserveRes = useCubeQuery({
-    measures: ['reserve.shortfall_balance_avg'],
-    timeDimensions: [{ dimension: 'reserve.day', granularity: 'day' }],
-    order: {
-      'reserve.day': 'desc',
-    },
-    limit: 1,
-  });
-
-  const reserveAllocRes = useCubeQuery({
-    measures: ['reserve_allocations.amount_usd_sum'],
-    timeDimensions: [{ dimension: 'reserve_allocations.day', granularity: 'day', dateRange: 'from 1 days ago to now' }],
-    order: {
-      'reserve_allocations.day': 'desc',
-    },
-  });
-
-  if (reserveAllocRes.error) {
-    return <ErrorAlert value={reserveAllocRes.error} />;
+  if (error) {
+    return <ErrorAlert value={error} />;
   }
-
-  if (wcRes.error) {
-    return <ErrorAlert value={wcRes.error} />;
-  }
-
-  if (ibcRes.error) {
-    return <ErrorAlert value={ibcRes.error} />;
-  }
-
-  if (vmRes.error) {
-    return <ErrorAlert value={vmRes.error} />;
-  }
-
-  if (vgRes.error) {
-    return <ErrorAlert value={vgRes.error} />;
-  }
-
-  if (psmGovRes.error) {
-    return <ErrorAlert value={psmGovRes.error} />;
-  }
-
-  if (psmRes.error) {
-    return <ErrorAlert value={psmRes.error} />;
-  }
-
-  if (reserveRes.error) {
-    return <ErrorAlert value={reserveRes.error} />;
-  }
-
-  if (
-    wcRes.isLoading ||
-    !wcRes.resultSet ||
-    ibcRes.isLoading ||
-    !ibcRes.resultSet ||
-    vmRes.isLoading ||
-    !vmRes.resultSet ||
-    vgRes.isLoading ||
-    !vgRes.resultSet ||
-    psmRes.isLoading ||
-    !psmRes.resultSet ||
-    reserveRes.isLoading ||
-    !reserveRes.resultSet ||
-    reserveAllocRes.isLoading ||
-    !reserveAllocRes.resultSet ||
-    psmGovRes.isLoading ||
-    !psmGovRes.resultSet
-  ) {
+  if (isLoading) {
     return (
       <>
         <PageHeader title="Summary" />
@@ -191,22 +116,43 @@ export function InterProtocol() {
   }
 
   // top cards
-  const ibcBalance = extractFirstFloat(ibcRes, 'balances.amount_sum');
-  const walletCount = extractFirstFloat(wcRes, 'wallets.address_count');
+  const ibcBalance = 0;
+  const walletCount = response.wallets.totalCount;
 
-  const psmMinted = extractFirstFloat(psmRes, 'psm_stats.minted_pool_balance_sum');
-  const psmAnchor = extractFirstFloat(psmRes, 'psm_stats.anchor_pool_balance_sum');
-  const vaultMinted = extractFirstFloat(vmRes, 'vault_factory_metrics.total_debt_sum');
+  const psmMinted =
+    response.psmMetrics.nodes.reduce((agg, node) => agg + Number(node.mintedPoolBalance), 0) / 1_000_000;
+  const psmAnchor =
+    response.psmMetrics.nodes.reduce((agg, node) => agg + Number(node.anchorPoolBalance), 0) / 1_000_000;
+  const vaultMinted =
+    response.vaultManagerMetrics.nodes.reduce((agg, node) => agg + Number(node.totalDebt), 0) / 1_000_000;
   const totalMinted = psmMinted + vaultMinted;
 
-  const vaultMintLimit = extractFirstFloat(vgRes, 'vault_factory_governance.debt_limit_sum');
-  const psmMintLimit = extractFirstFloat(psmGovRes, 'psm_governance.mint_limit_sum');
+  const vaultMintLimit =
+    response.vaultManagerGovernances.nodes.reduce((agg, node) => agg + Number(node.debtLimit), 0) / 1_000_000;
+  const psmMintLimit = response.psmGovernances.nodes.reduce((agg, node) => agg + Number(node.mintLimit), 0) / 1_000_000;
   const totalMintLimit = vaultMintLimit + psmMintLimit;
 
   // bottom cards
-  const totalReserve = extractFirstFloat(reserveAllocRes, 'reserve_allocations.amount_usd_sum');
-  const reserveShortfall = extractFirstFloat(reserveRes, 'reserve.shortfall_balance_avg');
-  const totalLockedCollateral = extractFirstFloat(vmRes, 'vault_factory_metrics.total_collateral_usd_sum');
+  const totalReserve = response.reserveMetrics.nodes.reduce(
+    (agg, node) =>
+      agg +
+      node.allocations.nodes.reduce((agg_, node_) => {
+        const allocationInUsd =
+          ((Number(node_.value) / 1_000_000) * Number(oraclePrices[node_.token]?.typeOutAmount || 1_000_000)) /
+          1_000_000;
+        return agg_ + allocationInUsd;
+      }, 0),
+    0,
+  );
+  const reserveShortfall =
+    response.reserveMetrics.nodes.reduce((agg, node) => agg + Number(node.shortfallBalance), 0) / 1_000_000;
+  const totalLockedCollateral = response.vaultManagerMetrics.nodes.reduce((agg, node) => {
+    const collateralInUsd =
+      ((Number(node.totalCollateral) / 1_000_000) *
+        Number(oraclePrices[node.liquidatingCollateralBrand].typeOutAmount)) /
+      1_000_000;
+    return agg + collateralInUsd;
+  }, 0);
 
   return (
     <>
