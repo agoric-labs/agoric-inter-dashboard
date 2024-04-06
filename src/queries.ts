@@ -18,6 +18,31 @@ query {
     }
 }`;
 
+export const PSM_GRAPH_TOKENS_QUERY = `
+query {
+    psmMetrics {
+        nodes {
+            id
+            token
+        }
+    }
+}`;
+
+export const PSM_TOKEN_DAILY_MINT_QUERY = (tokens: Array<string>) => `
+query {
+    ${tokens.map((token: string) => `
+        ${token}: psmMetricDailies(first: 90, filter: {token: {equalTo: "${token}"}}, orderBy:DATE_KEY_DESC) {
+        nodes {
+                id
+                token
+                dateKey
+                blockTimeLast
+                totalMintedProvidedLast
+            }
+        }`
+)}
+}`
+
 export const VAULTS_DASHBOARD_QUERY = `
 query {
     vaultManagerMetrics {
