@@ -1,32 +1,18 @@
-import { useCubeQuery } from '@cubejs-client/react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ValueCard } from '@/components/ValueCard';
-import { formatPrice, getCubeQueryView, extractFirstFloat } from '@/utils';
+import { formatPrice } from '@/utils';
+import { ReserveDashboardData } from '@/pages/Reserve';
 
 type Props = {
   title?: string;
+  data: ReserveDashboardData;
+  isLoading: boolean;
 };
 
-export function ReserveShortfall({ title = 'Reserve Shortfall' }: Props) {
-  const res = useCubeQuery({
-    measures: ['reserve.shortfall_balance_avg'],
-    timeDimensions: [{ dimension: 'reserve.day', granularity: 'day' }],
-    order: {
-      'reserve.day': 'desc',
-    },
-    limit: 1,
-  });
-
-  if (res.isLoading || !res.resultSet) {
+export function ReserveShortfall({ title = 'Reserve Shortfall', data, isLoading }: Props) {
+  if (isLoading || !data) {
     return <ValueCard title={title} value={<Skeleton className="w-[100px] h-[32px] rounded-full" />} />;
   }
-
-  const [resultSet, requestView] = getCubeQueryView(res);
-  if (!resultSet) {
-    return requestView;
-  }
-
-  const latest = extractFirstFloat(res, 'reserve.shortfall_balance_avg');
-
-  return <ValueCard title={title} value={formatPrice(latest)} />;
+  const shortfall = data.reduce((agg, node) => agg + Number(node.shortfallBalance), 0) / 1_000_000;
+  return <ValueCard title={title} value={formatPrice(shortfall)} />;
 }

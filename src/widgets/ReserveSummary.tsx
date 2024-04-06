@@ -1,37 +1,27 @@
-import { useCubeQuery } from '@cubejs-client/react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ValueCard } from '@/components/ValueCard';
-import { formatPrice, getCubeQueryView, extractFirstFloat } from '@/utils';
+import { formatPrice } from '@/utils';
+import { ReserveDashboardData } from '@/pages/Reserve';
 
 type Props = {
   title?: string;
+  data: ReserveDashboardData;
+  isLoading: boolean;
 };
 
-export function ReserveSummary({ title = 'Total Reserve Assets' }: Props) {
-  const res = useCubeQuery({
-    measures: ['reserve_allocations.amount_usd_sum'],
-    timeDimensions: [
-      {
-        dimension: 'reserve_allocations.day',
-        granularity: 'day',
-        dateRange: 'from 1 days ago to now',
-      },
-    ],
-    order: {
-      'reserve_allocations.day': 'desc',
-    },
-  });
-
-  if (res.isLoading || !res.resultSet) {
+export function ReserveSummary({ title = 'Total Reserve Assets', data, isLoading }: Props) {
+  if (isLoading || !data) {
     return <ValueCard title={title} value={<Skeleton className="w-[100px] h-[32px] rounded-full" />} />;
   }
-
-  const [resultSet, requestView] = getCubeQueryView(res);
-  if (!resultSet) {
-    return requestView;
-  }
-
-  const latest = extractFirstFloat(res, 'reserve_allocations.amount_usd_sum');
-
-  return <ValueCard title={title} value={formatPrice(latest)} />;
+  const totalReserve = data.reduce(
+    (agg, node) =>
+      agg +
+      Object.values(node.allocations).reduce((agg_, node_) => {
+        const allocationInUsd =
+          ((Number(node_.value) / 1_000_000) * Number(node_.typeOutAmount || 1_000_000)) / 1_000_000;
+        return agg_ + allocationInUsd;
+      }, 0),
+    0,
+  );
+  return <ValueCard title={title} value={formatPrice(totalReserve)} />;
 }
