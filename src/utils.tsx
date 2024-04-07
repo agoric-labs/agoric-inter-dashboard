@@ -128,3 +128,13 @@ export const subQueryFetcher = (query: string) =>
       },
     },
   );
+export const subQueryGraphFetcher = (query: string) =>
+  axios.post(
+    'https://api.subquery.network/sq/agoric-labs/mainnet-test__YWdvc',
+    { query },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  );

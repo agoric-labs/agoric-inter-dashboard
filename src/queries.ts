@@ -50,6 +50,42 @@ query {
     }
 }`;
 
+export const VAULTS_GRAPH_TOKENS_QUERY = `
+query {
+    vaultManagerMetrics {
+        nodes {
+            id
+            liquidatingCollateralBrand
+        }   
+    }
+}`
+
+export const VAULTS_DAILY_METRICS_QUERY = (tokens: string[]) => `
+query {
+    ${tokens.map((token) =>
+    `${token}: vaultManagerMetricsDailies(first: 90, filter:{liquidatingCollateralBrand: {equalTo: "${token}"} }, orderBy:DATE_KEY_DESC)  {
+        nodes {
+            id
+            dateKey
+            liquidatingCollateralBrand
+            blockTimeLast
+            totalDebtSum
+            totalCollateralLast
+            metricsCount
+        }
+    }
+    ${token}_oracle: oraclePriceDailies (first: 90, filter:{typeInName: {equalTo: "${token}"}}, orderBy:DATE_KEY_DESC ) {
+        nodes {
+            id
+            dateKey
+            blockTimeLast
+            typeInName
+            typeInAmountLast
+            typeOutAmountLast
+        }
+    }`)}
+}`
+
 export const OPEN_VAULTS_QUERY = `
 query {
     vaults {
