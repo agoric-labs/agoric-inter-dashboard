@@ -89,31 +89,6 @@ export const Reserve = () => {
 
   const sortedGraphDataList = Object.values(graphDataMap);
   sortedGraphDataList.sort((a, b) => a.key - b.key);
-  let prevValue: GraphData = sortedGraphDataList[0];
-  const graphDataList: Array<GraphData> = sortedGraphDataList.reduce(
-    (aggArray: Array<GraphData>, graphData: GraphData) => {
-      // filling in missing days
-      const prevDay = new Date(prevValue.x);
-      const nextDay = new Date(graphData.x);
-      const timeDiff = nextDay.getTime() - prevDay.getTime();
-      const diffDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-      const missingDays =
-        diffDays > 1
-          ? Array.from(Array(diffDays - 1).keys()).map((idx) => {
-              const newDate = new Date(prevDay);
-              newDate.setDate(prevDay.getDate() + 1 + idx);
-              const newDateString = newDate.toISOString().slice(0, 10);
-              const dateKey = Number(newDateString.replaceAll('-', ''));
-              return { ...prevValue, x: newDateString, key: dateKey };
-            })
-          : [];
-
-      const newAggArray = [...aggArray, ...missingDays, { ...prevValue, ...graphData }];
-      prevValue = { ...prevValue, ...graphData };
-      return newAggArray;
-    },
-    [],
-  );
 
   return (
     <>
@@ -124,7 +99,7 @@ export const Reserve = () => {
           <ReserveCosmosSummary />
           <ReserveShortfall data={reserveDashboardQueryData} isLoading={isLoading} />
         </div>
-        <ReserveHistory data={graphDataList} tokenNames={tokenNames} isLoading={graphDataIsLoading} />
+        <ReserveHistory data={sortedGraphDataList} tokenNames={tokenNames} isLoading={graphDataIsLoading} />
       </PageContent>
     </>
   );
