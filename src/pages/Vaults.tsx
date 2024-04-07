@@ -11,8 +11,13 @@ import { OpenVaults } from '@/widgets/OpenVaults';
 import { VaultManagers } from '@/widgets/VaultManagers';
 import { VaultManagerCountCard } from '@/widgets/VaultManagerCountCard';
 import { VaultTotalLockedCollateralValueCard } from '@/widgets/VaultTotalLockedCollateralValueCard';
-import { VAULTS_DASHBOARD_QUERY, OPEN_VAULTS_QUERY } from '@/queries';
-import { subQueryFetcher } from '@/utils';
+import {
+  VAULTS_DASHBOARD_QUERY,
+  OPEN_VAULTS_QUERY,
+  VAULTS_GRAPH_TOKENS_QUERY,
+  VAULTS_DAILY_METRICS_QUERY,
+} from '@/queries';
+import { subQueryFetcher, subQueryGraphFetcher } from '@/utils';
 
 type OraclePriceNode = { priceFeedName: string; typeInAmount: number; typeOutAmount: number };
 type VaultManagerMetricsNode = {
@@ -55,6 +60,14 @@ type OpenVaultsResponse = {
   oraclePrices: { nodes: Array<OraclePriceNode> };
   vaultManagerGovernances: { nodes: Array<VaultManagerGovernancesNode> };
 };
+
+type VaultManagerMetricsResponse = {
+  vaultManagerMetrics: {
+    nodes: Array<VaultManagerMetricsNode>;
+  };
+};
+
+type GraphData = { key: number; x: string };
 
 export type VaultsDashboardData = {
   [key: string]: VaultManagerMetricsNode & OraclePriceNode & VaultDashboardManagerGovernancesNode;
@@ -144,6 +157,64 @@ export function Vaults() {
     };
   });
 
+  //  Queries for graph
+  const { data: tokenNamesData } = useSWR<AxiosResponse, AxiosError>(VAULTS_GRAPH_TOKENS_QUERY, subQueryGraphFetcher);
+  const tokenNamesResponse: VaultManagerMetricsResponse = tokenNamesData?.data.data;
+  const tokenNames = tokenNamesResponse?.vaultManagerMetrics.nodes.map((node) => node.liquidatingCollateralBrand) || [];
+  const { data: dailyMetricsData, isLoading: graphDataIsLoading } = useSWR<AxiosResponse, AxiosError>(
+    VAULTS_DAILY_METRICS_QUERY(tokenNames),
+    subQueryGraphFetcher,
+  );
+  const dailyMetricsResponse = dailyMetricsData?.data.data;
+
+  const graphDataMap: { [key: number]: GraphData } = {};
+  tokenNames.forEach((tokenName) => {
+    const dailyOracles = dailyMetricsResponse?.[`${tokenName}_oracle`].nodes.reduce(
+      (agg: object, dailyOracleData: { dateKey: string }) => ({ ...agg, [dailyOracleData.dateKey]: dailyOracleData }),
+      {},
+    );
+
+    dailyMetricsResponse?.[tokenName].nodes.forEach((dailyTokenMetrics: any) => {
+      const oracle = dailyOracles[dailyTokenMetrics.dateKey];
+      graphDataMap[dailyTokenMetrics.dateKey] = {
+        ...graphDataMap[dailyTokenMetrics.dateKey],
+        x: dailyTokenMetrics.blockTimeLast.slice(0, 10),
+        key: dailyTokenMetrics.dateKey,
+        [`${dailyTokenMetrics.liquidatingCollateralBrand}-total_collateral`]:
+          (dailyTokenMetrics.totalCollateralLast / 1_000_000) * (oracle.typeOutAmountLast / oracle.typeInAmountLast),
+        [`${dailyTokenMetrics.liquidatingCollateralBrand}-total_minted`]:
+          dailyTokenMetrics.totalDebtSum / dailyTokenMetrics.metricsCount / 1000_000,
+      };
+    });
+  });
+
+  const sortedGraphDataList = Object.values(graphDataMap).slice().sort((a, b) => a.key - b.key);
+  let prevValue: GraphData = sortedGraphDataList[0];
+  const graphDataList: Array<GraphData> = sortedGraphDataList.reduce(
+    (aggArray: Array<GraphData>, graphData: GraphData) => {
+      // filling in missing days
+      const prevDay = new Date(prevValue.x);
+      const nextDay = new Date(graphData.x);
+      const timeDiff = nextDay.getTime() - prevDay.getTime();
+      const diffDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+      const missingDays =
+        diffDays > 1
+          ? Array.from(Array(diffDays - 1).keys()).map((idx) => {
+              const newDate = new Date(prevDay);
+              newDate.setDate(prevDay.getDate() + 1 + idx);
+              const newDateString = newDate.toISOString().slice(0, 10);
+              const dateKey = Number(newDateString.replaceAll('-', ''));
+              return { ...prevValue, x: newDateString, key: dateKey };
+            })
+          : [];
+
+      const newAggArray = [...aggArray, ...missingDays, { ...prevValue, ...graphData }];
+      prevValue = { ...prevValue, ...graphData };
+      return newAggArray;
+    },
+    [],
+  );
+
   return (
     <>
       <PageHeader title="Vaults" />
@@ -154,8 +225,8 @@ export function Vaults() {
           <VaultTotalLockedCollateralValueCard data={vaultsDashboardQueryData} isLoading={vaultsDashboardIsLoading} />
         </ValueCardGrid>
         <TokenPrices data={vaultsDashboardQueryData} isLoading={vaultsDashboardIsLoading} />
-        <VaultTotalLockedCollateralChart />
-        <VaultTotalMintedISTChart />
+        <VaultTotalLockedCollateralChart data={graphDataList} tokenNames={tokenNames} isLoading={graphDataIsLoading} />
+        <VaultTotalMintedISTChart data={graphDataList} tokenNames={tokenNames} isLoading={graphDataIsLoading} />
         <hr className="my-5" />
         <VaultManagers data={vaultsDashboardQueryData} isLoading={vaultsDashboardIsLoading} />
         <hr className="my-5" />
