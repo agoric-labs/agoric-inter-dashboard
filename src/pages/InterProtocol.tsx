@@ -116,8 +116,8 @@ export function InterProtocol() {
   }
 
   // top cards
-  const ibcBalance = 0;
-  const walletCount = response.wallets.totalCount;
+  // const ibcBalance = 0;
+  // const walletCount = response.wallets.totalCount;
 
   const psmMinted =
     response.psmMetrics.nodes.reduce((agg, node) => agg + Number(node.mintedPoolBalance), 0) / 1_000_000;
@@ -162,9 +162,9 @@ export function InterProtocol() {
           <ValueCard title="IST in Circulation" value={formatIST(totalMinted)} />
           <ValueCard title="Total Mint Limit" value={formatIST(vaultMintLimit + psmMintLimit)} />
           <ValueCard title="Total Mint Limit Utilized" value={formatPercent(totalMinted / totalMintLimit)} />
-          <ValueCard title="Total Interchain IST" value={formatIST(ibcBalance)} />
+          {/* <ValueCard title="Total Interchain IST" value={formatIST(ibcBalance)} />
           <ValueCard title="% of Interchain IST" value={formatPercent(ibcBalance / totalMinted)} />
-          <ValueCard title="Smart Wallets Provisioned" value={walletCount} />
+          <ValueCard title="Smart Wallets Provisioned" value={walletCount} /> */}
         </ValueCardGrid>
 
         <SectionHeader>Balances</SectionHeader>
