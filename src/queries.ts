@@ -31,7 +31,7 @@ query {
 export const PSM_TOKEN_DAILY_MINT_QUERY = (tokens: Array<string>) => `
 query {
     ${tokens.map((token: string) => `
-        ${token}: psmMetricDailies(first: 90, filter: {token: {equalTo: "${token}"}}, orderBy:DATE_KEY_DESC) {
+        ${token}: psmMetricDailies(first: 90, filter: {token: {equalTo: "${token}"}}, orderBy:DATE_KEY_ASC) {
         nodes {
                 id
                 token
@@ -88,7 +88,7 @@ query {
 export const VAULTS_DAILY_METRICS_QUERY = (tokens: string[]) => `
 query {
     ${tokens.map((token) =>
-    `${token}: vaultManagerMetricsDailies(first: 90, filter:{liquidatingCollateralBrand: {equalTo: "${token}"} }, orderBy:DATE_KEY_DESC)  {
+    `${token}: vaultManagerMetricsDailies(first: 90, filter:{liquidatingCollateralBrand: {equalTo: "${token}"} }, orderBy:DATE_KEY_ASC)  {
         nodes {
             id
             dateKey
@@ -99,7 +99,7 @@ query {
             metricsCount
         }
     }
-    ${token}_oracle: oraclePriceDailies (first: 90, filter:{typeInName: {equalTo: "${token}"}}, orderBy:DATE_KEY_DESC ) {
+    ${token}_oracle: oraclePriceDailies (first: 90, filter:{typeInName: {equalTo: "${token}"}}, orderBy:DATE_KEY_ASC ) {
         nodes {
             id
             dateKey
@@ -162,6 +162,45 @@ query {
         }
     }
 }`
+
+
+export const RESERVE_GRAPH_TOKENS_QUERY = `
+query {
+    reserveMetrics {
+        nodes {
+            allocations {
+                nodes {
+                    id
+                    token
+                }
+            }
+        }
+    }
+}`
+
+export const RESERVE_DAILY_METRICS_QUERY = (tokens: string[]) => `
+query {
+    ${tokens.map((token) =>
+    `${token}: reserveAllocationMetricsDailies (first: 90, filter: {token: {equalTo: "${token}"}}, orderBy:DATE_KEY_ASC) {
+        nodes {
+            id
+            blockTimeLast
+            dateKey
+            valueLast
+            token
+        }
+    }
+    ${token}_oracle: oraclePriceDailies (first: 90, filter: {typeInName: {equalTo: "${token}"}}, orderBy:DATE_KEY_ASC) {
+        nodes {
+          dateKey
+          blockTimeLast
+          typeInName
+          typeInAmountLast
+          typeOutAmountLast
+        }
+    }`)}
+}`
+
 
 export const INTER_DASHBOARD_QUERY = `
 query {

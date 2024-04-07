@@ -6,8 +6,8 @@ import { ReserveSummary } from '@/widgets/ReserveSummary';
 import { ReserveCosmosSummary } from '@/widgets/ReserveCosmosSummary';
 import { ReserveShortfall } from '@/widgets/ReserveShortfall';
 import { ReserveHistory } from '@/widgets/ReserveHistory';
-import { subQueryFetcher } from '@/utils';
-import { RESERVE_DASHBOARD_QUERY } from '@/queries';
+import { subQueryFetcher, subQueryGraphFetcher } from '@/utils';
+import { RESERVE_DASHBOARD_QUERY, RESERVE_GRAPH_TOKENS_QUERY, RESERVE_DAILY_METRICS_QUERY } from '@/queries';
 
 type OraclePriceNode = {
   typeInAmount: number;
@@ -29,6 +29,13 @@ export type ReserveDashboardData = Array<{
   shortfallBalance: number;
   allocations: { [key: string]: AllocationsNode & OraclePriceNode };
 }>;
+
+type ReserveManagerMetricsResponse = {
+  reserveMetrics: { nodes: Array<ReserveMetricsNode> };
+};
+
+type GraphData = { key: number; x: string };
+
 export const Reserve = () => {
   const { data, isLoading } = useSWR<AxiosResponse, AxiosError>(RESERVE_DASHBOARD_QUERY, subQueryFetcher);
 
@@ -48,6 +55,41 @@ export const Reserve = () => {
     ),
   }));
 
+  //  Queries for graph
+  const { data: tokenNamesData } = useSWR<AxiosResponse, AxiosError>(RESERVE_GRAPH_TOKENS_QUERY, subQueryGraphFetcher);
+  const tokenNamesResponse: ReserveManagerMetricsResponse = tokenNamesData?.data.data;
+  const tokenNames =
+    tokenNamesResponse?.reserveMetrics.nodes
+      .map((node) => node.allocations.nodes.map((allocation) => allocation.token))
+      .flat() || [];
+  const { data: dailyMetricsData, isLoading: graphDataIsLoading } = useSWR<AxiosResponse, AxiosError>(
+    RESERVE_DAILY_METRICS_QUERY(tokenNames),
+    subQueryGraphFetcher,
+  );
+  const dailyMetricsResponse = dailyMetricsData?.data.data;
+
+  const graphDataMap: { [key: number]: GraphData } = {};
+  tokenNames.forEach((tokenName) => {
+    const dailyOracles = dailyMetricsResponse?.[`${tokenName}_oracle`].nodes.reduce(
+      (agg: object, dailyOracleData: { dateKey: string }) => ({ ...agg, [dailyOracleData.dateKey]: dailyOracleData }),
+      {},
+    );
+
+    dailyMetricsResponse?.[tokenName].nodes.forEach((dailyTokenMetrics: any) => {
+      const oracle = dailyOracles[dailyTokenMetrics.dateKey] || { typeOutAmountLast: 1, typeInAmountLast: 1 };
+      graphDataMap[dailyTokenMetrics.dateKey] = {
+        ...graphDataMap[dailyTokenMetrics.dateKey],
+        x: dailyTokenMetrics.blockTimeLast.slice(0, 10),
+        key: dailyTokenMetrics.dateKey,
+        [`${dailyTokenMetrics.token}`]:
+          (dailyTokenMetrics.valueLast / 1_000_000) * (oracle.typeOutAmountLast / oracle.typeInAmountLast),
+      };
+    });
+  });
+
+  const sortedGraphDataList = Object.values(graphDataMap);
+  sortedGraphDataList.sort((a, b) => a.key - b.key);
+
   return (
     <>
       <PageHeader title="Reserve Assets" />
@@ -57,7 +99,7 @@ export const Reserve = () => {
           <ReserveCosmosSummary />
           <ReserveShortfall data={reserveDashboardQueryData} isLoading={isLoading} />
         </div>
-        <ReserveHistory />
+        <ReserveHistory data={sortedGraphDataList} tokenNames={tokenNames} isLoading={graphDataIsLoading} />
       </PageContent>
     </>
   );
