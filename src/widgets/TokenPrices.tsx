@@ -1,7 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { SectionHeader } from '@/components/SectionHeader';
 import { TokenPricesTable } from '@/components/TokenPricesTable';
-import { icons } from '@/components/OraclePrices';
 import { VaultsDashboardData } from '@/pages/Vaults';
 
 type Props = {
@@ -29,11 +28,11 @@ export function TokenPrices({ title = 'Summary', data, isLoading }: Props) {
     return {
       token: (
         <span className="flex">
-          <img
+          {/* <img
             src={icons[token.liquidatingCollateralBrand.toLowerCase()] || icons.unknown}
             alt={token.liquidatingCollateralBrand}
             className="w-4 h-4"
-          />{' '}
+          />{' '} */}
           <span className="flex-1 ml-2">{token.liquidatingCollateralBrand}</span>
         </span>
       ),
