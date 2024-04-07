@@ -40,16 +40,6 @@ const menuItems = [
 
 const chains: { [key: string]: string } = {
   mainnet: 'Mainnet',
-  emerynet: 'Emerynet',
-  ollinet: 'Ollinet',
-  devnet: 'Devnet',
-};
-
-const ranges: { [key: string]: string } = {
-  day: 'Daily',
-  week: 'Weekly',
-  month: 'Monthly',
-  year: 'Yearly',
 };
 
 export function MainLayout({ children }: Props) {
@@ -58,16 +48,9 @@ export function MainLayout({ children }: Props) {
 
   const sp = new URLSearchParams(location.search);
   const chain = sp.get('chain') || 'mainnet';
-  const range = sp.get('range') || 'day';
 
   const handleChainChange = (newChain: string) => {
     sp.set('chain', newChain);
-    const newUrl = `${location.pathname}?${sp.toString()}`;
-    navigate(newUrl);
-  };
-
-  const handleRangeChange = (newRange: string) => {
-    sp.set('range', newRange);
     const newUrl = `${location.pathname}?${sp.toString()}`;
     navigate(newUrl);
   };
@@ -84,7 +67,7 @@ export function MainLayout({ children }: Props) {
           </Link>
           <div className="flex-1 lg:block flex flex-wrap m-4 lg:m-0">
             {menuItems.map((i) => {
-              const to = `${i.to}?chain=${chain}&range=${range}`;
+              const to = `${i.to}?chain=${chain}`;
 
               return (
                 <NavLink to={to} key={i.label} className="text-black block flex lg:m-8 m-2 mr-0 nav-link">
@@ -103,18 +86,6 @@ export function MainLayout({ children }: Props) {
                 {Object.keys(chains).map((c) => (
                   <SelectItem key={c} value={c}>
                     {chains[c]}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select onValueChange={handleRangeChange}>
-              <SelectTrigger className="w-full max-w-[170px] text-gray-700 border-gray-700 mx-4 my-4 bg-transparent flex-1">
-                <SelectValue placeholder={ranges[range]} />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.keys(ranges).map((c) => (
-                  <SelectItem key={c} value={c}>
-                    {ranges[c]}
                   </SelectItem>
                 ))}
               </SelectContent>
