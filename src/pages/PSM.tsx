@@ -66,7 +66,7 @@ export const PSM = () => {
       };
     });
   });
-  const sortedGraphDataList = Object.values(graphDataMap).toSorted((a, b) => a.key - b.key);
+  const sortedGraphDataList = Object.values(graphDataMap).slice().sort((a, b) => a.key - b.key);
   let prevValue: GraphData = sortedGraphDataList[0];
   const graphDataList: Array<GraphData> = sortedGraphDataList.reduce(
     (aggArray: Array<GraphData>, graphData: GraphData) => {
