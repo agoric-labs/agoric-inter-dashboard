@@ -292,3 +292,30 @@ query {
         }
     } 
 }`;
+
+export const LIQUIDATION_GRAPH_TOKENS_QUERY = `
+query {
+    vaultManagerMetrics {
+        nodes {
+            id
+            liquidatingCollateralBrand
+        }   
+    }
+}`
+
+export const LIQUIDATION_DAILY_METRICS_QUERY = (tokens: string[]) => `
+query {
+    ${tokens.map((token) =>
+    `${token}: vaultManagerMetricsDailies ( first: 90, filter:{liquidatingCollateralBrand: {equalTo: "${token}"}}, orderBy:DATE_KEY_ASC)  {
+        nodes {
+            id
+            dateKey
+            blockTimeLast
+            numActiveVaultsLast
+            numLiquidatingVaultsLast
+            numLiquidationsCompletedLast
+            numLiquidationsAbortedLast
+            liquidatingCollateralBrand
+        }
+    }`)}
+}`

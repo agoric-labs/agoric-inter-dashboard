@@ -1,30 +1,17 @@
-import { useCubeQuery } from '@cubejs-client/react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { getCubeQueryView, formatDay, toTitleCase } from '@/utils';
-import { useGranularity } from '@/components/CubeProvider';
+import { formatDay, toTitleCase } from '@/utils';
 import { colors } from '@/components/palette';
 
 type Props = {
   title?: string;
+  isLoading: boolean;
+  data: Array<object>;
 };
 
-export function VaultStatesChart({ title = 'Vault States' }: Props) {
-  const granularity = useGranularity();
-  const res = useCubeQuery({
-    measures: ['vault_states.count'],
-    timeDimensions: [
-      {
-        dimension: 'vault_states.day',
-        granularity,
-        dateRange: granularity === 'day' ? 'Last 90 days' : undefined,
-      },
-    ],
-    dimensions: ['vault_states.state'],
-  });
-
-  if (res.isLoading || !res.resultSet) {
+export function VaultStatesChart({ title = 'Vault States', data, isLoading }: Props) {
+  if (isLoading || !data) {
     return (
       <Card className="my-4 mb-4">
         <CardHeader>
@@ -40,17 +27,12 @@ export function VaultStatesChart({ title = 'Vault States' }: Props) {
     );
   }
 
-  const [resultSet, requestView] = getCubeQueryView(res);
-  if (!resultSet) {
-    return requestView;
-  }
-
   const barChart = (
     <ResponsiveContainer width="100%" height={300}>
       <BarChart
         width={500}
         height={300}
-        data={resultSet.chartPivot()}
+        data={data}
         margin={{
           top: 20,
           right: 30,
@@ -64,14 +46,8 @@ export function VaultStatesChart({ title = 'Vault States' }: Props) {
         <YAxis />
         <Tooltip />
         <Legend />
-        {resultSet.seriesNames().map((col, idx) => (
-          <Bar
-            key={col.key}
-            stackId="a"
-            dataKey={col.key}
-            name={toTitleCase(col.shortTitle)}
-            fill={colors[idx % colors.length]}
-          />
+        {['active', 'liquidated'].map((col, idx) => (
+          <Bar key={col} stackId="a" dataKey={col} name={toTitleCase(col)} fill={colors[idx % colors.length]} />
         ))}
       </BarChart>
     </ResponsiveContainer>
