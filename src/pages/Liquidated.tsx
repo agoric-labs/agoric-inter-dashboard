@@ -119,7 +119,32 @@ export function Liquidated() {
   });
   const sortedGraphDataList = Object.values(graphDataMap);
   sortedGraphDataList.sort((a, b) => a.key - b.key);
-  const graphDataList = sortedGraphDataList.map((item) => ({
+  let prevValue: GraphData = sortedGraphDataList[0];
+  const graphDataList: Array<GraphData> = sortedGraphDataList.reduce(
+    (aggArray: Array<GraphData>, graphData: GraphData) => {
+      // filling in missing days
+      const prevDay = new Date(prevValue.x);
+      const nextDay = new Date(graphData.x);
+      const timeDiff = nextDay.getTime() - prevDay.getTime();
+      const diffDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+      const missingDays =
+        diffDays > 1
+          ? Array.from(Array(diffDays - 1).keys()).map((idx) => {
+              const newDate = new Date(prevDay);
+              newDate.setDate(prevDay.getDate() + 1 + idx);
+              const newDateString = newDate.toISOString().slice(0, 10);
+              const dateKey = Number(newDateString.replaceAll('-', ''));
+              return { ...prevValue, x: newDateString, key: dateKey };
+            })
+          : [];
+
+      const newAggArray = [...aggArray, ...missingDays, { ...prevValue, ...graphData }];
+      prevValue = { ...prevValue, ...graphData };
+      return newAggArray;
+    },
+    [],
+  );
+  const summedGraphDataList = graphDataList.map((item) => ({
     ...item,
     active: sum(Object.values(item.active)),
     liquidated: sum(Object.values(item.active)),
@@ -132,7 +157,7 @@ export function Liquidated() {
         <ValueCardGrid>
           <LiquidatedVaultCountCard data={response?.vaultManagerMetrics?.nodes} isLoading={isLoading} />
         </ValueCardGrid>
-        <VaultStatesChart data={graphDataList} isLoading={graphDataIsLoading} />
+        <VaultStatesChart data={summedGraphDataList} isLoading={graphDataIsLoading} />
         <hr className="my-5" />
         <LiquidatedVaults data={liquidationDashboardData} isLoading={isLoading} />
       </PageContent>
