@@ -1,5 +1,5 @@
 import { AxiosError, AxiosResponse } from 'axios';
-import useSWR from 'swr/immutable';
+import useSWR from 'swr';
 import { ValueCardGrid } from '@/components/ValueCardGrid';
 import { PageHeader } from '@/components/PageHeader';
 import { PageContent } from '@/components/PageContent';

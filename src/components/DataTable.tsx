@@ -70,7 +70,7 @@ export function DataTable<T>({ data, columns }: { data: T[]; columns: DataColumn
       }
     }
 
-    const oldCol = col.header;
+    const OldCol: any = col.header;
 
     col.header = ({ column }) => (
       <button
@@ -78,7 +78,7 @@ export function DataTable<T>({ data, columns }: { data: T[]; columns: DataColumn
         className="text-left w-full"
         type="button"
       >
-        {typeof oldCol === 'string' ? oldCol : React.createElement(oldCol as any, { column })}
+        {typeof OldCol === 'string' ? OldCol : <OldCol column={column} />}
       </button>
     );
 
