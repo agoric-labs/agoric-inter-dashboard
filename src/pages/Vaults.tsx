@@ -188,8 +188,32 @@ export function Vaults() {
     });
   });
 
-  const sortedGraphDataList = Object.values(graphDataMap);
-  sortedGraphDataList.sort((a, b) => a.key - b.key);
+  const sortedGraphDataList = Object.values(graphDataMap).slice().sort((a, b) => a.key - b.key);
+  let prevValue: GraphData = sortedGraphDataList[0];
+  const graphDataList: Array<GraphData> = sortedGraphDataList.reduce(
+    (aggArray: Array<GraphData>, graphData: GraphData) => {
+      // filling in missing days
+      const prevDay = new Date(prevValue.x);
+      const nextDay = new Date(graphData.x);
+      const timeDiff = nextDay.getTime() - prevDay.getTime();
+      const diffDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+      const missingDays =
+        diffDays > 1
+          ? Array.from(Array(diffDays - 1).keys()).map((idx) => {
+              const newDate = new Date(prevDay);
+              newDate.setDate(prevDay.getDate() + 1 + idx);
+              const newDateString = newDate.toISOString().slice(0, 10);
+              const dateKey = Number(newDateString.replaceAll('-', ''));
+              return { ...prevValue, x: newDateString, key: dateKey };
+            })
+          : [];
+
+      const newAggArray = [...aggArray, ...missingDays, { ...prevValue, ...graphData }];
+      prevValue = { ...prevValue, ...graphData };
+      return newAggArray;
+    },
+    [],
+  );
 
   return (
     <>
@@ -201,12 +225,8 @@ export function Vaults() {
           <VaultTotalLockedCollateralValueCard data={vaultsDashboardQueryData} isLoading={vaultsDashboardIsLoading} />
         </ValueCardGrid>
         <TokenPrices data={vaultsDashboardQueryData} isLoading={vaultsDashboardIsLoading} />
-        <VaultTotalLockedCollateralChart
-          data={sortedGraphDataList}
-          tokenNames={tokenNames}
-          isLoading={graphDataIsLoading}
-        />
-        <VaultTotalMintedISTChart data={sortedGraphDataList} tokenNames={tokenNames} isLoading={graphDataIsLoading} />
+        <VaultTotalLockedCollateralChart data={graphDataList} tokenNames={tokenNames} isLoading={graphDataIsLoading} />
+        <VaultTotalMintedISTChart data={graphDataList} tokenNames={tokenNames} isLoading={graphDataIsLoading} />
         <hr className="my-5" />
         <VaultManagers data={vaultsDashboardQueryData} isLoading={vaultsDashboardIsLoading} />
         <hr className="my-5" />
