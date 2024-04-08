@@ -1,0 +1,497 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InterProtocol Snapshot tests should match snapshot when data is loaded 1`] = `
+<div>
+  <h1
+    class="flex items-center space-x-4 lg:space-x-6 border-b p-8 text-3xl font-bold tracking-tight"
+  >
+    Summary
+  </h1>
+  <div
+    class="p-8"
+  >
+    <div
+      class="grid grid-cols-2 xl:grid-cols-3 gap-4 mb-5"
+    >
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+        >
+          <h3
+            class="tracking-tight text-sm font-medium"
+          >
+            IST in Circulation
+          </h3>
+        </div>
+        <div
+          class="p-6 pt-0"
+        >
+          <div
+            class="text-2xl font-bold"
+          >
+            1.62M
+          </div>
+        </div>
+      </div>
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+        >
+          <h3
+            class="tracking-tight text-sm font-medium"
+          >
+            Total Mint Limit
+          </h3>
+        </div>
+        <div
+          class="p-6 pt-0"
+        >
+          <div
+            class="text-2xl font-bold"
+          >
+            9.73M
+          </div>
+        </div>
+      </div>
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+        >
+          <h3
+            class="tracking-tight text-sm font-medium"
+          >
+            Total Mint Limit Utilized
+          </h3>
+        </div>
+        <div
+          class="p-6 pt-0"
+        >
+          <div
+            class="text-2xl font-bold"
+          >
+            16.68%
+          </div>
+        </div>
+      </div>
+    </div>
+    <h2
+      class="text-2xl fontebold tracking-tight mb-5"
+    >
+      Balances
+    </h2>
+    <div
+      class="flex-none md:flex"
+    >
+      <div
+        class="flex-1 grid grid-cols-2 gap-4"
+      >
+        <div
+          class="rounded-lg border bg-card text-card-foreground shadow-sm"
+        >
+          <div
+            class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+          >
+            <h3
+              class="tracking-tight text-sm font-medium"
+            >
+              Total Reserve Assets
+            </h3>
+          </div>
+          <div
+            class="p-6 pt-0"
+          >
+            <div
+              class="text-2xl font-bold"
+            >
+              $84.56K
+            </div>
+          </div>
+        </div>
+        <div
+          class="rounded-lg border bg-card text-card-foreground shadow-sm"
+        >
+          <div
+            class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+          >
+            <h3
+              class="tracking-tight text-sm font-medium"
+            >
+              Total Minted IST
+            </h3>
+          </div>
+          <div
+            class="p-6 pt-0"
+          >
+            <div
+              class="text-2xl font-bold"
+            >
+              1.62M
+            </div>
+          </div>
+        </div>
+        <div
+          class="rounded-lg border bg-card text-card-foreground shadow-sm"
+        >
+          <div
+            class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+          >
+            <h3
+              class="tracking-tight text-sm font-medium"
+            >
+              Total Collateral Value Locked
+            </h3>
+          </div>
+          <div
+            class="p-6 pt-0"
+          >
+            <div
+              class="text-2xl font-bold"
+            >
+              $5.76M
+            </div>
+          </div>
+        </div>
+        <div
+          class="rounded-lg border bg-card text-card-foreground shadow-sm"
+        >
+          <div
+            class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+          >
+            <h3
+              class="tracking-tight text-sm font-medium"
+            >
+              IST minted by Vaults
+            </h3>
+          </div>
+          <div
+            class="p-6 pt-0"
+          >
+            <div
+              class="text-2xl font-bold"
+            >
+              1.62M
+            </div>
+          </div>
+        </div>
+        <div
+          class="rounded-lg border bg-card text-card-foreground shadow-sm"
+        >
+          <div
+            class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+          >
+            <h3
+              class="tracking-tight text-sm font-medium"
+            >
+              Total PSM Assets
+            </h3>
+          </div>
+          <div
+            class="p-6 pt-0"
+          >
+            <div
+              class="text-2xl font-bold"
+            >
+              $468,878.14M
+            </div>
+          </div>
+        </div>
+        <div
+          class="rounded-lg border bg-card text-card-foreground shadow-sm"
+        >
+          <div
+            class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+          >
+            <h3
+              class="tracking-tight text-sm font-medium"
+            >
+              IST minted by PSM
+            </h3>
+          </div>
+          <div
+            class="p-6 pt-0"
+          >
+            <div
+              class="text-2xl font-bold"
+            >
+              4.11K
+            </div>
+          </div>
+        </div>
+        <div
+          class="rounded-lg border bg-card text-card-foreground shadow-sm col-span-2"
+        >
+          <div
+            class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+          >
+            <h3
+              class="tracking-tight text-sm font-medium"
+            >
+              Reserve Shortfall
+            </h3>
+          </div>
+          <div
+            class="p-6 pt-0"
+          >
+            <div
+              class="text-2xl font-bold"
+            >
+              $5.75K
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="w-[400px] ml-5"
+      >
+        <div
+          class="recharts-wrapper"
+          role="region"
+          style="position: relative; cursor: default; width: 400px; height: 400px;"
+        >
+          <svg
+            class="recharts-surface"
+            cx="50%"
+            cy="50%"
+            height="400"
+            viewBox="0 0 400 400"
+            width="400"
+          >
+            <title />
+            <desc />
+            <defs>
+              <clippath
+                id="recharts1-clip"
+              >
+                <rect
+                  height="390"
+                  width="390"
+                  x="5"
+                  y="5"
+                />
+              </clippath>
+            </defs>
+            <g
+              class="recharts-layer recharts-pie"
+              tabindex="0"
+            >
+              <g
+                class="recharts-layer"
+              >
+                <g
+                  class="recharts-layer recharts-pie-sector"
+                  tabindex="-1"
+                />
+                <g
+                  class="recharts-layer recharts-pie-sector"
+                  tabindex="-1"
+                />
+              </g>
+            </g>
+          </svg>
+          <div
+            class="recharts-tooltip-wrapper"
+            role="dialog"
+            style="transform: translate(undefinedpx, undefinedpx); pointer-events: none; visibility: hidden; position: absolute; top: 0px; left: 0px;"
+            tabindex="-1"
+          >
+            <div
+              class="recharts-default-tooltip"
+              style="margin: 0px; padding: 10px; background-color: rgb(255, 255, 255); border: 1px solid #ccc; white-space: nowrap;"
+            >
+              <p
+                class="recharts-tooltip-label"
+                style="margin: 0px;"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`InterProtocol Snapshot tests should match snapshot when data is loading 1`] = `
+<div>
+  <h1
+    class="flex items-center space-x-4 lg:space-x-6 border-b p-8 text-3xl font-bold tracking-tight"
+  >
+    Summary
+  </h1>
+  <div
+    class="p-8"
+  >
+    <div
+      class="grid grid-cols-2 xl:grid-cols-3 gap-4 mb-5"
+    >
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+        >
+          <h3
+            class="tracking-tight text-sm font-medium"
+          >
+            IST in Circulation
+          </h3>
+        </div>
+        <div
+          class="p-6 pt-0"
+        >
+          <div
+            class="text-2xl font-bold"
+          >
+            <div
+              class="animate-pulse bg-muted w-[100px] h-[32px] rounded-full"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+        >
+          <h3
+            class="tracking-tight text-sm font-medium"
+          >
+            Total Mint Limit
+          </h3>
+        </div>
+        <div
+          class="p-6 pt-0"
+        >
+          <div
+            class="text-2xl font-bold"
+          >
+            <div
+              class="animate-pulse bg-muted w-[100px] h-[32px] rounded-full"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+        >
+          <h3
+            class="tracking-tight text-sm font-medium"
+          >
+            Total Mint Limit Utilized
+          </h3>
+        </div>
+        <div
+          class="p-6 pt-0"
+        >
+          <div
+            class="text-2xl font-bold"
+          >
+            <div
+              class="animate-pulse bg-muted w-[100px] h-[32px] rounded-full"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+        >
+          <h3
+            class="tracking-tight text-sm font-medium"
+          >
+            Total Interchain IST
+          </h3>
+        </div>
+        <div
+          class="p-6 pt-0"
+        >
+          <div
+            class="text-2xl font-bold"
+          >
+            <div
+              class="animate-pulse bg-muted w-[100px] h-[32px] rounded-full"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+        >
+          <h3
+            class="tracking-tight text-sm font-medium"
+          >
+            % of Interchain IST
+          </h3>
+        </div>
+        <div
+          class="p-6 pt-0"
+        >
+          <div
+            class="text-2xl font-bold"
+          >
+            <div
+              class="animate-pulse bg-muted w-[100px] h-[32px] rounded-full"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+        >
+          <h3
+            class="tracking-tight text-sm font-medium"
+          >
+            Smart Wallets Provisioned
+          </h3>
+        </div>
+        <div
+          class="p-6 pt-0"
+        >
+          <div
+            class="text-2xl font-bold"
+          >
+            <div
+              class="animate-pulse bg-muted w-[100px] h-[32px] rounded-full"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <h2
+      class="text-2xl fontebold tracking-tight mb-5"
+    >
+      Balances
+    </h2>
+    <div
+      class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+    />
+    <div
+      class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+    />
+    <div
+      class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+    />
+    <div
+      class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+    />
+  </div>
+</div>
+`;
