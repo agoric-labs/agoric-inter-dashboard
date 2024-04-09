@@ -159,8 +159,12 @@ export function InterProtocol() {
       <PageHeader title="Summary" />
       <PageContent>
         <ValueCardGrid>
-          <ValueCard title="IST in Circulation" value={formatIST(totalMinted)} />
-          <ValueCard title="Total Mint Limit" value={formatIST(vaultMintLimit + psmMintLimit)} />
+          <ValueCard title="IST in Circulation" value={formatIST(totalMinted)} testId="inter-protocol-minted" />
+          <ValueCard
+            title="Total Mint Limit"
+            value={formatIST(vaultMintLimit + psmMintLimit)}
+            testId="inter-protocol-mint-limit"
+          />
           <ValueCard title="Total Mint Limit Utilized" value={formatPercent(totalMinted / totalMintLimit)} />
           {/* <ValueCard title="Total Interchain IST" value={formatIST(ibcBalance)} />
           <ValueCard title="% of Interchain IST" value={formatPercent(ibcBalance / totalMinted)} />
