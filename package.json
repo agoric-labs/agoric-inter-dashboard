@@ -10,6 +10,7 @@
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx --fix",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "test": "npx jest --maxWorkers=1 --config jest.config.ts",
+    "test:e2e": "cypress run",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -40,6 +41,9 @@
     "@babel/core": "^7.0.0-0",
     "@babel/preset-env": "^7.22.9",
     "@babel/preset-typescript": "^7.23.0",
+    "@endo/far": "^1.1.1",
+    "@endo/init": "^1.1.1",
+    "@endo/marshal": "^1.4.1",
     "@rollup/plugin-alias": "^5.0.0",
     "@types/jest": "^29.5.3",
     "@types/react": "^18.0.17",
@@ -49,6 +53,7 @@
     "@typescript-eslint/parser": "^5.0.0",
     "@vitejs/plugin-react": "^2.1.0",
     "autoprefixer": "^10.4.14",
+    "cypress": "^13.7.2",
     "eslint": "^8.2.0",
     "eslint-config-airbnb": "19.0.4",
     "eslint-config-airbnb-typescript": "^17.0.0",

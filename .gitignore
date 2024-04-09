@@ -4,3 +4,7 @@ public/data
 .husky
 bigquerycreds.json
 .env
+
+# Cypress
+downloads
+screenshots
