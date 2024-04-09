@@ -75,7 +75,7 @@ export const Reserve = () => {
     );
 
     dailyMetricsResponse?.[tokenName].nodes.forEach((dailyTokenMetrics: any) => {
-      const oracle = dailyOracles[dailyTokenMetrics.dateKey] || { typeOutAmountLast: 1, typeInAmountLast: 1 };
+      const oracle = dailyOracles[dailyTokenMetrics.dateKey] || { typeOutAmountLast: 0, typeInAmountLast: 1 };
       graphDataMap[dailyTokenMetrics.dateKey] = {
         ...graphDataMap[dailyTokenMetrics.dateKey],
         x: dailyTokenMetrics.blockTimeLast.slice(0, 10),

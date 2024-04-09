@@ -175,7 +175,7 @@ export function Vaults() {
     );
 
     dailyMetricsResponse?.[tokenName].nodes.forEach((dailyTokenMetrics: any) => {
-      const oracle = dailyOracles[dailyTokenMetrics.dateKey];
+      const oracle = dailyOracles[dailyTokenMetrics.dateKey] || { typeOutAmountLast: 0, typeInAmountLast: 1 };
       graphDataMap[dailyTokenMetrics.dateKey] = {
         ...graphDataMap[dailyTokenMetrics.dateKey],
         x: dailyTokenMetrics.blockTimeLast.slice(0, 10),
@@ -188,7 +188,9 @@ export function Vaults() {
     });
   });
 
-  const sortedGraphDataList = Object.values(graphDataMap).slice().sort((a, b) => a.key - b.key);
+  const sortedGraphDataList = Object.values(graphDataMap)
+    .slice()
+    .sort((a, b) => a.key - b.key);
   let prevValue: GraphData = sortedGraphDataList[0];
   const graphDataList: Array<GraphData> = sortedGraphDataList.reduce(
     (aggArray: Array<GraphData>, graphData: GraphData) => {
