@@ -138,8 +138,7 @@ export function InterProtocol() {
       agg +
       node.allocations.nodes.reduce((agg_, node_) => {
         const allocationInUsd =
-          ((Number(node_.value) / 1_000_000) * Number(oraclePrices[node_.token]?.typeOutAmount || 1_000_000)) /
-          1_000_000;
+          ((Number(node_.value) / 1_000_000) * Number(oraclePrices[node_.token]?.typeOutAmount || 0)) / 1_000_000;
         return agg_ + allocationInUsd;
       }, 0),
     0,
@@ -149,8 +148,7 @@ export function InterProtocol() {
   const totalLockedCollateral = response.vaultManagerMetrics.nodes.reduce((agg, node) => {
     const collateralInUsd =
       ((Number(node.totalCollateral) / 1_000_000) *
-        Number(oraclePrices[node.liquidatingCollateralBrand].typeOutAmount)) /
-      1_000_000;
+        Number(oraclePrices[node.liquidatingCollateralBrand]?.typeOutAmount) || 0) / 1_000_000;
     return agg + collateralInUsd;
   }, 0);
 
