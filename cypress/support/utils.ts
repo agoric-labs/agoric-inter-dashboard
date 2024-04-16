@@ -24,6 +24,15 @@ const roundPrice = (v: string | number) => {
 const M = 10 ** 6;
 const K = 10 ** 3;
 
+export const formatUSD = (val: any) => {
+    const amount = parseFloat(val);
+
+    return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    }).format(amount);
+};
+
 const formatISTRaw = (val: any) => {
     const amount = parseFloat(val);
 
@@ -51,3 +60,17 @@ const makeCoinFormatter = (formatFn: any) => (v: any) => {
 };
 
 export const formatIST = makeCoinFormatter(formatISTRaw);
+
+export const formatPercent = (v: any) => `${roundPrice(v * 100)}%`;
+
+export const formatPrice = makeCoinFormatter(formatUSD);
+
+export const extractFormattedNumber = (formattedValue: string) => {
+    const formattedValueCleaned = formattedValue.trim();
+    const firstSymbol: any = formattedValueCleaned.at(0);
+    const lastSymbol: any = formattedValueCleaned.at(-1);
+    const numberString = formattedValueCleaned.slice(isNaN(firstSymbol) ? 1 : 0, isNaN(lastSymbol) ? -1 : undefined);
+    const number = Number(numberString.replaceAll(',', ''));
+
+    return [isNaN(firstSymbol) ? firstSymbol : null, number, isNaN(lastSymbol) ? lastSymbol : null];
+};
