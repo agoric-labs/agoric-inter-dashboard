@@ -23,7 +23,7 @@ export const PSMStats = ({ data }: Props) => (
     </CardHeader>
     <CardContent className="flex-none md:flex flex-row items-center justify-between">
       <div className="text-2xl tracking-tight mt-4">
-        <span className="font-bold">
+        <span className="font-bold" data-testid={data.label ? `psm-minted-ist-${data.coin}` : ''}>
           {formatPrice(data.minted_pool_balance)} {/* of{' '} */}
           {/* <span className="text-gray-400">{formatPrice(data.mint_limit)}</span> */}
         </span>
