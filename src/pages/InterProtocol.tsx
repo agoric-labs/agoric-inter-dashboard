@@ -157,9 +157,17 @@ export function InterProtocol() {
       <PageHeader title="Summary" />
       <PageContent>
         <ValueCardGrid>
-          <ValueCard title="IST in Circulation" value={formatIST(totalMinted)} />
-          <ValueCard title="Total Mint Limit" value={formatIST(vaultMintLimit + psmMintLimit)} />
-          <ValueCard title="Total Mint Limit Utilized" value={formatPercent(totalMinted / totalMintLimit)} />
+          <ValueCard title="IST in Circulation" value={formatIST(totalMinted)} testId="inter-protocol-minted" />
+          <ValueCard
+            title="Total Mint Limit"
+            value={formatIST(vaultMintLimit + psmMintLimit)}
+            testId="inter-protocol-mint-limit"
+          />
+          <ValueCard
+            title="Total Mint Limit Utilized"
+            value={formatPercent(totalMinted / totalMintLimit)}
+            testId="inter-protocol-mint-limit-utilized"
+          />
           {/* <ValueCard title="Total Interchain IST" value={formatIST(ibcBalance)} />
           <ValueCard title="% of Interchain IST" value={formatPercent(ibcBalance / totalMinted)} />
           <ValueCard title="Smart Wallets Provisioned" value={walletCount} /> */}
@@ -168,13 +176,34 @@ export function InterProtocol() {
         <SectionHeader>Balances</SectionHeader>
         <div className="flex-none md:flex">
           <div className="flex-1 grid grid-cols-2 gap-4">
-            <ValueCard title="Total Reserve Assets" value={formatPrice(totalReserve)} />
-            <ValueCard title="Total Minted IST" value={formatIST(totalMinted)} />
-            <ValueCard title="Total Collateral Value Locked" value={formatPrice(totalLockedCollateral)} />
-            <ValueCard title="IST minted by Vaults" value={formatIST(vaultMinted)} />
-            <ValueCard title="Total PSM Assets" value={formatPrice(psmAnchor)} />
-            <ValueCard title="IST minted by PSM" value={formatIST(psmMinted)} />
-            <ValueCard title="Reserve Shortfall" value={formatPrice(reserveShortfall)} className="col-span-2" />
+            <ValueCard
+              title="Total Reserve Assets"
+              value={formatPrice(totalReserve)}
+              testId="inter-protocol-total-reserve-assets"
+            />
+            <ValueCard title="Total Minted IST" value={formatIST(totalMinted)} testId="inter-protocol-total-minted" />
+            <ValueCard
+              title="Total Collateral Value Locked"
+              value={formatPrice(totalLockedCollateral)}
+              testId="inter-protocol-total-collateral-value-locked"
+            />
+            <ValueCard
+              title="IST minted by Vaults"
+              value={formatIST(vaultMinted)}
+              testId="inter-protocol-ist-minted-vaults"
+            />
+            <ValueCard
+              title="Total PSM Assets"
+              value={formatPrice(psmAnchor)}
+              testId="inter-protocol-total-psm-assets"
+            />
+            <ValueCard title="IST minted by PSM" value={formatIST(psmMinted)} testId="inter-protocol-ist-minted-psm" />
+            <ValueCard
+              title="Reserve Shortfall"
+              value={formatPrice(reserveShortfall)}
+              className="col-span-2"
+              testId="inter-protocol-reserve-shortfall"
+            />
           </div>
           <div className="w-[400px] ml-5">
             <PieChart width={400} height={400}>
