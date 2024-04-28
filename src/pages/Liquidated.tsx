@@ -28,6 +28,8 @@ type VaultsNode = {
   id: string;
   state: string;
   token: string;
+  liquidatingAt?: string | null;
+  liquidatedAt?: string | null;
 };
 
 type LiquidationDashboardResponse = {
