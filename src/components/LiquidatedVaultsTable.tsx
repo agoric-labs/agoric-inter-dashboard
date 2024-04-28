@@ -33,16 +33,16 @@ export const columns: DataColumn<Row>[] = [
     type: 'text',
     header: 'State',
   },
-  // {
-  //   accessorKey: 'liquidationStartTime',
-  //   type: 'text',
-  //   header: 'Liquidation Start Time',
-  // },
-  // {
-  //   accessorKey: 'liquidationTime',
-  //   type: 'text',
-  //   header: 'Liquidation Time',
-  // },
+  {
+    accessorKey: 'liquidationStartTime',
+    type: 'text',
+    header: 'Liquidation Start Time',
+  },
+  {
+    accessorKey: 'liquidationTime',
+    type: 'text',
+    header: 'Liquidation Time',
+  },
   {
     accessorKey: 'liquidating_debt_amount_avg',
     type: 'number',

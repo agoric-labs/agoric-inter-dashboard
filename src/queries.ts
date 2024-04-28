@@ -289,6 +289,8 @@ query {
             debt
             state
             balance
+            liquidatingAt
+            liquidatedAt
         }
     } 
 }`;
