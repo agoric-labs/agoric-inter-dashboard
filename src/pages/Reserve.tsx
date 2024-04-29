@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import { AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import { PageHeader } from '@/components/PageHeader';
 import { PageContent } from '@/components/PageContent';
 import { ReserveSummary } from '@/widgets/ReserveSummary';
@@ -7,6 +7,13 @@ import { ReserveShortfall } from '@/widgets/ReserveShortfall';
 import { ReserveHistory } from '@/widgets/ReserveHistory';
 import { subQueryFetcher, subQueryGraphFetcher } from '@/utils';
 import { RESERVE_DASHBOARD_QUERY, RESERVE_GRAPH_TOKENS_QUERY, RESERVE_DAILY_METRICS_QUERY } from '@/queries';
+import { ReserveCosmosSummary } from '@/widgets/ReserveCosmosSummary';
+import {
+  GET_ACCOUNT_BALANCE_URL,
+  GET_MODULE_ACCOUNTS_URL,
+  VBANK_RESERVE_ACCOUNT,
+  UIST_DENOMINATION,
+} from '@/constants';
 
 type OraclePriceNode = {
   typeInAmount: number;
@@ -114,13 +121,29 @@ export const Reserve = () => {
     [],
   );
 
+  // Cosmos reserve balance
+  const { data: moduleAccounts } = useSWR<AxiosResponse, AxiosError>(GET_MODULE_ACCOUNTS_URL, axios.get);
+  const reserveAccount = moduleAccounts?.data.accounts.find(
+    (account: { name: string }) => account.name === VBANK_RESERVE_ACCOUNT,
+  );
+  const reserveAddress = reserveAccount?.base_account.address;
+
+  const { data: reserveBalance, isLoading: reserveBalanceLoading } = useSWR<AxiosResponse, AxiosError>(
+    GET_ACCOUNT_BALANCE_URL(reserveAddress),
+    axios.get,
+  );
+  const istReserve: { amount: number } = reserveBalance?.data.balances.find(
+    (balance: { denom: string }) => balance.denom === UIST_DENOMINATION,
+  );
+  const istReserveBalance = (istReserve?.amount || 0) / 1_000_000;
+
   return (
     <>
       <PageHeader title="Reserve Assets" />
       <PageContent>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <ReserveSummary data={reserveDashboardQueryData} isLoading={isLoading} />
-          {/* <ReserveCosmosSummary /> */}
+          <ReserveCosmosSummary data={istReserveBalance} isLoading={reserveBalanceLoading} />
           <ReserveShortfall data={reserveDashboardQueryData} isLoading={isLoading} />
         </div>
         <ReserveHistory data={graphDataList} tokenNames={tokenNames} isLoading={graphDataIsLoading} />
