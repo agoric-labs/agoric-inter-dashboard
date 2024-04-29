@@ -25,6 +25,7 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults', data, isLoading 
   const rows = data.vaults.map((vaultData) => {
     const splitVaultId = vaultData?.id?.split('.');
     const vaultIdx = splitVaultId.at(-1)?.split('vault')[1] || '';
+    const vaultState = vaultData?.state?.charAt(0).toUpperCase() + vaultData?.state?.slice(1);
     const vaultManager = splitVaultId?.slice(0, 4).join('.');
     const vaultManagerGovernance = data.vaultManagerGovernances[vaultManager];
     const liquidationRatio =
@@ -36,7 +37,7 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults', data, isLoading 
     return {
       vault_idx: vaultIdx,
       collateral_type: vaultData.token,
-      state: vaultData.state,
+      state: vaultState,
       liquidating_debt_amount_avg: istDebtAmount,
       liquidation_margin_avg: liquidationRatio,
       liquidating_rate: liquidationPrice,
