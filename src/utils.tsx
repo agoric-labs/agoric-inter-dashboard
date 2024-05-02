@@ -120,7 +120,7 @@ export const extractFirstFloat = (res: any, key: string) => parseFloat(extractFi
 
 export const subQueryFetcher = (query: string) =>
   axios.post(
-    'https://api.subquery.network/sq/agoric-labs/agoric-mainnet-v2__YWdvc',
+    'https://api.subquery.network/sq/agoric-labs/mainnet__YWdvc',
     { query },
     {
       headers: {
@@ -130,7 +130,7 @@ export const subQueryFetcher = (query: string) =>
   );
 export const subQueryGraphFetcher = (query: string) =>
   axios.post(
-    'https://api.subquery.network/sq/agoric-labs/mainnet-test__YWdvc',
+    'https://api.subquery.network/sq/agoric-labs/mainnet__YWdvc',
     { query },
     {
       headers: {
