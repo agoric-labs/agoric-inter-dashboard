@@ -119,7 +119,7 @@ export const Reserve = () => {
       return newAggArray;
     },
     [],
-  );
+  ).slice(-90);
 
   // Cosmos reserve balance
   const { data: moduleAccounts } = useSWR<AxiosResponse, AxiosError>(GET_MODULE_ACCOUNTS_URL, axios.get);

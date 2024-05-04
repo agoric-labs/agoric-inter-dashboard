@@ -215,7 +215,7 @@ export function Vaults() {
       return newAggArray;
     },
     [],
-  );
+  ).slice(-90);;
 
   return (
     <>

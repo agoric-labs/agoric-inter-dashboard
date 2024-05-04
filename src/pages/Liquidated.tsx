@@ -145,7 +145,7 @@ export function Liquidated() {
       return newAggArray;
     },
     [],
-  );
+  ).slice(-90);
   const summedGraphDataList = graphDataList.map((item) => ({
     ...item,
     active: sum(Object.values(item.active)),

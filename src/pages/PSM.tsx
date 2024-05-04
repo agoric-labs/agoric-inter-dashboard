@@ -91,7 +91,7 @@ export const PSM = () => {
       return newAggArray;
     },
     [],
-  );
+  ).slice(-90);;
 
   return (
     <>
