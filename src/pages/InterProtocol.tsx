@@ -146,8 +146,9 @@ export function InterProtocol() {
     (agg, node) =>
       agg +
       node.allocations.nodes.reduce((agg_, node_) => {
+        console.log("token", node_.token, "oraclePrices", oraclePrices[node_.token]?.typeOutAmount || 1, "value", node_.value)
         const allocationInUsd =
-          ((Number(node_.value) / 1_000_000) * Number(oraclePrices[node_.token]?.typeOutAmount || 0)) / 1_000_000;
+          ((Number(node_.value) / 1_000_000) * Number(oraclePrices[node_.token]?.typeOutAmount || 1_000_000)) / 1_000_000;
         return agg_ + allocationInUsd;
       }, 0),
     0,
