@@ -23,26 +23,15 @@ export function OpenVaults({ title = 'Open Vaults', data, isLoading }: Props) {
   }
 
   data.sort((a, b) => {
-    const idAMatch = a.id.match(/vaults.vault(\d+)$/);
-    const idBMatch = b.id.match(/vaults.vault(\d+)$/);
-
-    if (idAMatch && idBMatch) {
-      const idAValue = parseInt(idAMatch[1], 10);
-      const idBValue = parseInt(idBMatch[1], 10);
-
-      if (idAValue < idBValue) {
-        return -1;
-      } else if (idAValue > idBValue) {
-        return 1;
-      }
-    }
-    return 0;
+    const nameA: string = a.token?.toLowerCase();
+    const nameB: string = b.token?.toLowerCase();
+    return nameA.localeCompare(nameB);
   });
 
   const rows = data.map((vaultData) => {
     const vaultIdx = vaultData.id.split('.').at(-1)?.split('vault')[1] || '';
     const collateralValueUsd = ((vaultData.typeOutAmount / 1_000_000) * vaultData.balance) / 1_000_000;
-    const liquidationRatio = vaultData.liquidationMarginNumerator / vaultData.liquidationMarginDenominator;
+    const liquidationRatio = vaultData?.liquidationMarginNumerator / vaultData?.liquidationMarginDenominator;
     const istDebtAmount = vaultData.debt / 1_000_000;
     const collateralAmount = vaultData.balance / 1_000_000;
     const liquidationPrice = (istDebtAmount * liquidationRatio) / collateralAmount;
