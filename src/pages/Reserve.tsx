@@ -13,6 +13,7 @@ import {
   GET_MODULE_ACCOUNTS_URL,
   VBANK_RESERVE_ACCOUNT,
   UIST_DENOMINATION,
+  GRAPH_DAYS,
 } from '@/constants';
 
 type OraclePriceNode = {
@@ -40,8 +41,6 @@ type ReserveManagerMetricsResponse = {
   reserveMetrics: { nodes: Array<ReserveMetricsNode> };
 };
 
-type GraphData = { key: number; x: string };
-
 export const Reserve = () => {
   const { data, isLoading } = useSWR<AxiosResponse, AxiosError>(RESERVE_DASHBOARD_QUERY, subQueryFetcher);
 
@@ -52,7 +51,7 @@ export const Reserve = () => {
   );
   const reserveDashboardQueryData: ReserveDashboardData = response?.reserveMetrics?.nodes?.map((vaultNode) => ({
     ...vaultNode,
-    allocations: vaultNode.allocations.nodes.reduce(
+    allocations: vaultNode.allocations?.nodes?.reduce(
       (agg, allocation) => ({
         ...agg,
         [allocation.token]: { ...allocation, ...oraclePrices[allocation.token] },
@@ -61,41 +60,98 @@ export const Reserve = () => {
     ),
   }));
 
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - GRAPH_DAYS);
+  const startDateFormatDate = startDate.toISOString().slice(0, 10);
+    
+  const startDateKey = Number(startDateFormatDate.replaceAll('-', ''));
   //  Queries for graph
   const { data: tokenNamesData } = useSWR<AxiosResponse, AxiosError>(RESERVE_GRAPH_TOKENS_QUERY, subQueryGraphFetcher);
   const tokenNamesResponse: ReserveManagerMetricsResponse = tokenNamesData?.data.data;
   const tokenNames =
-    tokenNamesResponse?.reserveMetrics.nodes
-      .map((node) => node.allocations.nodes.map((allocation) => allocation.token))
+    tokenNamesResponse?.reserveMetrics?.nodes
+      .map((node) => node.allocations?.nodes?.map((allocation) => allocation.token))
       .flat() || [];
   const { data: dailyMetricsData, isLoading: graphDataIsLoading } = useSWR<AxiosResponse, AxiosError>(
-    RESERVE_DAILY_METRICS_QUERY(tokenNames),
+    RESERVE_DAILY_METRICS_QUERY(tokenNames, startDateKey),
     subQueryGraphFetcher,
   );
   const dailyMetricsResponse = dailyMetricsData?.data.data;
+  
+  const graphDataMap = new Map();
 
-  const graphDataMap: { [key: number]: GraphData } = {};
+  
+  const today = new Date();
+  
+  for (let dateNum = GRAPH_DAYS; dateNum >= 0; dateNum -= 1) {
+    // Create a new date object for each day
+    const date = new Date(today);
+
+    // Subtract the number of days in the loop
+    date.setDate(date.getDate() - dateNum);
+
+    const formatDate = date.toISOString().slice(0, 10);
+    
+    const dateKey = Number(formatDate.replaceAll('-', ''));
+
+    // const formatDate = dateKey.toString().replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3');
+
+    graphDataMap.set(dateKey, {});
+    //graphDataMap[dateKey] = new Map<string, number>();
+    //graphDataMap[dateKey].set(`key`, dateKey);
+    graphDataMap.get(dateKey).key = dateKey;
+    graphDataMap.get(dateKey).x = formatDate;
+    
+  }
+
+  
   tokenNames.forEach((tokenName) => {
-    const dailyOracles = dailyMetricsResponse?.[`${tokenName}_oracle`].nodes.reduce(
+    const dailyOracles = dailyMetricsResponse?.[`${tokenName}_oracle`]?.nodes.reduce(
       (agg: object, dailyOracleData: { dateKey: string }) => ({ ...agg, [dailyOracleData.dateKey]: dailyOracleData }),
       {},
     );
+    
+    
+    let lastTokenMetric = dailyMetricsResponse?.[`${tokenName}_last`]?.nodes[0];
+    console.log(dailyMetricsResponse);
+    // console.log(lastTokenMetric);
+    // console.log(dailyOracles);
+    // console.log(lastTokenMetric);
+    // dailyMetricsResponse?.[`${tokenName}_oracle`].nodes.forEach((dailyOracle: any) => {
+    //   // const oracle = dailyOracles[dailyTokenMetrics.dateKey] || { typeOutAmountLast: 0, typeInAmountLast: 1 };
 
-    dailyMetricsResponse?.[tokenName].nodes.forEach((dailyTokenMetrics: any) => {
-      const oracle = dailyOracles[dailyTokenMetrics.dateKey] || { typeOutAmountLast: 0, typeInAmountLast: 1 };
-      graphDataMap[dailyTokenMetrics.dateKey] = {
-        ...graphDataMap[dailyTokenMetrics.dateKey],
-        x: dailyTokenMetrics.blockTimeLast.slice(0, 10),
-        key: dailyTokenMetrics.dateKey,
-        [`${dailyTokenMetrics.token}`]:
-          (dailyTokenMetrics.valueLast / 1_000_000) * (oracle.typeOutAmountLast / oracle.typeInAmountLast),
-      };
-    });
+    const dailyMetrics = dailyMetricsResponse?.[`${tokenName}_oracle`]?.nodes;
+    for (let dateNum = GRAPH_DAYS; dateNum >= 0; dateNum -= 1) {
+      // Create a new date object for each day
+      const date = new Date(today);
+
+      // Subtract the number of days in the loop
+      date.setDate(date.getDate() - dateNum);
+
+      const formatDate = date.toISOString().slice(0, 10);
+      
+      const dateKey = Number(formatDate.replaceAll('-', ''));
+      const oracle = (dailyOracles && dailyOracles[dateKey]) || { typeOutAmountLast: 0, typeInAmountLast: 1 };
+      const tokenMetrics = (dailyMetrics && dailyMetrics[dateKey]) || lastTokenMetric;
+      
+      graphDataMap.get(dateKey)[`${tokenName}`] = ((tokenMetrics?.valueLast || 0) / 1_000_000) * (oracle.typeOutAmountLast / oracle.typeInAmountLast);
+
+      lastTokenMetric = tokenMetrics;
+    }
+
+    // });
   });
 
-  const sortedGraphDataList = Object.values(graphDataMap);
+  type GraphData = { key: number; x: string };
+  
+  const graphDataMapT = Object.fromEntries(graphDataMap.entries());
+
+  console.log(graphDataMapT);
+
+  const sortedGraphDataList = Object.values(graphDataMapT) as GraphData[];
   sortedGraphDataList.sort((a, b) => a.key - b.key);
   let prevValue: GraphData = sortedGraphDataList[0];
+  // console.log("test", JSON.stringify(graphDataMap));
   const graphDataList: Array<GraphData> = sortedGraphDataList.reduce(
     (aggArray: Array<GraphData>, graphData: GraphData) => {
       // filling in missing days
@@ -119,7 +175,7 @@ export const Reserve = () => {
       return newAggArray;
     },
     [],
-  ).slice(-90);
+  ).slice(-1 * GRAPH_DAYS);
 
   // Cosmos reserve balance
   const { data: moduleAccounts } = useSWR<AxiosResponse, AxiosError>(GET_MODULE_ACCOUNTS_URL, axios.get);

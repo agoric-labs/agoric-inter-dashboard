@@ -5,3 +5,5 @@ export const GET_ACCOUNT_BALANCE_URL = (address: string) => `https://main-a.api.
 export const UIST_DENOMINATION = 'uist';
 
 export const VBANK_RESERVE_ACCOUNT = 'vbank/reserve';
+
+export const GRAPH_DAYS = 90;
