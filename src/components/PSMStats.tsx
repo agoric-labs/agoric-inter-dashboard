@@ -1,4 +1,4 @@
-import { formatPrice } from '@/utils';
+import { formatPrice, formatPercent } from '@/utils';
 import { Skeleton as SkeletonEl } from '@/components/ui/skeleton';
 import { Card, CardDescription, CardContent, CardHeader, CardTitle } from './ui/card';
 
@@ -24,15 +24,15 @@ export const PSMStats = ({ data }: Props) => (
     <CardContent className="flex-none md:flex flex-row items-center justify-between">
       <div className="text-2xl tracking-tight mt-4">
         <span className="font-bold" data-testid={data.label ? `psm-minted-ist-${data.coin}` : ''}>
-          {formatPrice(data.minted_pool_balance)} {/* of{' '} */}
-          {/* <span className="text-gray-400">{formatPrice(data.mint_limit)}</span> */}
+          {formatPrice(data.minted_pool_balance)} of{' '}
+          <span className="text-gray-400">{formatPrice(data.mint_limit)}</span>
         </span>
         <CardDescription>Minted IST {/* / Limit */}</CardDescription>
       </div>
-      {/* <div className="text-2xl md:text-right mt-4">
+      <div className="text-2xl md:text-right mt-4">
         <span className="font-bold">{formatPercent(data.utilized)}</span>
         <CardDescription>Utilized</CardDescription>
-      </div> */}
+      </div>
     </CardContent>
   </Card>
 );
