@@ -22,7 +22,14 @@ export function VaultManagers({ title = 'Collateral Type', data, isLoading }: Pr
     );
   }
 
-  const rows = Object.entries(data).map(([coinName, coinData]) => {
+  const entries = Object.entries(data);
+  const sortedEntries = entries.sort(([keyA], [keyB]) => {
+    const nameA: string = keyA.toLowerCase();
+    const nameB: string = keyB.toLowerCase();
+    return nameA.localeCompare(nameB);
+  });
+
+  const rows = sortedEntries.map(([coinName, coinData]) => {
     const totalCollateral = coinData.totalCollateral / 1_000_000;
     const oraclePrice = coinData.typeOutAmount / 1_000_000;
     const totalCollateralUsd = totalCollateral * oraclePrice;

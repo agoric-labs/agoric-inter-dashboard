@@ -22,7 +22,14 @@ export function TokenPrices({ title = 'Summary', data, isLoading }: Props) {
     );
   }
 
-  const oraclePrices = Object.values(data).map((token) => {
+  const entries = Object.values(data);
+  const sortedEntries = entries.sort((a, b) => {
+    const nameA: string = a.liquidatingCollateralBrand?.toLowerCase();
+    const nameB: string = b.liquidatingCollateralBrand?.toLowerCase();
+    return nameA.localeCompare(nameB);
+  });
+
+  const oraclePrices = sortedEntries.map((token) => {
     const change = 1 - token.typeOutAmount / token.typeInAmount;
     const changeValue = Math.round(change * 10000) / 100;
     return {

@@ -23,6 +23,12 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults', data, isLoading 
     );
   }
 
+  data.vaults?.sort((a, b) => {
+    const nameA: string = a.token?.toLowerCase();
+    const nameB: string = b.token?.toLowerCase();
+    return nameA.localeCompare(nameB);
+  });
+
   const rows = data.vaults?.map((vaultData) => {
     const splitVaultId = vaultData?.id?.split('.');
     const vaultIdx = splitVaultId.at(-1)?.split('vault')[1] || '';
