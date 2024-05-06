@@ -67,6 +67,7 @@ type VaultManagerMetricsNode = {
   totalCollateral: number;
   totalDebt: number;
 };
+type BoardAuxesNode = { allegedName: string; decimalPlaces: number };
 
 type InterProtocolResponse = {
   oraclePrices: { nodes: Array<OraclePriceNode> };
@@ -80,6 +81,7 @@ type InterProtocolResponse = {
     nodes: Array<VaultManagerMetricsNode>;
   };
   wallets: { totalCount: number };
+  boardAuxes: { nodes: Array<BoardAuxesNode> };
 };
 
 export function InterProtocol() {
@@ -119,10 +121,17 @@ export function InterProtocol() {
   // const ibcBalance = 0;
   // const walletCount = response.wallets.totalCount;
 
+  const boardAuxes: { [key: string]: number } = response.boardAuxes.nodes.reduce(
+    (agg, node) => ({ ...agg, [node.allegedName]: node.decimalPlaces }),
+    {},
+  );
+
   const psmMinted =
     response.psmMetrics.nodes.reduce((agg, node) => agg + Number(node.mintedPoolBalance), 0) / 1_000_000;
-  const psmAnchor =
-    response.psmMetrics.nodes.reduce((agg, node) => agg + Number(node.anchorPoolBalance), 0) / 1_000_000;
+  const psmAnchor = response.psmMetrics.nodes.reduce(
+    (agg, node) => agg + Number(node.anchorPoolBalance) / 10 ** (boardAuxes[node.token] || 6),
+    0,
+  );
   const vaultMinted =
     response.vaultManagerMetrics.nodes.reduce((agg, node) => agg + Number(node.totalDebt), 0) / 1_000_000;
   const totalMinted = psmMinted + vaultMinted;

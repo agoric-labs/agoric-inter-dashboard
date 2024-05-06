@@ -259,6 +259,12 @@ query {
             priceFeedName
         }
     }
+    boardAuxes {
+        nodes {
+            allegedName
+            decimalPlaces
+        }
+    }
 }`
 
 export const LIQUIDATIONS_DASHBOARD = `
