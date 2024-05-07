@@ -44,7 +44,7 @@ query {
         }`
 )}
 }`
-
+const currentDate = new Date();
 export const VAULTS_DASHBOARD_QUERY = `
 query {
     vaultManagerMetrics {
@@ -73,6 +73,19 @@ query {
         nodes {
             id
             debtLimit
+        }
+    }
+    oraclePriceDailies(filter: {
+        dateKey: { 
+            in: [${getDateKey(currentDate).key}, ${getDateKey(currentDate, 1).key}] 
+        }
+    }) {
+        nodes {
+            priceFeedName
+            typeInName
+            typeInAmountLast
+            typeOutAmountLast
+            dateKey
         }
     }
 }`;
@@ -212,7 +225,6 @@ query {
     }`)}
 }`
 
-const currentDate = new Date();
 export const INTER_DASHBOARD_QUERY = `
 query {
     psmMetrics {
@@ -274,17 +286,6 @@ query {
         nodes {
             allegedName
             decimalPlaces
-        }
-    }
-    oraclePriceDailies(filter: {
-        dateKey: { 
-            in: [${getDateKey(currentDate)}, ${getDateKey(currentDate, 1)}] 
-        }
-    }) {
-        nodes {
-            priceFeedName
-            typeInName
-            dateKey
         }
     }
 }`

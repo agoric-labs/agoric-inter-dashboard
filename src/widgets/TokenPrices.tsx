@@ -40,7 +40,7 @@ export function TokenPrices({ title = 'Summary', data, isLoading }: Props) {
       </>
     );
   }
-
+  
   const entries = Object.values(data);
   const sortedEntries = entries.sort((a, b) => {
     const nameA: string = a.liquidatingCollateralBrand?.toLowerCase();

@@ -43,6 +43,11 @@ type VaultDashboardManagerGovernancesNode = {
   id: string;
   debtLimit: number;
 };
+type OraclePriceDailies = {
+  priceFeedName: string;
+  typeInName: string;
+  dateKey: number;
+}
 
 type VaultsDashboardResponse = {
   boardAuxes: { nodes: Array<{ allegedName: string; decimalPlaces: number }> };
@@ -51,6 +56,7 @@ type VaultsDashboardResponse = {
     nodes: Array<VaultManagerMetricsNode>;
   };
   vaultManagerGovernances: { nodes: Array<VaultDashboardManagerGovernancesNode> };
+  oraclePriceDailies: { nodes: Array<OraclePriceDailies> };
 };
 
 type OpenVaultsResponse = {
@@ -70,7 +76,7 @@ type VaultManagerMetricsResponse = {
 type GraphData = { key: number; x: string };
 
 export type VaultsDashboardData = {
-  [key: string]: VaultManagerMetricsNode & OraclePriceNode & VaultDashboardManagerGovernancesNode;
+  [key: string]: VaultManagerMetricsNode & OraclePriceNode & VaultDashboardManagerGovernancesNode & OraclePriceDailies;
 };
 export type OpenVaultsData = Array<VaultsNode & OraclePriceNode & VaultManagerGovernancesNode>;
 
@@ -95,6 +101,23 @@ export function Vaults() {
       return { ...agg, [tokenName]: node };
     }, {});
 
+    const oracleDailyPrices: { [key: string]: OraclePriceDailies[] } =
+      vaultsDashboardResponse?.oraclePriceDailies?.nodes?.reduce(
+        (agg: { [key: string]: OraclePriceDailies[] }, node) => {
+          const nameSegments = node.priceFeedName.split('-');
+          if (nameSegments.length !== 2) {
+            throw new Error(`Invalid priceFeedName: ${node.priceFeedName}`);
+          }
+          const tokenName = nameSegments[0];
+          if (!agg[tokenName]) {
+            agg[tokenName] = [];
+          }
+          agg[tokenName].push(node);
+          return agg;
+        },
+        {} as { [key: string]: OraclePriceDailies[] },
+      );
+
   const vaultsDashboardManagerGovernances: { [key: string]: VaultDashboardManagerGovernancesNode } =
     vaultsDashboardResponse?.vaultManagerGovernances?.nodes?.reduce((agg, node) => {
       const idSegments = node.id.split('.');
@@ -117,6 +140,7 @@ export function Vaults() {
           ...vaultsDashboardManagerGovernances[managerName],
           ...vaultDashboardOraclePrices[node.liquidatingCollateralBrand],
           ...node,
+          oracleDailyPrices: {...oracleDailyPrices[node.liquidatingCollateralBrand]}
         },
       };
     },
