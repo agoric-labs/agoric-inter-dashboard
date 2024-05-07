@@ -119,7 +119,7 @@ export function InterProtocol() {
 
   // top cards
   // const ibcBalance = 0;
-  // const walletCount = response.wallets.totalCount;
+  const walletCount = response.wallets.totalCount;
 
   const boardAuxes: { [key: string]: number } = response.boardAuxes.nodes.reduce(
     (agg, node) => ({ ...agg, [node.allegedName]: node.decimalPlaces }),
@@ -179,8 +179,8 @@ export function InterProtocol() {
             testId="inter-protocol-mint-limit-utilized"
           />
           {/* <ValueCard title="Total Interchain IST" value={formatIST(ibcBalance)} />
-          <ValueCard title="% of Interchain IST" value={formatPercent(ibcBalance / totalMinted)} />
-          <ValueCard title="Smart Wallets Provisioned" value={walletCount} /> */}
+          <ValueCard title="% of Interchain IST" value={formatPercent(ibcBalance / totalMinted)} /> */}
+          <ValueCard title="Smart Wallets Provisioned" value={walletCount} />
         </ValueCardGrid>
 
         <SectionHeader>Balances</SectionHeader>
