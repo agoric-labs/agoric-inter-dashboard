@@ -5,7 +5,7 @@ import { parseISO, format } from 'date-fns';
 import { UseCubeQueryResult } from '@cubejs-client/react';
 import { ErrorAlert } from '@/components/ErrorAlert';
 import { Loading } from '@/components/Loading';
-import { SUBQUERY_URL } from './constants'; 
+import { SUBQUERY_URL } from './constants';
 
 export const formatDay = (v: string) => format(parseISO(v), 'MM/dd');
 export const formatDayAndTime = (v: string) => format(parseISO(v), 'MM/dd HH:mm');
@@ -119,7 +119,7 @@ export const extractFirst = (res: any, key: string) => {
 
 export const extractFirstFloat = (res: any, key: string) => parseFloat(extractFirst(res, key) || '0');
 
-interface RequestOptions {
+export interface RequestOptions {
   url: string;
   method: RequestMethod;
   data?: object;
@@ -170,3 +170,10 @@ export const subQueryFetcher = (query: string) => {
   return fetchData(options);
 };
 
+export const fetchDataFromUrl = (url: string) => {
+  const params: RequestOptions = {
+    method: RequestMethod.GET,
+    url,
+  };
+  return fetchData(params);
+};
