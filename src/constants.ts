@@ -7,3 +7,5 @@ export const GET_INTERCHAIN_BALANCES_URL = 'https://rickhouse.agoric-core.worker
 export const UIST_DENOMINATION = 'uist';
 
 export const VBANK_RESERVE_ACCOUNT = 'vbank/reserve';
+
+export const SUBQUERY_URL = 'https://api.subquery.network/sq/agoric-labs/mainnet__YWdvc';

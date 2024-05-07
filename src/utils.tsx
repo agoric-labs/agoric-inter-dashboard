@@ -5,6 +5,7 @@ import { parseISO, format } from 'date-fns';
 import { UseCubeQueryResult } from '@cubejs-client/react';
 import { ErrorAlert } from '@/components/ErrorAlert';
 import { Loading } from '@/components/Loading';
+import { SUBQUERY_URL } from './constants'; 
 
 export const formatDay = (v: string) => format(parseISO(v), 'MM/dd');
 export const formatDayAndTime = (v: string) => format(parseISO(v), 'MM/dd HH:mm');
@@ -119,18 +120,8 @@ export const extractFirst = (res: any, key: string) => {
 export const extractFirstFloat = (res: any, key: string) => parseFloat(extractFirst(res, key) || '0');
 
 export const subQueryFetcher = (query: string) =>
-  axios.post(
-    'https://api.subquery.network/sq/agoric-labs/mainnet__YWdvc',
-    { query },
-    {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    },
-  );
-export const subQueryGraphFetcher = (query: string) =>
-  axios.post(
-    'https://api.subquery.network/sq/agoric-labs/mainnet__YWdvc',
+  axios.post(SUBQUERY_URL,
+    
     { query },
     {
       headers: {

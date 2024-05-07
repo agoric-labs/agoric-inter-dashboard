@@ -5,7 +5,7 @@ import { PageContent } from '@/components/PageContent';
 import { PSMStats } from '@/widgets/PSMStats';
 import { PSMHistory } from '@/widgets/PSMHistory';
 import { PSMMintedPoolBalancePie } from '@/widgets/PSMMintedPoolBalancePie';
-import { subQueryFetcher, subQueryGraphFetcher } from '@/utils';
+import { subQueryFetcher } from '@/utils';
 import { PSM_DASHBOARD_QUERY, PSM_GRAPH_TOKENS_QUERY, PSM_TOKEN_DAILY_MINT_QUERY } from '@/queries';
 
 type PsmMetricsNode = {
@@ -46,13 +46,13 @@ export const PSM = () => {
   });
 
   //  Queries for graph
-  const { data: tokenNamesData } = useSWR<AxiosResponse, AxiosError>(PSM_GRAPH_TOKENS_QUERY, subQueryGraphFetcher);
+  const { data: tokenNamesData } = useSWR<AxiosResponse, AxiosError>(PSM_GRAPH_TOKENS_QUERY, subQueryFetcher);
   const tokenNamesResponse: PsmMetricsResponse = tokenNamesData?.data.data;
   const tokenNames = tokenNamesResponse?.psmMetrics.nodes.map((node: { token: string }) => node.token) || [];
 
   const { data: dailyMetricsData, isLoading: graphDataIsLoading } = useSWR<AxiosResponse, AxiosError>(
     PSM_TOKEN_DAILY_MINT_QUERY(tokenNames),
-    subQueryGraphFetcher,
+    subQueryFetcher,
   );
   const dailyMetricsResponse: PsmMetricsDailyResponse = dailyMetricsData?.data.data;
   const graphDataMap: { [key: number]: GraphData } = {};
