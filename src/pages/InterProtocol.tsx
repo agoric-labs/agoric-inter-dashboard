@@ -1,7 +1,6 @@
 import useSWR from 'swr';
 import { AxiosError, AxiosResponse } from 'axios';
 import { PieChart, Pie, Cell, Tooltip } from 'recharts';
-import { Skeleton } from '@/components/ui/skeleton';
 import { SectionHeader } from '@/components/SectionHeader';
 import { ValueCard } from '@/components/ValueCard';
 import { ValueCardGrid } from '@/components/ValueCardGrid';
@@ -9,20 +8,12 @@ import { PageHeader } from '@/components/PageHeader';
 import { PageContent } from '@/components/PageContent';
 import { colors } from '@/components/palette';
 import { formatPercent, roundPrice, formatPrice, formatIST, subQueryFetcher, fetchDataFromUrl } from '@/utils';
-import { ErrorAlert } from '@/components/ErrorAlert';
 import { INTER_DASHBOARD_QUERY } from '@/queries';
 import {
   GET_INTERCHAIN_BALANCES_URL,
 } from '@/constants';
+import InterProtocolSkeleton from '@/components/InterProtocolSkeleton';
 
-const firstCards = [
-  'IST in Circulation',
-  'Total Mint Limit',
-  'Total Mint Limit Utilized',
-  'Total Interchain IST',
-  '% of Interchain IST',
-  'Smart Wallets Provisioned',
-];
 
 const RADIAN = Math.PI / 180;
 
@@ -124,28 +115,8 @@ export function InterProtocol() {
   const error = dashboardError || interchainBalanceError;
   const isLoading = isDashboardLoading || isInterchainBalanceLoading;
 
-
-  if (error) {
-    return <ErrorAlert value={error} />;
-  }
-  if (isLoading) {
-    return (
-      <>
-        <PageHeader title="Summary" />
-        <PageContent>
-          <ValueCardGrid>
-            {firstCards.map((title) => (
-              <ValueCard title={title} key={title} value={<Skeleton className="w-[100px] h-[32px] rounded-full" />} />
-            ))}
-          </ValueCardGrid>
-          <SectionHeader>Balances</SectionHeader>
-          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
-          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
-          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
-          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
-        </PageContent>
-      </>
-    );
+  if (error || isLoading) {
+    return <InterProtocolSkeleton error={error} isLoading={isLoading} />;
   }
 
   const ibcBalance = getInterchainBalance(interchainBalanceData?.data?.balances);
