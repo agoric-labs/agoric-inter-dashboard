@@ -5,7 +5,7 @@ import { PageContent } from '@/components/PageContent';
 import { ReserveSummary } from '@/widgets/ReserveSummary';
 import { ReserveShortfall } from '@/widgets/ReserveShortfall';
 import { ReserveHistory } from '@/widgets/ReserveHistory';
-import { subQueryFetcher } from '@/utils';
+import { getDateKey, subQueryFetcher } from '@/utils';
 import { RESERVE_DASHBOARD_QUERY, RESERVE_GRAPH_TOKENS_QUERY, RESERVE_DAILY_METRICS_QUERY } from '@/queries';
 import { ReserveCosmosSummary } from '@/widgets/ReserveCosmosSummary';
 import {
@@ -62,18 +62,14 @@ export const Reserve = () => {
     ),
   }));
 
-  const startDate = new Date();
-  startDate.setDate(startDate.getDate() - GRAPH_DAYS);
-  const startDateFormatDate = startDate.toISOString().slice(0, 10);
-  const startDateKey = Number(startDateFormatDate.replaceAll('-', ''));
-
+  const { key: startDateKey } = getDateKey(new Date(), GRAPH_DAYS);
   //  Queries for graph
   const { data: tokenNamesData } = useSWR<AxiosResponse, AxiosError>(RESERVE_GRAPH_TOKENS_QUERY, subQueryFetcher);
   const tokenNamesResponse: ReserveManagerMetricsResponse = tokenNamesData?.data.data;
   const tokenNames =
-    tokenNamesResponse?.reserveMetrics?.nodes
-      .map((node) => node.allocations?.nodes?.map((allocation) => allocation.token))
-      .flat() || [];
+    tokenNamesResponse?.reserveMetrics?.nodes.flatMap((node) =>
+      node.allocations?.nodes?.map((allocation) => allocation.token),
+    ) || [];
   tokenNames.sort();
   const { data: dailyMetricsData, isLoading: graphDataIsLoading } = useSWR<AxiosResponse, AxiosError>(
     RESERVE_DAILY_METRICS_QUERY(tokenNames, startDateKey),
@@ -85,12 +81,9 @@ export const Reserve = () => {
 
   const today = new Date();
   const graphDataMap: { [key: string]: GraphData } = range.reduce((agg, dateNum: number) => {
-    const date = new Date(today);
-    date.setDate(date.getDate() - dateNum);
-    const formatDate = date.toISOString().slice(0, 10);
-    const dateKey = Number(formatDate.replaceAll('-', ''));
+    const { key: dateKey, formattedDate } = getDateKey(new Date(today), dateNum);
 
-    return { ...agg, [dateKey]: { key: dateKey, x: formatDate } };
+    return { ...agg, [dateKey]: { key: dateKey, x: formattedDate } };
   }, {});
 
   tokenNames.forEach((tokenName: string) => {
@@ -107,20 +100,18 @@ export const Reserve = () => {
     );
 
     const dateList = Object.keys(graphDataMap);
-    dateList.sort()
-    dateList
-      .forEach((dateKey: string) => {
-        const oracle = (dailyOracles && dailyOracles[dateKey]) || { typeOutAmountLast: 1, typeInAmountLast: 1 };
-        const tokenMetrics = (dailyMetrics && dailyMetrics[dateKey]) || lastTokenMetric;
-        graphDataMap[dateKey][tokenName] =
-          ((tokenMetrics?.valueLast || 0) / 1_000_000) * (oracle.typeOutAmountLast / oracle.typeInAmountLast);
+    dateList.sort();
+    dateList.forEach((dateKey: string) => {
+      const oracle = (dailyOracles && dailyOracles[dateKey]) || { typeOutAmountLast: 1, typeInAmountLast: 1 };
+      const tokenMetrics = (dailyMetrics && dailyMetrics[dateKey]) || lastTokenMetric;
+      graphDataMap[dateKey][tokenName] =
+        ((tokenMetrics?.valueLast || 0) / 1_000_000) * (oracle.typeOutAmountLast / oracle.typeInAmountLast);
 
-        lastTokenMetric = tokenMetrics;
-
-      });
+      lastTokenMetric = tokenMetrics;
+    });
   });
 
-  const sortedGraphDataList = Object.values(graphDataMap) as GraphData[];
+  const sortedGraphDataList = Object.values(graphDataMap);
   sortedGraphDataList.sort((a, b) => a.key - b.key);
   let prevValue: GraphData = sortedGraphDataList[0];
   const graphDataList: Array<GraphData> = sortedGraphDataList
