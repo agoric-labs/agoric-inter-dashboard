@@ -13,13 +13,12 @@ import { VaultManagerCountCard } from '@/widgets/VaultManagerCountCard';
 import { VaultTotalLockedCollateralValueCard } from '@/widgets/VaultTotalLockedCollateralValueCard';
 import {
   VAULTS_DASHBOARD_QUERY,
-  OPEN_VAULTS_QUERY,
-  VAULTS_GRAPH_TOKENS_QUERY,
   VAULTS_DAILY_METRICS_QUERY,
 } from '@/queries';
 import { subQueryFetcher } from '@/utils';
 
 type OraclePriceNode = { priceFeedName: string; typeInAmount: number; typeOutAmount: number };
+
 type VaultManagerMetricsNode = {
   id: string;
   liquidatingCollateralBrand: string;
@@ -38,9 +37,6 @@ type VaultManagerGovernancesNode = {
   id: string;
   liquidationMarginDenominator: number;
   liquidationMarginNumerator: number;
-};
-type VaultDashboardManagerGovernancesNode = {
-  id: string;
   debtLimit: number;
 };
 type OraclePriceDailies = {
@@ -57,22 +53,11 @@ type VaultsDashboardResponse = {
   vaultManagerMetrics: {
     nodes: Array<VaultManagerMetricsNode>;
   };
-  vaultManagerGovernances: { nodes: Array<VaultDashboardManagerGovernancesNode> };
-  oraclePriceDailies: { nodes: Array<OraclePriceDailies> };
-};
-
-type OpenVaultsResponse = {
+  vaultManagerGovernances: { nodes: Array<VaultManagerGovernancesNode> };
   vaults: {
     nodes: Array<VaultsNode>;
   };
-  oraclePrices: { nodes: Array<OraclePriceNode> };
-  vaultManagerGovernances: { nodes: Array<VaultManagerGovernancesNode> };
-};
-
-type VaultManagerMetricsResponse = {
-  vaultManagerMetrics: {
-    nodes: Array<VaultManagerMetricsNode>;
-  };
+  oraclePriceDailies: { nodes: Array<OraclePriceDailies> };
 };
 
 type GraphData = { key: number; x: string };
@@ -80,7 +65,7 @@ type OraclePriceDailiesArr = {
   oracleDailyPrices: Array<OraclePriceDailies>;
 };
 export type VaultsDashboardData = {
-  [key: string]: VaultManagerMetricsNode & OraclePriceNode & VaultDashboardManagerGovernancesNode & OraclePriceDailiesArr;
+  [key: string]: VaultManagerMetricsNode & OraclePriceNode & VaultManagerGovernancesNode & VaultsNode & OraclePriceDailiesArr;
 };
 export type OpenVaultsData = Array<VaultsNode & OraclePriceNode & VaultManagerGovernancesNode>;
 
@@ -89,13 +74,10 @@ export function Vaults() {
     VAULTS_DASHBOARD_QUERY,
     subQueryFetcher,
   );
-  const { data: openVaultsData, isLoading: openVaultsIsLoading } = useSWR<AxiosResponse, AxiosError>(
-    OPEN_VAULTS_QUERY,
-    subQueryFetcher,
-  );
 
   const vaultsDashboardResponse: VaultsDashboardResponse = vaultsDashboardData?.data?.data;
-  const vaultDashboardOraclePrices: { [key: string]: OraclePriceNode } =
+
+  const oraclePrices: { [key: string]: OraclePriceNode } =
     vaultsDashboardResponse?.oraclePrices?.nodes?.reduce((agg, node) => {
       const nameSegments = node.priceFeedName.split('-');
       if (nameSegments.length !== 2) {
@@ -117,7 +99,7 @@ export function Vaults() {
     });
 
 
-  const vaultsDashboardManagerGovernances: { [key: string]: VaultDashboardManagerGovernancesNode } =
+  const vaultsDashboardManagerGovernances: { [key: string]: VaultManagerGovernancesNode } =
     vaultsDashboardResponse?.vaultManagerGovernances?.nodes?.reduce((agg, node) => {
       const idSegments = node.id.split('.');
       if (idSegments.length < 4) {
@@ -126,6 +108,7 @@ export function Vaults() {
       const managerName = idSegments.slice(0, 4).join('.');
       return { ...agg, [managerName]: node };
     }, {});
+
   const vaultsDashboardQueryData: VaultsDashboardData = vaultsDashboardResponse?.vaultManagerMetrics?.nodes?.reduce(
     (agg, node) => {
       const idSegments = node.id.split('.');
@@ -137,7 +120,7 @@ export function Vaults() {
         ...agg,
         [node.liquidatingCollateralBrand]: {
           ...vaultsDashboardManagerGovernances[managerName],
-          ...vaultDashboardOraclePrices[node.liquidatingCollateralBrand],
+          ...oraclePrices[node.liquidatingCollateralBrand],
           ...node,
           oracleDailyPrices: [...(oracleDailyPrices[node.liquidatingCollateralBrand] || [])],
         },
@@ -146,28 +129,7 @@ export function Vaults() {
     {},
   );
 
-  const openVaultsResponse: OpenVaultsResponse = openVaultsData?.data?.data;
-  const oraclePrices: { [key: string]: OraclePriceNode } = openVaultsResponse?.oraclePrices?.nodes?.reduce(
-    (agg, node) => {
-      const nameSegments = node.priceFeedName.split('-');
-      if (nameSegments.length !== 2) {
-        throw new Error(`Invalid priceFeedName: ${node.priceFeedName}`);
-      }
-      const tokenName = nameSegments[0];
-      return { ...agg, [tokenName]: node };
-    },
-    {},
-  );
-  const vaultManagerGovernances: { [key: string]: VaultManagerGovernancesNode } =
-    openVaultsResponse?.vaultManagerGovernances?.nodes?.reduce((agg, node) => {
-      const idSegments = node.id.split('.');
-      if (idSegments.length < 4) {
-        throw new Error(`Node ID does not contain enough segments: ${node.id}`);
-      }
-      const managerName = idSegments.slice(0, 4).join('.');
-      return { ...agg, [managerName]: node };
-    }, {});
-  const openVaultsQueryData: OpenVaultsData = openVaultsResponse?.vaults?.nodes?.map((vaultNode) => {
+  const openVaultsQueryData: OpenVaultsData = vaultsDashboardResponse?.vaults?.nodes?.map((vaultNode) => {
     const idSegments = vaultNode.id.split('.');
     if (idSegments.length < 4) {
       throw new Error(`Node ID does not contain enough segments: ${vaultNode.id}`);
@@ -175,15 +137,12 @@ export function Vaults() {
     const managerName = idSegments.slice(0, 4).join('.');
     return {
       ...oraclePrices[vaultNode.token],
-      ...vaultManagerGovernances[managerName],
+      ...vaultsDashboardManagerGovernances[managerName],
       ...vaultNode,
     };
   });
 
-  //  Queries for graph
-  const { data: tokenNamesData } = useSWR<AxiosResponse, AxiosError>(VAULTS_GRAPH_TOKENS_QUERY, subQueryFetcher);
-  const tokenNamesResponse: VaultManagerMetricsResponse = tokenNamesData?.data.data;
-  const tokenNames = tokenNamesResponse?.vaultManagerMetrics.nodes.map((node) => node.liquidatingCollateralBrand) || [];
+  const tokenNames = vaultsDashboardResponse?.vaultManagerMetrics.nodes.map((node) => node.liquidatingCollateralBrand) || [];
   const { data: dailyMetricsData, isLoading: graphDataIsLoading } = useSWR<AxiosResponse, AxiosError>(
     VAULTS_DAILY_METRICS_QUERY(tokenNames),
     subQueryFetcher,
@@ -255,7 +214,7 @@ export function Vaults() {
         <hr className="my-5" />
         <VaultManagers data={vaultsDashboardQueryData} isLoading={vaultsDashboardIsLoading} />
         <hr className="my-5" />
-        <OpenVaults data={openVaultsQueryData} isLoading={openVaultsIsLoading} />
+        <OpenVaults data={openVaultsQueryData} isLoading={vaultsDashboardIsLoading} />
       </PageContent>
     </>
   );

@@ -57,9 +57,7 @@ query {
         }
     }
     oraclePrices {
-        nodes {
-            priceFeedName
-            typeOutAmount
+	@@ -129,13 +86,29 @@ query {
             typeInAmount
         }
     }
@@ -73,6 +71,17 @@ query {
         nodes {
             id
             debtLimit
+            liquidationMarginNumerator
+            liquidationMarginDenominator
+        }
+    }
+    vaults(filter: {state: {equalTo: "active"}}) {
+        nodes {
+            id
+            token
+            balance
+            state
+            debt
         }
     }
     oraclePriceDailies(filter: {
@@ -88,16 +97,6 @@ query {
         }
     }
 }`;
-
-export const VAULTS_GRAPH_TOKENS_QUERY = `
-query {
-    vaultManagerMetrics {
-        nodes {
-            id
-            liquidatingCollateralBrand
-        }   
-    }
-}`
 
 export const VAULTS_DAILY_METRICS_QUERY = (tokens: string[]) => `
 query {
@@ -124,33 +123,6 @@ query {
         }
     }`)}
 }`
-
-export const OPEN_VAULTS_QUERY = `
-query {
-    vaults (filter: {state: {equalTo: "active"}}) {
-        nodes {
-            id
-            token
-            balance
-            state
-            debt
-        }
-    }
-    oraclePrices {
-        nodes {
-            priceFeedName
-            typeOutAmount
-            typeInAmount
-        }
-    }
-    vaultManagerGovernances {
-        nodes {
-            id
-            liquidationMarginNumerator
-            liquidationMarginDenominator
-        }
-    }
-}`;
 
 export const RESERVE_DASHBOARD_QUERY = `
 query {
