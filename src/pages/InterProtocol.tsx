@@ -1,3 +1,4 @@
+import axios from 'axios';
 import useSWR from 'swr';
 import { AxiosError, AxiosResponse } from 'axios';
 import { PieChart, Pie, Cell, Tooltip } from 'recharts';
@@ -11,6 +12,9 @@ import { colors } from '@/components/palette';
 import { formatPercent, roundPrice, formatPrice, formatIST, subQueryFetcher } from '@/utils';
 import { ErrorAlert } from '@/components/ErrorAlert';
 import { INTER_DASHBOARD_QUERY } from '@/queries';
+import {
+  GET_INTERCHAIN_BALANCES_URL,
+} from '@/constants';
 
 const firstCards = [
   'IST in Circulation',
@@ -84,9 +88,31 @@ type InterProtocolResponse = {
   boardAuxes: { nodes: Array<BoardAuxesNode> };
 };
 
+type Balance = {
+  denom: string;
+  amount: string;
+};
+
+type AccountData = {
+  channel_id: string;
+  address: string;
+  balance: Balance[];
+};
+
+function getInterchainBalance(data: AccountData[]): number {
+  const balanceList = data?.map(account => ({
+      channel_id: account.channel_id,
+      address: account.address,
+      uist_balance: Number(account.balance.find(b => b.denom === "uist")?.amount || "0")
+  })).filter(account => account.uist_balance !== 0);
+  // sum up the balances
+  return balanceList.reduce((acc, account) => acc + account.uist_balance, 0) / 1_000_000;
+}
+
 export function InterProtocol() {
   const { data, error, isLoading } = useSWR<AxiosResponse, AxiosError>(INTER_DASHBOARD_QUERY, subQueryFetcher);
-
+  const { data: balances } = useSWR<AxiosResponse, AxiosError>(GET_INTERCHAIN_BALANCES_URL, axios.get);
+  const ibcBalance = getInterchainBalance(balances?.data?.balances);
   const response: InterProtocolResponse = data?.data?.data;
 
   const oraclePrices: { [key: string]: OraclePriceNode } = response?.oraclePrices?.nodes?.reduce(
@@ -117,8 +143,6 @@ export function InterProtocol() {
     );
   }
 
-  // top cards
-  // const ibcBalance = 0;
   const walletCount = response.wallets.totalCount;
 
   const boardAuxes: { [key: string]: number } = response.boardAuxes.nodes.reduce(
@@ -146,7 +170,6 @@ export function InterProtocol() {
     (agg, node) =>
       agg +
       node.allocations.nodes.reduce((agg_, node_) => {
-        console.log("token", node_.token, "oraclePrices", oraclePrices[node_.token]?.typeOutAmount || 1, "value", node_.value)
         const allocationInUsd =
           ((Number(node_.value) / 1_000_000) * Number(oraclePrices[node_.token]?.typeOutAmount || 1_000_000)) / 1_000_000;
         return agg_ + allocationInUsd;
@@ -178,8 +201,8 @@ export function InterProtocol() {
             value={formatPercent(totalMinted / totalMintLimit)}
             testId="inter-protocol-mint-limit-utilized"
           />
-          {/* <ValueCard title="Total Interchain IST" value={formatIST(ibcBalance)} />
-          <ValueCard title="% of Interchain IST" value={formatPercent(ibcBalance / totalMinted)} /> */}
+          <ValueCard title="Total Interchain IST" value={formatIST(ibcBalance)} />
+          <ValueCard title="% of Interchain IST" value={formatPercent(ibcBalance / totalMinted)} />
           <ValueCard title="Smart Wallets Provisioned" value={walletCount} />
         </ValueCardGrid>
 
