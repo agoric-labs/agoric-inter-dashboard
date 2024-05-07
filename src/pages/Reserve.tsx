@@ -73,8 +73,8 @@ export const Reserve = () => {
   const tokenNames =
     tokenNamesResponse?.reserveMetrics?.nodes
       .map((node) => node.allocations?.nodes?.map((allocation) => allocation.token))
-      .flat()
-      .toSorted() || [];
+      .flat() || [];
+  tokenNames.sort();
   const { data: dailyMetricsData, isLoading: graphDataIsLoading } = useSWR<AxiosResponse, AxiosError>(
     RESERVE_DAILY_METRICS_QUERY(tokenNames, startDateKey),
     subQueryFetcher,
@@ -93,7 +93,7 @@ export const Reserve = () => {
     return { ...agg, [dateKey]: { key: dateKey, x: formatDate } };
   }, {});
 
-  tokenNames.forEach((tokenName) => {
+  tokenNames.forEach((tokenName: string) => {
     const dailyOracles = dailyMetricsResponse?.[`${tokenName}_oracle`]?.nodes.reduce(
       (agg: object, dailyOracleData: { dateKey: string }) => ({ ...agg, [dailyOracleData.dateKey]: dailyOracleData }),
       {},
@@ -106,9 +106,10 @@ export const Reserve = () => {
       {},
     );
 
-    Object.keys(graphDataMap)
-      .toSorted()
-      .forEach((dateKey) => {
+    const dateList = Object.keys(graphDataMap);
+    dateList.sort()
+    dateList
+      .forEach((dateKey: string) => {
         const oracle = (dailyOracles && dailyOracles[dateKey]) || { typeOutAmountLast: 1, typeInAmountLast: 1 };
         const tokenMetrics = (dailyMetrics && dailyMetrics[dateKey]) || lastTokenMetric;
         graphDataMap[dateKey][tokenName] =
