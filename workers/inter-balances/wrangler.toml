@@ -1,0 +1,15 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "balances"
+main = "src/index.js"
+compatibility_date = "2024-05-02"
+compatibility_flags = ["nodejs_compat"]
+
+# Bind a KV Namespace. Use KV as persistent storage for small key-value pairs.
+# Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#kv-namespaces
+[[kv_namespaces]]
+binding = "InterchainBalancesCache"
+id = "1c96e8400a2e4d1890ec490467142bb5"
+
+[triggers]
+# Run once every hour
+crons = [ "0 * * * *" ]
