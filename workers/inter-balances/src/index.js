@@ -69,6 +69,7 @@ async function handleBalancesRequest(env) {
   return new Response(balances, {
     headers: { 
 			'content-type': 'application/json;charset=UTF-8',
+			'Access-Control-Allow-Origin': '*',
 			'Cache-Control': 'max-age=3600'
 		},
   });
