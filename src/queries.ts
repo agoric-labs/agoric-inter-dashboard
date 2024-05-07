@@ -1,3 +1,5 @@
+import { getDateKey } from "./utils";
+
 export const PSM_DASHBOARD_QUERY = `
 query {
     _metadata {
@@ -210,7 +212,7 @@ query {
     }`)}
 }`
 
-
+const currentDate = new Date();
 export const INTER_DASHBOARD_QUERY = `
 query {
     psmMetrics {
@@ -272,6 +274,17 @@ query {
         nodes {
             allegedName
             decimalPlaces
+        }
+    }
+    oraclePriceDailies(filter: {
+        dateKey: { 
+            in: [${getDateKey(currentDate)}, ${getDateKey(currentDate, 1)}] 
+        }
+    }) {
+        nodes {
+            priceFeedName
+            typeInName
+            dateKey
         }
     }
 }`
