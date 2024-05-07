@@ -6,7 +6,7 @@ import { PageContent } from '@/components/PageContent';
 import { LiquidatedVaults } from '@/widgets/LiquidatedVaults';
 import { VaultStatesChart } from '@/widgets/VaultStatesChart';
 import { LiquidatedVaultCountCard } from '@/widgets/LiquidatedVaultCountCard';
-import { subQueryFetcher, subQueryGraphFetcher } from '@/utils';
+import { subQueryFetcher } from '@/utils';
 import { LIQUIDATIONS_DASHBOARD, LIQUIDATION_GRAPH_TOKENS_QUERY, LIQUIDATION_DAILY_METRICS_QUERY } from '@/queries';
 
 export type VaultManagerMetricsNode = {
@@ -91,14 +91,14 @@ export function Liquidated() {
   //  Queries for graph
   const { data: tokenNamesData } = useSWR<AxiosResponse, AxiosError>(
     LIQUIDATION_GRAPH_TOKENS_QUERY,
-    subQueryGraphFetcher,
+    subQueryFetcher,
   );
   const tokenNamesResponse: TokenNamesResponse = tokenNamesData?.data.data;
   const tokenNames = tokenNamesResponse?.vaultManagerMetrics.nodes.map((node) => node.liquidatingCollateralBrand) || [];
 
   const { data: dailyMetricsData, isLoading: graphDataIsLoading } = useSWR<AxiosResponse, AxiosError>(
     LIQUIDATION_DAILY_METRICS_QUERY(tokenNames),
-    subQueryGraphFetcher,
+    subQueryFetcher,
   );
   const dailyMetricsResponse: LiquidationMetricsDailyResponse = dailyMetricsData?.data.data;
   const graphDataMap: { [key: number]: GraphData } = {};

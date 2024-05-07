@@ -22,10 +22,16 @@ export function OpenVaults({ title = 'Open Vaults', data, isLoading }: Props) {
     );
   }
 
+  data.sort((a, b) => {
+    const nameA: string = a.token?.toLowerCase();
+    const nameB: string = b.token?.toLowerCase();
+    return nameA.localeCompare(nameB);
+  });
+
   const rows = data.map((vaultData) => {
     const vaultIdx = vaultData.id.split('.').at(-1)?.split('vault')[1] || '';
     const collateralValueUsd = ((vaultData.typeOutAmount / 1_000_000) * vaultData.balance) / 1_000_000;
-    const liquidationRatio = vaultData.liquidationMarginNumerator / vaultData.liquidationMarginDenominator;
+    const liquidationRatio = vaultData?.liquidationMarginNumerator / vaultData?.liquidationMarginDenominator;
     const istDebtAmount = vaultData.debt / 1_000_000;
     const collateralAmount = vaultData.balance / 1_000_000;
     const liquidationPrice = (istDebtAmount * liquidationRatio) / collateralAmount;

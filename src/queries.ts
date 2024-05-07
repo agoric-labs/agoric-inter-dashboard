@@ -113,7 +113,7 @@ query {
 
 export const OPEN_VAULTS_QUERY = `
 query {
-    vaults {
+    vaults (filter: {state: {equalTo: "active"}}) {
         nodes {
             id
             token
@@ -266,6 +266,12 @@ query {
             typeInAmount
             typeOutAmount
             priceFeedName
+        }
+    }
+    boardAuxes {
+        nodes {
+            allegedName
+            decimalPlaces
         }
     }
 }`

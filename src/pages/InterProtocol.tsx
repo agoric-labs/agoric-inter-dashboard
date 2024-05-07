@@ -8,9 +8,12 @@ import { ValueCardGrid } from '@/components/ValueCardGrid';
 import { PageHeader } from '@/components/PageHeader';
 import { PageContent } from '@/components/PageContent';
 import { colors } from '@/components/palette';
-import { formatPercent, roundPrice, formatPrice, formatIST, subQueryFetcher } from '@/utils';
+import { formatPercent, roundPrice, formatPrice, formatIST, subQueryFetcher, fetchDataFromUrl } from '@/utils';
 import { ErrorAlert } from '@/components/ErrorAlert';
 import { INTER_DASHBOARD_QUERY } from '@/queries';
+import {
+  GET_INTERCHAIN_BALANCES_URL,
+} from '@/constants';
 
 const firstCards = [
   'IST in Circulation',
@@ -67,6 +70,7 @@ type VaultManagerMetricsNode = {
   totalCollateral: number;
   totalDebt: number;
 };
+type BoardAuxesNode = { allegedName: string; decimalPlaces: number };
 
 type InterProtocolResponse = {
   oraclePrices: { nodes: Array<OraclePriceNode> };
@@ -80,17 +84,46 @@ type InterProtocolResponse = {
     nodes: Array<VaultManagerMetricsNode>;
   };
   wallets: { totalCount: number };
+  boardAuxes: { nodes: Array<BoardAuxesNode> };
 };
 
+type Balance = {
+  denom: string;
+  amount: string;
+};
+
+type AccountData = {
+  channel_id: string;
+  address: string;
+  balance: Balance[];
+};
+
+function getInterchainBalance(data: AccountData[]): number {
+  const balanceList = data
+    .map((account) => ({
+      channel_id: account.channel_id,
+      address: account.address,
+      uist_balance: Number(account.balance.find((b) => b.denom === 'uist')?.amount || '0'),
+    }))
+    .filter((account) => account.uist_balance !== 0);
+  return balanceList.reduce((acc, account) => acc + account.uist_balance, 0) / 1_000_000;
+}
 export function InterProtocol() {
-  const { data, error, isLoading } = useSWR<AxiosResponse, AxiosError>(INTER_DASHBOARD_QUERY, subQueryFetcher);
+  const {
+    data: dashboardData,
+    error: dashboardError,
+    isLoading: isDashboardLoading,
+  } = useSWR<AxiosResponse, AxiosError>(INTER_DASHBOARD_QUERY, subQueryFetcher);
 
-  const response: InterProtocolResponse = data?.data?.data;
+  const {
+    data: interchainBalanceData,
+    error: interchainBalanceError,
+    isLoading: isInterchainBalanceLoading,
+  } = useSWR<AxiosResponse, AxiosError>(GET_INTERCHAIN_BALANCES_URL, fetchDataFromUrl);
 
-  const oraclePrices: { [key: string]: OraclePriceNode } = response?.oraclePrices?.nodes?.reduce(
-    (agg, node) => ({ ...agg, [node.typeInName]: node }),
-    {},
-  );
+  const error = dashboardError || interchainBalanceError;
+  const isLoading = isDashboardLoading || isInterchainBalanceLoading;
+
 
   if (error) {
     return <ErrorAlert value={error} />;
@@ -115,37 +148,49 @@ export function InterProtocol() {
     );
   }
 
-  // top cards
-  // const ibcBalance = 0;
-  // const walletCount = response.wallets.totalCount;
+  const ibcBalance = getInterchainBalance(interchainBalanceData?.data?.balances);
+  const dashboardResponse: InterProtocolResponse = dashboardData?.data?.data;
+  const walletCount = dashboardResponse?.wallets?.totalCount;
+
+  const oraclePrices: { [key: string]: OraclePriceNode } = dashboardResponse?.oraclePrices?.nodes?.reduce(
+    (agg, node) => ({ ...agg, [node.typeInName]: node }),
+    {},
+  );
+
+  const boardAuxes: { [key: string]: number } = dashboardResponse.boardAuxes.nodes.reduce(
+    (agg, node) => ({ ...agg, [node.allegedName]: node.decimalPlaces }),
+    {},
+  );
 
   const psmMinted =
-    response.psmMetrics.nodes.reduce((agg, node) => agg + Number(node.mintedPoolBalance), 0) / 1_000_000;
-  const psmAnchor =
-    response.psmMetrics.nodes.reduce((agg, node) => agg + Number(node.anchorPoolBalance), 0) / 1_000_000;
+  dashboardResponse.psmMetrics.nodes.reduce((agg, node) => agg + Number(node.mintedPoolBalance), 0) / 1_000_000;
+  const psmAnchor = dashboardResponse.psmMetrics.nodes.reduce(
+    (agg, node) => agg + Number(node.anchorPoolBalance) / 10 ** (boardAuxes[node.token] || 6),
+    0,
+  );
   const vaultMinted =
-    response.vaultManagerMetrics.nodes.reduce((agg, node) => agg + Number(node.totalDebt), 0) / 1_000_000;
+  dashboardResponse.vaultManagerMetrics.nodes.reduce((agg, node) => agg + Number(node.totalDebt), 0) / 1_000_000;
   const totalMinted = psmMinted + vaultMinted;
 
   const vaultMintLimit =
-    response.vaultManagerGovernances.nodes.reduce((agg, node) => agg + Number(node.debtLimit), 0) / 1_000_000;
-  const psmMintLimit = response.psmGovernances.nodes.reduce((agg, node) => agg + Number(node.mintLimit), 0) / 1_000_000;
+  dashboardResponse.vaultManagerGovernances.nodes.reduce((agg, node) => agg + Number(node.debtLimit), 0) / 1_000_000;
+  const psmMintLimit = dashboardResponse.psmGovernances.nodes.reduce((agg, node) => agg + Number(node.mintLimit), 0) / 1_000_000;
   const totalMintLimit = vaultMintLimit + psmMintLimit;
 
   // bottom cards
-  const totalReserve = response.reserveMetrics.nodes.reduce(
+  const totalReserve = dashboardResponse.reserveMetrics.nodes.reduce(
     (agg, node) =>
       agg +
       node.allocations.nodes.reduce((agg_, node_) => {
         const allocationInUsd =
-          ((Number(node_.value) / 1_000_000) * Number(oraclePrices[node_.token]?.typeOutAmount || 0)) / 1_000_000;
+          ((Number(node_.value) / 1_000_000) * Number(oraclePrices[node_.token]?.typeOutAmount || 1_000_000)) / 1_000_000;
         return agg_ + allocationInUsd;
       }, 0),
     0,
   );
   const reserveShortfall =
-    response.reserveMetrics.nodes.reduce((agg, node) => agg + Number(node.shortfallBalance), 0) / 1_000_000;
-  const totalLockedCollateral = response.vaultManagerMetrics.nodes.reduce((agg, node) => {
+  dashboardResponse.reserveMetrics.nodes.reduce((agg, node) => agg + Number(node.shortfallBalance), 0) / 1_000_000;
+  const totalLockedCollateral = dashboardResponse.vaultManagerMetrics.nodes.reduce((agg, node) => {
     const collateralInUsd =
       ((Number(node.totalCollateral) / 1_000_000) *
         Number(oraclePrices[node.liquidatingCollateralBrand]?.typeOutAmount) || 0) / 1_000_000;
@@ -168,9 +213,9 @@ export function InterProtocol() {
             value={formatPercent(totalMinted / totalMintLimit)}
             testId="inter-protocol-mint-limit-utilized"
           />
-          {/* <ValueCard title="Total Interchain IST" value={formatIST(ibcBalance)} />
+          <ValueCard title="Total Interchain IST" value={formatIST(ibcBalance)} />
           <ValueCard title="% of Interchain IST" value={formatPercent(ibcBalance / totalMinted)} />
-          <ValueCard title="Smart Wallets Provisioned" value={walletCount} /> */}
+          <ValueCard title="Smart Wallets Provisioned" value={walletCount} />
         </ValueCardGrid>
 
         <SectionHeader>Balances</SectionHeader>
