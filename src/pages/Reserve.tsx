@@ -163,7 +163,7 @@ export const Reserve = () => {
           <ReserveCosmosSummary data={istReserveBalance} isLoading={reserveBalanceLoading} />
           <ReserveShortfall data={reserveDashboardQueryData} isLoading={isLoading} />
         </div>
-        <ReserveHistory data={graphDataList} tokenNames={tokenNames} isLoading={graphDataIsLoading} />
+        {/* <ReserveHistory data={graphDataList} tokenNames={tokenNames} isLoading={graphDataIsLoading} /> */}
       </PageContent>
     </>
   );
