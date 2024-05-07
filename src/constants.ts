@@ -8,4 +8,6 @@ export const UIST_DENOMINATION = 'uist';
 
 export const VBANK_RESERVE_ACCOUNT = 'vbank/reserve';
 
+export const GRAPH_DAYS = 90;
+
 export const SUBQUERY_URL = 'https://api.subquery.network/sq/agoric-labs/mainnet__YWdvc';

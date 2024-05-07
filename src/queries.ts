@@ -178,7 +178,7 @@ query {
     }
 }`
 
-export const RESERVE_DAILY_METRICS_QUERY = (tokens: string[]) => `
+export const RESERVE_DAILY_METRICS_QUERY = (tokens: string[], startDate: number) => `
 query {
     ${tokens.map((token) =>
     `${token}: reserveAllocationMetricsDailies (first: 90, filter: {token: {equalTo: "${token}"}}, orderBy:DATE_KEY_DESC) {
@@ -197,6 +197,15 @@ query {
           typeInName
           typeInAmountLast
           typeOutAmountLast
+        }
+    }
+    ${token}_last: reserveAllocationMetricsDailies (first: 1, filter: {token: {equalTo: "${token}"}, valueLast: {greaterThan: "0" }, dateKey: {lessThan: ${startDate}}}, orderBy:DATE_KEY_DESC) {
+        nodes {
+          id
+          blockTimeLast
+          dateKey
+          valueLast
+          token
         }
     }`)}
 }`
