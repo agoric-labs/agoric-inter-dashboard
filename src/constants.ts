@@ -2,6 +2,10 @@ export const GET_MODULE_ACCOUNTS_URL = 'https://main-a.api.agoric.net:443/cosmos
 
 export const GET_ACCOUNT_BALANCE_URL = (address: string) => `https://main-a.api.agoric.net:443/cosmos/bank/v1beta1/balances/${address}`;
 
+export const GET_INTERCHAIN_BALANCES_URL = 'https://rickhouse.agoric-core.workers.dev/inter-balances';
+
 export const UIST_DENOMINATION = 'uist';
 
 export const VBANK_RESERVE_ACCOUNT = 'vbank/reserve';
+
+export const SUBQUERY_URL = 'https://api.subquery.network/sq/agoric-labs/mainnet__YWdvc';

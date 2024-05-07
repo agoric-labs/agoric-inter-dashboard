@@ -1,10 +1,11 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { parseISO, format } from 'date-fns';
 import { UseCubeQueryResult } from '@cubejs-client/react';
 import { ErrorAlert } from '@/components/ErrorAlert';
 import { Loading } from '@/components/Loading';
+import { SUBQUERY_URL } from './constants';
 
 export const formatDay = (v: string) => format(parseISO(v), 'MM/dd');
 export const formatDayAndTime = (v: string) => format(parseISO(v), 'MM/dd HH:mm');
@@ -118,23 +119,61 @@ export const extractFirst = (res: any, key: string) => {
 
 export const extractFirstFloat = (res: any, key: string) => parseFloat(extractFirst(res, key) || '0');
 
-export const subQueryFetcher = (query: string) =>
-  axios.post(
-    'https://api.subquery.network/sq/agoric-labs/mainnet__YWdvc',
-    { query },
-    {
-      headers: {
-        'Content-Type': 'application/json',
-      },
+export interface RequestOptions {
+  url: string;
+  method: RequestMethod;
+  data?: object;
+  params?: object;
+}
+
+export const enum RequestMethod {
+  GET = 'GET',
+  POST = 'POST',
+}
+
+export const fetchData = async (options: RequestOptions): Promise<AxiosResponse> => {
+  const { url, method, data = {}, params = {} } = options;
+
+  if (!url) {
+    throw new Error('Invalid URL');
+  }
+
+  const axiosOptions = {
+    headers: {
+      'Content-Type': 'application/json',
     },
-  );
-export const subQueryGraphFetcher = (query: string) =>
-  axios.post(
-    'https://api.subquery.network/sq/agoric-labs/mainnet__YWdvc',
-    { query },
-    {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    },
-  );
+    params: method === RequestMethod.GET ? params : undefined,
+    data: method === RequestMethod.POST ? data : undefined,
+  };
+
+  try {
+    if (method === RequestMethod.GET) {
+      return await axios.get(url, axiosOptions);
+    } else if (method === RequestMethod.POST) {
+      return await axios.post(url, data, axiosOptions);
+    } else {
+      throw new Error('Unsupported HTTP method');
+    }
+  } catch (error) {
+    console.error(`Error fetching data: ${error}`);
+    throw error;
+  }
+};
+
+export const subQueryFetcher = (query: string) => {
+  const options = {
+    url: SUBQUERY_URL,
+    method: RequestMethod.POST,
+    data: { query },
+  };
+
+  return fetchData(options);
+};
+
+export const fetchDataFromUrl = (url: string) => {
+  const params: RequestOptions = {
+    method: RequestMethod.GET,
+    url,
+  };
+  return fetchData(params);
+};

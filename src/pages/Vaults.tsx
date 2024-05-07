@@ -17,7 +17,7 @@ import {
   VAULTS_GRAPH_TOKENS_QUERY,
   VAULTS_DAILY_METRICS_QUERY,
 } from '@/queries';
-import { subQueryFetcher, subQueryGraphFetcher } from '@/utils';
+import { subQueryFetcher } from '@/utils';
 
 type OraclePriceNode = { priceFeedName: string; typeInAmount: number; typeOutAmount: number };
 type VaultManagerMetricsNode = {
@@ -158,12 +158,12 @@ export function Vaults() {
   });
 
   //  Queries for graph
-  const { data: tokenNamesData } = useSWR<AxiosResponse, AxiosError>(VAULTS_GRAPH_TOKENS_QUERY, subQueryGraphFetcher);
+  const { data: tokenNamesData } = useSWR<AxiosResponse, AxiosError>(VAULTS_GRAPH_TOKENS_QUERY, subQueryFetcher);
   const tokenNamesResponse: VaultManagerMetricsResponse = tokenNamesData?.data.data;
   const tokenNames = tokenNamesResponse?.vaultManagerMetrics.nodes.map((node) => node.liquidatingCollateralBrand) || [];
   const { data: dailyMetricsData, isLoading: graphDataIsLoading } = useSWR<AxiosResponse, AxiosError>(
     VAULTS_DAILY_METRICS_QUERY(tokenNames),
-    subQueryGraphFetcher,
+    subQueryFetcher,
   );
   const dailyMetricsResponse = dailyMetricsData?.data.data;
 

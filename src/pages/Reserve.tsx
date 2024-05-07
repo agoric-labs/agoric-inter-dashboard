@@ -5,7 +5,7 @@ import { PageContent } from '@/components/PageContent';
 import { ReserveSummary } from '@/widgets/ReserveSummary';
 import { ReserveShortfall } from '@/widgets/ReserveShortfall';
 import { ReserveHistory } from '@/widgets/ReserveHistory';
-import { subQueryFetcher, subQueryGraphFetcher } from '@/utils';
+import { subQueryFetcher } from '@/utils';
 import { RESERVE_DASHBOARD_QUERY, RESERVE_GRAPH_TOKENS_QUERY, RESERVE_DAILY_METRICS_QUERY } from '@/queries';
 import { ReserveCosmosSummary } from '@/widgets/ReserveCosmosSummary';
 import {
@@ -62,7 +62,7 @@ export const Reserve = () => {
   }));
 
   //  Queries for graph
-  const { data: tokenNamesData } = useSWR<AxiosResponse, AxiosError>(RESERVE_GRAPH_TOKENS_QUERY, subQueryGraphFetcher);
+  const { data: tokenNamesData } = useSWR<AxiosResponse, AxiosError>(RESERVE_GRAPH_TOKENS_QUERY, subQueryFetcher);
   const tokenNamesResponse: ReserveManagerMetricsResponse = tokenNamesData?.data.data;
   const tokenNames =
     tokenNamesResponse?.reserveMetrics.nodes
@@ -70,7 +70,7 @@ export const Reserve = () => {
       .flat() || [];
   const { data: dailyMetricsData, isLoading: graphDataIsLoading } = useSWR<AxiosResponse, AxiosError>(
     RESERVE_DAILY_METRICS_QUERY(tokenNames),
-    subQueryGraphFetcher,
+    subQueryFetcher,
   );
   const dailyMetricsResponse = dailyMetricsData?.data.data;
 
