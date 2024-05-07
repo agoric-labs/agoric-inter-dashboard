@@ -57,7 +57,9 @@ query {
         }
     }
     oraclePrices {
-	@@ -129,13 +86,29 @@ query {
+        nodes {
+            priceFeedName
+            typeOutAmount
             typeInAmount
         }
     }
