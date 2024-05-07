@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { parseISO, format } from 'date-fns';
@@ -119,13 +119,54 @@ export const extractFirst = (res: any, key: string) => {
 
 export const extractFirstFloat = (res: any, key: string) => parseFloat(extractFirst(res, key) || '0');
 
-export const subQueryFetcher = (query: string) =>
-  axios.post(SUBQUERY_URL,
-    
-    { query },
-    {
-      headers: {
-        'Content-Type': 'application/json',
-      },
+interface RequestOptions {
+  url: string;
+  method: RequestMethod;
+  data?: object;
+  params?: object;
+}
+
+export const enum RequestMethod {
+  GET = 'GET',
+  POST = 'POST',
+}
+
+export const fetchData = async (options: RequestOptions): Promise<AxiosResponse> => {
+  const { url, method, data = {}, params = {} } = options;
+
+  if (!url) {
+    throw new Error('Invalid URL');
+  }
+
+  const axiosOptions = {
+    headers: {
+      'Content-Type': 'application/json',
     },
-  );
+    params: method === RequestMethod.GET ? params : undefined,
+    data: method === RequestMethod.POST ? data : undefined,
+  };
+
+  try {
+    if (method === RequestMethod.GET) {
+      return await axios.get(url, axiosOptions);
+    } else if (method === RequestMethod.POST) {
+      return await axios.post(url, data, axiosOptions);
+    } else {
+      throw new Error('Unsupported HTTP method');
+    }
+  } catch (error) {
+    console.error(`Error fetching data: ${error}`);
+    throw error;
+  }
+};
+
+export const subQueryFetcher = (query: string) => {
+  const options = {
+    url: SUBQUERY_URL,
+    method: RequestMethod.POST,
+    data: { query },
+  };
+
+  return fetchData(options);
+};
+
