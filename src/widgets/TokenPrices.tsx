@@ -40,7 +40,6 @@ export function TokenPrices({ title = 'Summary', data, isLoading }: Props) {
       </>
     );
   }
-  
   const entries = Object.values(data);
   const sortedEntries = entries.sort((a, b) => {
     const nameA: string = a.liquidatingCollateralBrand?.toLowerCase();
@@ -49,8 +48,18 @@ export function TokenPrices({ title = 'Summary', data, isLoading }: Props) {
   });
 
   const oraclePrices = sortedEntries.map((token) => {
-    const change = 1 - token.typeOutAmount / token.typeInAmount;
+    // Determine 24h change in oracle price
+    const sortedOracleDailyPrices = token?.oracleDailyPrices?.sort((a, b) => b.dateKey - a.dateKey);
+    const oraclePriceYesterday = sortedOracleDailyPrices[0].typeOutAmountLast / 1_000_000;
+    const oraclePriceToday = sortedOracleDailyPrices[1].typeOutAmountLast / 1_000_000;
+    // const changeValue = Number((oraclePriceToday - oraclePriceYesterday).toFixed(2));
+    const change = 1 - (oraclePriceToday / oraclePriceYesterday);
     const changeValue = Math.round(change * 10000) / 100;
+
+
+
+
+
     return {
       token: (
         <span className="flex">

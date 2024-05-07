@@ -47,6 +47,8 @@ type OraclePriceDailies = {
   priceFeedName: string;
   typeInName: string;
   dateKey: number;
+  typeInAmountLast: number
+  typeOutAmountLast: number
 }
 
 type VaultsDashboardResponse = {
@@ -74,9 +76,11 @@ type VaultManagerMetricsResponse = {
 };
 
 type GraphData = { key: number; x: string };
-
+type OraclePriceDailiesArr = {
+  oracleDailyPrices: Array<OraclePriceDailies>;
+};
 export type VaultsDashboardData = {
-  [key: string]: VaultManagerMetricsNode & OraclePriceNode & VaultDashboardManagerGovernancesNode & OraclePriceDailies;
+  [key: string]: VaultManagerMetricsNode & OraclePriceNode & VaultDashboardManagerGovernancesNode & OraclePriceDailiesArr;
 };
 export type OpenVaultsData = Array<VaultsNode & OraclePriceNode & VaultManagerGovernancesNode>;
 
@@ -140,7 +144,7 @@ export function Vaults() {
           ...vaultsDashboardManagerGovernances[managerName],
           ...vaultDashboardOraclePrices[node.liquidatingCollateralBrand],
           ...node,
-          oracleDailyPrices: {...oracleDailyPrices[node.liquidatingCollateralBrand]}
+          oracleDailyPrices: [...oracleDailyPrices[node.liquidatingCollateralBrand]]
         },
       };
     },
