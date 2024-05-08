@@ -81,7 +81,6 @@ query {
         }
     }) {
         nodes {
-            priceFeedName
             typeInName
             typeInAmountLast
             typeOutAmountLast

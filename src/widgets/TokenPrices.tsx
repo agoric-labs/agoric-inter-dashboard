@@ -52,13 +52,8 @@ export function TokenPrices({ title = 'Summary', data, isLoading }: Props) {
     const sortedOracleDailyPrices = token?.oracleDailyPrices?.sort((a, b) => b.dateKey - a.dateKey);
     const oraclePriceYesterday = sortedOracleDailyPrices[0].typeOutAmountLast / 1_000_000;
     const oraclePriceToday = sortedOracleDailyPrices[1].typeOutAmountLast / 1_000_000;
-    // const changeValue = Number((oraclePriceToday - oraclePriceYesterday).toFixed(2));
     const change = 1 - (oraclePriceToday / oraclePriceYesterday);
     const changeValue = Math.round(change * 10000) / 100;
-
-
-
-
 
     return {
       token: (

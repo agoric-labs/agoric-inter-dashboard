@@ -105,22 +105,17 @@ export function Vaults() {
       return { ...agg, [tokenName]: node };
     }, {});
 
-    const oracleDailyPrices: { [key: string]: OraclePriceDailies[] } =
-      vaultsDashboardResponse?.oraclePriceDailies?.nodes?.reduce(
-        (agg: { [key: string]: OraclePriceDailies[] }, node) => {
-          const nameSegments = node.priceFeedName.split('-');
-          if (nameSegments.length !== 2) {
-            throw new Error(`Invalid priceFeedName: ${node.priceFeedName}`);
-          }
-          const tokenName = nameSegments[0];
-          if (!agg[tokenName]) {
-            agg[tokenName] = [];
-          }
-          agg[tokenName].push(node);
-          return agg;
-        },
-        {} as { [key: string]: OraclePriceDailies[] },
-      );
+    const oracleDailyPrices: { [key: string]: OraclePriceDailies[] } = {};
+    vaultsDashboardResponse?.oraclePriceDailies?.nodes?.forEach((node) => {
+      const typeInName = node.typeInName;
+
+      if (!(typeInName in oracleDailyPrices)) {
+        oracleDailyPrices[typeInName] = [];
+      }
+
+      oracleDailyPrices[typeInName].push(node);
+    });
+
 
   const vaultsDashboardManagerGovernances: { [key: string]: VaultDashboardManagerGovernancesNode } =
     vaultsDashboardResponse?.vaultManagerGovernances?.nodes?.reduce((agg, node) => {
@@ -144,7 +139,7 @@ export function Vaults() {
           ...vaultsDashboardManagerGovernances[managerName],
           ...vaultDashboardOraclePrices[node.liquidatingCollateralBrand],
           ...node,
-          oracleDailyPrices: [...oracleDailyPrices[node.liquidatingCollateralBrand]]
+          oracleDailyPrices: [...(oracleDailyPrices[node.liquidatingCollateralBrand] || [])],
         },
       };
     },
