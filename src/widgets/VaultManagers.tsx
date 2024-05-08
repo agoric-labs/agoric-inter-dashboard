@@ -2,6 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { VaultManagersTable } from '@/components/VaultManagersTable';
 import { SectionHeader } from '@/components/SectionHeader';
 import { VaultsDashboardData } from '@/pages/Vaults';
+import CollateralWithIcon from '@/components/ui/collateralWithIcon';
 
 type Props = {
   title?: string;
@@ -37,7 +38,7 @@ export function VaultManagers({ title = 'Collateral Type', data, isLoading }: Pr
     const colletarizationRatio = totalCollateralUsd / totalIstMinted;
     const debtLimit = coinData.debtLimit / 1_000_000;
     return {
-      collateral_type: coinName,
+      collateral_type: <CollateralWithIcon collateralType={coinName} />,
       debt_type: 'IST',
       total_collateral: totalCollateral,
       total_collateral_current_usd: totalCollateralUsd,

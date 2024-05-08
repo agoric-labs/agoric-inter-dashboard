@@ -1,7 +1,7 @@
 import { DataTable, DataColumn } from './DataTable';
 
 type Row = {
-  collateral_type: string;
+  collateral_type: JSX.Element;
   debt_type: string;
   total_collateral: number;
   total_collateral_current_usd: number;
@@ -18,7 +18,7 @@ type Props = {
 export const columns: DataColumn<Row>[] = [
   {
     accessorKey: 'collateral_type',
-    type: 'text',
+    type: 'markup',
     header: 'Collateral Type',
   },
   {

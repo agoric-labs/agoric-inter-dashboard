@@ -2,25 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { SectionHeader } from '@/components/SectionHeader';
 import { TokenPricesTable } from '@/components/TokenPricesTable';
 import { VaultsDashboardData } from '@/pages/Vaults';
-
-import atom from '../icons/atom.svg';
-import statom from '../icons/statom.svg';
-import unknown from '../icons/unknown.svg';
-import osmosis from '../icons/osmosis.svg';
-import sttia from '../icons/sttia.svg';
-import stkdydx from '../icons/stkdydx.svg';
-import stkatom from '../icons/stkatom.svg';
-
-export const icons: { [key: string]: string } = {
-  atom,
-  statom1: atom,
-  statom,
-  stosmo: osmosis,
-  sttia,
-  stkatom,
-  stkdydx,
-  unknown,
-};
+import CollateralWithIcon from '@/components/ui/collateralWithIcon';
 
 type Props = {
   title?: string;
@@ -56,16 +38,7 @@ export function TokenPrices({ title = 'Summary', data, isLoading }: Props) {
     const changeValue = Math.round(change * 10000) / 100;
 
     return {
-      token: (
-        <span className="flex">
-          <img
-            src={icons[token.liquidatingCollateralBrand.toLowerCase()] || icons.unknown}
-            alt={token.liquidatingCollateralBrand}
-            className="w-4 h-4"
-          />{' '}
-          <span className="flex-1 ml-2">{token.liquidatingCollateralBrand}</span>
-        </span>
-      ),
+      token: <CollateralWithIcon collateralType={token.liquidatingCollateralBrand} />,
       name: token.liquidatingCollateralBrand,
       numActive: token.numActiveVaults,
       oraclePrice: token.typeOutAmount / 1_000_000,

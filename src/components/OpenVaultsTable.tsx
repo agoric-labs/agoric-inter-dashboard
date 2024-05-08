@@ -2,7 +2,7 @@ import { DataTable, DataColumn } from './DataTable';
 
 type Row = {
   vault_idx: string;
-  collateral_type: string;
+  collateral_type: JSX.Element;
   debt_type: string;
   collateral_amount: number;
   current_collateral_price: number;
@@ -27,7 +27,7 @@ export const columns: DataColumn<Row>[] = [
   },
   {
     accessorKey: 'collateral_type',
-    type: 'text',
+    type: 'markup',
     header: 'Collateral Type',
   },
   {
