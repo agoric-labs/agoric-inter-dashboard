@@ -38,12 +38,30 @@ export async function handleGauntletRequest(env) {
 					nodes {
 						id
 						debtLimit
-						mintFeeNumerator
-						mintFeeDenominator
-						liquidationMarginNumerator
-						liquidationMarginDenominator
 					}
 				}
+        vaults (filter: {state: {equalTo: "active"}}) {
+          nodes {
+            id
+            token
+            balance
+            state
+            debt
+            lockedValue
+            coin
+          }
+      }
+    liquidatedVaults: vaults (filter: {state: {equalTo: "liquidated"}}) {
+      nodes {
+        id
+        token
+        balance
+        state
+        debt
+        lockedValue
+        coin
+      }
+    }
 			}
 		`,
   };
@@ -66,7 +84,8 @@ export async function handleGauntletRequest(env) {
     const jsonData = await response.json();
 
     const oracle_prices = transformOraclePrices(jsonData.data);
-    const managers = transformVaultManagerMetrics(jsonData.data);
+    const {oraclePrices, vaultManagerMetrics, vaultManagerGovernances} = jsonData.data
+    const managers = transformVaultManagerMetrics(oraclePrices, vaultManagerMetrics, vaultManagerGovernances);
     // Check if the HTTP request was successful
     if (response.ok) {
       // Handle the data as needed
@@ -103,21 +122,29 @@ function transformOraclePrices(data) {
   return oracle_prices;
 }
 
-function transformVaultManagerMetrics(data) {
+function transformVaultManagerMetrics(oraclePrices, vaultManagerMetrics, vaultManagerGovernances) {
   const priceMap = new Map();
-  data?.oraclePrices.nodes.forEach((price) => {
+  oraclePrices.nodes.forEach((price) => {
     const rate = parseInt(price.typeOutAmount) / parseInt(price.typeInAmount);
     priceMap.set(price.typeInName, rate);
   });
 
-  const managers = data?.vaultManagerMetrics?.nodes.map((node) => {
+
+  const managers = vaultManagerMetrics?.nodes.map((node) => {
     const price = priceMap.get(node.liquidatingCollateralBrand) || 1;
     const totalIstMinted = node.totalDebt / 1_000_000;
     const totalCollateral = node.totalCollateral / 1e6; // Converting from minor to major units
     const totalCollateralUSD = totalCollateral * price; // Assuming a conversion rate to USD, example rate used
     const totalDebt = node.totalDebt / 1e6; // Converting from minor to major units
     const collateralizationRatio = totalCollateralUSD / totalIstMinted; // Calculate collateralization ratio
-    const istMintingLimit = (totalCollateral / 1000) * 2.5; // Some assumption made here for minting limit calculation
+    const debtLimit = vaultManagerGovernances.nodes.find((governanceNode) => {
+      const splittedGovernanceNodeID = governanceNode.id.split('.');
+      const splittedVaultManagerID = node.id.split('.');
+
+      return splittedGovernanceNodeID[3] === splittedVaultManagerID[3];
+    }).debtLimit;
+    const istMintingLimit = debtLimit / 1_000_000;
+
 
     const utilizationRate = collateralizationRatio;
 
