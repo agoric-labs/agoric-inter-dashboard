@@ -2,6 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { OpenVaultsTable } from '@/components/OpenVaultsTable';
 import { SectionHeader } from '@/components/SectionHeader';
 import { OpenVaultsData } from '@/pages/Vaults';
+import CollateralWithIcon from '@/components/ui/collateralWithIcon';
 
 type Props = {
   title?: string;
@@ -38,7 +39,7 @@ export function OpenVaults({ title = 'Open Vaults', data, isLoading }: Props) {
     const currentCollateralPrice = vaultData.typeOutAmount / 1_000_000;
     return {
       vault_idx: vaultIdx,
-      collateral_type: vaultData.token,
+      collateral_type: <CollateralWithIcon collateralType={vaultData.token} />,
       debt_type: 'IST',
       collateral_amount: collateralAmount,
       current_collateral_price: currentCollateralPrice,
