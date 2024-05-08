@@ -38,6 +38,8 @@ export async function handleGauntletRequest(env) {
 					nodes {
 						id
 						debtLimit
+            liquidationMarginNumerator
+            liquidationMarginDenominator
 					}
 				}
         vaults (filter: {state: {equalTo: "active"}}) {
@@ -84,14 +86,15 @@ export async function handleGauntletRequest(env) {
     const jsonData = await response.json();
 
     const oracle_prices = transformOraclePrices(jsonData.data);
-    const {oraclePrices, vaultManagerMetrics, vaultManagerGovernances} = jsonData.data
+    const { oraclePrices, vaultManagerMetrics, vaultManagerGovernances, vaults, liquidatedVaults } = jsonData.data;
     const managers = transformVaultManagerMetrics(oraclePrices, vaultManagerMetrics, vaultManagerGovernances);
+    const vaultsData = transformVaults(vaults, oraclePrices, vaultManagerGovernances)
     // Check if the HTTP request was successful
     if (response.ok) {
       // Handle the data as needed
       console.log('Data fetched successfully:', jsonData);
 
-      return new Response(JSON.stringify({ managers, oracle_prices, jsonData }), {
+      return new Response(JSON.stringify({ managers, oracle_prices, vaults: vaultsData, jsonData }), {
         headers: {
           'content-type': 'application/json;charset=UTF-8',
           'Access-Control-Allow-Origin': '*',
@@ -120,6 +123,44 @@ function transformOraclePrices(data) {
   });
 
   return oracle_prices;
+}
+
+function transformVaults(vaults, oraclePrices, vaultManagerGovernances) {
+  const transformedVaults = vaults.nodes.map((vaultData) => {
+    const vaultManagerGovernanceNode = vaultManagerGovernances.nodes.find((governanceNode) => {
+      const splittedGovernanceNodeID = governanceNode.id.split('.');
+      const splittedVaultManagerID = vaultData.id.split('.');
+
+      return splittedGovernanceNodeID[3] === splittedVaultManagerID[3];
+    });
+
+    const oraclePrice = oraclePrices.nodes.find((oracleNode) => oracleNode.typeInName === vaultData.token);
+    const vaultIdx = vaultData.id.split('.').at(-1)?.split('vault')[1] || '';
+    const collateralValueUsd = ((oraclePrice.typeOutAmount / oraclePrice.typeInAmount) * vaultData.balance) / 1_000_000;
+    const liquidationRatio =
+      vaultManagerGovernanceNode?.liquidationMarginNumerator / vaultManagerGovernanceNode?.liquidationMarginDenominator;
+    const istDebtAmount = vaultData.debt / 1_000_000;
+    const collateralAmount = vaultData.balance / 1_000_000;
+    const liquidationPrice = (istDebtAmount * liquidationRatio) / collateralAmount;
+    const currentCollateralPrice = oraclePrice.typeOutAmount / oraclePrice.typeInAmount;
+
+    return {
+      vault_idx: vaultIdx,
+      collateral_type: vaultData.token,
+      debt_type: 'IST',
+      collateral_amount: collateralAmount,
+      current_collateral_price: currentCollateralPrice,
+      collateral_amount_current_usd: collateralValueUsd,
+      debt_amount: istDebtAmount,
+      ist_debt_amount: istDebtAmount,
+      liquidation_margin: liquidationRatio,
+      liquidation_price: liquidationPrice,
+      liquidation_cushion: currentCollateralPrice / (liquidationPrice - 1),
+      collateralization_ratio: collateralValueUsd / (vaultData.debt / 1_000_000),
+    };
+  });
+
+  return transformedVaults;
 }
 
 function transformVaultManagerMetrics(oraclePrices, vaultManagerMetrics, vaultManagerGovernances) {
