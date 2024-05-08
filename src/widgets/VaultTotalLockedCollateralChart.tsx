@@ -3,12 +3,14 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { formatDay } from '@/utils';
 import { colors } from '@/components/palette';
+import VaultChartsSkeleton from '@/components/VaultChartsSkeleton';
 
 type Props = {
   title?: string;
   data: Array<object>;
   tokenNames: Array<string>;
   isLoading: boolean;
+  error: any;
 };
 
 export function VaultTotalLockedCollateralChart({
@@ -16,21 +18,10 @@ export function VaultTotalLockedCollateralChart({
   data,
   tokenNames,
   isLoading,
+  error,
 }: Props) {
   if (isLoading || !data) {
-    return (
-      <Card className="my-4 mb-4">
-        <CardHeader>
-          <CardTitle>{title}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
-          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
-          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
-          <Skeleton className="w-full h-[20px] rounded-full mb-2" />
-        </CardContent>
-      </Card>
-    );
+    return <VaultChartsSkeleton title={title} isLoading={isLoading} error={error} />;
   }
 
   const barChart = (
