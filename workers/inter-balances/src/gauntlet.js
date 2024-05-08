@@ -2,46 +2,46 @@ export async function handleGauntletRequest(env) {
   console.log('Fetching channels...');
   const graphqlQuery = {
     query: `
-			{
-				oraclePrices {
-					nodes {
-						typeInName
-						typeOutName
-						typeInAmount
-						typeOutAmount
-						blockTime
-					}
-				}
-				oraclePriceDailies (filter: {dateKey: { greaterThan: 20240501 } }, orderBy: DATE_KEY_DESC) {
-					nodes {
-						typeInName
-						typeOutName
-						typeInAmountLast
-						typeOutAmountLast
-						blockTimeLast
-					}
-				}
-				vaultManagerMetrics {
-					nodes {
-						id
-						blockTime
-						totalCollateral
-						totalDebt
-						totalCollateralSold
-						totalShortfallReceived
-						liquidatingCollateralValue
-          	liquidatingDebtBrand
-          	liquidatingCollateralBrand
-					}
-				}
-				vaultManagerGovernances  {
-					nodes {
-						id
-						debtLimit
+      {
+        oraclePrices {
+          nodes {
+            typeInName
+            typeOutName
+            typeInAmount
+            typeOutAmount
+            blockTime
+          }
+        }
+        oraclePriceDailies (filter: {dateKey: { greaterThan: 20240501 } }, orderBy: DATE_KEY_DESC) {
+          nodes {
+            typeInName
+            typeOutName
+            typeInAmountLast
+            typeOutAmountLast
+            blockTimeLast
+          }
+        }
+        vaultManagerMetrics {
+          nodes {
+            id
+            blockTime
+            totalCollateral
+            totalDebt
+            totalCollateralSold
+            totalShortfallReceived
+            liquidatingCollateralValue
+            liquidatingDebtBrand
+            liquidatingCollateralBrand
+          }
+        }
+        vaultManagerGovernances  {
+          nodes {
+            id
+            debtLimit
             liquidationMarginNumerator
             liquidationMarginDenominator
-					}
-				}
+          }
+        }
         vaults (filter: {state: {equalTo: "active"}}) {
           nodes {
             id
@@ -52,21 +52,20 @@ export async function handleGauntletRequest(env) {
             lockedValue
             coin
           }
-      }
-    liquidatedVaults: vaults (filter: {state: {equalTo: "liquidated"}}) {
-      nodes {
-        id
-        token
-        balance
-        state
-        debt
-        lockedValue
-        coin
-        liquidatingAt
-      }
-    }
-			}
-		`,
+        }
+        liquidatedVaults: vaults (filter: {state: {equalTo: "liquidated"}}) {
+          nodes {
+            id
+            token
+            balance
+            state
+            debt
+            lockedValue
+            coin
+            liquidatingAt
+          }
+        }
+      }`,
   };
 
   const apiUrl = 'https://api.subquery.network/sq/agoric-labs/mainnet__YWdvc';
