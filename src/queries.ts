@@ -1,3 +1,5 @@
+import { getDateKey } from "./utils";
+
 export const PSM_DASHBOARD_QUERY = `
 query {
     _metadata {
@@ -42,7 +44,7 @@ query {
         }`
 )}
 }`
-
+const currentDate = new Date();
 export const VAULTS_DASHBOARD_QUERY = `
 query {
     vaultManagerMetrics {
@@ -71,6 +73,18 @@ query {
         nodes {
             id
             debtLimit
+        }
+    }
+    oraclePriceDailies(filter: {
+        dateKey: { 
+            in: [${getDateKey(currentDate).key}, ${getDateKey(currentDate, 1).key}] 
+        }
+    }) {
+        nodes {
+            typeInName
+            typeInAmountLast
+            typeOutAmountLast
+            dateKey
         }
     }
 }`;
@@ -209,7 +223,6 @@ query {
         }
     }`)}
 }`
-
 
 export const INTER_DASHBOARD_QUERY = `
 query {

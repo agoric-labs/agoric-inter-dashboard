@@ -43,6 +43,13 @@ type VaultDashboardManagerGovernancesNode = {
   id: string;
   debtLimit: number;
 };
+type OraclePriceDailies = {
+  priceFeedName: string;
+  typeInName: string;
+  dateKey: number;
+  typeInAmountLast: number
+  typeOutAmountLast: number
+}
 
 type VaultsDashboardResponse = {
   boardAuxes: { nodes: Array<{ allegedName: string; decimalPlaces: number }> };
@@ -51,6 +58,7 @@ type VaultsDashboardResponse = {
     nodes: Array<VaultManagerMetricsNode>;
   };
   vaultManagerGovernances: { nodes: Array<VaultDashboardManagerGovernancesNode> };
+  oraclePriceDailies: { nodes: Array<OraclePriceDailies> };
 };
 
 type OpenVaultsResponse = {
@@ -68,9 +76,11 @@ type VaultManagerMetricsResponse = {
 };
 
 type GraphData = { key: number; x: string };
-
+type OraclePriceDailiesArr = {
+  oracleDailyPrices: Array<OraclePriceDailies>;
+};
 export type VaultsDashboardData = {
-  [key: string]: VaultManagerMetricsNode & OraclePriceNode & VaultDashboardManagerGovernancesNode;
+  [key: string]: VaultManagerMetricsNode & OraclePriceNode & VaultDashboardManagerGovernancesNode & OraclePriceDailiesArr;
 };
 export type OpenVaultsData = Array<VaultsNode & OraclePriceNode & VaultManagerGovernancesNode>;
 
@@ -95,6 +105,18 @@ export function Vaults() {
       return { ...agg, [tokenName]: node };
     }, {});
 
+    const oracleDailyPrices: { [key: string]: OraclePriceDailies[] } = {};
+    vaultsDashboardResponse?.oraclePriceDailies?.nodes?.forEach((node) => {
+      const typeInName = node.typeInName;
+
+      if (!(typeInName in oracleDailyPrices)) {
+        oracleDailyPrices[typeInName] = [];
+      }
+
+      oracleDailyPrices[typeInName].push(node);
+    });
+
+
   const vaultsDashboardManagerGovernances: { [key: string]: VaultDashboardManagerGovernancesNode } =
     vaultsDashboardResponse?.vaultManagerGovernances?.nodes?.reduce((agg, node) => {
       const idSegments = node.id.split('.');
@@ -117,6 +139,7 @@ export function Vaults() {
           ...vaultsDashboardManagerGovernances[managerName],
           ...vaultDashboardOraclePrices[node.liquidatingCollateralBrand],
           ...node,
+          oracleDailyPrices: [...(oracleDailyPrices[node.liquidatingCollateralBrand] || [])],
         },
       };
     },
