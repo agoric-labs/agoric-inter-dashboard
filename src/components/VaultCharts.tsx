@@ -32,21 +32,21 @@ export function VaultCharts({ tokenNames, vaultsDataIsLoading, error }: Props) {
 
   const graphDataMap: { [key: number]: GraphData } = {};
   tokenNames.forEach((tokenName) => {
-    const dailyOracles = dailyMetricsResponse?.[`${tokenName}_oracle`].nodes.reduce(
-      (agg: object, dailyOracleData: { dateKey: string }) => ({ ...agg, [dailyOracleData.dateKey]: dailyOracleData }),
+    const dailyOracles = dailyMetricsResponse?.[`${tokenName}_oracle`]?.nodes.reduce(
+      (agg: object, dailyOracleData: { dateKey: string }) => ({ ...agg, [dailyOracleData?.dateKey]: dailyOracleData }),
       {},
     );
 
     dailyMetricsResponse?.[tokenName]?.nodes.forEach((dailyTokenMetrics: any) => {
-      const oracle = dailyOracles[dailyTokenMetrics.dateKey] || { typeOutAmountLast: 0, typeInAmountLast: 1 };
-      graphDataMap[dailyTokenMetrics.dateKey] = {
-        ...graphDataMap[dailyTokenMetrics.dateKey],
-        x: dailyTokenMetrics.blockTimeLast.slice(0, 10),
-        key: dailyTokenMetrics.dateKey,
-        [`${dailyTokenMetrics.liquidatingCollateralBrand}-total_collateral`]:
-          (dailyTokenMetrics.totalCollateralLast / 1_000_000) * (oracle.typeOutAmountLast / oracle.typeInAmountLast),
-        [`${dailyTokenMetrics.liquidatingCollateralBrand}-total_minted`]:
-          dailyTokenMetrics.totalDebtSum / dailyTokenMetrics.metricsCount / 1000_000,
+      const oracle = dailyOracles[dailyTokenMetrics?.dateKey] || { typeOutAmountLast: 0, typeInAmountLast: 1 };
+      graphDataMap[dailyTokenMetrics?.dateKey] = {
+        ...graphDataMap[dailyTokenMetrics?.dateKey],
+        x: dailyTokenMetrics?.blockTimeLast?.slice(0, 10),
+        key: dailyTokenMetrics?.dateKey,
+        [`${dailyTokenMetrics?.liquidatingCollateralBrand}-total_collateral`]:
+          (dailyTokenMetrics?.totalCollateralLast / 1_000_000) * (oracle.typeOutAmountLast / oracle.typeInAmountLast),
+        [`${dailyTokenMetrics?.liquidatingCollateralBrand}-total_minted`]:
+          dailyTokenMetrics?.totalDebtSum / dailyTokenMetrics?.metricsCount / 1000_000,
       };
     });
   });
