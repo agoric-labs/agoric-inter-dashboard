@@ -30,8 +30,9 @@ exports[`InterProtocol Snapshot tests should match snapshot when data is loaded 
         >
           <div
             class="text-2xl font-bold"
+            data-testid="inter-protocol-minted"
           >
-            1.62M
+            1.57M
           </div>
         </div>
       </div>
@@ -52,8 +53,9 @@ exports[`InterProtocol Snapshot tests should match snapshot when data is loaded 
         >
           <div
             class="text-2xl font-bold"
+            data-testid="inter-protocol-mint-limit"
           >
-            9.73M
+            16.7M
           </div>
         </div>
       </div>
@@ -74,8 +76,75 @@ exports[`InterProtocol Snapshot tests should match snapshot when data is loaded 
         >
           <div
             class="text-2xl font-bold"
+            data-testid="inter-protocol-mint-limit-utilized"
           >
-            16.68%
+            9.38%
+          </div>
+        </div>
+      </div>
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+        >
+          <h3
+            class="tracking-tight text-sm font-medium"
+          >
+            Total Interchain IST
+          </h3>
+        </div>
+        <div
+          class="p-6 pt-0"
+        >
+          <div
+            class="text-2xl font-bold"
+          >
+            421.28K
+          </div>
+        </div>
+      </div>
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+        >
+          <h3
+            class="tracking-tight text-sm font-medium"
+          >
+            % of Interchain IST
+          </h3>
+        </div>
+        <div
+          class="p-6 pt-0"
+        >
+          <div
+            class="text-2xl font-bold"
+          >
+            26.9%
+          </div>
+        </div>
+      </div>
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+        >
+          <h3
+            class="tracking-tight text-sm font-medium"
+          >
+            Smart Wallets Provisioned
+          </h3>
+        </div>
+        <div
+          class="p-6 pt-0"
+        >
+          <div
+            class="text-2xl font-bold"
+          >
+            1651
           </div>
         </div>
       </div>
@@ -108,8 +177,9 @@ exports[`InterProtocol Snapshot tests should match snapshot when data is loaded 
           >
             <div
               class="text-2xl font-bold"
+              data-testid="inter-protocol-total-reserve-assets"
             >
-              $84.56K
+              $99.38K
             </div>
           </div>
         </div>
@@ -130,8 +200,9 @@ exports[`InterProtocol Snapshot tests should match snapshot when data is loaded 
           >
             <div
               class="text-2xl font-bold"
+              data-testid="inter-protocol-total-minted"
             >
-              1.62M
+              1.57M
             </div>
           </div>
         </div>
@@ -152,8 +223,9 @@ exports[`InterProtocol Snapshot tests should match snapshot when data is loaded 
           >
             <div
               class="text-2xl font-bold"
+              data-testid="inter-protocol-total-collateral-value-locked"
             >
-              $5.76M
+              $5.00M
             </div>
           </div>
         </div>
@@ -174,8 +246,9 @@ exports[`InterProtocol Snapshot tests should match snapshot when data is loaded 
           >
             <div
               class="text-2xl font-bold"
+              data-testid="inter-protocol-ist-minted-vaults"
             >
-              1.62M
+              1.53M
             </div>
           </div>
         </div>
@@ -196,8 +269,9 @@ exports[`InterProtocol Snapshot tests should match snapshot when data is loaded 
           >
             <div
               class="text-2xl font-bold"
+              data-testid="inter-protocol-total-psm-assets"
             >
-              $468,878.14M
+              $28.77K
             </div>
           </div>
         </div>
@@ -218,8 +292,9 @@ exports[`InterProtocol Snapshot tests should match snapshot when data is loaded 
           >
             <div
               class="text-2xl font-bold"
+              data-testid="inter-protocol-ist-minted-psm"
             >
-              4.11K
+              32.79K
             </div>
           </div>
         </div>
@@ -240,8 +315,9 @@ exports[`InterProtocol Snapshot tests should match snapshot when data is loaded 
           >
             <div
               class="text-2xl font-bold"
+              data-testid="inter-protocol-reserve-shortfall"
             >
-              $5.75K
+              $7.84K
             </div>
           </div>
         </div>
@@ -487,7 +563,7 @@ exports[`InterProtocol Snapshot tests should match snapshot when data is loading
       class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
     />
     <div
-      class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+      class="animate-pulse bg-muted w-full h/[20px] rounded-full mb-2"
     />
     <div
       class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"

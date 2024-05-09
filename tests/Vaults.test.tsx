@@ -2,8 +2,8 @@ import React from 'react';
 import useSWR from 'swr';
 import { render } from '@testing-library/react';
 import { Vaults } from '@/pages/Vaults';
-import { VAULTS_DASHBOARD_QUERY, OPEN_VAULTS_QUERY, VAULTS_GRAPH_TOKENS_QUERY } from '@/queries';
-import { graphDataMock, openVaultsDataMock, dashboardDataMock, graphNodesDataMock } from './__mocks__/Vaults';
+import { VAULTS_DASHBOARD_QUERY } from '@/queries';
+import { graphDataMock, dashboardDataMock } from './__mocks__/Vaults';
 
 jest.mock('swr', () => {
   const originalModule = jest.requireActual('@/utils');
@@ -37,8 +37,6 @@ describe('Vaults Dashboard Snapshot tests', () => {
       const mockData =
         {
           [VAULTS_DASHBOARD_QUERY]: dashboardDataMock,
-          [OPEN_VAULTS_QUERY]: openVaultsDataMock,
-          [VAULTS_GRAPH_TOKENS_QUERY]: graphNodesDataMock,
         }[query] || graphDataMock;
       return { data: mockData, error: null, isLoading: false };
     });
