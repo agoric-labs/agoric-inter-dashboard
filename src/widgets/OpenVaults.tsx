@@ -32,11 +32,13 @@ export function OpenVaults({ title = 'Open Vaults', data, isLoading }: Props) {
   const rows = data.map((vaultData) => {
     const vaultIdx = vaultData.id.split('.').at(-1)?.split('vault')[1] || '';
     const collateralValueUsd = ((vaultData.typeOutAmount / 1_000_000) * vaultData.balance) / 1_000_000;
-    const liquidationRatio = vaultData?.liquidationMarginNumerator / vaultData?.liquidationMarginDenominator;
+    const liquidationRatio = (vaultData?.liquidationMarginNumerator ?? 0) / (vaultData?.liquidationMarginDenominator ?? 1);
     const istDebtAmount = vaultData.debt / 1_000_000;
     const collateralAmount = vaultData.balance / 1_000_000;
     const liquidationPrice = (istDebtAmount * liquidationRatio) / collateralAmount;
     const currentCollateralPrice = vaultData.typeOutAmount / 1_000_000;
+    const collateralizationRatio = collateralValueUsd / (vaultData.debt / 1_000_000);
+
     return {
       vault_idx: vaultIdx,
       collateral_type: <CollateralWithIcon collateralType={vaultData.token} />,
@@ -49,7 +51,7 @@ export function OpenVaults({ title = 'Open Vaults', data, isLoading }: Props) {
       liquidation_margin: liquidationRatio,
       liquidation_price: liquidationPrice,
       liquidation_cushion: currentCollateralPrice / (liquidationPrice - 1),
-      collateralization_ratio: collateralValueUsd / (vaultData.debt / 1_000_000),
+      collateralization_ratio: collateralizationRatio === Infinity ? 0 : collateralizationRatio,
     };
   });
 
