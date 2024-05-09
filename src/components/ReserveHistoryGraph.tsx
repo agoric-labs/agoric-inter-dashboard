@@ -1,4 +1,3 @@
-
 import useSWR from 'swr';
 import { AxiosError, AxiosResponse } from 'axios';
 import { ReserveHistory } from '@/widgets/ReserveHistory';
@@ -10,7 +9,11 @@ type GraphData = { key: number; x: string; [key: string]: any };
 
 const ReserveHistoryGraph = ({ tokenNames }: { tokenNames: string[] }) => {
   const { key: startDateKey } = getDateKey(new Date(), GRAPH_DAYS);
-  const { data: dailyMetricsData, isLoading: graphDataIsLoading } = useSWR<AxiosResponse, AxiosError>(
+  const {
+    data: dailyMetricsData,
+    isLoading: graphDataIsLoading,
+    error,
+  } = useSWR<AxiosResponse, AxiosError>(
     tokenNames.length ? RESERVE_DAILY_METRICS_QUERY(tokenNames, startDateKey) : null,
     subQueryFetcher,
   );
@@ -77,7 +80,14 @@ const ReserveHistoryGraph = ({ tokenNames }: { tokenNames: string[] }) => {
     }, [])
     .slice(-1 * GRAPH_DAYS);
 
-  return <ReserveHistory data={graphDataList} tokenNames={tokenNames} isLoading={graphDataIsLoading} />;
+  return (
+    <ReserveHistory
+      data={graphDataList}
+      tokenNames={tokenNames}
+      isLoading={graphDataIsLoading}
+      error={error?.message}
+    />
+  );
 };
 
 export default ReserveHistoryGraph;

@@ -1,9 +1,8 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { formatDay } from '@/utils';
 import { colors } from '@/components/palette';
-import VaultChartsSkeleton from '@/components/VaultChartsSkeleton';
+import ChartsSkeleton from '@/components/ChartsSkeleton';
 
 type Props = {
   title?: string;
@@ -21,7 +20,7 @@ export function VaultTotalLockedCollateralChart({
   error,
 }: Props) {
   if (isLoading || !data) {
-    return <VaultChartsSkeleton title={title} isLoading={isLoading} error={error} />;
+    return <ChartsSkeleton title={title} isLoading={isLoading} error={error} />;
   }
 
   const barChart = (

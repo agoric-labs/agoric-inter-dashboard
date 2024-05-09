@@ -4,7 +4,7 @@ import { VaultTotalLockedCollateralChart } from '@/widgets/VaultTotalLockedColla
 import { VaultTotalMintedISTChart } from '@/widgets/VaultTotalMintedISTChart';
 import { VAULTS_DAILY_METRICS_QUERY } from '@/queries';
 import { subQueryFetcher } from '@/utils';
-import VaultChartsSkeleton from './VaultChartsSkeleton';
+import ChartsSkeleton from './ChartsSkeleton';
 
 type Props = {
   tokenNames: Array<string>;
@@ -17,8 +17,8 @@ export function VaultCharts({ tokenNames, vaultsDataIsLoading, error }: Props) {
   if (vaultsDataIsLoading || error) {
     return (
       <>
-        <VaultChartsSkeleton title="Total Locked Collateral" isLoading={vaultsDataIsLoading} error={error} />
-        <VaultChartsSkeleton title="Total Minted IST" isLoading={vaultsDataIsLoading} error={error} />
+        <ChartsSkeleton title="Total Locked Collateral" isLoading={vaultsDataIsLoading} error={error} />
+        <ChartsSkeleton title="Total Minted IST" isLoading={vaultsDataIsLoading} error={error} />
       </>
     );
   }
