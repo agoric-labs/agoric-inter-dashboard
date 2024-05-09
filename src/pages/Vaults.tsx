@@ -200,12 +200,12 @@ export function Vaults() {
       <PageHeader title="Vaults" />
       <PageContent>
         <ValueCardGrid>
-          <VaultManagerCountCard data={dashboardData} isLoading={isLoading} />
-          <ActiveVaultCountCard data={openVaults} isLoading={isLoading} />
+          <VaultManagerCountCard totalCollateralTypes={Object.keys(dashboardData)?.length} isLoading={isLoading} />
+          <ActiveVaultCountCard activeVaults={openVaults?.length} isLoading={isLoading} />
           <VaultTotalLockedCollateralValueCard data={dashboardData} isLoading={isLoading} />
         </ValueCardGrid>
         <TokenPrices data={dashboardData} isLoading={isLoading} />
-        <VaultCharts tokenNames={tokenNames} vaultsDataIsLoading={isLoading} error={error}/>
+        <VaultCharts tokenNames={tokenNames} vaultsDataIsLoading={isLoading} error={error} />
         <hr className="my-5" />
         <VaultManagers data={dashboardData} isLoading={isLoading} />
         <hr className="my-5" />

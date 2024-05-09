@@ -1,17 +1,20 @@
 import { ValueCard } from '@/components/ValueCard';
 import { Skeleton } from '@/components/ui/skeleton';
-import { VaultsDashboardData } from '@/pages/Vaults';
 
 type Props = {
   title?: string;
-  data: VaultsDashboardData;
+  totalCollateralTypes: number;
   isLoading: boolean;
 };
 
-export function VaultManagerCountCard({ title = 'Total Collateral Types', data, isLoading }: Props) {
-  if (isLoading || !data) {
+export function VaultManagerCountCard({
+  title = 'Total Collateral Types',
+  totalCollateralTypes = 0,
+  isLoading,
+}: Props) {
+  if (isLoading) {
     return <ValueCard title={title} value={<Skeleton className="w-[50px] h-[32px] rounded-full" />} />;
   }
 
-  return <ValueCard title={title} value={Object.keys(data).length} />;
+  return <ValueCard title={title} value={totalCollateralTypes} />;
 }
