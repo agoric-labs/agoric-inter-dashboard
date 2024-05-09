@@ -1,77 +1,9 @@
+import { graphqlQuery } from './queries.js';
+import { SUBQUERY_URL } from './constants.js';
 export async function handleGauntletRequest(env) {
-  console.log('Fetching channels...');
-  const graphqlQuery = {
-    query: `
-      {
-        oraclePrices {
-          nodes {
-            typeInName
-            typeOutName
-            typeInAmount
-            typeOutAmount
-            blockTime
-          }
-        }
-        oraclePriceDailies (filter: {dateKey: { greaterThan: 20240501 } }, orderBy: DATE_KEY_DESC) {
-          nodes {
-            typeInName
-            typeOutName
-            typeInAmountLast
-            typeOutAmountLast
-            blockTimeLast
-          }
-        }
-        vaultManagerMetrics {
-          nodes {
-            id
-            blockTime
-            totalCollateral
-            totalDebt
-            totalCollateralSold
-            totalShortfallReceived
-            liquidatingCollateralValue
-            liquidatingDebtBrand
-            liquidatingCollateralBrand
-          }
-        }
-        vaultManagerGovernances  {
-          nodes {
-            id
-            debtLimit
-            liquidationMarginNumerator
-            liquidationMarginDenominator
-          }
-        }
-        vaults (filter: {state: {equalTo: "active"}}) {
-          nodes {
-            id
-            token
-            balance
-            state
-            debt
-            lockedValue
-            coin
-          }
-        }
-        liquidatedVaults: vaults (filter: {state: {equalTo: "liquidated"}}) {
-          nodes {
-            id
-            token
-            balance
-            state
-            debt
-            lockedValue
-            coin
-            liquidatingAt
-          }
-        }
-      }`,
-  };
-
-  const apiUrl = 'https://api.subquery.network/sq/agoric-labs/mainnet__YWdvc';
 
   try {
-    const response = await fetch(apiUrl, {
+    const response = await fetch(SUBQUERY_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -94,9 +26,9 @@ export async function handleGauntletRequest(env) {
     return new Response(
       JSON.stringify({
         managers: managersData,
-        oraclePrices: oraclePricesData,
-        vaults: vaultsData,
-        liquidatedVaults: liquidatedVaultsData,
+        oracle_rices: oraclePricesData,
+        open_vaults: vaultsData,
+        liquidated_vaults: liquidatedVaultsData,
       }),
       {
         headers: {
@@ -134,24 +66,41 @@ function transformLiquidatedVaults(vaults, vaultManagerGovernances) {
       return splittedGovernanceNodeID[3] === splittedVaultManagerID[3];
     });
 
-    const managerIdx = vaultManagerGovernanceNode?.id?.split('.')[3];
+    const managerIdx = vaultManagerGovernanceNode?.id?.match(/manager(\d+)/)[1];
     const pattern = /vault(\d+)/;
     const match = vaultData?.id?.match(pattern);
     const vaultIdx = match ? match[1] : '';
 
     const liquidatingTimeStampInSeconds = Math.round(new Date(vaultData.liquidatingAt).getTime() / 1000);
 
+			/*
+			"collateral_type": "ATOM",
+      "day": "2024-05-09T00:00:00.000",
+      "day.day": "2024-05-09T00:00:00.000",
+      "debt_type": "IST",
+      "last_state": "liquidated",
+      "liquidated_enter_time": 1702877045,
+      "liquidated_return_amount_avg": 4.416504,
+      "liquidated_return_amount_usd_avg": 47.975299328928,
+      "liquidating_collateral_amount_avg": 4.416504,
+      "liquidating_debt_amount_avg": 25.125,
+      "liquidating_enter_time": 1702875602,
+      "liquidating_rate": 10.862732,
+      "liquidation_margin_avg": 1.9,
+      "manager_idx": "0",
+      "vault_idx": "62"
+			*/
     return {
       collateral_type: vaultData.token,
       debt_type: 'IST',
       last_state: vaultData.state,
       liquidated_enter_time: liquidatingTimeStampInSeconds,
-      liquidated_return_amount_avg: 'DUMMY',
-      liquidated_return_amount_usd_avg: 'DUMMY',
-      liquidating_collateral_amount_avg: 'DUMMY',
-      liquidating_debt_amount_avg: 'DUMMY',
-      liquidating_rate: 'DUMMY',
-      liquidation_margin_avg: 'DUMMY',
+      liquidated_return_amount_avg: 0,
+      liquidated_return_amount_usd_avg: 0,
+      liquidating_collateral_amount_avg: 0,
+      liquidating_debt_amount_avg: 0,
+      liquidating_rate: 0,
+      liquidation_margin_avg: 0,
       manager_idx: managerIdx,
       vault_idx: vaultIdx,
     };
@@ -182,20 +131,22 @@ function transformVaults(vaults, oraclePrices, vaultManagerGovernances) {
     const collateralAmount = vaultData.balance / 1_000_000;
     const liquidationPrice = (istDebtAmount * liquidationRatio) / collateralAmount;
     const currentCollateralPrice = rate;
+		const managerIdx = vaultManagerGovernanceNode?.id?.match(/manager(\d+)/)[1];
 
     return {
-      vault_idx: vaultIdx,
-      collateral_type: vaultData.token,
-      debt_type: 'IST',
       collateral_amount: collateralAmount,
-      current_collateral_price: currentCollateralPrice,
       collateral_amount_current_usd: collateralValueUsd,
+      collateral_type: vaultData.token,
+      collateralization_ratio: collateralValueUsd / (vaultData.debt / 1_000_000),
+      current_collateral_price: currentCollateralPrice,
       debt_amount: istDebtAmount,
+      debt_type: 'IST',
       ist_debt_amount: istDebtAmount,
+      liquidation_cushion: currentCollateralPrice / (liquidationPrice - 1),
       liquidation_margin: liquidationRatio,
       liquidation_price: liquidationPrice,
-      liquidation_cushion: currentCollateralPrice / (liquidationPrice - 1),
-      collateralization_ratio: collateralValueUsd / (vaultData.debt / 1_000_000),
+      manager_idx: managerIdx,
+      vault_ix: vaultIdx,
     };
   });
 
