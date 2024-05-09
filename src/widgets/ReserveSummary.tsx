@@ -17,7 +17,7 @@ export function ReserveSummary({ title = 'Total Reserve Assets', data, isLoading
     (agg, node) =>
       agg +
       Object.values(node.allocations).reduce((agg_, node_) => {
-        const allocationInUsd = ((Number(node_.value) / 1_000_000) * Number(node_.typeOutAmount || 0)) / 1_000_000;
+        const allocationInUsd = ((Number(node_.value) / 1_000_000) * Number(node_.typeOutAmount || 1_000_000)) / 1_000_000;
         return agg_ + allocationInUsd;
       }, 0),
     0,
