@@ -5,17 +5,14 @@ import { PageHeader } from '@/components/PageHeader';
 import { PageContent } from '@/components/PageContent';
 import { TokenPrices } from '@/widgets/TokenPrices';
 import { ActiveVaultCountCard } from '@/widgets/ActiveVaultCountCard';
-import { VaultTotalLockedCollateralChart } from '@/widgets/VaultTotalLockedCollateralChart';
-import { VaultTotalMintedISTChart } from '@/widgets/VaultTotalMintedISTChart';
 import { OpenVaults } from '@/widgets/OpenVaults';
 import { VaultManagers } from '@/widgets/VaultManagers';
 import { VaultManagerCountCard } from '@/widgets/VaultManagerCountCard';
 import { VaultTotalLockedCollateralValueCard } from '@/widgets/VaultTotalLockedCollateralValueCard';
-import {
-  VAULTS_DASHBOARD_QUERY,
-  VAULTS_DAILY_METRICS_QUERY,
-} from '@/queries';
+import { VAULTS_DASHBOARD_QUERY } from '@/queries';
 import { subQueryFetcher } from '@/utils';
+import { VaultCharts } from '@/components/VaultCharts';
+import { ErrorAlert } from '@/components/ErrorAlert';
 
 type OraclePriceNode = { priceFeedName: string; typeInAmount: number; typeOutAmount: number };
 
@@ -65,8 +62,6 @@ type VaultsDashboardResponse = {
   oraclePriceDailies: { nodes: Array<OraclePriceDailiesNode> };
 };
 
-type GraphData = { key: number; x: string };
-
 type OraclePriceDailiesArr = {
   oracleDailyPrices: Array<OraclePriceDailiesNode>;
 };
@@ -76,158 +71,145 @@ type OracleDailyPriceNodesData = { [key: string]: OraclePriceDailiesNode[] };
 type VaultManagerGovernancesNodesData = { [key: string]: VaultManagerGovernancesNode };
 
 export type VaultsDashboardData = {
-  [key: string]: VaultManagerMetricsNode &
-    OraclePriceNode &
-    VaultManagerGovernancesNode &
-    VaultsNode &
-    OraclePriceDailiesArr;
+  [key: string]: VaultManagerMetricsNode & OraclePriceNode & VaultManagerGovernancesNode & OraclePriceDailiesArr;
 };
+
 export type OpenVaultsData = Array<VaultsNode & OraclePriceNode & VaultManagerGovernancesNode>;
 
-export function Vaults() {
-  const { data, isLoading: vaultsDashboardIsLoading } = useSWR<AxiosResponse, AxiosError>(
-    VAULTS_DASHBOARD_QUERY,
-    subQueryFetcher,
-  );
-
-  const vaultsDashboardResponse: VaultsDashboardResponse = data?.data?.data;
-
-  const oraclePrices: OraclePriceNodesData = vaultsDashboardResponse?.oraclePrices?.nodes?.reduce((agg, node) => {
+function processOraclePrices(nodes: OraclePriceNode[]): OraclePriceNodesData {
+  let obj: OraclePriceNodesData = {};
+  return nodes?.reduce((agg, node) => {
     const nameSegments = node.priceFeedName.split('-');
     if (nameSegments.length !== 2) {
       throw new Error(`Invalid priceFeedName: ${node.priceFeedName}`);
     }
+
     const tokenName = nameSegments[0];
-    return { ...agg, [tokenName]: node };
-  }, {});
+    agg[tokenName] = node;
+    return agg;
+  }, obj);
+}
 
-    const oracleDailyPrices: OracleDailyPriceNodesData = {};
-    vaultsDashboardResponse?.oraclePriceDailies?.nodes?.forEach((node) => {
-      const typeInName = node.typeInName;
+function processOracleDailyPrices(nodes: OraclePriceDailiesNode[]): OracleDailyPriceNodesData {
+  const obj: OracleDailyPriceNodesData = {};
+  return nodes?.reduce((agg, node) => {
+    const typeInName = node.typeInName;
 
-      if (!(typeInName in oracleDailyPrices)) {
-        oracleDailyPrices[typeInName] = [];
-      }
+    if (!agg[typeInName]) {
+      agg[typeInName] = [];
+    }
 
-      oracleDailyPrices[typeInName].push(node);
-    });
+    agg[typeInName].push(node);
+    return agg;
+  }, obj);
+}
 
-  const managerGovernancesNodes: VaultManagerGovernancesNodesData =
-    vaultsDashboardResponse?.vaultManagerGovernances?.nodes?.reduce((agg, node) => {
-      const idSegments = node.id.split('.');
-      if (idSegments.length < 4) {
-        throw new Error(`Node ID does not contain enough segments: ${node.id}`);
-      }
-      const managerName = idSegments.slice(0, 4).join('.');
-      return { ...agg, [managerName]: node };
-    }, {});
+function processManagerGovernancesNodes(nodes: VaultManagerGovernancesNode[]): VaultManagerGovernancesNodesData {
+  let obj: VaultManagerGovernancesNodesData = {};
+  return nodes?.reduce((agg, node) => {
+    const idSegments = node.id.split('.');
+    if (idSegments.length < 4) {
+      throw new Error(`Node ID does not contain enough segments: ${node.id}`);
+    }
+    const managerName = idSegments.slice(0, 4).join('.');
+    agg[managerName] = node;
+    return agg;
+  }, obj);
+}
 
-  const vaultsDashboardData: VaultsDashboardData = vaultsDashboardResponse?.vaultManagerMetrics?.nodes?.reduce(
-    (agg, node) => {
-      const idSegments = node.id.split('.');
-      if (idSegments.length < 4) {
-        throw new Error(`Node ID does not contain enough segments: ${node.id}`);
-      }
-      const managerName = idSegments.slice(0, 4).join('.');
-      return {
-        ...agg,
-        [node.liquidatingCollateralBrand]: {
-          ...managerGovernancesNodes[managerName],
-          ...oraclePrices[node.liquidatingCollateralBrand],
-          ...node,
-          oracleDailyPrices: [...(oracleDailyPrices[node.liquidatingCollateralBrand] || [])],
-        },
-      };
-    },
-    {},
-  );
-
-  const openVaultsData: OpenVaultsData = vaultsDashboardResponse?.vaults?.nodes?.map((vaultNode) => {
+function processOpenVaultsData(
+  nodes: VaultsNode[],
+  oraclePrices: OraclePriceNodesData,
+  managerGovernancesNodes: VaultManagerGovernancesNodesData,
+): OpenVaultsData {
+  let arr: OpenVaultsData = [];
+  const openVaultsData: OpenVaultsData = nodes?.reduce((acc, vaultNode) => {
     const idSegments = vaultNode.id.split('.');
     if (idSegments.length < 4) {
       throw new Error(`Node ID does not contain enough segments: ${vaultNode.id}`);
     }
     const managerName = idSegments.slice(0, 4).join('.');
-    return {
+
+    const combinedData = {
       ...oraclePrices[vaultNode.token],
       ...managerGovernancesNodes[managerName],
       ...vaultNode,
     };
-  });
 
-  const tokenNames = vaultsDashboardResponse?.vaultManagerMetrics?.nodes?.map((node) => node.liquidatingCollateralBrand) || [];
-  const { data: dailyMetricsData, isLoading: graphDataIsLoading } = useSWR<AxiosResponse, AxiosError>(
-    VAULTS_DAILY_METRICS_QUERY(tokenNames),
-    subQueryFetcher,
+    acc.push(combinedData);
+
+    return acc;
+  }, arr);
+
+  return openVaultsData;
+}
+
+function processVaultsData(
+  vaultsDashboardResponse: VaultsDashboardResponse,
+): [OpenVaultsData, VaultsDashboardData, string[]] {
+  const oraclePrices = processOraclePrices(vaultsDashboardResponse?.oraclePrices?.nodes);
+  const oracleDailyPrices = processOracleDailyPrices(vaultsDashboardResponse?.oraclePriceDailies?.nodes);
+  const managerGovernancesNodes = processManagerGovernancesNodes(
+    vaultsDashboardResponse?.vaultManagerGovernances?.nodes,
   );
-  const dailyMetricsResponse = dailyMetricsData?.data?.data;
+  const openVaults: OpenVaultsData = processOpenVaultsData(
+    vaultsDashboardResponse.vaults.nodes,
+    oraclePrices,
+    managerGovernancesNodes,
+  );
+  const tokenNames: string[] =
+    vaultsDashboardResponse?.vaultManagerMetrics?.nodes?.map((node) => node.liquidatingCollateralBrand) || [];
 
-  const graphDataMap: { [key: number]: GraphData } = {};
-  tokenNames.forEach((tokenName) => {
-    const dailyOracles = dailyMetricsResponse?.[`${tokenName}_oracle`].nodes.reduce(
-      (agg: object, dailyOracleData: { dateKey: string }) => ({ ...agg, [dailyOracleData.dateKey]: dailyOracleData }),
-      {},
-    );
+  let dashboardData: VaultsDashboardData = {};
+  vaultsDashboardResponse?.vaultManagerMetrics?.nodes?.reduce((agg, node) => {
+    const idSegments = node.id.split('.');
+    if (idSegments.length < 4) {
+      throw new Error(`Node ID does not contain enough segments: ${node.id}`);
+    }
+    const managerName = idSegments.slice(0, 4).join('.');
+    const liquidatingCollateralBrand = node.liquidatingCollateralBrand;
 
-    dailyMetricsResponse?.[tokenName]?.nodes.forEach((dailyTokenMetrics: any) => {
-      const oracle = dailyOracles[dailyTokenMetrics.dateKey] || { typeOutAmountLast: 0, typeInAmountLast: 1 };
-      graphDataMap[dailyTokenMetrics.dateKey] = {
-        ...graphDataMap[dailyTokenMetrics.dateKey],
-        x: dailyTokenMetrics.blockTimeLast.slice(0, 10),
-        key: dailyTokenMetrics.dateKey,
-        [`${dailyTokenMetrics.liquidatingCollateralBrand}-total_collateral`]:
-          (dailyTokenMetrics.totalCollateralLast / 1_000_000) * (oracle.typeOutAmountLast / oracle.typeInAmountLast),
-        [`${dailyTokenMetrics.liquidatingCollateralBrand}-total_minted`]:
-          dailyTokenMetrics.totalDebtSum / dailyTokenMetrics.metricsCount / 1000_000,
-      };
-    });
-  });
+    agg[liquidatingCollateralBrand] = {
+      ...managerGovernancesNodes[managerName],
+      ...oraclePrices[liquidatingCollateralBrand],
+      ...node,
+      oracleDailyPrices: [...(oracleDailyPrices[liquidatingCollateralBrand] || [])],
+    };
+    return agg;
+  }, dashboardData);
 
-  const sortedGraphDataList = Object.values(graphDataMap)
-    .slice()
-    .sort((a, b) => a.key - b.key);
-  let prevValue: GraphData = sortedGraphDataList[0];
-  const graphDataList: Array<GraphData> = sortedGraphDataList.reduce(
-    (aggArray: Array<GraphData>, graphData: GraphData) => {
-      // filling in missing days
-      const prevDay = new Date(prevValue.x);
-      const nextDay = new Date(graphData.x);
-      const timeDiff = nextDay.getTime() - prevDay.getTime();
-      const diffDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-      const missingDays =
-        diffDays > 1
-          ? Array.from(Array(diffDays - 1).keys()).map((idx) => {
-              const newDate = new Date(prevDay);
-              newDate.setDate(prevDay.getDate() + 1 + idx);
-              const newDateString = newDate.toISOString().slice(0, 10);
-              const dateKey = Number(newDateString.replaceAll('-', ''));
-              return { ...prevValue, x: newDateString, key: dateKey };
-            })
-          : [];
+  return [openVaults, dashboardData, tokenNames];
+}
+export function Vaults() {
+  const { data, isLoading, error } = useSWR<AxiosResponse, AxiosError>(VAULTS_DASHBOARD_QUERY, subQueryFetcher);
 
-      const newAggArray = [...aggArray, ...missingDays, { ...prevValue, ...graphData }];
-      prevValue = { ...prevValue, ...graphData };
-      return newAggArray;
-    },
-    [],
-  ).slice(-90);;
+  if (error) {
+    return <ErrorAlert value={error} />;
+  }
+
+  let openVaults: OpenVaultsData = [];
+  let dashboardData: VaultsDashboardData = {};
+  let tokenNames: string[] = [];
+
+  if (data) {
+    [openVaults, dashboardData, tokenNames] = processVaultsData(data.data.data);
+  }
 
   return (
     <>
       <PageHeader title="Vaults" />
       <PageContent>
         <ValueCardGrid>
-          <VaultManagerCountCard data={vaultsDashboardData} isLoading={vaultsDashboardIsLoading} />
-          <ActiveVaultCountCard data={openVaultsData} isLoading={vaultsDashboardIsLoading} />
-          <VaultTotalLockedCollateralValueCard data={vaultsDashboardData} isLoading={vaultsDashboardIsLoading} />
+          <VaultManagerCountCard data={dashboardData} isLoading={isLoading} />
+          <ActiveVaultCountCard data={openVaults} isLoading={isLoading} />
+          <VaultTotalLockedCollateralValueCard data={dashboardData} isLoading={isLoading} />
         </ValueCardGrid>
-        <TokenPrices data={vaultsDashboardData} isLoading={vaultsDashboardIsLoading} />
-        <VaultTotalLockedCollateralChart data={graphDataList} tokenNames={tokenNames} isLoading={graphDataIsLoading} />
-        <VaultTotalMintedISTChart data={graphDataList} tokenNames={tokenNames} isLoading={graphDataIsLoading} />
+        <TokenPrices data={dashboardData} isLoading={isLoading} />
+        <VaultCharts tokenNames={tokenNames} vaultsDataIsLoading={isLoading} error={error}/>
         <hr className="my-5" />
-        <VaultManagers data={vaultsDashboardData} isLoading={vaultsDashboardIsLoading} />
+        <VaultManagers data={dashboardData} isLoading={isLoading} />
         <hr className="my-5" />
-        <OpenVaults data={openVaultsData} isLoading={vaultsDashboardIsLoading} />
+        <OpenVaults data={openVaults} isLoading={isLoading} />
       </PageContent>
     </>
   );
