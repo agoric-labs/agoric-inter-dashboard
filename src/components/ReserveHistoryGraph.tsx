@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import { AxiosError, AxiosResponse } from 'axios';
 import { ReserveHistory } from '@/widgets/ReserveHistory';
 import { GRAPH_DAYS } from '@/constants';
-import { getDateKey, subQueryFetcher } from '@/utils';
+import { getDateKey, range, subQueryFetcher } from '@/utils';
 import { RESERVE_DAILY_METRICS_QUERY } from '@/queries';
 
 type GraphData = { key: number; x: string; [key: string]: any };
@@ -18,10 +18,10 @@ const ReserveHistoryGraph = ({ tokenNames }: { tokenNames: string[] }) => {
     subQueryFetcher,
   );
   const dailyMetricsResponse = dailyMetricsData?.data.data;
-  const range: number[] = [...Object(Array(90)).keys()].reverse();
+  const dayRange: number[] = range(90).reverse();
 
   const today = new Date();
-  const graphDataMap: { [key: string]: GraphData } = range.reduce((agg, dateNum: number) => {
+  const graphDataMap: { [key: string]: GraphData } = dayRange.reduce((agg, dateNum: number) => {
     const { key: dateKey, formattedDate } = getDateKey(new Date(today), dateNum);
 
     return { ...agg, [dateKey]: { key: dateKey, x: formattedDate } };
@@ -65,7 +65,7 @@ const ReserveHistoryGraph = ({ tokenNames }: { tokenNames: string[] }) => {
       const diffDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
       const missingDays =
         diffDays > 1
-          ? Array.from(Array(diffDays - 1).keys()).map((idx) => {
+          ? range(diffDays - 1).map((idx) => {
               const newDate = new Date(prevDay);
               newDate.setDate(prevDay.getDate() + 1 + idx);
               const newDateString = newDate.toISOString().slice(0, 10);
