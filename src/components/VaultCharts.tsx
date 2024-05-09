@@ -28,9 +28,11 @@ export function VaultCharts({ tokenNames, vaultsDataIsLoading, error }: Props) {
     isLoading: graphDataIsLoading,
     error: graphDataError,
   } = useSWR<AxiosResponse, AxiosError>(VAULTS_DAILY_METRICS_QUERY(tokenNames), subQueryFetcher);
+ 
   const dailyMetricsResponse = dailyMetricsData?.data?.data;
 
   const graphDataMap: { [key: number]: GraphData } = {};
+  
   tokenNames.forEach((tokenName) => {
     const dailyOracles = dailyMetricsResponse?.[`${tokenName}_oracle`]?.nodes.reduce(
       (agg: object, dailyOracleData: { dateKey: string }) => ({ ...agg, [dailyOracleData?.dateKey]: dailyOracleData }),
@@ -38,7 +40,14 @@ export function VaultCharts({ tokenNames, vaultsDataIsLoading, error }: Props) {
     );
 
     dailyMetricsResponse?.[tokenName]?.nodes.forEach((dailyTokenMetrics: any) => {
-      const oracle = dailyOracles[dailyTokenMetrics?.dateKey] || { typeOutAmountLast: 0, typeInAmountLast: 1 };
+      let oracle;
+
+      if (dailyTokenMetrics?.dateKey in dailyOracles) {
+        oracle = dailyOracles[dailyTokenMetrics.dateKey];
+      } else {
+        oracle = { typeOutAmountLast: 0, typeInAmountLast: 1 };
+      }
+
       graphDataMap[dailyTokenMetrics?.dateKey] = {
         ...graphDataMap[dailyTokenMetrics?.dateKey],
         x: dailyTokenMetrics?.blockTimeLast?.slice(0, 10),
