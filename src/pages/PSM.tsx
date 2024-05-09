@@ -103,11 +103,11 @@ export const PSM = () => {
           </div>
           <PSMMintedPoolBalancePie data={queryData} isLoading={isLoading} />
         </div>
-        <PSMHistory
+        {/* <PSMHistory
           data={graphDataList}
           tokenNames={Object.keys(dailyMetricsData?.data.data || {})}
           isLoading={graphDataIsLoading}
-        />
+        /> */}
       </PageContent>
     </>
   );

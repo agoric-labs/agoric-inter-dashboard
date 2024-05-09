@@ -218,7 +218,7 @@ export function Vaults() {
       <PageContent>
         <ValueCardGrid>
           <VaultManagerCountCard data={vaultsDashboardData} isLoading={vaultsDashboardIsLoading} />
-          <ActiveVaultCountCard data={vaultsDashboardData} isLoading={vaultsDashboardIsLoading} />
+          <ActiveVaultCountCard data={openVaultsData} isLoading={vaultsDashboardIsLoading} />
           <VaultTotalLockedCollateralValueCard data={vaultsDashboardData} isLoading={vaultsDashboardIsLoading} />
         </ValueCardGrid>
         <TokenPrices data={vaultsDashboardData} isLoading={vaultsDashboardIsLoading} />

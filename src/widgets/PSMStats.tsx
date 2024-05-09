@@ -29,7 +29,7 @@ export function PSMStats({ data, error, isLoading }: { data: object; error?: Err
               label: coinLabels[coinName] || coinName,
               mint_limit: formattedMintLimit,
               minted_pool_balance: formattedPoolBalance,
-              utilized: (formattedPoolBalance / formattedMintLimit) * 100,
+              utilized: formattedPoolBalance / formattedMintLimit,
             }}
             key={coinName}
           />
