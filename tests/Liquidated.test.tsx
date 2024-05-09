@@ -5,13 +5,10 @@ import { Liquidated } from '@/pages/Liquidated';
 import { LIQUIDATIONS_DASHBOARD, LIQUIDATION_GRAPH_TOKENS_QUERY } from '@/queries';
 import { graphDataMock, dashboardDataMock, graphNodesDataMock } from './__mocks__/Liquidated';
 
-jest.mock('swr', () => {
-  const originalModule = jest.requireActual('@/utils');
-  return {
-    ...originalModule,
-    default: jest.fn(),
-  };
-});
+jest.mock('swr', () => ({
+  default: jest.fn(),
+}));
+
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),

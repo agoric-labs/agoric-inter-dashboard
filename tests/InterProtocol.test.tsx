@@ -5,13 +5,9 @@ import { dashboardDataMock, interchainBalancesMock } from './__mocks__/InterProt
 import { INTER_DASHBOARD_QUERY } from '@/queries';
 import { GET_INTERCHAIN_BALANCES_URL } from '@/constants';
 
-jest.mock('swr', () => {
-  const originalModule = jest.requireActual('@/utils');
-  return {
-    ...originalModule,
+jest.mock('swr', () => ({
     default: jest.fn(),
-  };
-});
+  }));
 
 describe('InterProtocol Snapshot tests', () => {
   it('should match snapshot when data is loaded', async () => {

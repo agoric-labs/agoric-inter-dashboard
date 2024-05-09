@@ -12,13 +12,10 @@ import {
 } from './__mocks__/Reserve';
 import { GET_ACCOUNT_BALANCE_URL, GET_MODULE_ACCOUNTS_URL } from '@/constants';
 
-jest.mock('swr', () => {
-  const originalModule = jest.requireActual('@/utils');
-  return {
-    ...originalModule,
-    default: jest.fn(),
-  };
-});
+jest.mock('swr', () => ({
+  default: jest.fn(),
+}));
+
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),

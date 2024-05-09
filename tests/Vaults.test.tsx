@@ -5,13 +5,10 @@ import { Vaults } from '@/pages/Vaults';
 import { VAULTS_DASHBOARD_QUERY } from '@/queries';
 import { graphDataMock, dashboardDataMock } from './__mocks__/Vaults';
 
-jest.mock('swr', () => {
-  const originalModule = jest.requireActual('@/utils');
-  return {
-    ...originalModule,
+jest.mock('swr', () => ({
     default: jest.fn(),
-  };
-});
+  }));
+
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),

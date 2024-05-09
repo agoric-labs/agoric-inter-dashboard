@@ -5,13 +5,11 @@ import { PSM } from '@/pages/PSM';
 import { PSM_DASHBOARD_QUERY, PSM_GRAPH_TOKENS_QUERY } from '@/queries';
 import { graphDataMock, dashboardDataMock, graphNodesDataMock } from './__mocks__/PSM';
 
-jest.mock('swr', () => {
-  const originalModule = jest.requireActual('@/utils');
-  return {
-    ...originalModule,
-    default: jest.fn(),
-  };
-});
+
+jest.mock('swr', () => ({
+  default: jest.fn(),
+}));
+
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
