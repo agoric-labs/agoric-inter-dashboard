@@ -27,7 +27,7 @@ export const PSMStats = ({ data }: Props) => (
           {formatPrice(data.minted_pool_balance)} of{' '}
           <span className="text-gray-400">{formatPrice(data.mint_limit)}</span>
         </span>
-        <CardDescription>Minted IST {/* / Limit */}</CardDescription>
+        <CardDescription>Minted IST / Limit</CardDescription>
       </div>
       <div className="text-2xl md:text-right mt-4">
         <span className="font-bold">{formatPercent(data.utilized)}</span>

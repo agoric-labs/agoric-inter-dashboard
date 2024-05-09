@@ -1,10 +1,10 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { ValueCard } from '@/components/ValueCard';
-import { VaultsDashboardData } from '@/pages/Vaults';
+import { OpenVaultsData } from '@/pages/Vaults';
 
 type Props = {
   title?: string;
-  data: VaultsDashboardData;
+  data: OpenVaultsData;
   isLoading: boolean;
 };
 
@@ -13,10 +13,5 @@ export function ActiveVaultCountCard({ title = 'Total Active Vaults', data, isLo
     return <ValueCard title={title} value={<Skeleton className="w-[50px] h-[32px] rounded-full" />} />;
   }
 
-  const activeVaultCount = Object.values(data).reduce(
-    (totalCount, tokenData) => totalCount + Number(tokenData.numActiveVaults),
-    0,
-  );
-
-  return <ValueCard title={`${title}`} value={activeVaultCount} />;
+  return <ValueCard title={`${title}`} value={data.length} />;
 }
