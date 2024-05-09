@@ -35,7 +35,7 @@ export const columns: DataColumn<Row>[] = [
   {
     accessorKey: 'dayChange',
     type: 'markupRight',
-    header: '24h Change',
+    header: 'Daily Change',
     size: 50,
   },
 ];
