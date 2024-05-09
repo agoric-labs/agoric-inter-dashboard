@@ -1,0 +1,916 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PSM Dashboard Snapshot tests should match snapshot when data is loaded 1`] = `
+<div>
+  <h1
+    class="flex items-center space-x-4 lg:space-x-6 border-b p-8 text-3xl font-bold tracking-tight"
+  >
+    PSM
+  </h1>
+  <div
+    class="p-8"
+  >
+    <div
+      class="grid gap-4 grid-cols-1 2xl:grid-cols-2"
+    >
+      <div>
+        <div
+          class="grid grid-cols-1 xl:grid-cols-2 gap-4"
+        >
+          <div
+            class="rounded-lg border bg-card text-card-foreground shadow-sm"
+          >
+            <div
+              class="p-6 flex flex-row items-center justify-between space-y-0"
+            >
+              <h3
+                class="text-2xl leading-none tracking-tight font-bold"
+              >
+                USDC
+              </h3>
+            </div>
+            <div
+              class="p-6 pt-0 flex-none md:flex flex-row items-center justify-between"
+            >
+              <div
+                class="text-2xl tracking-tight mt-4"
+              >
+                <span
+                  class="font-bold"
+                  data-testid="psm-minted-ist-USDC"
+                >
+                  $2.73
+                   of
+                   
+                  <span
+                    class="text-gray-400"
+                  >
+                    $1.00M
+                  </span>
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Minted IST / Limit
+                </p>
+              </div>
+              <div
+                class="text-2xl md:text-right mt-4"
+              >
+                <span
+                  class="font-bold"
+                >
+                  0%
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Utilized
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="rounded-lg border bg-card text-card-foreground shadow-sm"
+          >
+            <div
+              class="p-6 flex flex-row items-center justify-between space-y-0"
+            >
+              <h3
+                class="text-2xl leading-none tracking-tight font-bold"
+              >
+                IST ↔ DAI (Gravity)
+              </h3>
+            </div>
+            <div
+              class="p-6 pt-0 flex-none md:flex flex-row items-center justify-between"
+            >
+              <div
+                class="text-2xl tracking-tight mt-4"
+              >
+                <span
+                  class="font-bold"
+                  data-testid="psm-minted-ist-DAI_grv"
+                >
+                  $0.00
+                   of
+                   
+                  <span
+                    class="text-gray-400"
+                  >
+                    $500.00K
+                  </span>
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Minted IST / Limit
+                </p>
+              </div>
+              <div
+                class="text-2xl md:text-right mt-4"
+              >
+                <span
+                  class="font-bold"
+                >
+                  0%
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Utilized
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="rounded-lg border bg-card text-card-foreground shadow-sm"
+          >
+            <div
+              class="p-6 flex flex-row items-center justify-between space-y-0"
+            >
+              <h3
+                class="text-2xl leading-none tracking-tight font-bold"
+              >
+                IST ↔ USDT (Axelar)
+              </h3>
+            </div>
+            <div
+              class="p-6 pt-0 flex-none md:flex flex-row items-center justify-between"
+            >
+              <div
+                class="text-2xl tracking-tight mt-4"
+              >
+                <span
+                  class="font-bold"
+                  data-testid="psm-minted-ist-USDT_axl"
+                >
+                  $26.26
+                   of
+                   
+                  <span
+                    class="text-gray-400"
+                  >
+                    $975.00K
+                  </span>
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Minted IST / Limit
+                </p>
+              </div>
+              <div
+                class="text-2xl md:text-right mt-4"
+              >
+                <span
+                  class="font-bold"
+                >
+                  0%
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Utilized
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="rounded-lg border bg-card text-card-foreground shadow-sm"
+          >
+            <div
+              class="p-6 flex flex-row items-center justify-between space-y-0"
+            >
+              <h3
+                class="text-2xl leading-none tracking-tight font-bold"
+              >
+                IST ↔ USDT (Gravity)
+              </h3>
+            </div>
+            <div
+              class="p-6 pt-0 flex-none md:flex flex-row items-center justify-between"
+            >
+              <div
+                class="text-2xl tracking-tight mt-4"
+              >
+                <span
+                  class="font-bold"
+                  data-testid="psm-minted-ist-USDT_grv"
+                >
+                  $73.61
+                   of
+                   
+                  <span
+                    class="text-gray-400"
+                  >
+                    $1.13M
+                  </span>
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Minted IST / Limit
+                </p>
+              </div>
+              <div
+                class="text-2xl md:text-right mt-4"
+              >
+                <span
+                  class="font-bold"
+                >
+                  0.01%
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Utilized
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="rounded-lg border bg-card text-card-foreground shadow-sm"
+          >
+            <div
+              class="p-6 flex flex-row items-center justify-between space-y-0"
+            >
+              <h3
+                class="text-2xl leading-none tracking-tight font-bold"
+              >
+                IST ↔ USDC (Gravity)
+              </h3>
+            </div>
+            <div
+              class="p-6 pt-0 flex-none md:flex flex-row items-center justify-between"
+            >
+              <div
+                class="text-2xl tracking-tight mt-4"
+              >
+                <span
+                  class="font-bold"
+                  data-testid="psm-minted-ist-USDC_grv"
+                >
+                  $0.00
+                   of
+                   
+                  <span
+                    class="text-gray-400"
+                  >
+                    $1.50M
+                  </span>
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Minted IST / Limit
+                </p>
+              </div>
+              <div
+                class="text-2xl md:text-right mt-4"
+              >
+                <span
+                  class="font-bold"
+                >
+                  0%
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Utilized
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="rounded-lg border bg-card text-card-foreground shadow-sm"
+          >
+            <div
+              class="p-6 flex flex-row items-center justify-between space-y-0"
+            >
+              <h3
+                class="text-2xl leading-none tracking-tight font-bold"
+              >
+                IST ↔ DAI (Axelar)
+              </h3>
+            </div>
+            <div
+              class="p-6 pt-0 flex-none md:flex flex-row items-center justify-between"
+            >
+              <div
+                class="text-2xl tracking-tight mt-4"
+              >
+                <span
+                  class="font-bold"
+                  data-testid="psm-minted-ist-DAI_axl"
+                >
+                  $32.69K
+                   of
+                   
+                  <span
+                    class="text-gray-400"
+                  >
+                    $1.10M
+                  </span>
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Minted IST / Limit
+                </p>
+              </div>
+              <div
+                class="text-2xl md:text-right mt-4"
+              >
+                <span
+                  class="font-bold"
+                >
+                  2.97%
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Utilized
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="rounded-lg border bg-card text-card-foreground shadow-sm"
+          >
+            <div
+              class="p-6 flex flex-row items-center justify-between space-y-0"
+            >
+              <h3
+                class="text-2xl leading-none tracking-tight font-bold"
+              >
+                USDT
+              </h3>
+            </div>
+            <div
+              class="p-6 pt-0 flex-none md:flex flex-row items-center justify-between"
+            >
+              <div
+                class="text-2xl tracking-tight mt-4"
+              >
+                <span
+                  class="font-bold"
+                  data-testid="psm-minted-ist-USDT"
+                >
+                  $0.99
+                   of
+                   
+                  <span
+                    class="text-gray-400"
+                  >
+                    $1.00M
+                  </span>
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Minted IST / Limit
+                </p>
+              </div>
+              <div
+                class="text-2xl md:text-right mt-4"
+              >
+                <span
+                  class="font-bold"
+                >
+                  0%
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Utilized
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="rounded-lg border bg-card text-card-foreground shadow-sm"
+          >
+            <div
+              class="p-6 flex flex-row items-center justify-between space-y-0"
+            >
+              <h3
+                class="text-2xl leading-none tracking-tight font-bold"
+              >
+                IST ↔ USDC (Axelar)
+              </h3>
+            </div>
+            <div
+              class="p-6 pt-0 flex-none md:flex flex-row items-center justify-between"
+            >
+              <div
+                class="text-2xl tracking-tight mt-4"
+              >
+                <span
+                  class="font-bold"
+                  data-testid="psm-minted-ist-USDC_axl"
+                >
+                  $2.38
+                   of
+                   
+                  <span
+                    class="text-gray-400"
+                  >
+                    $1.50M
+                  </span>
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Minted IST / Limit
+                </p>
+              </div>
+              <div
+                class="text-2xl md:text-right mt-4"
+              >
+                <span
+                  class="font-bold"
+                >
+                  0%
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Utilized
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="flex flex-col space-y-1.5 p-6"
+        >
+          <h3
+            class="text-2xl font-semibold leading-none tracking-tight"
+          >
+            Total Minted IST Per Anchor
+          </h3>
+        </div>
+        <div
+          class="p-6 pt-0"
+        >
+          <div
+            class="w-full h-[400px]"
+          >
+            <div
+              class="recharts-responsive-container"
+              style="width: 800px; height: 800px; min-width: 0;"
+            >
+              <div
+                class="recharts-wrapper"
+                role="region"
+                style="position: relative; cursor: default; width: 800px; height: 800px;"
+              >
+                <svg
+                  class="recharts-surface"
+                  cx="50%"
+                  cy="50%"
+                  height="800"
+                  viewBox="0 0 800 800"
+                  width="800"
+                >
+                  <title />
+                  <desc />
+                  <defs>
+                    <clippath
+                      id="recharts1-clip"
+                    >
+                      <rect
+                        height="790"
+                        width="790"
+                        x="5"
+                        y="5"
+                      />
+                    </clippath>
+                  </defs>
+                  <g
+                    class="recharts-layer recharts-pie"
+                    tabindex="0"
+                  >
+                    <g
+                      class="recharts-layer"
+                    >
+                      <g
+                        class="recharts-layer recharts-pie-sector"
+                        tabindex="-1"
+                      />
+                      <g
+                        class="recharts-layer recharts-pie-sector"
+                        tabindex="-1"
+                      />
+                      <g
+                        class="recharts-layer recharts-pie-sector"
+                        tabindex="-1"
+                      />
+                      <g
+                        class="recharts-layer recharts-pie-sector"
+                        tabindex="-1"
+                      />
+                      <g
+                        class="recharts-layer recharts-pie-sector"
+                        tabindex="-1"
+                      />
+                      <g
+                        class="recharts-layer recharts-pie-sector"
+                        tabindex="-1"
+                      />
+                      <g
+                        class="recharts-layer recharts-pie-sector"
+                        tabindex="-1"
+                      />
+                    </g>
+                  </g>
+                </svg>
+                <div
+                  class="recharts-tooltip-wrapper"
+                  role="dialog"
+                  style="transform: translate(undefinedpx, undefinedpx); pointer-events: none; visibility: hidden; position: absolute; top: 0px; left: 0px;"
+                  tabindex="-1"
+                >
+                  <div
+                    class="recharts-default-tooltip"
+                    style="margin: 0px; padding: 10px; background-color: rgb(255, 255, 255); border: 1px solid #ccc; white-space: nowrap;"
+                  >
+                    <p
+                      class="recharts-tooltip-label"
+                      style="margin: 0px;"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`PSM Dashboard Snapshot tests should match snapshot when data is loading 1`] = `
+<div>
+  <h1
+    class="flex items-center space-x-4 lg:space-x-6 border-b p-8 text-3xl font-bold tracking-tight"
+  >
+    PSM
+  </h1>
+  <div
+    class="p-8"
+  >
+    <div
+      class="grid gap-4 grid-cols-1 2xl:grid-cols-2"
+    >
+      <div>
+        <div
+          class="grid grid-cols-1 xl:grid-cols-2 gap-4"
+        >
+          <div
+            class="rounded-lg border bg-card text-card-foreground shadow-sm"
+          >
+            <div
+              class="p-6 flex flex-row items-center justify-between space-y-0"
+            >
+              <div
+                class="animate-pulse bg-muted w-[150px] h-[24px] rounded-full"
+              />
+            </div>
+            <div
+              class="p-6 pt-0 flex-none md:flex flex-row items-center justify-between"
+            >
+              <div
+                class="text-2xl tracking-tight mt-4"
+              >
+                <span
+                  class="font-bold"
+                  data-testid=""
+                >
+                  $0.00
+                   of
+                   
+                  <span
+                    class="text-gray-400"
+                  >
+                    $0.00
+                  </span>
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Minted IST / Limit
+                </p>
+              </div>
+              <div
+                class="text-2xl md:text-right mt-4"
+              >
+                <span
+                  class="font-bold"
+                >
+                  0%
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Utilized
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="rounded-lg border bg-card text-card-foreground shadow-sm"
+          >
+            <div
+              class="p-6 flex flex-row items-center justify-between space-y-0"
+            >
+              <div
+                class="animate-pulse bg-muted w-[150px] h-[24px] rounded-full"
+              />
+            </div>
+            <div
+              class="p-6 pt-0 flex-none md:flex flex-row items-center justify-between"
+            >
+              <div
+                class="text-2xl tracking-tight mt-4"
+              >
+                <span
+                  class="font-bold"
+                  data-testid=""
+                >
+                  $0.00
+                   of
+                   
+                  <span
+                    class="text-gray-400"
+                  >
+                    $0.00
+                  </span>
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Minted IST / Limit
+                </p>
+              </div>
+              <div
+                class="text-2xl md:text-right mt-4"
+              >
+                <span
+                  class="font-bold"
+                >
+                  0%
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Utilized
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="rounded-lg border bg-card text-card-foreground shadow-sm"
+          >
+            <div
+              class="p-6 flex flex-row items-center justify-between space-y-0"
+            >
+              <div
+                class="animate-pulse bg-muted w-[150px] h-[24px] rounded-full"
+              />
+            </div>
+            <div
+              class="p-6 pt-0 flex-none md:flex flex-row items-center justify-between"
+            >
+              <div
+                class="text-2xl tracking-tight mt-4"
+              >
+                <span
+                  class="font-bold"
+                  data-testid=""
+                >
+                  $0.00
+                   of
+                   
+                  <span
+                    class="text-gray-400"
+                  >
+                    $0.00
+                  </span>
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Minted IST / Limit
+                </p>
+              </div>
+              <div
+                class="text-2xl md:text-right mt-4"
+              >
+                <span
+                  class="font-bold"
+                >
+                  0%
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Utilized
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="rounded-lg border bg-card text-card-foreground shadow-sm"
+          >
+            <div
+              class="p-6 flex flex-row items-center justify-between space-y-0"
+            >
+              <div
+                class="animate-pulse bg-muted w-[150px] h-[24px] rounded-full"
+              />
+            </div>
+            <div
+              class="p-6 pt-0 flex-none md:flex flex-row items-center justify-between"
+            >
+              <div
+                class="text-2xl tracking-tight mt-4"
+              >
+                <span
+                  class="font-bold"
+                  data-testid=""
+                >
+                  $0.00
+                   of
+                   
+                  <span
+                    class="text-gray-400"
+                  >
+                    $0.00
+                  </span>
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Minted IST / Limit
+                </p>
+              </div>
+              <div
+                class="text-2xl md:text-right mt-4"
+              >
+                <span
+                  class="font-bold"
+                >
+                  0%
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Utilized
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="rounded-lg border bg-card text-card-foreground shadow-sm"
+          >
+            <div
+              class="p-6 flex flex-row items-center justify-between space-y-0"
+            >
+              <div
+                class="animate-pulse bg-muted w-[150px] h-[24px] rounded-full"
+              />
+            </div>
+            <div
+              class="p-6 pt-0 flex-none md:flex flex-row items-center justify-between"
+            >
+              <div
+                class="text-2xl tracking-tight mt-4"
+              >
+                <span
+                  class="font-bold"
+                  data-testid=""
+                >
+                  $0.00
+                   of
+                   
+                  <span
+                    class="text-gray-400"
+                  >
+                    $0.00
+                  </span>
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Minted IST / Limit
+                </p>
+              </div>
+              <div
+                class="text-2xl md:text-right mt-4"
+              >
+                <span
+                  class="font-bold"
+                >
+                  0%
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Utilized
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="rounded-lg border bg-card text-card-foreground shadow-sm"
+          >
+            <div
+              class="p-6 flex flex-row items-center justify-between space-y-0"
+            >
+              <div
+                class="animate-pulse bg-muted w-[150px] h-[24px] rounded-full"
+              />
+            </div>
+            <div
+              class="p-6 pt-0 flex-none md:flex flex-row items-center justify-between"
+            >
+              <div
+                class="text-2xl tracking-tight mt-4"
+              >
+                <span
+                  class="font-bold"
+                  data-testid=""
+                >
+                  $0.00
+                   of
+                   
+                  <span
+                    class="text-gray-400"
+                  >
+                    $0.00
+                  </span>
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Minted IST / Limit
+                </p>
+              </div>
+              <div
+                class="text-2xl md:text-right mt-4"
+              >
+                <span
+                  class="font-bold"
+                >
+                  0%
+                </span>
+                <p
+                  class="text-sm text-muted-foreground"
+                >
+                  Utilized
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="flex flex-col space-y-1.5 p-6"
+        >
+          <h3
+            class="text-2xl font-semibold leading-none tracking-tight"
+          >
+            Total Minted IST Per Anchor
+          </h3>
+        </div>
+        <div
+          class="p-6 pt-0"
+        >
+          <div
+            class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+          />
+          <div
+            class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+          />
+          <div
+            class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+          />
+          <div
+            class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

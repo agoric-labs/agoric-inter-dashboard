@@ -1,8 +1,9 @@
 export default {
   preset: 'ts-jest',
-  testEnvironment: 'node',
+  testEnvironment: 'jsdom',
   transform: {
     '^.+\\.ts?$': 'ts-jest',
+    '^.+\\.svg$': '<rootDir>/tests/transformers/svgTransform.cjs',
   },
   moduleNameMapper: {
     '@/(.*)': '<rootDir>/src/$1',

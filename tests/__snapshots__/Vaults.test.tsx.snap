@@ -1,0 +1,1847 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Vaults Dashboard Snapshot tests should match snapshot when data is loaded 1`] = `
+<div>
+  <h1
+    class="flex items-center space-x-4 lg:space-x-6 border-b p-8 text-3xl font-bold tracking-tight"
+  >
+    Vaults
+  </h1>
+  <div
+    class="p-8"
+  >
+    <div
+      class="grid grid-cols-2 xl:grid-cols-3 gap-4 mb-5"
+    >
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+        >
+          <h3
+            class="tracking-tight text-sm font-medium"
+          >
+            Total Collateral Types
+          </h3>
+        </div>
+        <div
+          class="p-6 pt-0"
+        >
+          <div
+            class="text-2xl font-bold"
+          >
+            5
+          </div>
+        </div>
+      </div>
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+        >
+          <h3
+            class="tracking-tight text-sm font-medium"
+          >
+            Total Active Vaults
+          </h3>
+        </div>
+        <div
+          class="p-6 pt-0"
+        >
+          <div
+            class="text-2xl font-bold"
+          >
+            4
+          </div>
+        </div>
+      </div>
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+        >
+          <h3
+            class="tracking-tight text-sm font-medium"
+          >
+            Total Locked Collateral Value
+          </h3>
+        </div>
+        <div
+          class="p-6 pt-0"
+        >
+          <div
+            class="text-2xl font-bold"
+          >
+            $4.95M
+          </div>
+        </div>
+      </div>
+    </div>
+    <h2
+      class="text-2xl fontebold tracking-tight mb-5"
+    >
+      Summary
+    </h2>
+    <div
+      class="rounded-md border"
+    >
+      <div
+        class="w-full overflow-auto"
+      >
+        <table
+          class="w-full caption-bottom text-sm"
+        >
+          <thead
+            class="[&_tr]:border-b"
+          >
+            <tr
+              class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+            >
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 200px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
+                  Collateral Type
+                </button>
+              </th>
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 50px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
+                  <div
+                    class="text-right"
+                  >
+                    Active Vaults
+                  </div>
+                </button>
+              </th>
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 50px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
+                  <div
+                    class="text-right"
+                  >
+                    Oracle Price, USD
+                  </div>
+                </button>
+              </th>
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 50px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
+                  <div
+                    class="text-right"
+                  >
+                    Daily Change
+                  </div>
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            class="[&_tr:last-child]:border-0"
+          >
+            <tr
+              class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+              data-state="false"
+            >
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <span
+                  class="flex"
+                >
+                  <img
+                    alt="ATOM"
+                    class="w-4 h-4"
+                  />
+                   
+                  <span
+                    class="flex-1 ml-2"
+                  >
+                    ATOM
+                  </span>
+                </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  18
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  $8.96
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right text-red-500"
+                >
+                  -1.81
+                  %
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+              data-state="false"
+            >
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <span
+                  class="flex"
+                >
+                  <img
+                    alt="stATOM"
+                    class="w-4 h-4"
+                  />
+                   
+                  <span
+                    class="flex-1 ml-2"
+                  >
+                    stATOM
+                  </span>
+                </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  84
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  $12.12
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right text-red-500"
+                >
+                  -1.83
+                  %
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+              data-state="false"
+            >
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <span
+                  class="flex"
+                >
+                  <img
+                    alt="stkATOM"
+                    class="w-4 h-4"
+                  />
+                   
+                  <span
+                    class="flex-1 ml-2"
+                  >
+                    stkATOM
+                  </span>
+                </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  2
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  $11.41
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right text-red-500"
+                >
+                  -1.6
+                  %
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+              data-state="false"
+            >
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <span
+                  class="flex"
+                >
+                  <img
+                    alt="stOSMO"
+                    class="w-4 h-4"
+                  />
+                   
+                  <span
+                    class="flex-1 ml-2"
+                  >
+                    stOSMO
+                  </span>
+                </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  26
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  $1.05
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right text-red-500"
+                >
+                  -0.16
+                  %
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+              data-state="false"
+            >
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <span
+                  class="flex"
+                >
+                  <img
+                    alt="stTIA"
+                    class="w-4 h-4"
+                  />
+                   
+                  <span
+                    class="flex-1 ml-2"
+                  >
+                    stTIA
+                  </span>
+                </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  75
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  $9.66
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right text-red-500"
+                >
+                  -0.04
+                  %
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div
+      class="rounded-lg border bg-card text-card-foreground shadow-sm my-4 mb-4"
+    >
+      <div
+        class="flex flex-col space-y-1.5 p-6"
+      >
+        <h3
+          class="text-2xl font-semibold leading-none tracking-tight"
+        >
+          Total Locked Collateral
+        </h3>
+      </div>
+      <div
+        class="p-6 pt-0"
+      >
+        <div
+          class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+        />
+        <div
+          class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+        />
+        <div
+          class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+        />
+        <div
+          class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+        />
+      </div>
+    </div>
+    <div
+      class="rounded-lg border bg-card text-card-foreground shadow-sm my-4 mb-4"
+    >
+      <div
+        class="flex flex-col space-y-1.5 p-6"
+      >
+        <h3
+          class="text-2xl font-semibold leading-none tracking-tight"
+        >
+          Total Minted IST
+        </h3>
+      </div>
+      <div
+        class="p-6 pt-0"
+      >
+        <div
+          class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+        />
+        <div
+          class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+        />
+        <div
+          class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+        />
+        <div
+          class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+        />
+      </div>
+    </div>
+    <hr
+      class="my-5"
+    />
+    <h2
+      class="text-2xl fontebold tracking-tight mb-5"
+    >
+      Collateral Type
+    </h2>
+    <div
+      class="rounded-md border"
+    >
+      <div
+        class="w-full overflow-auto"
+      >
+        <table
+          class="w-full caption-bottom text-sm"
+        >
+          <thead
+            class="[&_tr]:border-b"
+          >
+            <tr
+              class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+            >
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 150px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
+                  Collateral Type
+                </button>
+              </th>
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 150px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
+                  Debt Type
+                </button>
+              </th>
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 150px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
+                  <div
+                    class="text-right"
+                  >
+                    Total Locked Collateral
+                  </div>
+                </button>
+              </th>
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 150px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
+                  <div
+                    class="text-right"
+                  >
+                    Total Locked Collateral Value ($USD)
+                  </div>
+                </button>
+              </th>
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 150px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
+                  <div
+                    class="text-right"
+                  >
+                    Total IST Minted
+                  </div>
+                </button>
+              </th>
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 150px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
+                  <div
+                    class="text-right"
+                  >
+                    Colletarization Ratio
+                  </div>
+                </button>
+              </th>
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 150px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
+                  <div
+                    class="text-right"
+                  >
+                    IST Minting Limit
+                  </div>
+                </button>
+              </th>
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 150px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
+                  <div
+                    class="text-right"
+                  >
+                    Utilization Rate
+                  </div>
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            class="[&_tr:last-child]:border-0"
+          >
+            <tr
+              class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+              data-state="false"
+            >
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <span
+                  class="flex"
+                >
+                  <img
+                    alt="ATOM"
+                    class="w-4 h-4"
+                  />
+                   
+                  <span
+                    class="flex-1 ml-2"
+                  >
+                    ATOM
+                  </span>
+                </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                IST
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  2,044.733
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  $18,324.31
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  1,716.291
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  1067.67%
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  500,000
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  0.34%
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+              data-state="false"
+            >
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <span
+                  class="flex"
+                >
+                  <img
+                    alt="stATOM"
+                    class="w-4 h-4"
+                  />
+                   
+                  <span
+                    class="flex-1 ml-2"
+                  >
+                    stATOM
+                  </span>
+                </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                IST
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  192,336.763
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  $2,331,236.20
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  785,570.109
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  296.76%
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  2,000,000
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  39.28%
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+              data-state="false"
+            >
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <span
+                  class="flex"
+                >
+                  <img
+                    alt="stkATOM"
+                    class="w-4 h-4"
+                  />
+                   
+                  <span
+                    class="flex-1 ml-2"
+                  >
+                    stkATOM
+                  </span>
+                </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                IST
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  105
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  $1,197.90
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  402.232
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  297.81%
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  500,000
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  0.08%
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+              data-state="false"
+            >
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <span
+                  class="flex"
+                >
+                  <img
+                    alt="stOSMO"
+                    class="w-4 h-4"
+                  />
+                   
+                  <span
+                    class="flex-1 ml-2"
+                  >
+                    stOSMO
+                  </span>
+                </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                IST
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  1,434,282.77
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  $1,510,368.60
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  413,454.649
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  365.3%
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  1,000,000
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  41.35%
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+              data-state="false"
+            >
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <span
+                  class="flex"
+                >
+                  <img
+                    alt="stTIA"
+                    class="w-4 h-4"
+                  />
+                   
+                  <span
+                    class="flex-1 ml-2"
+                  >
+                    stTIA
+                  </span>
+                </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                IST
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  112,659.464
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  $1,087,803.74
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  332,362.213
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  327.29%
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  4,000,000
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  8.31%
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <hr
+      class="my-5"
+    />
+    <h2
+      class="text-2xl fontebold tracking-tight mb-5"
+    >
+      Open Vaults
+    </h2>
+    <div
+      class="rounded-md border"
+    >
+      <div
+        class="w-full overflow-auto"
+      >
+        <table
+          class="w-full caption-bottom text-sm"
+        >
+          <thead
+            class="[&_tr]:border-b"
+          >
+            <tr
+              class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+            >
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 150px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
+                  ID
+                </button>
+              </th>
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 150px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
+                  Collateral Type
+                </button>
+              </th>
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 150px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
+                  Debt Type
+                </button>
+              </th>
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 150px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
+                  <div
+                    class="text-right"
+                  >
+                    Collateral Amount
+                  </div>
+                </button>
+              </th>
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 150px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
+                  <div
+                    class="text-right"
+                  >
+                    Current Collateral Price
+                  </div>
+                </button>
+              </th>
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 150px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
+                  <div
+                    class="text-right"
+                  >
+                    Collateral Value ($USD)
+                  </div>
+                </button>
+              </th>
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 150px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
+                  <div
+                    class="text-right"
+                  >
+                    IST Debt Amount
+                  </div>
+                </button>
+              </th>
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 150px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
+                  <div
+                    class="text-right"
+                  >
+                    Liquidation Ratio
+                  </div>
+                </button>
+              </th>
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 150px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
+                  <div
+                    class="text-right"
+                  >
+                    Liquidation Price
+                  </div>
+                </button>
+              </th>
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 150px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
+                  <div
+                    class="text-right"
+                  >
+                    Liquidation Cushion
+                  </div>
+                </button>
+              </th>
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 150px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
+                  <div
+                    class="text-right"
+                  >
+                    Collateralization Ratio
+                  </div>
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            class="[&_tr:last-child]:border-0"
+          >
+            <tr
+              class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+              data-state="false"
+            >
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                105
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <span
+                  class="flex"
+                >
+                  <img
+                    alt="stATOM"
+                    class="w-4 h-4"
+                  />
+                   
+                  <span
+                    class="flex-1 ml-2"
+                  >
+                    stATOM
+                  </span>
+                </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                IST
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  27.215
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  $12.12
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  $329.86
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  150.309
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  160%
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  $8.84
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  1.547
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  219.45%
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+              data-state="false"
+            >
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                3
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <span
+                  class="flex"
+                >
+                  <img
+                    alt="stkATOM"
+                    class="w-4 h-4"
+                  />
+                   
+                  <span
+                    class="flex-1 ml-2"
+                  >
+                    stkATOM
+                  </span>
+                </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                IST
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  5
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  $11.41
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  $57.04
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  25.125
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  160%
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  $8.04
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  1.621
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  227.04%
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+              data-state="false"
+            >
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                40
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <span
+                  class="flex"
+                >
+                  <img
+                    alt="stOSMO"
+                    class="w-4 h-4"
+                  />
+                   
+                  <span
+                    class="flex-1 ml-2"
+                  >
+                    stOSMO
+                  </span>
+                </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                IST
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  500
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  $1.05
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  $526.52
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  170.85
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  170%
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  $0.58
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  -2.513
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  308.18%
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+              data-state="false"
+            >
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                147
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <span
+                  class="flex"
+                >
+                  <img
+                    alt="stTIA"
+                    class="w-4 h-4"
+                  />
+                   
+                  <span
+                    class="flex-1 ml-2"
+                  >
+                    stTIA
+                  </span>
+                </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                IST
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  30.75
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  $9.66
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  $296.91
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  130.766
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  190%
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  $8.08
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  1.364
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  227.06%
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Vaults Dashboard Snapshot tests should match snapshot when data is loading 1`] = `
+<div>
+  <h1
+    class="flex items-center space-x-4 lg:space-x-6 border-b p-8 text-3xl font-bold tracking-tight"
+  >
+    Vaults
+  </h1>
+  <div
+    class="p-8"
+  >
+    <div
+      class="grid grid-cols-2 xl:grid-cols-3 gap-4 mb-5"
+    >
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+        >
+          <h3
+            class="tracking-tight text-sm font-medium"
+          >
+            Total Collateral Types
+          </h3>
+        </div>
+        <div
+          class="p-6 pt-0"
+        >
+          <div
+            class="text-2xl font-bold"
+          >
+            <div
+              class="animate-pulse bg-muted w-[50px] h-[32px] rounded-full"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+        >
+          <h3
+            class="tracking-tight text-sm font-medium"
+          >
+            Total Active Vaults
+          </h3>
+        </div>
+        <div
+          class="p-6 pt-0"
+        >
+          <div
+            class="text-2xl font-bold"
+          >
+            <div
+              class="animate-pulse bg-muted w-[50px] h-[32px] rounded-full"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="rounded-lg border bg-card text-card-foreground shadow-sm"
+      >
+        <div
+          class="p-6 flex flex-row items-center justify-between space-y-0 pb-2"
+        >
+          <h3
+            class="tracking-tight text-sm font-medium"
+          >
+            Total Locked Collateral Value
+          </h3>
+        </div>
+        <div
+          class="p-6 pt-0"
+        >
+          <div
+            class="text-2xl font-bold"
+          >
+            <div
+              class="animate-pulse bg-muted w-[50px] h-[32px] rounded-full"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <h2
+      class="text-2xl fontebold tracking-tight mb-5"
+    >
+      Summary
+    </h2>
+    <div
+      class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+    />
+    <div
+      class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+    />
+    <div
+      class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+    />
+    <div
+      class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+    />
+    <div
+      class="rounded-lg border bg-card text-card-foreground shadow-sm my-4 mb-4"
+    >
+      <div
+        class="flex flex-col space-y-1.5 p-6"
+      >
+        <h3
+          class="text-2xl font-semibold leading-none tracking-tight"
+        >
+          Total Locked Collateral
+        </h3>
+      </div>
+      <div
+        class="p-6 pt-0"
+      >
+        <div
+          class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+        />
+        <div
+          class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+        />
+        <div
+          class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+        />
+        <div
+          class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+        />
+      </div>
+    </div>
+    <div
+      class="rounded-lg border bg-card text-card-foreground shadow-sm my-4 mb-4"
+    >
+      <div
+        class="flex flex-col space-y-1.5 p-6"
+      >
+        <h3
+          class="text-2xl font-semibold leading-none tracking-tight"
+        >
+          Total Minted IST
+        </h3>
+      </div>
+      <div
+        class="p-6 pt-0"
+      >
+        <div
+          class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+        />
+        <div
+          class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+        />
+        <div
+          class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+        />
+        <div
+          class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+        />
+      </div>
+    </div>
+    <hr
+      class="my-5"
+    />
+    <h2
+      class="text-2xl fontebold tracking-tight mb-5"
+    >
+      Collateral Type
+    </h2>
+    <div
+      class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+    />
+    <div
+      class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+    />
+    <div
+      class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+    />
+    <div
+      class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+    />
+    <hr
+      class="my-5"
+    />
+    <h2
+      class="text-2xl fontebold tracking-tight mb-5"
+    >
+      Open Vaults
+    </h2>
+    <div
+      class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+    />
+    <div
+      class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+    />
+    <div
+      class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+    />
+    <div
+      class="animate-pulse bg-muted w-full h-[20px] rounded-full mb-2"
+    />
+  </div>
+</div>
+`;
