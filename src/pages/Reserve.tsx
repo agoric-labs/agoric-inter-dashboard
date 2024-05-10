@@ -8,6 +8,7 @@ import { fetchDataFromUrl, subQueryFetcher } from '@/utils';
 import { RESERVE_DASHBOARD_QUERY, RESERVE_GRAPH_TOKENS_QUERY } from '@/queries';
 import { ReserveCosmosSummary } from '@/widgets/ReserveCosmosSummary';
 import { GET_MODULE_ACCOUNTS_URL, VBANK_RESERVE_ACCOUNT } from '@/constants';
+import ReserveHistoryGraph from '@/components/ReserveHistoryGraph';
 
 type OraclePriceNode = {
   typeInAmount: number;
@@ -82,7 +83,7 @@ export const Reserve = () => {
           <ReserveCosmosSummary reserveAddress={reserveAddress} isLoading={moduleAccountsLoading} error={moduleAccountsError}/>
           <ReserveShortfall data={reserveDashboardQueryData} isLoading={isLoading} />
         </div>
-        {/* <ReserveHistoryGraph tokenNames={tokenNames} /> */}
+        <ReserveHistoryGraph tokenNames={tokenNames} />
       </PageContent>
     </>
   );
