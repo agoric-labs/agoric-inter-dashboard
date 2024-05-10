@@ -32,10 +32,6 @@ export function TokenPrices({ title = 'Summary', data, isLoading }: Props) {
   const oraclePrices = sortedEntries.map((token) => {
     // Determine 24h change in oracle price
     const sortedOracleDailyPrices = token?.oracleDailyPrices?.sort((a, b) => b.dateKey - a.dateKey);
-    // const oraclePriceYesterday = sortedOracleDailyPrices.length ? sortedOracleDailyPrices[0].typeOutAmountLast / 1_000_000 : null;
-    // const oraclePriceToday = sortedOracleDailyPrices ? sortedOracleDailyPrices[1].typeOutAmountLast / 1_000_000 : null;
-    // const change = (oraclePriceToday !== null && oraclePriceYesterday !== null) ? 1 - (oraclePriceToday / oraclePriceYesterday) : null;
-    // const changeValue = change !== null ? Math.round(change * 10000) / 100: "N/A";
     const changeValue = sortedOracleDailyPrices.length > 0 ? (() => {
       const oraclePriceYesterday = sortedOracleDailyPrices[0].typeOutAmountLast / 1_000_000;
       const oraclePriceToday = sortedOracleDailyPrices[1].typeOutAmountLast / 1_000_000;
