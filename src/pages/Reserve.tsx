@@ -47,7 +47,7 @@ export const Reserve = () => {
     allocations: vaultNode.allocations?.nodes?.reduce(
       (agg, allocation) => ({
         ...agg,
-        [allocation.token]: { ...allocation, ...oraclePrices[allocation.token] },
+        [allocation.denom]: { ...allocation, ...oraclePrices[allocation.denom] },
       }),
       {},
     ),
@@ -58,7 +58,7 @@ export const Reserve = () => {
   const tokenNamesResponse: ReserveManagerMetricsResponse = tokenNamesData?.data.data;
   const tokenNames =
     tokenNamesResponse?.reserveMetrics?.nodes.flatMap((node) =>
-      node.allocations?.nodes?.map((allocation) => allocation.token),
+      node.allocations?.nodes?.map((allocation) => allocation.denom),
     ) || [];
   tokenNames.sort();
 

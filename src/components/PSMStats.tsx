@@ -40,7 +40,7 @@ export const PSMStats = ({ data }: Props) => (
 export const Skeleton = () => (
   <PSMStats
     data={{
-      coin: 'token',
+      coin: 'denom',
       label: '',
       mint_limit: 0,
       minted_pool_balance: 0,
