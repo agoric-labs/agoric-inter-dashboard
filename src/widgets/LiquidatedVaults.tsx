@@ -7,6 +7,7 @@ import { SectionHeader } from '@/components/SectionHeader';
 import { LiquidationDashboardData } from '@/pages/Liquidated';
 import { LIQUIDATION_ORACLE_PRICES_DAILIES_QUERY } from '@/queries';
 import { formatSecondsToHumanReadable, getDateKey, subQueryFetcher } from '@/utils';
+import { VAULT_STATES } from '@/constants';
 
 type Props = {
   title?: string;
@@ -94,7 +95,9 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults', data, isLoading 
     const oraclePrice = oraclePriceSnapshot || oraclePriceToday;
 
     const [, vaultManager, vaultIdx] = vaultIdRegexMatch;
-    const vaultState = vaultData.state[0].toUpperCase() + vaultData.state.slice(1);
+    
+    const vaultStateSuffix = vaultData?.currentState?.state === VAULT_STATES.CLOSED ? ' (Closed)' : '';
+    const vaultState = vaultData.state[0].toUpperCase() + vaultData.state.slice(1) + vaultStateSuffix;
     const vaultManagerGovernance = data.vaultManagerGovernances[vaultManager];
     const liquidationRatio =
       vaultManagerGovernance.liquidationMarginNumerator / vaultManagerGovernance.liquidationMarginDenominator;
