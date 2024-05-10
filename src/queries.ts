@@ -111,6 +111,7 @@ query {
             blockTimeLast
             totalCollateralLast
             metricsCount
+            totalDebtLast
         }
     }
     ${token}_oracle: oraclePriceDailies (first: 90, filter:{typeInName: {equalTo: "${token}"}}, orderBy:DATE_KEY_DESC ) {

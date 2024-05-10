@@ -50,16 +50,16 @@ export const columns: DataColumn<Row>[] = [
     type: 'number',
     header: 'IST Debt Amount',
   },
-  {
-    accessorKey: 'liquidation_margin_avg',
-    type: 'percent',
-    header: 'Liquidation Ratio',
-  },
-  {
-    accessorKey: 'liquidating_rate',
-    type: 'usd',
-    header: 'Liquidation Price',
-  },
+  // {
+  //   accessorKey: 'liquidation_margin_avg',
+  //   type: 'percent',
+  //   header: 'Liquidation Ratio',
+  // },
+  // {
+  //   accessorKey: 'liquidating_rate',
+  //   type: 'usd',
+  //   header: 'Liquidation Price',
+  // },
   {
     accessorKey: 'liquidated_return_amount',
     type: 'number',
