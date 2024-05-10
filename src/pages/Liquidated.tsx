@@ -45,6 +45,14 @@ type VaultLiquidationsNode = {
   liquidatingState: VaultLiquidationsNode
 };
 
+type OraclePriceNode = {
+  priceFeedName: string;
+  typeInAmount: number;
+  typeOutAmount: number;
+  typeInName: string;
+  typeOutName: string;
+  id: string;
+};
 type LiquidationDashboardResponse = {
   vaultLiquidations: { nodes: Array<VaultLiquidationsNode> };
   vaultManagerGovernances: {
@@ -53,10 +61,12 @@ type LiquidationDashboardResponse = {
   vaultManagerMetrics: {
     nodes: Array<VaultManagerMetricsNode>;
   };
+  oraclePrices: { nodes: Array<OraclePriceNode> };
 };
 export type LiquidationDashboardData = {
   vaultLiquidations: Array<VaultLiquidationsNode>;
   vaultManagerGovernances: { [key: string]: VaultManagerGovernancesNode };
+  oraclePrices: { [key: string]: OraclePriceNode };
 };
 
 type TokenNamesResponse = {
@@ -85,7 +95,6 @@ const sum = (items: Array<string>) => items.reduce((agg, next) => agg + Number(n
 
 export function Liquidated() {
   const { data, isLoading } = useSWR<AxiosResponse, AxiosError>(LIQUIDATIONS_DASHBOARD, subQueryFetcher);
-  console.log(data);
   const response: LiquidationDashboardResponse = data?.data?.data;
 
   const vaultManagerGovernances: { [key: string]: VaultManagerGovernancesNode } =
@@ -97,9 +106,15 @@ export function Liquidated() {
       const managerName = idSegments.slice(0, 4).join('.');
       return { ...agg, [managerName]: node };
     }, {});
+  const oraclePrices: { [key: string]: OraclePriceNode } = response?.oraclePrices?.nodes?.reduce(
+    (agg, node) => ({ ...agg, [node.typeInName]: node }),
+    {},
+  );
+
   const liquidationDashboardData = {
     vaultManagerGovernances,
     vaultLiquidations: response?.vaultLiquidations?.nodes,
+    oraclePrices,
   };
 
   //  Queries for graph
@@ -173,7 +188,7 @@ export function Liquidated() {
         <ValueCardGrid>
           <LiquidatedVaultCountCard data={response?.vaultManagerMetrics?.nodes} isLoading={isLoading} />
         </ValueCardGrid>
-        <VaultStatesChart data={summedGraphDataList} isLoading={graphDataIsLoading} />
+        {/* <VaultStatesChart data={summedGraphDataList} isLoading={graphDataIsLoading} /> */}
         <hr className="my-5" />
         <LiquidatedVaults data={liquidationDashboardData} isLoading={isLoading} />
       </PageContent>
