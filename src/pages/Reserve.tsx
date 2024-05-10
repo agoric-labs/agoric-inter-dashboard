@@ -16,7 +16,7 @@ type OraclePriceNode = {
   typeOutName: string;
   id: string;
 };
-type AllocationsNode = { id: string; token: string; value: number };
+type AllocationsNode = { id: string; denom: string; value: number };
 type ReserveMetricsNode = {
   allocations: { nodes: Array<AllocationsNode> };
   shortfallBalance: number;
