@@ -42,9 +42,9 @@ type OraclePriceNode = {
   typeOutName: string;
   id: string;
 };
-type PsmGovernancesNode = { token: string; mintLimit: number };
-type PsmMetricsNode = { token: string; anchorPoolBalance: number; mintedPoolBalance: number };
-type AllocationsNode = { id: string; token: string; value: number };
+type PsmGovernancesNode = { denom: string; mintLimit: number };
+type PsmMetricsNode = { denom: string; anchorPoolBalance: number; mintedPoolBalance: number };
+type AllocationsNode = { id: string; denom: string; value: number };
 type ReserveMetricsNode = {
   allocations: { nodes: Array<AllocationsNode> };
   shortfallBalance: number;
@@ -136,7 +136,7 @@ export function InterProtocol() {
   const psmMinted =
   dashboardResponse.psmMetrics.nodes.reduce((agg, node) => agg + Number(node.mintedPoolBalance), 0) / 1_000_000;
   const psmAnchor = dashboardResponse.psmMetrics.nodes.reduce(
-    (agg, node) => agg + Number(node.anchorPoolBalance) / 10 ** (boardAuxes[node.token] || 6),
+    (agg, node) => agg + Number(node.anchorPoolBalance) / 10 ** (boardAuxes[node.denom] || 6),
     0,
   );
   const vaultMinted =
@@ -154,7 +154,7 @@ export function InterProtocol() {
       agg +
       node.allocations.nodes.reduce((agg_, node_) => {
         const allocationInUsd =
-          ((Number(node_.value) / 1_000_000) * Number(oraclePrices[node_.token]?.typeOutAmount || 1_000_000)) / 1_000_000;
+          ((Number(node_.value) / 1_000_000) * Number(oraclePrices[node_.denom]?.typeOutAmount || 1_000_000)) / 1_000_000;
         return agg_ + allocationInUsd;
       }, 0),
     0,

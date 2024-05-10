@@ -55,7 +55,7 @@ export function VaultCharts({ tokenNames, vaultsDataIsLoading, error }: Props) {
         [`${dailyTokenMetrics?.liquidatingCollateralBrand}-total_collateral`]:
           (dailyTokenMetrics?.totalCollateralLast / 1_000_000) * (oracle.typeOutAmountLast / oracle.typeInAmountLast),
         [`${dailyTokenMetrics?.liquidatingCollateralBrand}-total_minted`]:
-          dailyTokenMetrics?.totalDebtSum / dailyTokenMetrics?.metricsCount / 1000_000,
+          dailyTokenMetrics?.totalDebtLast,
       };
     });
   });

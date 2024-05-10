@@ -24,8 +24,8 @@ export function OpenVaults({ title = 'Open Vaults', data, isLoading }: Props) {
   }
 
   data.sort((a, b) => {
-    const nameA: string = a.token?.toLowerCase();
-    const nameB: string = b.token?.toLowerCase();
+    const nameA: string = a.denom?.toLowerCase();
+    const nameB: string = b.denom?.toLowerCase();
     return nameA.localeCompare(nameB);
   });
 
@@ -41,7 +41,7 @@ export function OpenVaults({ title = 'Open Vaults', data, isLoading }: Props) {
 
     return {
       vault_idx: vaultIdx,
-      collateral_type: <CollateralWithIcon collateralType={vaultData.token} />,
+      collateral_type: <CollateralWithIcon collateralType={vaultData.denom} />,
       debt_type: 'IST',
       collateral_amount: collateralAmount,
       current_collateral_price: currentCollateralPrice,

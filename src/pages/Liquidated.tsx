@@ -22,18 +22,31 @@ type VaultManagerGovernancesNode = {
   liquidationMarginDenominator: number;
   liquidationMarginNumerator: number;
 };
+
 type VaultsNode = {
   balance: number;
   debt: number;
   id: string;
   state: string;
-  token: string;
-  liquidatingAt?: string | null;
-  liquidatedAt?: string | null;
+  denom: string;
+  blockTime: string;
+  currentState: string;
+  liquidatingState: VaultLiquidationsNode
+};
+
+type VaultLiquidationsNode = {
+  balance: number;
+  debt: number;
+  id: string;
+  state: string;
+  denom: string;
+  blockTime: string;
+  currentState: VaultsNode;
+  liquidatingState: VaultLiquidationsNode
 };
 
 type LiquidationDashboardResponse = {
-  vaults: { nodes: Array<VaultsNode> };
+  vaultLiquidations: { nodes: Array<VaultLiquidationsNode> };
   vaultManagerGovernances: {
     nodes: Array<VaultManagerGovernancesNode>;
   };
@@ -42,7 +55,7 @@ type LiquidationDashboardResponse = {
   };
 };
 export type LiquidationDashboardData = {
-  vaults: Array<VaultsNode>;
+  vaultLiquidations: Array<VaultLiquidationsNode>;
   vaultManagerGovernances: { [key: string]: VaultManagerGovernancesNode };
 };
 
@@ -72,6 +85,7 @@ const sum = (items: Array<string>) => items.reduce((agg, next) => agg + Number(n
 
 export function Liquidated() {
   const { data, isLoading } = useSWR<AxiosResponse, AxiosError>(LIQUIDATIONS_DASHBOARD, subQueryFetcher);
+  console.log(data);
   const response: LiquidationDashboardResponse = data?.data?.data;
 
   const vaultManagerGovernances: { [key: string]: VaultManagerGovernancesNode } =
@@ -85,7 +99,7 @@ export function Liquidated() {
     }, {});
   const liquidationDashboardData = {
     vaultManagerGovernances,
-    vaults: response?.vaults?.nodes,
+    vaultLiquidations: response?.vaultLiquidations?.nodes,
   };
 
   //  Queries for graph

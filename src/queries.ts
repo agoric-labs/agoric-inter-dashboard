@@ -8,14 +8,14 @@ query {
     psmMetrics {
         nodes {
             blockHeight
-            token
+            denom
             mintedPoolBalance
         }
     }
     psmGovernances {
         nodes {
             mintLimit
-            token
+            denom
         }
     }
 }`;
@@ -25,7 +25,7 @@ query {
     psmMetrics {
         nodes {
             id
-            token
+            denom
         }
     }
 }`;
@@ -33,10 +33,10 @@ query {
 export const PSM_TOKEN_DAILY_MINT_QUERY = (tokens: Array<string>) => `
 query {
     ${tokens.map((token: string) => `
-        ${token}: psmMetricDailies(first: 90, filter: {token: {equalTo: "${token}"}}, orderBy:DATE_KEY_DESC) {
+        ${token}: psmMetricsDailies(first: 90, filter: {denom: {equalTo: "${token}"}}, orderBy:DATE_KEY_DESC) {
         nodes {
                 id
-                token
+                denom
                 dateKey
                 blockTimeLast
                 totalMintedProvidedLast
@@ -80,7 +80,7 @@ query {
     vaults(filter: {state: {equalTo: "active"}}) {
         nodes {
             id
-            token
+            denom
             balance
             state
             debt
@@ -109,7 +109,6 @@ query {
             dateKey
             liquidatingCollateralBrand
             blockTimeLast
-            totalDebtSum
             totalCollateralLast
             metricsCount
         }
@@ -133,6 +132,8 @@ query {
             shortfallBalance
             allocations {
                 nodes {
+                    id
+                    denom
                     value
                 }
             }
@@ -154,7 +155,7 @@ query {
             allocations {
                 nodes {
                     id
-                    token
+                    denom
                 }
             }
         }
@@ -164,13 +165,13 @@ query {
 export const RESERVE_DAILY_METRICS_QUERY = (tokens: string[], startDate: number) => `
 query {
     ${tokens.map((token) =>
-    `${token}: reserveAllocationMetricsDailies (first: 90, filter: {token: {equalTo: "${token}"}}, orderBy:DATE_KEY_DESC) {
+    `${token}: reserveAllocationMetricsDailies (first: 90, filter: {denom: {equalTo: "${token}"}}, orderBy:DATE_KEY_DESC) {
         nodes {
             id
             blockTimeLast
             dateKey
             valueLast
-            token
+            denom
         }
     }
     ${token}_oracle: oraclePriceDailies (first: 90, filter: {typeInName: {equalTo: "${token}"}}, orderBy:DATE_KEY_DESC) {
@@ -182,13 +183,13 @@ query {
           typeOutAmountLast
         }
     }
-    ${token}_last: reserveAllocationMetricsDailies (first: 1, filter: {token: {equalTo: "${token}"}, valueLast: {greaterThan: "0" }, dateKey: {lessThan: ${startDate}}}, orderBy:DATE_KEY_DESC) {
+    ${token}_last: reserveAllocationMetricsDailies (first: 1, filter: {denom: {equalTo: "${token}"}, valueLast: {greaterThan: "0" }, dateKey: {lessThan: ${startDate}}}, orderBy:DATE_KEY_DESC) {
         nodes {
           id
           blockTimeLast
           dateKey
           valueLast
-          token
+          denom
         }
     }`)}
 }`
@@ -197,7 +198,7 @@ export const INTER_DASHBOARD_QUERY = `
 query {
     psmMetrics {
         nodes {
-            token
+            denom
             mintedPoolBalance
             anchorPoolBalance
             mintedPoolBalance
@@ -205,7 +206,7 @@ query {
     }
     psmGovernances {
         nodes {
-            token
+            denom
             mintLimit
         }
     }
@@ -231,7 +232,7 @@ query {
             allocations {
                 nodes {
                     id
-                    token
+                    denom
                     value
                 }
             }
@@ -279,15 +280,30 @@ query {
         }
     }
 
-    vaults (filter: {state: {equalTo: "liquidated"}}) {
+    vaultLiquidations (filter: {state: {equalTo: "liquidated"}}) {
         nodes {
             id
-            token
+            denom
             debt
             state
             balance
-            liquidatingAt
-            liquidatedAt
+            blockTime
+            currentState {
+                id
+                denom
+                debt
+                state
+                balance
+                blockTime
+            }
+            liquidatingState {
+                id
+                denom
+                debt
+                state
+                balance
+                blockTime
+            }
         }
     } 
 }`;

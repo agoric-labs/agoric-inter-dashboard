@@ -3,19 +3,18 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { PageHeader } from '@/components/PageHeader';
 import { PageContent } from '@/components/PageContent';
 import { PSMStats } from '@/widgets/PSMStats';
-import { PSMHistory } from '@/widgets/PSMHistory';
 import { PSMMintedPoolBalancePie } from '@/widgets/PSMMintedPoolBalancePie';
 import { subQueryFetcher } from '@/utils';
 import { PSM_DASHBOARD_QUERY, PSM_GRAPH_TOKENS_QUERY, PSM_TOKEN_DAILY_MINT_QUERY } from '@/queries';
 
 type PsmMetricsNode = {
   id: string;
-  token: string;
+  denom: string;
 };
 
 type PsmMetricsDailyNode = {
   id: string;
-  token: string;
+  denom: string;
   dateKey: number;
   blockTimeLast: string;
   totalMintedProvidedLast: number;
@@ -38,17 +37,17 @@ export const PSM = () => {
   const response = data?.data?.data;
   const queryData: { [key: string]: object } = {};
 
-  response?.psmMetrics?.nodes?.forEach((node: { token: string }) => {
-    queryData[node.token] = node;
+  response?.psmMetrics?.nodes?.forEach((node: { denom: string }) => {
+    queryData[node.denom] = node;
   });
-  response?.psmGovernances?.nodes?.forEach((node: { token: string }) => {
-    if (node.token in queryData) queryData[node.token] = { ...queryData[node.token], ...node };
+  response?.psmGovernances?.nodes?.forEach((node: { denom: string }) => {
+    if (node.denom in queryData) queryData[node.denom] = { ...queryData[node.denom], ...node };
   });
 
   //  Queries for graph
   const { data: tokenNamesData } = useSWR<AxiosResponse, AxiosError>(PSM_GRAPH_TOKENS_QUERY, subQueryFetcher);
   const tokenNamesResponse: PsmMetricsResponse = tokenNamesData?.data.data;
-  const tokenNames = tokenNamesResponse?.psmMetrics.nodes.map((node: { token: string }) => node.token) || [];
+  const tokenNames = tokenNamesResponse?.psmMetrics.nodes.map((node: { denom: string }) => node.denom) || [];
 
   const { data: dailyMetricsData, isLoading: graphDataIsLoading } = useSWR<AxiosResponse, AxiosError>(
     PSM_TOKEN_DAILY_MINT_QUERY(tokenNames),
@@ -62,7 +61,7 @@ export const PSM = () => {
         ...graphDataMap[dailyTokenMetrics.dateKey],
         x: dailyTokenMetrics.blockTimeLast.split('T')[0],
         key: dailyTokenMetrics.dateKey,
-        [dailyTokenMetrics.token]: Number(dailyTokenMetrics.totalMintedProvidedLast) / 1_000_000,
+        [dailyTokenMetrics.denom]: Number(dailyTokenMetrics.totalMintedProvidedLast) / 1_000_000,
       };
     });
   });

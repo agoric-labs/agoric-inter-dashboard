@@ -29,7 +29,7 @@ type VaultsNode = {
   debt: number;
   id: string;
   state: string;
-  token: string;
+  denom: string;
 };
 
 type VaultManagerGovernancesNode = {
@@ -77,13 +77,13 @@ export type VaultsDashboardData = {
 export type OpenVaultsData = Array<VaultsNode & OraclePriceNode & VaultManagerGovernancesNode>;
 
 function processOraclePrices(nodes: OraclePriceNode[]): OraclePriceNodesData {
-  let obj: OraclePriceNodesData = {};
+  const obj: OraclePriceNodesData = {};
   return nodes?.reduce((agg, node) => {
     const nameSegments = node.priceFeedName.split('-');
     if (nameSegments.length !== 2) {
       throw new Error(`Invalid priceFeedName: ${node.priceFeedName}`);
     }
-
+    
     const tokenName = nameSegments[0];
     agg[tokenName] = node;
     return agg;
@@ -131,7 +131,7 @@ function processOpenVaultsData(
     const managerName = idSegments.slice(0, 4).join('.');
 
     const combinedData = {
-      ...oraclePrices[vaultNode.token],
+      ...oraclePrices[vaultNode.denom],
       ...managerGovernancesNodes[managerName],
       ...vaultNode,
     };
