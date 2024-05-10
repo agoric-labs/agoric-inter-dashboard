@@ -45,7 +45,7 @@
     "@endo/init": "^1.1.1",
     "@endo/marshal": "^1.4.1",
     "@rollup/plugin-alias": "^5.0.0",
-    "@testing-library/react": "^14.2.2",
+    "@testing-library/react": "^15.0.7",
     "@types/jest": "^29.5.3",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
