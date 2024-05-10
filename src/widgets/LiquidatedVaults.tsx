@@ -2,7 +2,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { LiquidatedVaultsTable } from '@/components/LiquidatedVaultsTable';
 import { SectionHeader } from '@/components/SectionHeader';
 import { LiquidationDashboardData } from '@/pages/Liquidated';
-import { format, differenceInMinutes } from 'date-fns';
+import { format, differenceInSeconds } from 'date-fns';
+import { formatSecondsToHumanReadable } from '@/utils';
 
 type Props = {
   title?: string;
@@ -49,10 +50,10 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults', data, isLoading 
     }
 
     if (vaultData?.liquidatedAt && vaultData?.liquidatingAt) {
-      liquidationTime =
-        differenceInMinutes(new Date(vaultData.liquidatedAt), new Date(vaultData.liquidatingAt), {
-          roundingMethod: 'ceil',
-        }).toString() + ' min';
+      const seconds: number = differenceInSeconds(new Date(vaultData.liquidatedAt), new Date(vaultData.liquidatingAt), {
+        roundingMethod: 'ceil',
+      });
+      liquidationTime = formatSecondsToHumanReadable(seconds);
     }
 
     return {
