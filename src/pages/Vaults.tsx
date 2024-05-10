@@ -83,7 +83,7 @@ function processOraclePrices(nodes: OraclePriceNode[]): OraclePriceNodesData {
     if (nameSegments.length !== 2) {
       throw new Error(`Invalid priceFeedName: ${node.priceFeedName}`);
     }
-    
+
     const tokenName = nameSegments[0];
     agg[tokenName] = node;
     return agg;
@@ -191,7 +191,7 @@ export function Vaults() {
   let dashboardData: VaultsDashboardData = {};
   let tokenNames: string[] = [];
 
-  if (data) {
+  if (data && Object.keys(data).length > 0) {
     [openVaults, dashboardData, tokenNames] = processVaultsData(data.data.data);
   }
 
