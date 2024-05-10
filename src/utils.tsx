@@ -185,3 +185,5 @@ export const getDateKey = (date: Date, daysToSubtract: number = 0) => {
   const startDateKey = Number(startDateFormatDate.replaceAll('-', ''));
   return {key: startDateKey, formattedDate: startDateFormatDate};
 }
+
+export const range = (stop: number) => [...Object(Array(stop)).keys()];

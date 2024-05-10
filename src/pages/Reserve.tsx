@@ -4,19 +4,16 @@ import { PageHeader } from '@/components/PageHeader';
 import { PageContent } from '@/components/PageContent';
 import { ReserveSummary } from '@/widgets/ReserveSummary';
 import { ReserveShortfall } from '@/widgets/ReserveShortfall';
-import { ReserveHistory } from '@/widgets/ReserveHistory';
-import { getDateKey, subQueryFetcher } from '@/utils';
-import { RESERVE_DASHBOARD_QUERY, RESERVE_GRAPH_TOKENS_QUERY, RESERVE_DAILY_METRICS_QUERY } from '@/queries';
+import { subQueryFetcher } from '@/utils';
+import { RESERVE_DASHBOARD_QUERY, RESERVE_GRAPH_TOKENS_QUERY } from '@/queries';
 import { ReserveCosmosSummary } from '@/widgets/ReserveCosmosSummary';
 import {
   GET_ACCOUNT_BALANCE_URL,
   GET_MODULE_ACCOUNTS_URL,
   VBANK_RESERVE_ACCOUNT,
   UIST_DENOMINATION,
-  GRAPH_DAYS,
 } from '@/constants';
-
-type GraphData = { key: number; x: string; [key: string]: any };
+import ReserveHistoryGraph from '@/components/ReserveHistoryGraph';
 
 type OraclePriceNode = {
   typeInAmount: number;
@@ -62,7 +59,6 @@ export const Reserve = () => {
     ),
   }));
 
-  const { key: startDateKey } = getDateKey(new Date(), GRAPH_DAYS);
   //  Queries for graph
   const { data: tokenNamesData } = useSWR<AxiosResponse, AxiosError>(RESERVE_GRAPH_TOKENS_QUERY, subQueryFetcher);
   const tokenNamesResponse: ReserveManagerMetricsResponse = tokenNamesData?.data.data;
@@ -71,72 +67,6 @@ export const Reserve = () => {
       node.allocations?.nodes?.map((allocation) => allocation.token),
     ) || [];
   tokenNames.sort();
-  const { data: dailyMetricsData, isLoading: graphDataIsLoading } = useSWR<AxiosResponse, AxiosError>(
-    RESERVE_DAILY_METRICS_QUERY(tokenNames, startDateKey),
-    subQueryFetcher,
-  );
-  const dailyMetricsResponse = dailyMetricsData?.data.data;
-
-  const range: number[] = [...Object(Array(90)).keys()].reverse();
-
-  const today = new Date();
-  const graphDataMap: { [key: string]: GraphData } = range.reduce((agg, dateNum: number) => {
-    const { key: dateKey, formattedDate } = getDateKey(new Date(today), dateNum);
-
-    return { ...agg, [dateKey]: { key: dateKey, x: formattedDate } };
-  }, {});
-
-  tokenNames.forEach((tokenName: string) => {
-    const dailyOracles = dailyMetricsResponse?.[`${tokenName}_oracle`]?.nodes.reduce(
-      (agg: object, dailyOracleData: { dateKey: string }) => ({ ...agg, [dailyOracleData.dateKey]: dailyOracleData }),
-      {},
-    );
-
-    let lastTokenMetric = dailyMetricsResponse?.[`${tokenName}_last`]?.nodes[0];
-
-    const dailyMetrics = dailyMetricsResponse?.[tokenName]?.nodes.reduce(
-      (agg: object, metricsData: { dateKey: string }) => ({ ...agg, [metricsData.dateKey]: metricsData }),
-      {},
-    );
-
-    const dateList = Object.keys(graphDataMap);
-    dateList.sort();
-    dateList.forEach((dateKey: string) => {
-      const oracle = (dailyOracles && dailyOracles[dateKey]) || { typeOutAmountLast: 1, typeInAmountLast: 1 };
-      const tokenMetrics = (dailyMetrics && dailyMetrics[dateKey]) || lastTokenMetric;
-      graphDataMap[dateKey][tokenName] =
-        ((tokenMetrics?.valueLast || 0) / 1_000_000) * (oracle.typeOutAmountLast / oracle.typeInAmountLast);
-
-      lastTokenMetric = tokenMetrics;
-    });
-  });
-
-  const sortedGraphDataList = Object.values(graphDataMap);
-  sortedGraphDataList.sort((a, b) => a.key - b.key);
-  let prevValue: GraphData = sortedGraphDataList[0];
-  const graphDataList: Array<GraphData> = sortedGraphDataList
-    .reduce((aggArray: Array<GraphData>, graphData: GraphData) => {
-      // filling in missing days
-      const prevDay = new Date(prevValue.x);
-      const nextDay = new Date(graphData.x);
-      const timeDiff = nextDay.getTime() - prevDay.getTime();
-      const diffDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-      const missingDays =
-        diffDays > 1
-          ? Array.from(Array(diffDays - 1).keys()).map((idx) => {
-              const newDate = new Date(prevDay);
-              newDate.setDate(prevDay.getDate() + 1 + idx);
-              const newDateString = newDate.toISOString().slice(0, 10);
-              const dateKey = Number(newDateString.replaceAll('-', ''));
-              return { ...prevValue, x: newDateString, key: dateKey };
-            })
-          : [];
-
-      const newAggArray = [...aggArray, ...missingDays, { ...prevValue, ...graphData }];
-      prevValue = { ...prevValue, ...graphData };
-      return newAggArray;
-    }, [])
-    .slice(-1 * GRAPH_DAYS);
 
   // Cosmos reserve balance
   const { data: moduleAccounts } = useSWR<AxiosResponse, AxiosError>(GET_MODULE_ACCOUNTS_URL, axios.get);
@@ -146,7 +76,7 @@ export const Reserve = () => {
   const reserveAddress = reserveAccount?.base_account.address;
 
   const { data: reserveBalance, isLoading: reserveBalanceLoading } = useSWR<AxiosResponse, AxiosError>(
-    GET_ACCOUNT_BALANCE_URL(reserveAddress),
+    reserveAddress ? GET_ACCOUNT_BALANCE_URL(reserveAddress) : null,
     axios.get,
   );
   const istReserve: { amount: number } = reserveBalance?.data.balances.find(
@@ -163,7 +93,7 @@ export const Reserve = () => {
           <ReserveCosmosSummary data={istReserveBalance} isLoading={reserveBalanceLoading} />
           <ReserveShortfall data={reserveDashboardQueryData} isLoading={isLoading} />
         </div>
-        {/* <ReserveHistory data={graphDataList} tokenNames={tokenNames} isLoading={graphDataIsLoading} /> */}
+        {/* <ReserveHistoryGraph tokenNames={tokenNames} /> */}
       </PageContent>
     </>
   );
