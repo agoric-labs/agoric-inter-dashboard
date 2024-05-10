@@ -305,7 +305,17 @@ query {
                 blockTime
             }
         }
-    } 
+    }
+    oraclePrices {
+        nodes {
+            id
+            typeInName
+            typeOutName
+            typeInAmount
+            typeOutAmount
+            priceFeedName
+        }
+    }
 }`;
 
 export const LIQUIDATION_GRAPH_TOKENS_QUERY = `

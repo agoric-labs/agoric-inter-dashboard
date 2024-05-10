@@ -9,6 +9,8 @@ type Row = {
   liquidating_debt_amount_avg: number;
   liquidation_margin_avg: number;
   liquidating_rate: number;
+  liquidated_return_amount: number;
+  liquidated_return_amount_usd: number;
 };
 
 type Props = {
@@ -58,16 +60,16 @@ export const columns: DataColumn<Row>[] = [
     type: 'usd',
     header: 'Liquidation Price',
   },
-  // {
-  //   accessorKey: 'liquidated_return_amount_avg',
-  //   type: 'number',
-  //   header: 'Collateral Returned Amount',
-  // },
-  // {
-  //   accessorKey: 'liquidated_return_amount_usd_avg',
-  //   type: 'usd',
-  //   header: 'Collateral Returned ($USD)',
-  // },
+  {
+    accessorKey: 'liquidated_return_amount',
+    type: 'number',
+    header: 'Collateral Returned Amount',
+  },
+  {
+    accessorKey: 'liquidated_return_amount_usd',
+    type: 'usd',
+    header: 'Collateral Returned ($USD)',
+  },
 ];
 
 export function LiquidatedVaultsTable({ data }: Props) {
