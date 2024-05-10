@@ -133,8 +133,6 @@ query {
             shortfallBalance
             allocations {
                 nodes {
-                    id
-                    token
                     value
                 }
             }
@@ -142,10 +140,7 @@ query {
     }
     oraclePrices {
         nodes {
-            id
             typeInName
-            typeOutName
-            typeInAmount
             typeOutAmount
         }
     }
