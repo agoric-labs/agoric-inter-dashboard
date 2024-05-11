@@ -1,7 +1,41 @@
-import { graphqlQuery } from './queries.js';
+import { graphqlQuery, LIQUIDATION_ORACLE_PRICES_DAILIES_QUERY } from './queries.js';
 import { SUBQUERY_URL } from './constants.js';
-export async function handleGauntletRequest(env) {
+import { getDateKey } from './utils.js';
 
+async function getOraclPricesDailiesForLiquidatedVaults(vaultLiquidations) {
+  const oraclePricesDatekeyMap = vaultLiquidations?.nodes.reduce((agg, vault) => {
+    const { denom } = vault;
+    const prevDenomKeys = agg[denom] || [];
+    return { ...agg, [denom]: [...prevDenomKeys, getDateKey(new Date(vault.blockTime)).key] };
+  }, {});
+  const oraclePricesResponse = await fetch(SUBQUERY_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(LIQUIDATION_ORACLE_PRICES_DAILIES_QUERY(oraclePricesDatekeyMap)),
+  });
+  const { data } = await oraclePricesResponse.json();
+
+  const oraclePricesDailies =
+    data &&
+    Object.fromEntries(
+      Object.entries(data).map(([denom, oraclePrices]) => [
+        denom,
+        oraclePrices.nodes.reduce(
+          (agg, oracle) => ({
+            ...agg,
+            [oracle.dateKey]: oracle,
+          }),
+          {}
+        ),
+      ])
+    );
+  return oraclePricesDailies;
+}
+
+export async function handleGauntletRequest(env) {
   try {
     const response = await fetch(SUBQUERY_URL, {
       method: 'POST',
@@ -15,11 +49,14 @@ export async function handleGauntletRequest(env) {
     const { data } = await response.json();
     console.log('Data Fetched Successfully');
 
-    const { oraclePrices, oraclePriceDailies, vaultManagerMetrics, vaultManagerGovernances, vaults, liquidatedVaults } = data;
+    const { oraclePrices, oraclePriceDailies, vaultManagerMetrics, vaultManagerGovernances, vaults, vaultLiquidations } = data;
+
+    const liquidationOraclePricesDailies = await getOraclPricesDailiesForLiquidatedVaults(vaultLiquidations);
+
     const oraclePricesData = transformOraclePrices(oraclePriceDailies);
     const managersData = transformVaultManagerMetrics(oraclePrices, vaultManagerMetrics, vaultManagerGovernances);
     const vaultsData = transformVaults(vaults, oraclePrices, vaultManagerGovernances);
-    const liquidatedVaultsData = transformLiquidatedVaults(liquidatedVaults, vaultManagerGovernances);
+    const liquidatedVaultsData = transformLiquidatedVaults(vaultLiquidations, vaultManagerGovernances, liquidationOraclePricesDailies);
 
     console.log('Sending Response...');
 
@@ -57,7 +94,7 @@ function transformOraclePrices(oraclePriceDailies) {
   return transformedOraclePrices;
 }
 
-function transformLiquidatedVaults(vaults, vaultManagerGovernances) {
+function transformLiquidatedVaults(vaults, vaultManagerGovernances, oraclePricesDailies) {
   const transformedVaults = vaults.nodes.map((vaultData) => {
     const vaultManagerGovernanceNode = vaultManagerGovernances.nodes.find((governanceNode) => {
       const splittedGovernanceNodeID = governanceNode.id.split('.');
@@ -71,36 +108,28 @@ function transformLiquidatedVaults(vaults, vaultManagerGovernances) {
     const match = vaultData?.id?.match(pattern);
     const vaultIdx = match ? match[1] : '';
 
-    const liquidatingTimeStampInSeconds = Math.round(new Date(vaultData.liquidatingAt).getTime() / 1000);
+    const oraclePriceSnapshot = oraclePricesDailies?.[vaultData.denom]?.[getDateKey(vaultData.blockTime).key];
+    const oraclePriceRatio = oraclePriceSnapshot.typeOutAmountLast / oraclePriceSnapshot.typeInAmountLast;
 
-			/*
-			"collateral_type": "ATOM",
-      "day": "2024-05-09T00:00:00.000",
-      "day.day": "2024-05-09T00:00:00.000",
-      "debt_type": "IST",
-      "last_state": "liquidated",
-      "liquidated_enter_time": 1702877045,
-      "liquidated_return_amount_avg": 4.416504,
-      "liquidated_return_amount_usd_avg": 47.975299328928,
-      "liquidating_collateral_amount_avg": 4.416504,
-      "liquidating_debt_amount_avg": 25.125,
-      "liquidating_enter_time": 1702875602,
-      "liquidating_rate": 10.862732,
-      "liquidation_margin_avg": 1.9,
-      "manager_idx": "0",
-      "vault_idx": "62"
-			*/
+    const collateralAmountReturned = (vaultData.liquidatingState.balance - vaultData.balance) / 1_000_000;
+    const collateralAmountReturnedUsd = collateralAmountReturned * oraclePriceRatio;
+    const istDebtAmount = vaultData.liquidatingState.debt / 1_000_000;
+    const liquidatingTimeStampInSeconds = Math.round(new Date(vaultData.liquidatingState.blockTime).getTime() / 1000);
+    const liquidatedTimeStampInSeconds = Math.round(new Date(vaultData.blockTime).getTime() / 1000);
+
     return {
-      collateral_type: vaultData.token,
+      collateral_type: vaultData.denom,
       debt_type: 'IST',
       last_state: vaultData.state,
-      liquidated_enter_time: liquidatingTimeStampInSeconds,
-      liquidated_return_amount_avg: 0,
-      liquidated_return_amount_usd_avg: 0,
-      liquidating_collateral_amount_avg: 0,
-      liquidating_debt_amount_avg: 0,
-      liquidating_rate: 0,
-      liquidation_margin_avg: 0,
+      liquidated_enter_time: liquidatedTimeStampInSeconds,
+      liquidated_return_amount_avg: collateralAmountReturned,
+      liquidated_return_amount_usd_avg: collateralAmountReturnedUsd,
+      liquidating_collateral_amount_avg: collateralAmountReturned,
+      liquidating_debt_amount_avg: istDebtAmount,
+      liquidating_enter_time: liquidatingTimeStampInSeconds,
+      // Both are incorrect currently
+      // liquidating_rate: 0,
+      // liquidation_margin_avg: 0,
       manager_idx: managerIdx,
       vault_idx: vaultIdx,
     };
@@ -117,7 +146,7 @@ function transformVaults(vaults, oraclePrices, vaultManagerGovernances) {
       return splittedGovernanceNodeID[3] === splittedVaultManagerID[3];
     });
 
-    const oraclePriceNode = oraclePrices.nodes.find((oracleNode) => oracleNode.typeInName === vaultData.token);
+    const oraclePriceNode = oraclePrices.nodes.find((oracleNode) => oracleNode.typeInName === vaultData.denom);
     const rate = parseInt(oraclePriceNode.typeOutAmount) / parseInt(oraclePriceNode.typeInAmount);
 
     const pattern = /vault(\d+)/;
@@ -131,12 +160,12 @@ function transformVaults(vaults, oraclePrices, vaultManagerGovernances) {
     const collateralAmount = vaultData.balance / 1_000_000;
     const liquidationPrice = (istDebtAmount * liquidationRatio) / collateralAmount;
     const currentCollateralPrice = rate;
-		const managerIdx = vaultManagerGovernanceNode?.id?.match(/manager(\d+)/)[1];
+    const managerIdx = vaultManagerGovernanceNode?.id?.match(/manager(\d+)/)[1];
 
     return {
       collateral_amount: collateralAmount,
       collateral_amount_current_usd: collateralValueUsd,
-      collateral_type: vaultData.token,
+      collateral_type: vaultData.denom,
       collateralization_ratio: collateralValueUsd / (vaultData.debt / 1_000_000),
       current_collateral_price: currentCollateralPrice,
       debt_amount: istDebtAmount,

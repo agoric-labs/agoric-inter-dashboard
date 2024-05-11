@@ -50,17 +50,52 @@ export const graphqlQuery = {
           coin
         }
       }
-      liquidatedVaults: vaults (filter: {state: {equalTo: "liquidated"}}) {
+      vaultLiquidations (filter: {state: {equalTo: "liquidated"}}) {
         nodes {
-          id
-          denom
-          balance
-          state
-          debt
-          lockedValue
-          coin
-          liquidatingAt
+            id
+            denom
+            debt
+            state
+            balance
+            blockTime
+            currentState {
+                id
+                denom
+                debt
+                state
+                balance
+                blockTime
+            }
+            liquidatingState {
+                id
+                denom
+                debt
+                state
+                balance
+                blockTime
+            }
         }
-      }
+    }
     }`,
 };
+
+export const LIQUIDATION_ORACLE_PRICES_DAILIES_QUERY = (tokens) => ({
+  query: `
+{
+    ${Object.entries(tokens).map(
+      ([token, oracleKeys]) =>
+        `${token}:oraclePriceDailies (filter: {
+        dateKey: { in: [${oracleKeys.join(', ')}] }, typeInName: {equalTo: "${token}"}
+    }) {
+        nodes {
+            id
+            typeInName
+            typeOutName
+            typeInAmountLast
+            typeOutAmountLast
+            dateKey
+        }
+    }`
+    )}
+}`,
+});
