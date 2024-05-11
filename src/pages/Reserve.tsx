@@ -9,31 +9,12 @@ import { RESERVE_DASHBOARD_QUERY, RESERVE_GRAPH_TOKENS_QUERY } from '@/queries';
 import { ReserveCosmosSummary } from '@/widgets/ReserveCosmosSummary';
 import { GET_MODULE_ACCOUNTS_URL, VBANK_RESERVE_ACCOUNT } from '@/constants';
 import ReserveHistoryGraph from '@/components/ReserveHistoryGraph';
-
-type OraclePriceNode = {
-  typeInAmount: number;
-  typeOutAmount: number;
-  typeInName: string;
-  typeOutName: string;
-  id: string;
-};
-type AllocationsNode = { id: string; denom: string; value: number };
-type ReserveMetricsNode = {
-  allocations: { nodes: Array<AllocationsNode> };
-  shortfallBalance: number;
-};
-type ReserveDashboardResponse = {
-  oraclePrices: { nodes: Array<OraclePriceNode> };
-  reserveMetrics: { nodes: Array<ReserveMetricsNode> };
-};
-export type ReserveDashboardData = Array<{
-  shortfallBalance: number;
-  allocations: { [key: string]: AllocationsNode & OraclePriceNode };
-}>;
-
-type ReserveManagerMetricsResponse = {
-  reserveMetrics: { nodes: Array<ReserveMetricsNode> };
-};
+import {
+  ReserveDashboardResponse,
+  ReserveDashboardData,
+  OraclePriceNode,
+  ReserveManagerMetricsResponse,
+} from '@/types/reserve-types';
 
 export const Reserve = () => {
   const { data, isLoading } = useSWR<AxiosResponse, AxiosError>(RESERVE_DASHBOARD_QUERY, subQueryFetcher);
@@ -73,14 +54,18 @@ export const Reserve = () => {
     (account: { name: string }) => account.name === VBANK_RESERVE_ACCOUNT,
   );
   const reserveAddress = reserveAccount?.base_account.address;
-  
+
   return (
     <>
       <PageHeader title="Reserve Assets" />
       <PageContent>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <ReserveSummary data={reserveDashboardQueryData} isLoading={isLoading} />
-          <ReserveCosmosSummary reserveAddress={reserveAddress} isLoading={moduleAccountsLoading} error={moduleAccountsError}/>
+          <ReserveCosmosSummary
+            reserveAddress={reserveAddress}
+            isLoading={moduleAccountsLoading}
+            error={moduleAccountsError}
+          />
           <ReserveShortfall data={reserveDashboardQueryData} isLoading={isLoading} />
         </div>
         <ReserveHistoryGraph tokenNames={tokenNames} />
