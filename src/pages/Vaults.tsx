@@ -181,7 +181,11 @@ function processVaultsData(
   return [openVaults, dashboardData, tokenNames];
 }
 export function Vaults() {
-  const { data, isLoading, error } = useSWR<AxiosResponse, AxiosError>(VAULTS_DASHBOARD_QUERY, subQueryFetcher);
+  const {
+    data: vaultsData,
+    isLoading,
+    error,
+  } = useSWR<AxiosResponse, AxiosError>(VAULTS_DASHBOARD_QUERY, subQueryFetcher);
 
   if (error) {
     return <ErrorAlert value={error} />;
@@ -191,8 +195,8 @@ export function Vaults() {
   let dashboardData: VaultsDashboardData = {};
   let tokenNames: string[] = [];
 
-  if (data && Object.keys(data).length > 0) {
-    [openVaults, dashboardData, tokenNames] = processVaultsData(data.data.data);
+  if (vaultsData?.data?.data && Object.keys(vaultsData.data.data).length > 0) {
+    [openVaults, dashboardData, tokenNames] = processVaultsData(vaultsData.data.data);
   }
 
   return (
