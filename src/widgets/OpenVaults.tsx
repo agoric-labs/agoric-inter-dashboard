@@ -1,8 +1,8 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { OpenVaultsTable } from '@/components/OpenVaultsTable';
 import { SectionHeader } from '@/components/SectionHeader';
-import { OpenVaultsData } from '@/pages/Vaults';
 import CollateralWithIcon from '@/components/ui/collateralWithIcon';
+import { OpenVaultsData } from '@/types/vault-types';
 
 type Props = {
   title?: string;
