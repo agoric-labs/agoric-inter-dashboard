@@ -187,3 +187,42 @@ export const getDateKey = (date: Date, daysToSubtract: number = 0) => {
 }
 
 export const range = (stop: number) => [...Object(Array(stop)).keys()];
+
+type GraphData = { key: number; x: string; [key: string]: any };
+type FormattedGraphData = {
+  x: string;
+  key: number;
+  active?: any
+};
+
+const fillMissingDays = (startDate: Date, endDate: Date, formattedData: FormattedGraphData[]): void => {
+  const timeDifferenceInMilliseconds = endDate.getTime() - startDate.getTime();
+  const daysDifference = Math.ceil(timeDifferenceInMilliseconds / (1000 * 60 * 60 * 24));
+
+  if (daysDifference > 1) {
+    for (let day = 1; day < daysDifference; day++) {
+      const newDate = new Date(startDate);
+      newDate.setDate(startDate.getDate() + day);
+      const formattedDate = newDate.toISOString().slice(0, 10).replace(/-/g, '');
+      const dateKey = Number(formattedDate);
+      formattedData.push({ x: formattedDate, key: dateKey });
+    }
+  }
+};
+export const populateMissingDays = (graphDataMap: Record<string, GraphData>, GRAPH_DAYS: number): FormattedGraphData[] => {
+  const sortedGraphDataList = Object.values(graphDataMap).sort((a, b) => a.key - b.key);
+
+  const formattedData: FormattedGraphData[] = [];
+  let prevDate: Date | null = null;
+
+  for (const currentData of sortedGraphDataList) {
+    const currentDate = new Date(currentData.x);
+
+    prevDate && fillMissingDays(prevDate, currentDate, formattedData);
+    formattedData.push(currentData);
+
+    prevDate = currentDate;
+  }
+
+  return formattedData.slice(-GRAPH_DAYS);
+};

@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import { AxiosError, AxiosResponse } from 'axios';
 import { ReserveHistory } from '@/widgets/ReserveHistory';
 import { GRAPH_DAYS } from '@/constants';
-import { getDateKey, range, subQueryFetcher } from '@/utils';
+import { populateMissingDays, getDateKey, range, subQueryFetcher } from '@/utils';
 import { RESERVE_DAILY_METRICS_QUERY } from '@/queries';
 
 type GraphData = { key: number; x: string; [key: string]: any };
@@ -52,34 +52,8 @@ const ReserveHistoryGraph = ({ tokenNames }: { tokenNames: string[] }) => {
     });
   });
 
-  const sortedGraphDataList = Object.values(graphDataMap);
-  sortedGraphDataList.sort((a, b) => a.key - b.key);
-
-  let prevValue: GraphData = sortedGraphDataList[0];
-  const graphDataList: Array<GraphData> = sortedGraphDataList
-    .reduce((aggArray: Array<GraphData>, graphData: GraphData) => {
-      // filling in missing days
-      const prevDay = new Date(prevValue.x);
-      const nextDay = new Date(graphData.x);
-      const timeDiff = nextDay.getTime() - prevDay.getTime();
-      const diffDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-      const missingDays =
-        diffDays > 1
-          ? range(diffDays - 1).map((idx) => {
-              const newDate = new Date(prevDay);
-              newDate.setDate(prevDay.getDate() + 1 + idx);
-              const newDateString = newDate.toISOString().slice(0, 10);
-              const dateKey = Number(newDateString.replaceAll('-', ''));
-              return { ...prevValue, x: newDateString, key: dateKey };
-            })
-          : [];
-
-      const newAggArray = [...aggArray, ...missingDays, { ...prevValue, ...graphData }];
-      prevValue = { ...prevValue, ...graphData };
-      return newAggArray;
-    }, [])
-    .slice(-1 * GRAPH_DAYS);
-
+  const graphDataList = populateMissingDays(graphDataMap, GRAPH_DAYS);
+  
   return (
     <ReserveHistory
       data={graphDataList}
