@@ -4,93 +4,13 @@ import { ValueCardGrid } from '@/components/ValueCardGrid';
 import { PageHeader } from '@/components/PageHeader';
 import { PageContent } from '@/components/PageContent';
 import { LiquidatedVaults } from '@/widgets/LiquidatedVaults';
-import { VaultStatesChart } from '@/widgets/VaultStatesChart';
 import { LiquidatedVaultCountCard } from '@/widgets/LiquidatedVaultCountCard';
+import { VaultStatesChart } from '@/widgets/VaultStatesChart';
 import { subQueryFetcher } from '@/utils';
 import { LIQUIDATIONS_DASHBOARD, LIQUIDATION_GRAPH_TOKENS_QUERY, LIQUIDATION_DAILY_METRICS_QUERY } from '@/queries';
+import { GraphData, LiquidationDashboardResponse, LiquidationMetricsDailyResponse, OraclePriceNode, TokenNamesResponse, VaultManagerGovernancesNode } from '@/types/liquidation-types';
 
-export type VaultManagerMetricsNode = {
-  id: string;
-  liquidatingCollateralValue: number;
-  numActiveVaults: number;
-  numLiquidatingVaults: number;
-  numLiquidationsAborted: number;
-  numLiquidationsCompleted: number;
-};
-type VaultManagerGovernancesNode = {
-  id: string;
-  liquidationMarginDenominator: number;
-  liquidationMarginNumerator: number;
-};
 
-type VaultsNode = {
-  balance: number;
-  debt: number;
-  id: string;
-  state: string;
-  denom: string;
-  blockTime: string;
-  currentState: string;
-  liquidatingState: VaultLiquidationsNode
-};
-
-type VaultLiquidationsNode = {
-  balance: number;
-  debt: number;
-  id: string;
-  state: string;
-  denom: string;
-  blockTime: string;
-  currentState: VaultsNode;
-  liquidatingState: VaultLiquidationsNode
-};
-
-type OraclePriceNode = {
-  priceFeedName: string;
-  typeInAmount: number;
-  typeOutAmount: number;
-  typeInName: string;
-  typeOutName: string;
-  id: string;
-};
-type LiquidationDashboardResponse = {
-  vaultLiquidations: { nodes: Array<VaultLiquidationsNode> };
-  vaultManagerGovernances: {
-    nodes: Array<VaultManagerGovernancesNode>;
-  };
-  vaultManagerMetrics: {
-    nodes: Array<VaultManagerMetricsNode>;
-  };
-  oraclePrices: { nodes: Array<OraclePriceNode> };
-};
-export type LiquidationDashboardData = {
-  vaultLiquidations: Array<VaultLiquidationsNode>;
-  vaultManagerGovernances: { [key: string]: VaultManagerGovernancesNode };
-  oraclePrices: { [key: string]: OraclePriceNode };
-};
-
-type TokenNamesResponse = {
-  vaultManagerMetrics: {
-    nodes: Array<{ id: string; liquidatingCollateralBrand: string }>;
-  };
-};
-type LiquidationMetricsDailyNode = {
-  id: string;
-  dateKey: number;
-  blockTimeLast: string;
-  numActiveVaultsLast: number;
-  numLiquidatingVaultsLast: number;
-  numLiquidationsCompletedLast: number;
-  numLiquidationsAbortedLast: number;
-  liquidatingCollateralBrand: string;
-};
-
-type LiquidationMetricsDailyResponse = {
-  [key: string]: {
-    nodes: Array<LiquidationMetricsDailyNode>;
-  };
-};
-type GraphData = { key: number; x: string; active: object; liquidated: object };
 const sum = (items: Array<string>) => items.reduce((agg, next) => agg + Number(next), 0);
 
 export function Liquidated() {
