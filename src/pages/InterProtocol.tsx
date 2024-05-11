@@ -13,6 +13,8 @@ import {
   GET_INTERCHAIN_BALANCES_URL,
 } from '@/constants';
 import InterProtocolSkeleton from '@/components/InterProtocolSkeleton';
+import { AccountData, InterProtocolResponse } from '@/types/interprotocol-types';
+import { OraclePriceNode } from '@/types/vault-types';
 
 
 const RADIAN = Math.PI / 180;
@@ -34,60 +36,6 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
   );
 };
 
-type OraclePriceNode = {
-  priceFeedName: string;
-  typeInAmount: number;
-  typeOutAmount: number;
-  typeInName: string;
-  typeOutName: string;
-  id: string;
-};
-type PsmGovernancesNode = { denom: string; mintLimit: number };
-type PsmMetricsNode = { denom: string; anchorPoolBalance: number; mintedPoolBalance: number };
-type AllocationsNode = { id: string; denom: string; value: number };
-type ReserveMetricsNode = {
-  allocations: { nodes: Array<AllocationsNode> };
-  shortfallBalance: number;
-  totalFeeBurned: number;
-};
-type VaultManagerGovernancesNode = {
-  id: string;
-  debtLimit: number;
-};
-type VaultManagerMetricsNode = {
-  id: string;
-  liquidatingCollateralBrand: string;
-  liquidatingDebtBrand: string;
-  totalCollateral: number;
-  totalDebt: number;
-};
-type BoardAuxesNode = { allegedName: string; decimalPlaces: number };
-
-type InterProtocolResponse = {
-  oraclePrices: { nodes: Array<OraclePriceNode> };
-  psmGovernances: { nodes: Array<PsmGovernancesNode> };
-  psmMetrics: { nodes: Array<PsmMetricsNode> };
-  reserveMetrics: { nodes: Array<ReserveMetricsNode> };
-  vaultManagerGovernances: {
-    nodes: Array<VaultManagerGovernancesNode>;
-  };
-  vaultManagerMetrics: {
-    nodes: Array<VaultManagerMetricsNode>;
-  };
-  wallets: { totalCount: number };
-  boardAuxes: { nodes: Array<BoardAuxesNode> };
-};
-
-type Balance = {
-  denom: string;
-  amount: string;
-};
-
-type AccountData = {
-  channel_id: string;
-  address: string;
-  balance: Balance[];
-};
 
 function getInterchainBalance(data: AccountData[]): number {
   const balanceList = data
