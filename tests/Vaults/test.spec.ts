@@ -1,6 +1,6 @@
 import { constructGraph } from '@/components/VaultCharts';
 import { tokenNames, dailyMetricsResponse } from './mocks';
-import { extractDailyOracles } from '@/utils';
+import * as utils from '@/utils';
 
 describe('Tests for constructing graph', () => {
   it('should return a list of formatted graph data when given valid input', () => {
@@ -70,59 +70,90 @@ describe('Tests for constructing graph', () => {
     expect(result).toEqual(expectedGraphDataList);
   });
 
-  it('should return an empty object when dailyMetricsResponse is undefined or null', () => {
-    const tokenName = 'ATOM';
-    let dailyMetricsResponse = undefined;
+  it('should return a list of formatted graph data when given valid input and extractDailyOracles returns an empty object', () => {
+    const graphData = {};
 
-    let result = extractDailyOracles(tokenName, dailyMetricsResponse);
-    expect(result).toEqual({});
-    dailyMetricsResponse = null;
-    result = extractDailyOracles(tokenName, dailyMetricsResponse);
-    expect(result).toEqual({});
+    const expectedGraphDataList = [
+      {
+        'stTIA-total_collateral': 113147.464202,
+        'stTIA-total_minted': '334322591040',
+        key: 20240510,
+        x: '2024-05-10',
+      },
+      {
+        'ATOM-total_collateral': 2044.732568,
+        'ATOM-total_minted': '1716395996',
+        key: 20240511,
+        'stTIA-total_collateral': 112152.560009,
+        'stTIA-total_minted': '330447863054',
+        x: '2024-05-11',
+      },
+      {
+        'ATOM-total_collateral': 2056.752568,
+        'ATOM-total_minted': '1716827380',
+        key: 20240512,
+        'stTIA-total_collateral': 112152.560009,
+        'stTIA-total_minted': '330454604268',
+        x: '2024-05-12',
+      },
+      {
+        'ATOM-total_collateral': 2068.772568,
+        'ATOM-total_minted': '1717224228',
+        key: 20240513,
+        'stTIA-total_collateral': 112320.327361,
+        'stTIA-total_minted': '330990866379',
+        x: '2024-05-13',
+      },
+    ];
+
+    jest.spyOn(utils, 'extractDailyOracles').mockReturnValue({});
+    const result = constructGraph(tokenNames, dailyMetricsResponse, graphData);
+
+    expect(result).toEqual(expectedGraphDataList);
   });
 
-  it('should return an empty object when dailyMetricsResponse has empty nodes array', () => {
-    const tokenName = 'ATOM';
-    const dailyMetricsResponse = {
-      ATOM_oracle: {
-        nodes: [],
-      },
-    };
+  it('should return a list of formatted graph data when given valid input and extractDailyOracles returns an null or undefined object', () => {
+    const graphData = {};
 
-    const result = extractDailyOracles(tokenName, dailyMetricsResponse);
-
-    expect(result).toEqual({});
-  });
-
-  it('should return a DailyOracles object with the correct dateKey and data when dailyMetricsResponse has valid data', () => {
-    const tokenName = 'ATOM';
-    const result = extractDailyOracles(tokenName, dailyMetricsResponse);
-
-    expect(result).toEqual({
-      '20240511': {
-        blockTimeLast: '2024-05-11T00:08:40',
-        dateKey: 20240511,
-        id: 'ATOM-USD:20240511',
-        typeInAmountLast: 1000000,
-        typeInName: 'ATOM',
-        typeOutAmountLast: 8498855,
+    const expectedGraphDataList = [
+      {
+        'stTIA-total_collateral': 113147.464202,
+        'stTIA-total_minted': '334322591040',
+        key: 20240510,
+        x: '2024-05-10',
       },
-      '20240512': {
-        blockTimeLast: '2024-05-12T00:04:13',
-        dateKey: 20240512,
-        id: 'ATOM-USD:20240512',
-        typeInAmountLast: 1000000,
-        typeInName: 'ATOM',
-        typeOutAmountLast: 8488890,
+      {
+        'ATOM-total_collateral': 2044.732568,
+        'ATOM-total_minted': '1716395996',
+        key: 20240511,
+        'stTIA-total_collateral': 112152.560009,
+        'stTIA-total_minted': '330447863054',
+        x: '2024-05-11',
       },
-      '20240513': {
-        blockTimeLast: '2024-05-13T00:09:42',
-        dateKey: 20240513,
-        id: 'ATOM-USD:20240513',
-        typeInAmountLast: 1000000,
-        typeInName: 'ATOM',
-        typeOutAmountLast: 8527726,
+      {
+        'ATOM-total_collateral': 2056.752568,
+        'ATOM-total_minted': '1716827380',
+        key: 20240512,
+        'stTIA-total_collateral': 112152.560009,
+        'stTIA-total_minted': '330454604268',
+        x: '2024-05-12',
       },
-    });
+      {
+        'ATOM-total_collateral': 2068.772568,
+        'ATOM-total_minted': '1717224228',
+        key: 20240513,
+        'stTIA-total_collateral': 112320.327361,
+        'stTIA-total_minted': '330990866379',
+        x: '2024-05-13',
+      },
+    ];
+
+    jest.spyOn(utils, 'extractDailyOracles').mockReturnValue(null as unknown as any);
+    let result = constructGraph(tokenNames, dailyMetricsResponse, graphData);
+    expect(result).toEqual(expectedGraphDataList);
+
+    jest.spyOn(utils, 'extractDailyOracles').mockReturnValue(undefined as unknown as any);
+    result = constructGraph(tokenNames, dailyMetricsResponse, graphData);
+    expect(result).toEqual(expectedGraphDataList);
   });
 });
