@@ -6,8 +6,9 @@ import { VAULTS_DAILY_METRICS_QUERY } from '@/queries';
 import { extractDailyOracles, populateMissingDays, subQueryFetcher } from '@/utils';
 import ChartsSkeleton from './ChartsSkeleton';
 import { GRAPH_DAYS } from '@/constants';
-import { DailyMetricsResponse, DailyOracles, FormattedGraphData } from '@/types/common';
+import { DailyOracles, FormattedGraphData } from '@/types/common';
 import { GraphData } from '@/types/psm-types';
+import { VaultDailyMetricsQueryResponse } from '@/types/vault-types';
 
 type Props = {
   tokenNames: Array<string>;
@@ -41,7 +42,7 @@ function populateGraphData(dailyOracles: DailyOracles, nodes: any[], graphData: 
 
 function constructGraph(
   tokenNames: string[],
-  dailyMetricsResponse: DailyMetricsResponse,
+  dailyMetricsResponse: VaultDailyMetricsQueryResponse,
   graphData: Record<string, GraphData>,
 ): FormattedGraphData[] {
   for (let i = 0; i < tokenNames.length; i++) {
@@ -74,7 +75,7 @@ export function VaultCharts({ tokenNames, vaultsDataIsLoading, error }: Props) {
     error: graphDataError,
   } = useSWR<AxiosResponse, AxiosError>(VAULTS_DAILY_METRICS_QUERY(tokenNames), subQueryFetcher);
 
-  const dailyMetricsResponse = dailyMetricsData?.data?.data;
+  const dailyMetricsResponse: VaultDailyMetricsQueryResponse = dailyMetricsData?.data?.data;
 
   const graphData: Record<string, GraphData> = {};
   const graphDataList = constructGraph(tokenNames, dailyMetricsResponse, graphData);
