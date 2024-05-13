@@ -3,7 +3,7 @@ import useSWR from 'swr/immutable';
 import { VaultTotalLockedCollateralChart } from '@/widgets/VaultTotalLockedCollateralChart';
 import { VaultTotalMintedISTChart } from '@/widgets/VaultTotalMintedISTChart';
 import { VAULTS_DAILY_METRICS_QUERY } from '@/queries';
-import { populateMissingDays, subQueryFetcher } from '@/utils';
+import { extractDailyOracles, populateMissingDays, subQueryFetcher } from '@/utils';
 import ChartsSkeleton from './ChartsSkeleton';
 import { GRAPH_DAYS } from '@/constants';
 
@@ -33,30 +33,29 @@ export function VaultCharts({ tokenNames, vaultsDataIsLoading, error }: Props) {
   const dailyMetricsResponse = dailyMetricsData?.data?.data;
 
   const graphDataMap: { [key: number]: GraphData } = {};
+
   
   tokenNames.forEach((tokenName) => {
-    const dailyOracles = dailyMetricsResponse?.[`${tokenName}_oracle`]?.nodes.reduce(
-      (agg: object, dailyOracleData: { dateKey: string }) => ({ ...agg, [dailyOracleData?.dateKey]: dailyOracleData }),
-      {},
-    );
+    const dailyOracles = extractDailyOracles(tokenName, dailyMetricsResponse);
 
     dailyMetricsResponse?.[tokenName]?.nodes.forEach((dailyTokenMetrics: any) => {
-      let oracle;
+      const dateKey = dailyTokenMetrics?.dateKey;
 
-      if (dailyTokenMetrics?.dateKey in dailyOracles) {
-        oracle = dailyOracles[dailyTokenMetrics.dateKey];
-      } else {
-        oracle = { typeOutAmountLast: 0, typeInAmountLast: 1 };
-      }
+      const oracle = (dailyOracles && dailyOracles[dateKey]) || { typeOutAmountLast: 1, typeInAmountLast: 1 };
+      const blockTime = dailyTokenMetrics?.blockTimeLast?.slice(0, 10);
+      const liquidatingCollateralBrand = dailyTokenMetrics?.liquidatingCollateralBrand;
+      const totalCollateralLast = dailyTokenMetrics?.totalCollateralLast;
+      const totalDebtLast = dailyTokenMetrics?.totalDebtLast;
+      const typeOutAmountLast = Number(oracle.typeOutAmountLast);
+      const typeInAmountLast = Number(oracle.typeInAmountLast);
+      const totalCollateral = (totalCollateralLast / 1_000_000) * (typeOutAmountLast / typeInAmountLast);
 
-      graphDataMap[dailyTokenMetrics?.dateKey] = {
-        ...graphDataMap[dailyTokenMetrics?.dateKey],
-        x: dailyTokenMetrics?.blockTimeLast?.slice(0, 10),
-        key: dailyTokenMetrics?.dateKey,
-        [`${dailyTokenMetrics?.liquidatingCollateralBrand}-total_collateral`]:
-          (dailyTokenMetrics?.totalCollateralLast / 1_000_000) * (oracle.typeOutAmountLast / oracle.typeInAmountLast),
-        [`${dailyTokenMetrics?.liquidatingCollateralBrand}-total_minted`]:
-          dailyTokenMetrics?.totalDebtLast,
+      graphDataMap[dateKey] = {
+        ...graphDataMap[dateKey],
+        x: blockTime,
+        key: dateKey,
+        [`${liquidatingCollateralBrand}-total_collateral`]: totalCollateral,
+        [`${liquidatingCollateralBrand}-total_minted`]: totalDebtLast,
       };
     });
   });
