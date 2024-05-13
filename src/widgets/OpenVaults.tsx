@@ -31,12 +31,13 @@ export function OpenVaults({ title = 'Open Vaults', data, isLoading }: Props) {
 
   const rows = data.map((vaultData) => {
     const vaultIdx = vaultData.id.split('.').at(-1)?.split('vault')[1] || '';
-    const collateralValueUsd = ((vaultData.typeOutAmount / 1_000_000) * vaultData.balance) / 1_000_000;
+    const typeOutAmount = Number(vaultData?.typeOutAmount) || 0
+    const collateralValueUsd = ((typeOutAmount / 1_000_000) * vaultData.balance) / 1_000_000;
     const liquidationRatio = (vaultData?.liquidationMarginNumerator ?? 0) / (vaultData?.liquidationMarginDenominator ?? 1);
     const istDebtAmount = vaultData.debt / 1_000_000;
     const collateralAmount = vaultData.balance / 1_000_000;
     const liquidationPrice = (istDebtAmount * liquidationRatio) / collateralAmount;
-    const currentCollateralPrice = vaultData.typeOutAmount / 1_000_000;
+    const currentCollateralPrice = typeOutAmount / 1_000_000;
     const collateralizationRatio = collateralValueUsd / (vaultData.debt / 1_000_000);
 
     return {
@@ -45,7 +46,7 @@ export function OpenVaults({ title = 'Open Vaults', data, isLoading }: Props) {
       debt_type: 'IST',
       collateral_amount: collateralAmount,
       current_collateral_price: currentCollateralPrice,
-      collateral_oracle_usd_value: vaultData.typeOutAmount / 1_000_000,
+      collateral_oracle_usd_value: typeOutAmount / 1_000_000,
       collateral_amount_current_usd: collateralValueUsd,
       debt_amount: istDebtAmount,
       liquidation_margin: liquidationRatio,
