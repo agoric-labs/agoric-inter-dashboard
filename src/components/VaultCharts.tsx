@@ -78,7 +78,6 @@ export function VaultCharts({ tokenNames, vaultsDataIsLoading, error }: Props) {
   const dailyMetricsResponse: VaultDailyMetricsQueryResponse = dailyMetricsData?.data?.data;
 
   const graphData: Record<string, GraphData> = {};
-  console.log({dailyMetricsResponse})
   const graphDataList = constructGraph(tokenNames, dailyMetricsResponse, graphData);
 
   return (
