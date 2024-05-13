@@ -1,6 +1,5 @@
 export type OraclePriceNode = {
   id: string;
-<<<<<<< HEAD
   dateKey: number;
   blockTimeLast: string;
   typeInName: string;
@@ -9,21 +8,10 @@ export type OraclePriceNode = {
   typeInAmountLast?: string | number;
   typeOutAmount?: string | number;
   typeOutAmountLast?: string | number;
-=======
-  dateKey: string;
-  blockTimeLast: string;
-  typeInName: string;
-  priceFeedName: string;
-  typeInAmount: number;
-  typeInAmountLast: number;
-  typeOutAmount: number;
-  typeOutAmountLast: number;
->>>>>>> 9294c54 (chore: add type for vault metrics response)
 };
 
 export type VaultManagerMetricsNode = {
   id: string;
-<<<<<<< HEAD
   dateKey: number;
   liquidatingCollateralBrand: string;
   blockTimeLast: string;
@@ -33,17 +21,6 @@ export type VaultManagerMetricsNode = {
   metricsCount?: string;
   totalDebtLast?: string;
   numActiveVaults?: number;
-=======
-  dateKey: string;
-  liquidatingCollateralBrand: string;
-  blockTimeLast: string;
-  totalCollateral: number;
-  totalDebt: number;
-  totalCollateralLast: number;
-  metricsCount: number;
-  totalDebtLast: number;
-  numActiveVaults: number;
->>>>>>> 9294c54 (chore: add type for vault metrics response)
 };
 
 export type DailyOracles = {
@@ -90,15 +67,7 @@ export type VaultsDashboardResponse = {
 
 export type VaultDailyMetricsQueryResponse = {
   [key: string]: {
-<<<<<<< HEAD
     nodes: Array<VaultManagerMetricsNode | OraclePriceNode>;
-=======
-    nodes: Array<VaultManagerMetricsNode>;
-  };
-} & {
-  [key in `${string}_oracle`]: {
-    nodes: Array<OraclePriceNode>;
->>>>>>> 9294c54 (chore: add type for vault metrics response)
   };
 };
 
