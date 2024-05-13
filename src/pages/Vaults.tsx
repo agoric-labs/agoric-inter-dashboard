@@ -29,7 +29,7 @@ import {
 function processOraclePrices(nodes: OraclePriceNode[]): OraclePriceNodesData {
   const obj: OraclePriceNodesData = {};
   return nodes?.reduce((agg, node) => {
-    const nameSegments = node.priceFeedName.split('-');
+    const nameSegments = node?.priceFeedName?.split('-') || '';
     if (nameSegments.length !== 2) {
       throw new Error(`Invalid priceFeedName: ${node.priceFeedName}`);
     }

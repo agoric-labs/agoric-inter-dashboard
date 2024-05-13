@@ -16,7 +16,7 @@ type Props = {
   error: any;
 };
 
-function populateGraphData(dailyOracles: DailyOracles, nodes: any[], graphData: Record<string, GraphData>): void {
+export function populateGraphData(dailyOracles: DailyOracles, nodes: any[], graphData: Record<string, GraphData>): void {
   for (let j = 0; j < nodes.length; j++) {
     const dailyTokenMetrics = nodes[j];
     const dateKey = dailyTokenMetrics?.dateKey;
@@ -40,12 +40,12 @@ function populateGraphData(dailyOracles: DailyOracles, nodes: any[], graphData: 
   }
 }
 
-function constructGraph(
+export function constructGraph(
   tokenNames: string[],
   dailyMetricsResponse: VaultDailyMetricsQueryResponse,
   graphData: Record<string, GraphData>,
 ): FormattedGraphData[] {
-  for (let i = 0; i < tokenNames.length; i++) {
+  for (let i = 0; i < tokenNames?.length; i++) {
     const tokenName = tokenNames[i];
     const dailyOracles = extractDailyOracles(tokenName, dailyMetricsResponse);
 
@@ -78,6 +78,7 @@ export function VaultCharts({ tokenNames, vaultsDataIsLoading, error }: Props) {
   const dailyMetricsResponse: VaultDailyMetricsQueryResponse = dailyMetricsData?.data?.data;
 
   const graphData: Record<string, GraphData> = {};
+  console.log({dailyMetricsResponse})
   const graphDataList = constructGraph(tokenNames, dailyMetricsResponse, graphData);
 
   return (
