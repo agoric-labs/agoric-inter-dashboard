@@ -7,7 +7,7 @@ export type FormattedGraphData = {
 
 export type DailyMetricsResponse = {
   [key: string]: {
-    nodes?: { dateKey: string; [key: string]: any }[] | null;
+    nodes?: { dateKey: number; [key: string]: any }[] | null;
   };
 };
 

@@ -6,6 +6,8 @@ import { VAULTS_DAILY_METRICS_QUERY } from '@/queries';
 import { extractDailyOracles, populateMissingDays, subQueryFetcher } from '@/utils';
 import ChartsSkeleton from './ChartsSkeleton';
 import { GRAPH_DAYS } from '@/constants';
+import { DailyMetricsResponse, DailyOracles, FormattedGraphData } from '@/types/common';
+import { GraphData } from '@/types/psm-types';
 
 type Props = {
   tokenNames: Array<string>;
@@ -13,7 +15,49 @@ type Props = {
   error: any;
 };
 
-type GraphData = { key: number; x: string };
+function populateGraphData(dailyOracles: DailyOracles, nodes: any[], graphData: Record<string, GraphData>): void {
+  for (let j = 0; j < nodes.length; j++) {
+    const dailyTokenMetrics = nodes[j];
+    const dateKey = dailyTokenMetrics?.dateKey;
+
+    const oracle = (dailyOracles && dailyOracles[dateKey]) || { typeOutAmountLast: 1, typeInAmountLast: 1 };
+    const blockTime = dailyTokenMetrics?.blockTimeLast?.slice(0, 10);
+    const liquidatingCollateralBrand = dailyTokenMetrics?.liquidatingCollateralBrand;
+    const totalCollateralLast = dailyTokenMetrics?.totalCollateralLast;
+    const totalDebtLast = dailyTokenMetrics?.totalDebtLast;
+    const typeOutAmountLast = Number(oracle.typeOutAmountLast);
+    const typeInAmountLast = Number(oracle.typeInAmountLast);
+    const totalCollateral = (totalCollateralLast / 1_000_000) * (typeOutAmountLast / typeInAmountLast);
+
+    graphData[dateKey] = {
+      ...graphData[dateKey],
+      x: blockTime,
+      key: dateKey,
+      [`${liquidatingCollateralBrand}-total_collateral`]: totalCollateral,
+      [`${liquidatingCollateralBrand}-total_minted`]: totalDebtLast,
+    };
+  }
+}
+
+function constructGraph(
+  tokenNames: string[],
+  dailyMetricsResponse: DailyMetricsResponse,
+  graphData: Record<string, GraphData>,
+): FormattedGraphData[] {
+  for (let i = 0; i < tokenNames.length; i++) {
+    const tokenName = tokenNames[i];
+    const dailyOracles = extractDailyOracles(tokenName, dailyMetricsResponse);
+
+    const nodes = dailyMetricsResponse?.[tokenName]?.nodes;
+    if (nodes) {
+      populateGraphData(dailyOracles, nodes, graphData);
+    }
+  }
+
+  const graphDataList = populateMissingDays(graphData, GRAPH_DAYS);
+  return graphDataList;
+}
+
 export function VaultCharts({ tokenNames, vaultsDataIsLoading, error }: Props) {
   if (vaultsDataIsLoading || error) {
     return (
@@ -29,38 +73,11 @@ export function VaultCharts({ tokenNames, vaultsDataIsLoading, error }: Props) {
     isLoading: graphDataIsLoading,
     error: graphDataError,
   } = useSWR<AxiosResponse, AxiosError>(VAULTS_DAILY_METRICS_QUERY(tokenNames), subQueryFetcher);
- 
+
   const dailyMetricsResponse = dailyMetricsData?.data?.data;
 
-  const graphDataMap: { [key: number]: GraphData } = {};
-
-  
-  tokenNames.forEach((tokenName) => {
-    const dailyOracles = extractDailyOracles(tokenName, dailyMetricsResponse);
-
-    dailyMetricsResponse?.[tokenName]?.nodes.forEach((dailyTokenMetrics: any) => {
-      const dateKey = dailyTokenMetrics?.dateKey;
-
-      const oracle = (dailyOracles && dailyOracles[dateKey]) || { typeOutAmountLast: 1, typeInAmountLast: 1 };
-      const blockTime = dailyTokenMetrics?.blockTimeLast?.slice(0, 10);
-      const liquidatingCollateralBrand = dailyTokenMetrics?.liquidatingCollateralBrand;
-      const totalCollateralLast = dailyTokenMetrics?.totalCollateralLast;
-      const totalDebtLast = dailyTokenMetrics?.totalDebtLast;
-      const typeOutAmountLast = Number(oracle.typeOutAmountLast);
-      const typeInAmountLast = Number(oracle.typeInAmountLast);
-      const totalCollateral = (totalCollateralLast / 1_000_000) * (typeOutAmountLast / typeInAmountLast);
-
-      graphDataMap[dateKey] = {
-        ...graphDataMap[dateKey],
-        x: blockTime,
-        key: dateKey,
-        [`${liquidatingCollateralBrand}-total_collateral`]: totalCollateral,
-        [`${liquidatingCollateralBrand}-total_minted`]: totalDebtLast,
-      };
-    });
-  });
-
-  const graphDataList = populateMissingDays(graphDataMap, GRAPH_DAYS);
+  const graphData: Record<string, GraphData> = {};
+  const graphDataList = constructGraph(tokenNames, dailyMetricsResponse, graphData);
 
   return (
     <>
