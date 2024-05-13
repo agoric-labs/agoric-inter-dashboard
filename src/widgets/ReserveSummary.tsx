@@ -1,7 +1,7 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { ValueCard } from '@/components/ValueCard';
+import { ReserveDashboardData } from '@/types/reserve-types';
 import { formatPrice } from '@/utils';
-import { ReserveDashboardData } from '@/pages/Reserve';
 
 type Props = {
   title?: string;

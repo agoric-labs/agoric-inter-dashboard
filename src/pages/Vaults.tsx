@@ -13,68 +13,18 @@ import { VAULTS_DASHBOARD_QUERY } from '@/queries';
 import { subQueryFetcher } from '@/utils';
 import { VaultCharts } from '@/components/VaultCharts';
 import { ErrorAlert } from '@/components/ErrorAlert';
-
-type OraclePriceNode = { priceFeedName: string; typeInAmount: number; typeOutAmount: number };
-
-type VaultManagerMetricsNode = {
-  id: string;
-  liquidatingCollateralBrand: string;
-  numActiveVaults: number;
-  totalCollateral: number;
-  totalDebt: number;
-};
-
-type VaultsNode = {
-  balance: number;
-  debt: number;
-  id: string;
-  state: string;
-  denom: string;
-};
-
-type VaultManagerGovernancesNode = {
-  id: string;
-  liquidationMarginDenominator: number;
-  liquidationMarginNumerator: number;
-  debtLimit: number;
-};
-
-type OraclePriceDailiesNode = {
-  priceFeedName: string;
-  typeInName: string;
-  dateKey: number;
-  typeInAmountLast: number;
-  typeOutAmountLast: number;
-};
-
-type BoardAuxesNode = { allegedName: string; decimalPlaces: number };
-
-type VaultsDashboardResponse = {
-  boardAuxes: { nodes: Array<BoardAuxesNode> };
-  oraclePrices: { nodes: Array<OraclePriceNode> };
-  vaultManagerMetrics: {
-    nodes: Array<VaultManagerMetricsNode>;
-  };
-  vaultManagerGovernances: { nodes: Array<VaultManagerGovernancesNode> };
-  vaults: {
-    nodes: Array<VaultsNode>;
-  };
-  oraclePriceDailies: { nodes: Array<OraclePriceDailiesNode> };
-};
-
-type OraclePriceDailiesArr = {
-  oracleDailyPrices: Array<OraclePriceDailiesNode>;
-};
-
-type OraclePriceNodesData = { [key: string]: OraclePriceNode };
-type OracleDailyPriceNodesData = { [key: string]: OraclePriceDailiesNode[] };
-type VaultManagerGovernancesNodesData = { [key: string]: VaultManagerGovernancesNode };
-
-export type VaultsDashboardData = {
-  [key: string]: VaultManagerMetricsNode & OraclePriceNode & VaultManagerGovernancesNode & OraclePriceDailiesArr;
-};
-
-export type OpenVaultsData = Array<VaultsNode & OraclePriceNode & VaultManagerGovernancesNode>;
+import {
+  OraclePriceNode,
+  OraclePriceNodesData,
+  OraclePriceDailiesNode,
+  OracleDailyPriceNodesData,
+  VaultManagerGovernancesNode,
+  VaultManagerGovernancesNodesData,
+  VaultsNode,
+  OpenVaultsData,
+  VaultsDashboardResponse,
+  VaultsDashboardData,
+} from '@/types/vault-types';
 
 function processOraclePrices(nodes: OraclePriceNode[]): OraclePriceNodesData {
   const obj: OraclePriceNodesData = {};

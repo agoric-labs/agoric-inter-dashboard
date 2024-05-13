@@ -6,31 +6,7 @@ import { PSMStats } from '@/widgets/PSMStats';
 import { PSMMintedPoolBalancePie } from '@/widgets/PSMMintedPoolBalancePie';
 import { subQueryFetcher } from '@/utils';
 import { PSM_DASHBOARD_QUERY, PSM_GRAPH_TOKENS_QUERY, PSM_TOKEN_DAILY_MINT_QUERY } from '@/queries';
-
-type PsmMetricsNode = {
-  id: string;
-  denom: string;
-};
-
-type PsmMetricsDailyNode = {
-  id: string;
-  denom: string;
-  dateKey: number;
-  blockTimeLast: string;
-  totalMintedProvidedLast: number;
-};
-
-type PsmMetricsResponse = {
-  psmMetrics: {
-    nodes: Array<PsmMetricsNode>;
-  };
-};
-type PsmMetricsDailyResponse = {
-  [key: string]: {
-    nodes: Array<PsmMetricsDailyNode>;
-  };
-};
-type GraphData = { key: number; x: string };
+import { PsmMetricsResponse, PsmMetricsDailyResponse, GraphData } from '@/types/psm-types';
 
 export const PSM = () => {
   const { data, error, isLoading } = useSWR<AxiosResponse, AxiosError>(PSM_DASHBOARD_QUERY, subQueryFetcher);
@@ -65,10 +41,12 @@ export const PSM = () => {
       };
     });
   });
-  const sortedGraphDataList = Object.values(graphDataMap).slice().sort((a, b) => a.key - b.key);
+  const sortedGraphDataList = Object.values(graphDataMap)
+    .slice()
+    .sort((a, b) => a.key - b.key);
   let prevValue: GraphData = sortedGraphDataList[0];
-  const graphDataList: Array<GraphData> = sortedGraphDataList.reduce(
-    (aggArray: Array<GraphData>, graphData: GraphData) => {
+  const graphDataList: Array<GraphData> = sortedGraphDataList
+    .reduce((aggArray: Array<GraphData>, graphData: GraphData) => {
       // filling in missing days
       const prevDay = new Date(prevValue.x);
       const nextDay = new Date(graphData.x);
@@ -88,9 +66,8 @@ export const PSM = () => {
       const newAggArray = [...aggArray, ...missingDays, { ...prevValue, ...graphData }];
       prevValue = { ...prevValue, ...graphData };
       return newAggArray;
-    },
-    [],
-  ).slice(-90);;
+    }, [])
+    .slice(-90);
 
   return (
     <>

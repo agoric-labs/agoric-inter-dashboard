@@ -1,8 +1,8 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { SectionHeader } from '@/components/SectionHeader';
 import { TokenPricesTable } from '@/components/TokenPricesTable';
-import { VaultsDashboardData } from '@/pages/Vaults';
 import CollateralWithIcon from '@/components/ui/collateralWithIcon';
+import { VaultsDashboardData } from '@/types/vault-types';
 
 type Props = {
   title?: string;

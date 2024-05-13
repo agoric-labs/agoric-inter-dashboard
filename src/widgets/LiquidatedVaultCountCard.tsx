@@ -1,6 +1,7 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { ValueCard } from '@/components/ValueCard';
-import { VaultManagerMetricsNode } from '@/pages/Liquidated';
+import { VaultManagerMetricsNode } from '@/types/liquidation-types';
+
 
 type Props = {
   title?: string;

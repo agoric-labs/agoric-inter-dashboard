@@ -4,32 +4,16 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { Skeleton } from '@/components/ui/skeleton';
 import { LiquidatedVaultsTable } from '@/components/LiquidatedVaultsTable';
 import { SectionHeader } from '@/components/SectionHeader';
-import { LiquidationDashboardData } from '@/pages/Liquidated';
 import { LIQUIDATION_ORACLE_PRICES_DAILIES_QUERY } from '@/queries';
 import { formatSecondsToHumanReadable, getDateKey, subQueryFetcher } from '@/utils';
 import { VAULT_STATES } from '@/constants';
+import { LiquidationDashboardData, OraclePriceDailiesResponse, OraclePriceNode } from '@/types/liquidation-types';
 
 type Props = {
   title?: string;
   data: LiquidationDashboardData;
   isLoading: boolean;
 };
-
-type OraclePriceDailiesNode = {
-  typeInAmountLast: number;
-  typeOutAmountLast: number;
-  dateKey: number;
-};
-
-type OraclePriceNode = {
-  typeInAmount: number;
-  typeOutAmount: number;
-  typeInName: string;
-  typeOutName: string;
-  id: string;
-};
-
-type OraclePriceDailiesResponse = { [key: string]: { nodes: Array<OraclePriceDailiesNode> } };
 
 export function LiquidatedVaults({ title = 'Liquidated Vaults', data, isLoading }: Props) {
   const oraclePricesDatekeyMap: { [key: string]: Array<number> } = data.vaultLiquidations?.reduce(
@@ -95,7 +79,7 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults', data, isLoading 
     const oraclePrice = oraclePriceSnapshot || oraclePriceToday;
 
     const [, vaultManager, vaultIdx] = vaultIdRegexMatch;
-    
+
     const vaultStateSuffix = vaultData?.currentState?.state === VAULT_STATES.CLOSED ? ' (Closed)' : '';
     const vaultState = vaultData.state[0].toUpperCase() + vaultData.state.slice(1) + vaultStateSuffix;
     const vaultManagerGovernance = data.vaultManagerGovernances[vaultManager];
@@ -114,11 +98,14 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults', data, isLoading 
       liquidationStartTime = format(new Date(vaultData?.liquidatingState.blockTime), 'yyyy-MM-dd HH:mm');
     }
 
-
     if (vaultData?.liquidatingState) {
-      const seconds: number = differenceInSeconds(new Date(vaultData.blockTime), new Date(vaultData?.liquidatingState.blockTime), {
-        roundingMethod: 'ceil',
-      });
+      const seconds: number = differenceInSeconds(
+        new Date(vaultData.blockTime),
+        new Date(vaultData?.liquidatingState.blockTime),
+        {
+          roundingMethod: 'ceil',
+        },
+      );
       liquidationTime = formatSecondsToHumanReadable(seconds);
     }
 

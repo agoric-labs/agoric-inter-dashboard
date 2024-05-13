@@ -1,7 +1,7 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { ValueCard } from '@/components/ValueCard';
+import { VaultsDashboardData } from '@/types/vault-types';
 import { formatPrice } from '@/utils';
-import { VaultsDashboardData } from '@/pages/Vaults';
 
 type Props = {
   title?: string;
