@@ -204,7 +204,7 @@ function transformVaultManagerMetrics(oraclePrices, vaultManagerMetrics, vaultMa
     }).debtLimit;
     const istMintingLimit = debtLimit / 1_000_000;
 
-    const utilizationRate = collateralizationRatio;
+    const utilizationRate = totalIstMinted / istMintingLimit;
 
     return {
       colletarization_ratio: collateralizationRatio,
