@@ -6,7 +6,7 @@ import { UseCubeQueryResult } from '@cubejs-client/react';
 import { ErrorAlert } from '@/components/ErrorAlert';
 import { Loading } from '@/components/Loading';
 import { SUBQUERY_URL } from './constants';
-import { DailyMetricsResponse, DailyOracles, FormattedGraphData, GraphData, TokenDailyOracles } from './types/common';
+import { DailyOracles, FormattedGraphData, GraphData } from './types/common';
 
 export const formatDay = (v: string) => format(parseISO(v), 'MM/dd');
 export const formatDayAndTime = (v: string) => format(parseISO(v), 'MM/dd HH:mm');
@@ -223,7 +223,7 @@ export const populateMissingDays = (graphDataMap: Record<string, GraphData>, GRA
   return formattedData.slice(-GRAPH_DAYS);
 };
 
-export const extractDailyOracles = (tokenName: string, dailyMetricsResponse: DailyMetricsResponse) => {
+export const extractDailyOracles = (tokenName: string, dailyMetricsResponse: any) => {
   const oracleData = dailyMetricsResponse?.[`${tokenName}_oracle`]?.nodes || [];
 
   const dailyOracles: DailyOracles = {};
