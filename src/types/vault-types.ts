@@ -1,26 +1,38 @@
-export type OraclePriceNode = {
+export class OraclePriceNode {
   id: string;
-  dateKey: string;
+  dateKey: number;
   blockTimeLast: string;
   typeInName: string;
-  priceFeedName: string;
-  typeInAmount: number;
-  typeInAmountLast: number;
-  typeOutAmount: number;
-  typeOutAmountLast: number;
-};
+  priceFeedName?: string;
+  typeInAmount?: number;
+  typeInAmountLast?: number;
+  typeOutAmount?: number;
+  typeOutAmountLast?: number;
+
+  constructor(data: OraclePriceNode) {
+    this.id = data.id;
+    this.dateKey = data.dateKey;
+    this.blockTimeLast = data.blockTimeLast;
+    this.typeInName = data.typeInName;
+    this.priceFeedName = data.priceFeedName;
+    this.typeInAmount = Number(data?.typeInAmount) || 0;
+    this.typeInAmountLast = Number(data?.typeInAmountLast) || 0;
+    this.typeOutAmount = Number(data?.typeOutAmount) || 0;
+    this.typeOutAmountLast = Number(data?.typeOutAmountLast) || 0;
+  }
+}
 
 export type VaultManagerMetricsNode = {
   id: string;
-  dateKey: string;
+  dateKey: number;
   liquidatingCollateralBrand: string;
   blockTimeLast: string;
-  totalCollateral: number;
-  totalDebt: number;
-  totalCollateralLast: number;
-  metricsCount: number;
-  totalDebtLast: number;
-  numActiveVaults: number;
+  totalCollateral?: number;
+  totalDebt?: number;
+  totalCollateralLast?: string;
+  metricsCount?: string;
+  totalDebtLast?: string;
+  numActiveVaults?: number;
 };
 
 export type DailyOracles = {
@@ -67,11 +79,7 @@ export type VaultsDashboardResponse = {
 
 export type VaultDailyMetricsQueryResponse = {
   [key: string]: {
-    nodes: Array<VaultManagerMetricsNode>;
-  };
-} & {
-  [key in `${string}_oracle`]: {
-    nodes: Array<OraclePriceNode>;
+    nodes: Array<VaultManagerMetricsNode | OraclePriceNode>;
   };
 };
 
