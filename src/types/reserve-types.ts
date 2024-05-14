@@ -10,7 +10,7 @@ export type ReserveAllocationMetricsDailyNode = {
   id: string;
   blockTimeLast: string;
   dateKey: number;
-  valueLast: number;
+  valueLast: string;
   denom: string;
 };
 
