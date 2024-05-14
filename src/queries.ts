@@ -32,7 +32,7 @@ query {
 
 export const PSM_TOKEN_DAILY_MINT_QUERY = (tokens: Array<string>) => `
 query {
-    ${tokens.map((token: string) => `
+    ${tokens?.map((token: string) => `
         ${token}: psmMetricsDailies(first: 90, filter: {denom: {equalTo: "${token}"}}, orderBy:DATE_KEY_DESC) {
         nodes {
                 id
@@ -102,7 +102,7 @@ query {
 
 export const VAULTS_DAILY_METRICS_QUERY = (tokens: string[]) => `
 query {
-    ${tokens.map((token) =>
+    ${tokens?.map((token) =>
     `${token}: vaultManagerMetricsDailies(first: 90, filter:{liquidatingCollateralBrand: {equalTo: "${token}"} }, orderBy:DATE_KEY_DESC)  {
         nodes {
             id
@@ -165,7 +165,7 @@ query {
 
 export const RESERVE_DAILY_METRICS_QUERY = (tokens: string[], startDate: number) => `
 query {
-    ${tokens.map((token) =>
+    ${tokens?.map((token) =>
     `${token}: reserveAllocationMetricsDailies (first: 90, filter: {denom: {equalTo: "${token}"}}, orderBy:DATE_KEY_DESC) {
         nodes {
             id
@@ -331,7 +331,7 @@ query {
 
 export const LIQUIDATION_DAILY_METRICS_QUERY = (tokens: string[]) => `
 query {
-    ${tokens.map((token) =>
+    ${tokens?.map((token) =>
     `${token}: vaultManagerMetricsDailies ( first: 90, filter:{liquidatingCollateralBrand: {equalTo: "${token}"}}, orderBy:DATE_KEY_DESC)  {
         nodes {
             id
@@ -348,7 +348,7 @@ query {
 
 export const LIQUIDATION_ORACLE_PRICES_DAILIES_QUERY = (tokens: {[key:string]: number[]}) => `
 query {
-    ${Object.entries(tokens).map(([token, oracleKeys]) => 
+    ${Object.entries(tokens)?.map(([token, oracleKeys]) => 
     `${token}:oraclePriceDailies (filter: {
         dateKey: { in: [${oracleKeys.join(', ')}] }, typeInName: {equalTo: "${token}"}
     }) {
