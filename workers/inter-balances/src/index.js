@@ -31,7 +31,7 @@ export default {
       switch (url.pathname) {
         case '/inter-balances':
           return await handleBalancesRequest(env);
-        case '/gauntlet':
+        case '/data':
           return await handleGauntletRequest(env);
         default:
           return new Response('Not found', { status: 404 });
