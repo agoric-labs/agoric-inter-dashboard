@@ -1,12 +1,18 @@
 export const graphqlQuery = {
   query: `
     {
+      _metadata{
+        lastProcessedHeight
+        lastProcessedTimestamp
+      }
       oraclePrices {
         nodes {
           typeInName
           typeOutName
           typeInAmount
           typeOutAmount
+          blockTime
+          blockHeight
         }
       }
       oraclePriceDailies (filter: {dateKey: { greaterThan: 20240501 } }, orderBy: DATE_KEY_DESC) {
@@ -16,12 +22,14 @@ export const graphqlQuery = {
           typeInAmountLast
           typeOutAmountLast
           blockTimeLast
+          blockHeightLast
         }
       }
       vaultManagerMetrics {
         nodes {
           id
           blockTime
+          blockHeight
           totalCollateral
           totalDebt
           totalCollateralSold
@@ -34,6 +42,8 @@ export const graphqlQuery = {
       vaultManagerGovernances  {
         nodes {
           id
+          blockTime
+          blockHeight
           debtLimit
           liquidationMarginNumerator
           liquidationMarginDenominator
@@ -42,6 +52,8 @@ export const graphqlQuery = {
       vaults (filter: {state: {equalTo: "active"}}) {
         nodes {
           id
+          blockTime
+          blockHeight
           denom
           balance
           state
@@ -53,11 +65,12 @@ export const graphqlQuery = {
       vaultLiquidations (filter: {state: {equalTo: "liquidated"}}) {
         nodes {
             id
+            blockTime
+            blockHeight
             denom
             debt
             state
             balance
-            blockTime
             currentState {
                 id
                 denom
