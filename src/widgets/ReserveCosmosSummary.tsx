@@ -13,8 +13,12 @@ type Props = {
 };
 
 export function ReserveCosmosSummary({ title = 'Cosmos Reserve', isLoading, reserveAddress, error }: Props) {
-  if (isLoading || error) {
-    return <DataStatus isLoading={isLoading} error={error} title={title} />;
+  if (isLoading || error || !reserveAddress) {
+    const errorMessage = !reserveAddress && 'Oops! Unable to show Cosmos Reserve';
+
+    return (
+      <DataStatus isLoading={isLoading} error={error || (errorMessage && { message: errorMessage })} title={title} />
+    );
   }
 
   const {
