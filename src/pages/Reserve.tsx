@@ -36,7 +36,11 @@ export const Reserve = () => {
   }));
 
   //  Queries for graph
-  const { data: tokenNamesData } = useSWR<AxiosResponse, AxiosError>(RESERVE_GRAPH_TOKENS_QUERY, subQueryFetcher);
+  const {
+    data: tokenNamesData,
+    error: tokenNamesError,
+    isLoading: tokenNamesIsLoading,
+  } = useSWR<AxiosResponse, AxiosError>(RESERVE_GRAPH_TOKENS_QUERY, subQueryFetcher);
   const tokenNamesResponse: ReserveManagerMetricsResponse = tokenNamesData?.data.data;
   const tokenNames =
     tokenNamesResponse?.reserveMetrics?.nodes.flatMap((node) =>
@@ -68,7 +72,7 @@ export const Reserve = () => {
           />
           <ReserveShortfall data={reserveDashboardQueryData} isLoading={isLoading} />
         </div>
-        <ReserveHistoryGraph tokenNames={tokenNames} />
+        <ReserveHistoryGraph tokenNames={tokenNames} error={tokenNamesError} isLoading={tokenNamesIsLoading} />
       </PageContent>
     </>
   );

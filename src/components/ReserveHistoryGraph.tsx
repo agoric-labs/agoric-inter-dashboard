@@ -5,9 +5,12 @@ import { GRAPH_DAYS } from '@/constants';
 import { populateMissingDays, getDateKey, range, subQueryFetcher, extractDailyOracles } from '@/utils';
 import { RESERVE_DAILY_METRICS_QUERY } from '@/queries';
 import { GraphData, ReserveAllocationMetricsDaily, ReserveAllocationMetricsDailyNode } from '@/types/reserve-types';
+import ChartsSkeleton from './ChartsSkeleton';
 
 type Props = {
   tokenNames: string[];
+  error: any;
+  isLoading: boolean;
 };
 
 export function generateGraphDataForDateRange(dayRange: number[]): Record<string, GraphData> {
@@ -72,21 +75,43 @@ export function constructGraph(tokenNames: string[], dailyMetricsResponse: any) 
   return graphDataList;
 }
 
-const ReserveHistoryGraph = ({ tokenNames }: Props) => {
+const ReserveHistoryGraph = ({ tokenNames, isLoading, error }: Props) => {
+  if (isLoading || error || !tokenNames || tokenNames.length === 0) {
+    const errorMessage = (!tokenNames || tokenNames.length === 0) && 'Oops! Missing Token Names';
+
+    return (
+      <>
+        <ChartsSkeleton
+          title="Total Locked Collateral"
+          isLoading={isLoading}
+          error={error || (errorMessage && { message: errorMessage })}
+        />
+        <ChartsSkeleton
+          title="Total Minted IST"
+          isLoading={isLoading}
+          error={error || (errorMessage && { message: errorMessage })}
+        />
+      </>
+    );
+  }
+
   const { key: startDateKey } = getDateKey(new Date(), GRAPH_DAYS);
   const {
     data: dailyMetricsData,
     isLoading: graphDataIsLoading,
-    error,
-  } = useSWR<AxiosResponse, AxiosError>(
-    tokenNames.length ? RESERVE_DAILY_METRICS_QUERY(tokenNames, startDateKey) : null,
-    subQueryFetcher,
-  );
+    error: graphDataError,
+  } = useSWR<AxiosResponse, AxiosError>(RESERVE_DAILY_METRICS_QUERY(tokenNames, startDateKey), subQueryFetcher);
+
   const dailyMetricsResponse = dailyMetricsData?.data.data;
   const graphData = constructGraph(tokenNames, dailyMetricsResponse);
 
   return (
-    <ReserveHistory data={graphData} tokenNames={tokenNames} isLoading={graphDataIsLoading} error={error?.message} />
+    <ReserveHistory
+      data={graphData}
+      tokenNames={tokenNames}
+      isLoading={graphDataIsLoading}
+      error={graphDataError?.message}
+    />
   );
 };
 
