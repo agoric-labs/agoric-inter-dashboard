@@ -49,7 +49,7 @@ export async function handleGauntletRequest(env) {
     const { data } = await response.json();
     console.log('Data Fetched Successfully');
 
-    const { oraclePrices, oraclePriceDailies, vaultManagerMetrics, vaultManagerGovernances, vaults, vaultLiquidations } = data;
+    const { oraclePrices, oraclePriceDailies, vaultManagerMetrics, vaultManagerGovernances, vaults, vaultLiquidations, _metadata } = data;
 
     const liquidationOraclePricesDailies = await getOraclPricesDailiesForLiquidatedVaults(vaultLiquidations);
 
@@ -62,6 +62,8 @@ export async function handleGauntletRequest(env) {
 
     return new Response(
       JSON.stringify({
+        last_processed_height: _metadata.lastProcessedHeight,
+        last_processed_timestamp: _metadata.lastProcessedTimestamp,
         managers: managersData,
         oracle_prices: oraclePricesData,
         open_vaults: vaultsData,
@@ -88,6 +90,8 @@ function transformOraclePrices(oraclePriceDailies) {
       rate: rate,
       type_in_name: node.typeInName,
       type_out_name: node.typeOutName,
+      block_height_last: node.blockHeightLast,
+      block_time_last: node.blockTimeLast,
     };
   });
 
@@ -127,6 +131,8 @@ function transformLiquidatedVaults(vaults, vaultManagerGovernances, oraclePrices
       liquidating_collateral_amount_avg: collateralAmountReturned,
       liquidating_debt_amount_avg: istDebtAmount,
       liquidating_enter_time: liquidatingTimeStampInSeconds,
+      block_height: vaultData.blockHeight,
+      block_time: vaultData.blockTime,
       // Both are incorrect currently
       // liquidating_rate: 0,
       // liquidation_margin_avg: 0,
@@ -175,6 +181,8 @@ function transformVaults(vaults, oraclePrices, vaultManagerGovernances) {
       liquidation_cushion: currentCollateralPrice / (liquidationPrice - 1),
       liquidation_margin: liquidationRatio,
       liquidation_price: liquidationPrice,
+      block_height: vaultData.blockHeight,
+      block_time: vaultData.blockTime,
       manager_idx: managerIdx,
       vault_ix: vaultIdx,
     };
@@ -216,6 +224,8 @@ function transformVaultManagerMetrics(oraclePrices, vaultManagerMetrics, vaultMa
       total_locked_collateral_usd: totalCollateralUSD,
       utilization_rate: utilizationRate,
       vault_manager_type: node.liquidatingCollateralBrand,
+      block_height: node.blockHeight,
+      block_time: node.blockTime,
     };
   });
 
