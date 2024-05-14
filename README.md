@@ -1,26 +1,42 @@
-```
-yarn
-yarn husky add .husky/pre-commit "yarn lint-staged"
-yarn dev
-```
+# Inter-Protocol Dashboard and API Workers
 
-## Last values
+## Development
 
-Needs of the last two days should be ordered by day, and the `data[0]` should be used to display the most recent value.
-This approach helps avoid issues that occur after 00:00 and before the pre-aggregation is rebuilt."
+### Dashboard
 
-```
-  const res = useCubeQuery({
-    measures: ['reserve_allocations.amount_usd_sum'],
-    timeDimensions: [
-      {
-        dimension: 'reserve_allocations.day',
-        granularity: 'day',
-        dateRange: 'from 1 days ago to now', // important!
-      },
-    ],
-    order: {
-      'reserve_allocations.day': 'desc', // important!
-    },
-  });
-```
+To set up and run the dashboard locally, follow these steps:
+
+1. Install the dependencies:
+    ```sh
+    yarn install
+    ```
+2. Start the development server:
+    ```sh
+    yarn dev
+    ```
+
+### API Worker
+
+To set up and run the API worker locally, follow these steps:
+
+1. Navigate to the `workers/inter-balances` directory:
+    ```sh
+    cd workers/inter-balances
+    ```
+2. Install the dependencies:
+    ```sh
+    yarn install
+    ```
+3. Start the Wrangler development server:
+    ```sh
+    yarn wrangler dev
+    ```
+
+## Deployment
+
+### API Worker
+
+To deploy the API worker, use the following command:
+
+```sh
+yarn wrangler deploy
