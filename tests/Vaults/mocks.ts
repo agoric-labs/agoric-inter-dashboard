@@ -1,3 +1,4 @@
+import { DailyOracles } from '@/types/common';
 import { VaultDailyMetricsQueryResponse } from '@/types/vault-types';
 export const tokenNames: string[] = ['ATOM', 'stTIA', 'stkATOM', 'stOSMO', 'stATOM'];
 export const dailyMetricsResponse: VaultDailyMetricsQueryResponse = {
@@ -143,5 +144,45 @@ export const dailyMetricsResponse: VaultDailyMetricsQueryResponse = {
         typeOutAmountLast: 9909781,
       },
     ],
+  },
+};
+
+export const dailyMetricsResponseNodes = [
+  {
+    id: 'published.vaultFactory.managers.manager0.metrics:20240306',
+    dateKey: 20220101,
+    liquidatingCollateralBrand: 'ATOM',
+    blockTimeLast: '2022-01-01T00:30:12.551',
+    totalCollateralLast: '2069253102',
+    metricsCount: '24',
+    totalDebtLast: '1847260002',
+  },
+  {
+    id: 'published.vaultFactory.managers.manager0.metrics:20240305',
+    dateKey: 20240305,
+    liquidatingCollateralBrand: 'ATOM',
+    blockTimeLast: '2024-03-05T00:30:00.025',
+    totalCollateralLast: '2069253102',
+    metricsCount: '25',
+    totalDebtLast: '1847222298',
+  },
+];
+
+export const oracleDailies: DailyOracles = {
+  '20220101': {
+    id: 'ATOM-USD:20220101',
+    dateKey: '20220101',
+    blockTimeLast: '2022-01-01T00:00:58',
+    typeInName: 'ATOM',
+    typeInAmountLast: '1000000',
+    typeOutAmountLast: '10334934',
+  },
+  '20240305': {
+    id: 'ATOM-USD:20240305',
+    dateKey: '20240305',
+    blockTimeLast: '2024-03-05T00:06:13',
+    typeInName: 'ATOM',
+    typeInAmountLast: '1000000',
+    typeOutAmountLast: '10238759',
   },
 };

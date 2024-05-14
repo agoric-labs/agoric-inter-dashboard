@@ -6,6 +6,12 @@ export type FormattedGraphData = {
 };
 
 export type DailyOracles = {
-  [key: string]: { [date: string]: { dateKey: string; [key: string]: any } };
+  [key: string]: {
+    dateKey: string;
+    id: string;
+    blockTimeLast: string;
+    typeInName: string;
+    typeInAmountLast: string;
+    typeOutAmountLast: string;
+  };
 };
-
