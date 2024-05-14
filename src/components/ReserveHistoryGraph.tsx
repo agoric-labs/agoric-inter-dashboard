@@ -10,7 +10,7 @@ type Props = {
   tokenNames: string[];
 };
 
-function generateGraphDataForDateRange(dayRange: number[]): Record<string, GraphData> {
+export function generateGraphDataForDateRange(dayRange: number[]): Record<string, GraphData> {
   const graphData: Record<string, GraphData> = {};
 
   for (const dateNum of dayRange) {
@@ -21,7 +21,7 @@ function generateGraphDataForDateRange(dayRange: number[]): Record<string, Graph
   return graphData;
 }
 
-function updateGraphDataForToken(
+export function updateGraphDataForToken(
   tokenName: string,
   graphData: Record<string, GraphData>,
   dailyMetricsResponse: any,
@@ -53,7 +53,11 @@ function updateGraphDataForToken(
   }
 }
 
-function constructGraph(tokenNames: string[], dailyMetricsResponse: any) {
+export function constructGraph(tokenNames: string[], dailyMetricsResponse: any) {
+  if (!tokenNames || tokenNames?.length === 0 || !dailyMetricsResponse) {
+    return [];
+  }
+
   const dayRange: number[] = range(90).reverse();
   const graphData: Record<string, GraphData> = generateGraphDataForDateRange(dayRange);
 
