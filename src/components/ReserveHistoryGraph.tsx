@@ -46,7 +46,7 @@ export function updateGraphDataForToken(
     const oracle = (dailyOracles && dailyOracles[dateKey]) || { typeOutAmountLast: 1, typeInAmountLast: 1 };
     const tokenMetrics = (dailyMetrics && dailyMetrics[dateKey]) || lastTokenMetric;
 
-    const tokenValue = (tokenMetrics?.valueLast || 0) / 1_000_000;
+    const tokenValue = (Number(tokenMetrics?.valueLast) || 0) / 1_000_000;
     const ratio = Number(oracle.typeOutAmountLast) / Number(oracle.typeInAmountLast);
     graphData[dateKey][tokenName] = tokenValue * ratio;
 
