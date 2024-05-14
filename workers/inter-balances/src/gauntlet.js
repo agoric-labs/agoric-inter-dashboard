@@ -63,7 +63,7 @@ export async function handleGauntletRequest(env) {
     return new Response(
       JSON.stringify({
         managers: managersData,
-        oracle_rices: oraclePricesData,
+        oracle_prices: oraclePricesData,
         open_vaults: vaultsData,
         liquidated_vaults: liquidatedVaultsData,
       }),
@@ -161,12 +161,13 @@ function transformVaults(vaults, oraclePrices, vaultManagerGovernances) {
     const liquidationPrice = (istDebtAmount * liquidationRatio) / collateralAmount;
     const currentCollateralPrice = rate;
     const managerIdx = vaultManagerGovernanceNode?.id?.match(/manager(\d+)/)[1];
+    const collateralizationRatio = collateralValueUsd / (vaultData.debt / 1_000_000);
 
     return {
       collateral_amount: collateralAmount,
       collateral_amount_current_usd: collateralValueUsd,
       collateral_type: vaultData.denom,
-      collateralization_ratio: collateralValueUsd / (vaultData.debt / 1_000_000),
+      collateralization_ratio: collateralizationRatio === Infinity ? 0 : collateralizationRatio,
       current_collateral_price: currentCollateralPrice,
       debt_amount: istDebtAmount,
       debt_type: 'IST',
