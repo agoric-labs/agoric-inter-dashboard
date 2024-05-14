@@ -20,20 +20,22 @@ export const Reserve = () => {
   const { data, isLoading } = useSWR<AxiosResponse, AxiosError>(RESERVE_DASHBOARD_QUERY, subQueryFetcher);
 
   const response: ReserveDashboardResponse = data?.data?.data;
-  const oraclePrices: { [key: string]: OraclePriceNode } = response?.oraclePrices?.nodes?.reduce(
-    (agg, node) => ({ ...agg, [node.typeInName]: node }),
-    {},
-  );
-  const reserveDashboardQueryData: ReserveDashboardData = response?.reserveMetrics?.nodes?.map((vaultNode) => ({
-    ...vaultNode,
-    allocations: vaultNode.allocations?.nodes?.reduce(
-      (agg, allocation) => ({
-        ...agg,
-        [allocation.denom]: { ...allocation, ...oraclePrices[allocation.denom] },
-      }),
-      {},
-    ),
-  }));
+  const oraclePrices: { [key: string]: OraclePriceNode } =
+    response?.oraclePrices?.nodes?.reduce((agg, node) => ({ ...agg, [node.typeInName]: node }), {}) || {};
+
+  // TODO: make the fallback implementation in this section of code more readable
+  const reserveDashboardQueryData: ReserveDashboardData =
+    response?.reserveMetrics?.nodes?.map((vaultNode) => ({
+      ...vaultNode,
+      allocations:
+        vaultNode.allocations?.nodes?.reduce(
+          (agg, allocation) => ({
+            ...agg,
+            [allocation.denom]: { ...allocation, ...(oraclePrices[allocation.denom] || {}) },
+          }),
+          {},
+        ) || {},
+    })) || [];
 
   //  Queries for graph
   const {
@@ -41,9 +43,9 @@ export const Reserve = () => {
     error: tokenNamesError,
     isLoading: tokenNamesIsLoading,
   } = useSWR<AxiosResponse, AxiosError>(RESERVE_GRAPH_TOKENS_QUERY, subQueryFetcher);
-  const tokenNamesResponse: ReserveManagerMetricsResponse = tokenNamesData?.data.data;
+  const tokenNamesResponse: ReserveManagerMetricsResponse = tokenNamesData?.data?.data;
   const tokenNames =
-    tokenNamesResponse?.reserveMetrics?.nodes.flatMap((node) =>
+    tokenNamesResponse?.reserveMetrics?.nodes?.flatMap((node) =>
       node.allocations?.nodes?.map((allocation) => allocation.denom),
     ) || [];
   tokenNames.sort();
@@ -57,7 +59,7 @@ export const Reserve = () => {
   const reserveAccount = moduleAccountsData?.data?.accounts?.find(
     (account: { name: string }) => account.name === VBANK_RESERVE_ACCOUNT,
   );
-  const reserveAddress = reserveAccount?.base_account.address;
+  const reserveAddress = reserveAccount?.base_account?.address;
 
   return (
     <>
