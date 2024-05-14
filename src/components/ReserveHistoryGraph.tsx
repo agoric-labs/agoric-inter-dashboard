@@ -76,8 +76,9 @@ export function constructGraph(tokenNames: string[], dailyMetricsResponse: any) 
 }
 
 const ReserveHistoryGraph = ({ tokenNames, isLoading, error }: Props) => {
-  if (isLoading || error || !tokenNames || tokenNames.length === 0) {
-    const errorMessage = (!tokenNames || tokenNames.length === 0) && 'Oops! Missing Token Names';
+  const isTokenNamesEmpty = !tokenNames || tokenNames.length === 0;
+  if (isLoading || error || isTokenNamesEmpty) {
+    const errorMessage = !isTokenNamesEmpty && 'Oops! Missing Token Names';
 
     return (
       <>
