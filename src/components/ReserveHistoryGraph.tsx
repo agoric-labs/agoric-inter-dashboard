@@ -7,7 +7,11 @@ import { RESERVE_DAILY_METRICS_QUERY } from '@/queries';
 
 type GraphData = { key: number; x: string; [key: string]: any };
 
-const ReserveHistoryGraph = ({ tokenNames }: { tokenNames: string[] }) => {
+type Props = {
+  tokenNames: string[];
+};
+
+const ReserveHistoryGraph = ({ tokenNames }: Props) => {
   const { key: startDateKey } = getDateKey(new Date(), GRAPH_DAYS);
   const {
     data: dailyMetricsData,
@@ -41,18 +45,17 @@ const ReserveHistoryGraph = ({ tokenNames }: { tokenNames: string[] }) => {
     dateList.forEach((dateKey: string) => {
       const oracle = (dailyOracles && dailyOracles[dateKey]) || { typeOutAmountLast: 1, typeInAmountLast: 1 };
       const tokenMetrics = (dailyMetrics && dailyMetrics[dateKey]) || lastTokenMetric;
-      
+
       const tokenValue = (tokenMetrics?.valueLast || 0) / 1_000_000;
       const ratio = Number(oracle.typeOutAmountLast) / Number(oracle.typeInAmountLast);
       graphDataMap[dateKey][tokenName] = tokenValue * ratio;
-
 
       lastTokenMetric = tokenMetrics;
     });
   });
 
   const graphDataList = populateMissingDays(graphDataMap, GRAPH_DAYS);
-  
+
   return (
     <ReserveHistory
       data={graphDataList}
