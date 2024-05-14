@@ -17,7 +17,7 @@ type Props = {
 };
 
 export function populateGraphData(dailyOracles: DailyOracles, nodes: any[], graphData: Record<string, GraphData>): void {
-  for (let j = 0; j < nodes.length; j++) {
+  for (let j = 0; j < nodes?.length; j++) {
     const dailyTokenMetrics = nodes[j];
     const dateKey = dailyTokenMetrics?.dateKey;
 
