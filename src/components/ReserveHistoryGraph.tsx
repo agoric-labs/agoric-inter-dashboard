@@ -11,6 +11,59 @@ type Props = {
   tokenNames: string[];
 };
 
+function generateGraphDataForDateRange(dayRange: number[]): Record<string, GraphData> {
+  const graphData: Record<string, GraphData> = {};
+
+  for (const dateNum of dayRange) {
+    const { key: dateKey, formattedDate } = getDateKey(new Date(), dateNum);
+    graphData[dateKey] = { key: dateKey, x: formattedDate };
+  }
+
+  return graphData;
+}
+
+function updateGraphDataForToken(
+  tokenName: string,
+  graphDataMap: Record<string, GraphData>,
+  dailyMetricsResponse: any,
+  lastTokenMetric: any,
+): void {
+  const dailyOracles = extractDailyOracles(tokenName, dailyMetricsResponse);
+
+  const dailyMetrics = dailyMetricsResponse?.[tokenName]?.nodes.reduce(
+    (agg: object, metricsData: { dateKey: string }) => ({ ...agg, [metricsData.dateKey]: metricsData }),
+    {},
+  );
+
+  const dateList = Object.keys(graphDataMap);
+  dateList.sort();
+
+  dateList.forEach((dateKey: string) => {
+    const oracle = (dailyOracles && dailyOracles[dateKey]) || { typeOutAmountLast: 1, typeInAmountLast: 1 };
+    const tokenMetrics = (dailyMetrics && dailyMetrics[dateKey]) || lastTokenMetric;
+
+    const tokenValue = (tokenMetrics?.valueLast || 0) / 1_000_000;
+    const ratio = Number(oracle.typeOutAmountLast) / Number(oracle.typeInAmountLast);
+    graphDataMap[dateKey][tokenName] = tokenValue * ratio;
+
+    lastTokenMetric = tokenMetrics;
+  });
+}
+
+function constructGraph(tokenNames: string[], dailyMetricsResponse: any) {
+  const dayRange: number[] = range(90).reverse();
+  const graphData: Record<string, GraphData> = generateGraphDataForDateRange(dayRange);
+
+  for (let i = 0; i < tokenNames.length; i++) {
+    const tokenName = tokenNames[i];
+    let lastTokenMetric = dailyMetricsResponse?.[`${tokenName}_last`]?.nodes[0];
+    updateGraphDataForToken(tokenName, graphData, dailyMetricsResponse, lastTokenMetric);
+  }
+
+  const graphDataList = populateMissingDays(graphData, GRAPH_DAYS);
+  return graphDataList;
+}
+
 const ReserveHistoryGraph = ({ tokenNames }: Props) => {
   const { key: startDateKey } = getDateKey(new Date(), GRAPH_DAYS);
   const {
@@ -22,47 +75,10 @@ const ReserveHistoryGraph = ({ tokenNames }: Props) => {
     subQueryFetcher,
   );
   const dailyMetricsResponse = dailyMetricsData?.data.data;
-  const dayRange: number[] = range(90).reverse();
-
-  const today = new Date();
-  const graphDataMap: { [key: string]: GraphData } = dayRange.reduce((agg, dateNum: number) => {
-    const { key: dateKey, formattedDate } = getDateKey(new Date(today), dateNum);
-
-    return { ...agg, [dateKey]: { key: dateKey, x: formattedDate } };
-  }, {});
-
-  tokenNames.forEach((tokenName: string) => {
-    const dailyOracles = extractDailyOracles(tokenName, dailyMetricsResponse);
-    let lastTokenMetric = dailyMetricsResponse?.[`${tokenName}_last`]?.nodes[0];
-
-    const dailyMetrics = dailyMetricsResponse?.[tokenName]?.nodes.reduce(
-      (agg: object, metricsData: { dateKey: string }) => ({ ...agg, [metricsData.dateKey]: metricsData }),
-      {},
-    );
-
-    const dateList = Object.keys(graphDataMap);
-    dateList.sort();
-    dateList.forEach((dateKey: string) => {
-      const oracle = (dailyOracles && dailyOracles[dateKey]) || { typeOutAmountLast: 1, typeInAmountLast: 1 };
-      const tokenMetrics = (dailyMetrics && dailyMetrics[dateKey]) || lastTokenMetric;
-
-      const tokenValue = (tokenMetrics?.valueLast || 0) / 1_000_000;
-      const ratio = Number(oracle.typeOutAmountLast) / Number(oracle.typeInAmountLast);
-      graphDataMap[dateKey][tokenName] = tokenValue * ratio;
-
-      lastTokenMetric = tokenMetrics;
-    });
-  });
-
-  const graphDataList = populateMissingDays(graphDataMap, GRAPH_DAYS);
+  const graphData = constructGraph(tokenNames, dailyMetricsResponse);
 
   return (
-    <ReserveHistory
-      data={graphDataList}
-      tokenNames={tokenNames}
-      isLoading={graphDataIsLoading}
-      error={error?.message}
-    />
+    <ReserveHistory data={graphData} tokenNames={tokenNames} isLoading={graphDataIsLoading} error={error?.message} />
   );
 };
 
