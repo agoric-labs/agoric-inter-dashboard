@@ -3,16 +3,16 @@ export const dailyMetricsResponse = {
   ATOM: {
     nodes: [
       {
-        id: 'ATOM:20240513',
-        blockTimeLast: '2024-05-13T08:06:51',
-        dateKey: 20240513,
+        id: 'ATOM:20220101',
+        blockTimeLast: '2022-01-01T08:06:51',
+        dateKey: 20220101,
         valueLast: '10265620',
         denom: 'ATOM',
       },
       {
-        id: 'ATOM:20240512',
-        blockTimeLast: '2024-05-12T13:06:50',
-        dateKey: 20240512,
+        id: 'ATOM:20220102',
+        blockTimeLast: '2022-01-02T13:06:50',
+        dateKey: 20220102,
         valueLast: '10265620',
         denom: 'ATOM',
       },
@@ -21,15 +21,15 @@ export const dailyMetricsResponse = {
   ATOM_oracle: {
     nodes: [
       {
-        dateKey: 20240514,
-        blockTimeLast: '2024-05-14T00:00:27',
+        dateKey: 20220101,
+        blockTimeLast: '2022-01-01T00:00:27',
         typeInName: 'ATOM',
         typeInAmountLast: '1000000',
         typeOutAmountLast: '8373120',
       },
       {
-        dateKey: 20240513,
-        blockTimeLast: '2024-05-13T00:09:42',
+        dateKey: 20220102,
+        blockTimeLast: '2022-01-02T00:09:42',
         typeInName: 'ATOM',
         typeInAmountLast: '1000000',
         typeOutAmountLast: '8402990',
