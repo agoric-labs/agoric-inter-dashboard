@@ -4,8 +4,7 @@ import { ReserveHistory } from '@/widgets/ReserveHistory';
 import { GRAPH_DAYS } from '@/constants';
 import { populateMissingDays, getDateKey, range, subQueryFetcher, extractDailyOracles } from '@/utils';
 import { RESERVE_DAILY_METRICS_QUERY } from '@/queries';
-
-type GraphData = { key: number; x: string; [key: string]: any };
+import { GraphData, ReserveAllocationMetricsDaily, ReserveAllocationMetricsDailyNode } from '@/types/reserve-types';
 
 type Props = {
   tokenNames: string[];
@@ -24,30 +23,34 @@ function generateGraphDataForDateRange(dayRange: number[]): Record<string, Graph
 
 function updateGraphDataForToken(
   tokenName: string,
-  graphDataMap: Record<string, GraphData>,
+  graphData: Record<string, GraphData>,
   dailyMetricsResponse: any,
-  lastTokenMetric: any,
+  lastTokenMetric: ReserveAllocationMetricsDailyNode,
 ): void {
   const dailyOracles = extractDailyOracles(tokenName, dailyMetricsResponse);
 
-  const dailyMetrics = dailyMetricsResponse?.[tokenName]?.nodes.reduce(
-    (agg: object, metricsData: { dateKey: string }) => ({ ...agg, [metricsData.dateKey]: metricsData }),
-    {},
-  );
+  const dailyMetrics: ReserveAllocationMetricsDaily = {};
+  const nodes = dailyMetricsResponse?.[tokenName]?.nodes;
 
-  const dateList = Object.keys(graphDataMap);
-  dateList.sort();
+  for (let i = 0; i < nodes?.length; i++) {
+    const metricsData = nodes[i];
+    const { dateKey } = metricsData;
+    dailyMetrics[dateKey] = metricsData;
+  }
 
-  dateList.forEach((dateKey: string) => {
+  const dateList = Object.keys(graphData).sort();
+
+  for (let i = 0; i < dateList?.length; i++) {
+    const dateKey = dateList[i];
     const oracle = (dailyOracles && dailyOracles[dateKey]) || { typeOutAmountLast: 1, typeInAmountLast: 1 };
     const tokenMetrics = (dailyMetrics && dailyMetrics[dateKey]) || lastTokenMetric;
 
     const tokenValue = (tokenMetrics?.valueLast || 0) / 1_000_000;
     const ratio = Number(oracle.typeOutAmountLast) / Number(oracle.typeInAmountLast);
-    graphDataMap[dateKey][tokenName] = tokenValue * ratio;
+    graphData[dateKey][tokenName] = tokenValue * ratio;
 
     lastTokenMetric = tokenMetrics;
-  });
+  }
 }
 
 function constructGraph(tokenNames: string[], dailyMetricsResponse: any) {
@@ -56,7 +59,7 @@ function constructGraph(tokenNames: string[], dailyMetricsResponse: any) {
 
   for (let i = 0; i < tokenNames.length; i++) {
     const tokenName = tokenNames[i];
-    let lastTokenMetric = dailyMetricsResponse?.[`${tokenName}_last`]?.nodes[0];
+    let lastTokenMetric: ReserveAllocationMetricsDailyNode = dailyMetricsResponse?.[`${tokenName}_last`]?.nodes[0];
     updateGraphDataForToken(tokenName, graphData, dailyMetricsResponse, lastTokenMetric);
   }
 
