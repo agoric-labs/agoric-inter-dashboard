@@ -13,7 +13,8 @@ type Props = {
 export function generateGraphDataForDateRange(dayRange: number[]): Record<string, GraphData> {
   const graphData: Record<string, GraphData> = {};
 
-  for (const dateNum of dayRange) {
+  for (let i = 0; i < dayRange?.length; i++) {
+    const dateNum = dayRange[i];
     const { key: dateKey, formattedDate } = getDateKey(new Date(), dateNum);
     graphData[dateKey] = { key: dateKey, x: formattedDate };
   }
