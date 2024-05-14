@@ -6,10 +6,9 @@ import { PageContent } from '@/components/PageContent';
 import { LiquidatedVaults } from '@/widgets/LiquidatedVaults';
 import { LiquidatedVaultCountCard } from '@/widgets/LiquidatedVaultCountCard';
 import { VaultStatesChart } from '@/widgets/VaultStatesChart';
-import { populateMissingDays, subQueryFetcher } from '@/utils';
+import { subQueryFetcher } from '@/utils';
 import { LIQUIDATIONS_DASHBOARD, LIQUIDATION_GRAPH_TOKENS_QUERY, LIQUIDATION_DAILY_METRICS_QUERY } from '@/queries';
 import { GraphData, LiquidationDashboardResponse, LiquidationMetricsDailyResponse, OraclePriceNode, TokenNamesResponse, VaultManagerGovernancesNode } from '@/types/liquidation-types';
-import { GRAPH_DAYS } from '@/constants';
 
 
 const sum = (items: Array<string>) => items.reduce((agg, next) => agg + Number(next), 0);
@@ -69,9 +68,33 @@ export function Liquidated() {
       };
     });
   });
+  const sortedGraphDataList = Object.values(graphDataMap);
+  sortedGraphDataList.sort((a, b) => a.key - b.key);
+  let prevValue: GraphData = sortedGraphDataList[0];
+  const graphDataList: Array<GraphData> = sortedGraphDataList.reduce(
+    (aggArray: Array<GraphData>, graphData: GraphData) => {
+      // filling in missing days
+      const prevDay = new Date(prevValue.x);
+      const nextDay = new Date(graphData.x);
+      const timeDiff = nextDay.getTime() - prevDay.getTime();
+      const diffDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+      const missingDays =
+        diffDays > 1
+          ? Array.from(Array(diffDays - 1).keys()).map((idx) => {
+              const newDate = new Date(prevDay);
+              newDate.setDate(prevDay.getDate() + 1 + idx);
+              const newDateString = newDate.toISOString().slice(0, 10);
+              const dateKey = Number(newDateString.replaceAll('-', ''));
+              return { ...prevValue, x: newDateString, key: dateKey };
+            })
+          : [];
 
-  const graphDataList = populateMissingDays(graphDataMap, GRAPH_DAYS);
- 
+      const newAggArray = [...aggArray, ...missingDays, { ...prevValue, ...graphData }];
+      prevValue = { ...prevValue, ...graphData };
+      return newAggArray;
+    },
+    [],
+  ).slice(-90);
   const summedGraphDataList = graphDataList.map((item) => ({
     ...item,
     active: sum(Object.values(item.active)),

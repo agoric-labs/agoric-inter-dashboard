@@ -3,9 +3,8 @@ import useSWR from 'swr/immutable';
 import { VaultTotalLockedCollateralChart } from '@/widgets/VaultTotalLockedCollateralChart';
 import { VaultTotalMintedISTChart } from '@/widgets/VaultTotalMintedISTChart';
 import { VAULTS_DAILY_METRICS_QUERY } from '@/queries';
-import { populateMissingDays, subQueryFetcher } from '@/utils';
+import { subQueryFetcher } from '@/utils';
 import ChartsSkeleton from './ChartsSkeleton';
-import { GRAPH_DAYS } from '@/constants';
 
 type Props = {
   tokenNames: Array<string>;
@@ -61,7 +60,33 @@ export function VaultCharts({ tokenNames, vaultsDataIsLoading, error }: Props) {
     });
   });
 
-  const graphDataList = populateMissingDays(graphDataMap, GRAPH_DAYS);
+  const sortedGraphDataList = Object.values(graphDataMap)
+    .slice()
+    .sort((a, b) => a.key - b.key);
+  let prevValue: GraphData = sortedGraphDataList[0];
+  const graphDataList: Array<GraphData> = sortedGraphDataList
+    .reduce((aggArray: Array<GraphData>, graphData: GraphData) => {
+      // filling in missing days
+      const prevDay = new Date(prevValue.x);
+      const nextDay = new Date(graphData.x);
+      const timeDiff = nextDay.getTime() - prevDay.getTime();
+      const diffDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+      const missingDays =
+        diffDays > 1
+          ? Array.from(Array(diffDays - 1).keys()).map((idx) => {
+              const newDate = new Date(prevDay);
+              newDate.setDate(prevDay.getDate() + 1 + idx);
+              const newDateString = newDate.toISOString().slice(0, 10);
+              const dateKey = Number(newDateString.replaceAll('-', ''));
+              return { ...prevValue, x: newDateString, key: dateKey };
+            })
+          : [];
+
+      const newAggArray = [...aggArray, ...missingDays, { ...prevValue, ...graphData }];
+      prevValue = { ...prevValue, ...graphData };
+      return newAggArray;
+    }, [])
+    .slice(-90);
 
   return (
     <>
