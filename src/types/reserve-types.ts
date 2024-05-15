@@ -5,6 +5,21 @@ export type OraclePriceNode = {
   typeOutName: string;
   id: string;
 };
+
+export type ReserveAllocationMetricsDailyNode = {
+  id: string;
+  blockTimeLast: string;
+  dateKey: number;
+  valueLast: string;
+  denom: string;
+};
+
+export type GraphData = { key: number; x: string; [key: string]: any };
+
+export type ReserveAllocationMetricsDaily = {
+  [key: string]: ReserveAllocationMetricsDailyNode;
+};
+
 export type AllocationsNode = { id: string; denom: string; value: number };
 export type ReserveMetricsNode = {
   allocations: { nodes: Array<AllocationsNode> };
