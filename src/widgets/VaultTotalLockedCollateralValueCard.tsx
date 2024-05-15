@@ -18,10 +18,10 @@ export function VaultTotalLockedCollateralValueCard({
     return <ValueCard title={title} value={<Skeleton className="w-[50px] h-[32px] rounded-full" />} />;
   }
 
-  const totalCollateralLocked = Object.values(data).reduce(
-    (totalCount, tokenData) =>
-      totalCount + (tokenData.totalCollateral / 1_000_000) * (tokenData.typeOutAmount / 1_000_000),
-    0,
-  );
+  const totalCollateralLocked = Object.values(data).reduce((totalCount, tokenData) => {
+    const totalCollateral = tokenData?.totalCollateral || 0;
+    const typeOutAmount = Number(tokenData?.typeOutAmount) || 0;
+    return totalCount + (totalCollateral / 1_000_000) * (typeOutAmount / 1_000_000);
+  }, 0);
   return <ValueCard title={title} value={formatPrice(totalCollateralLocked)} />;
 }

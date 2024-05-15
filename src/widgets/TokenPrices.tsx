@@ -30,6 +30,7 @@ export function TokenPrices({ title = 'Summary', data, isLoading }: Props) {
   });
 
   const oraclePrices = sortedEntries.map((token) => {
+    const typeOutAmount = Number(token?.typeOutAmount) || 0
     // Determine 24h change in oracle price
     const sortedOracleDailyPrices = token?.oracleDailyPrices?.sort((a, b) => b.dateKey - a.dateKey);
     const changeValue = sortedOracleDailyPrices.length > 0 ? (() => {
@@ -51,8 +52,8 @@ export function TokenPrices({ title = 'Summary', data, isLoading }: Props) {
     return {
       token: <CollateralWithIcon collateralType={token.liquidatingCollateralBrand} />,
       name: token.liquidatingCollateralBrand,
-      numActive: token.numActiveVaults,
-      oraclePrice: token.typeOutAmount / 1_000_000,
+      numActive: token?.numActiveVaults || 0,
+      oraclePrice: typeOutAmount / 1_000_000,
       dayChange,
     };
   });

@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import { AxiosError, AxiosResponse } from 'axios';
 import { ReserveHistory } from '@/widgets/ReserveHistory';
 import { GRAPH_DAYS } from '@/constants';
-import { populateMissingDays, getDateKey, range, subQueryFetcher } from '@/utils';
+import { populateMissingDays, getDateKey, range, subQueryFetcher, extractDailyOracles } from '@/utils';
 import { RESERVE_DAILY_METRICS_QUERY } from '@/queries';
 
 type GraphData = { key: number; x: string; [key: string]: any };
@@ -28,11 +28,7 @@ const ReserveHistoryGraph = ({ tokenNames }: { tokenNames: string[] }) => {
   }, {});
 
   tokenNames.forEach((tokenName: string) => {
-    const dailyOracles = dailyMetricsResponse?.[`${tokenName}_oracle`]?.nodes.reduce(
-      (agg: object, dailyOracleData: { dateKey: string }) => ({ ...agg, [dailyOracleData.dateKey]: dailyOracleData }),
-      {},
-    );
-
+    const dailyOracles = extractDailyOracles(tokenName, dailyMetricsResponse);
     let lastTokenMetric = dailyMetricsResponse?.[`${tokenName}_last`]?.nodes[0];
 
     const dailyMetrics = dailyMetricsResponse?.[tokenName]?.nodes.reduce(
@@ -45,8 +41,11 @@ const ReserveHistoryGraph = ({ tokenNames }: { tokenNames: string[] }) => {
     dateList.forEach((dateKey: string) => {
       const oracle = (dailyOracles && dailyOracles[dateKey]) || { typeOutAmountLast: 1, typeInAmountLast: 1 };
       const tokenMetrics = (dailyMetrics && dailyMetrics[dateKey]) || lastTokenMetric;
-      graphDataMap[dateKey][tokenName] =
-        ((tokenMetrics?.valueLast || 0) / 1_000_000) * (oracle.typeOutAmountLast / oracle.typeInAmountLast);
+      
+      const tokenValue = (tokenMetrics?.valueLast || 0) / 1_000_000;
+      const ratio = Number(oracle.typeOutAmountLast) / Number(oracle.typeInAmountLast);
+      graphDataMap[dateKey][tokenName] = tokenValue * ratio;
+
 
       lastTokenMetric = tokenMetrics;
     });
