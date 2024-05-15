@@ -10,13 +10,13 @@ describe('Tests for constructing graph', () => {
     expect(graphData).toEqual({
       '20220101': {
         'ATOM-total_collateral': 21385.59423846527,
-        'ATOM-total_minted': '1847260002',
+        'ATOM-total_minted': 1847.260002,
         key: 20220101,
         x: '2022-01-01',
       },
       '20240305': {
         'ATOM-total_collateral': 21186.58382138042,
-        'ATOM-total_minted': '1847222298',
+        'ATOM-total_minted': 1847.222298,
         key: 20240305,
         x: '2024-03-05',
       },
@@ -31,13 +31,13 @@ describe('Tests for constructing graph', () => {
     expect(graphData).toEqual({
       '20220101': {
         'ATOM-total_collateral': 2069.253102,
-        'ATOM-total_minted': '1847260002',
+        'ATOM-total_minted': 1847.260002,
         key: 20220101,
         x: '2022-01-01',
       },
       '20240305': {
         'ATOM-total_collateral': 2069.253102,
-        'ATOM-total_minted': '1847222298',
+        'ATOM-total_minted': 1847.222298,
         key: 20240305,
         x: '2024-03-05',
       },
@@ -50,13 +50,13 @@ describe('Tests for constructing graph', () => {
     expect(graphData).toEqual({
       '20220101': {
         'ATOM-total_collateral': 2069.253102,
-        'ATOM-total_minted': '1847260002',
+        'ATOM-total_minted': 1847.260002,
         key: 20220101,
         x: '2022-01-01',
       },
       '20240305': {
         'ATOM-total_collateral': 2069.253102,
-        'ATOM-total_minted': '1847222298',
+        'ATOM-total_minted': 1847.222298,
         key: 20240305,
         x: '2024-03-05',
       },
