@@ -26,6 +26,17 @@ describe('Tests for Daily Oracles', () => {
     expect(result).toEqual({});
   });
 
+  it('should return an empty object when dailyMetricsResponse has undefined fields', () => {
+    const tokenName = 'ATOM';
+    const dailyMetricsResponse = {
+      ATOM_oracle: undefined
+    };
+
+    const result = extractDailyOracles(tokenName, dailyMetricsResponse);
+
+    expect(result).toEqual({});
+  });
+
   it('should return a DailyOracles object with the correct dateKey and data when dailyMetricsResponse has valid data', () => {
     const tokenName = 'ATOM';
     const result = extractDailyOracles(tokenName, dailyMetricsResponse);
