@@ -1,6 +1,7 @@
 import { PSMStats as Item, Skeleton } from '@/components/PSMStats';
 import { ErrorAlert } from '@/components/ErrorAlert';
 import { coinLabels } from '../coinLabels';
+import { range } from '@/utils';
 
 export function PSMStats({ data, error, isLoading }: { data: object; error?: Error; isLoading: boolean }) {
   if (error) {
@@ -10,7 +11,7 @@ export function PSMStats({ data, error, isLoading }: { data: object; error?: Err
   if (!data || isLoading) {
     return (
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        {[...new Array(6)].map((n) => (
+        {range(6).map((n) => (
           <Skeleton key={n} />
         ))}
       </div>
