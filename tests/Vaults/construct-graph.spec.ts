@@ -112,6 +112,48 @@ describe('Tests for constructing graph', () => {
     expect(result).toEqual(expectedGraphDataList);
   });
 
+  it('should return formatted graph data when given valid input and boardAuxes is an empty object', () => {
+    const graphData = {};
+
+    const expectedGraphDataList = [
+      {
+        'stTIA-total_collateral': 113147.464202,
+        'stTIA-total_minted': 334322.59104,
+        key: 20240510,
+        x: '2024-05-10',
+      },
+      {
+        'ATOM-total_collateral': 2044.732568,
+        'ATOM-total_minted': 1716.395996,
+        key: 20240511,
+        'stTIA-total_collateral': 112152.560009,
+        'stTIA-total_minted': 330447.863054,
+        x: '2024-05-11',
+      },
+      {
+        'ATOM-total_collateral': 2056.752568,
+        'ATOM-total_minted': 1716.82738,
+        key: 20240512,
+        'stTIA-total_collateral': 112152.560009,
+        'stTIA-total_minted': 330454.604268,
+        x: '2024-05-12',
+      },
+      {
+        'ATOM-total_collateral': 2068.772568,
+        'ATOM-total_minted': 1717.224228,
+        key: 20240513,
+        'stTIA-total_collateral': 112320.327361,
+        'stTIA-total_minted': 330990.866379,
+        x: '2024-05-13',
+      },
+    ];
+
+    jest.spyOn(utils, 'extractDailyOracles').mockReturnValue({});
+    const result = constructGraph(tokenNames, dailyMetricsResponse, {}, graphData);
+
+    expect(result).toEqual(expectedGraphDataList);
+  });
+
   it('should return a list of formatted graph data when given valid input and extractDailyOracles returns an null or undefined object', () => {
     const graphData = {};
 

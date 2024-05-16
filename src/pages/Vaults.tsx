@@ -73,7 +73,7 @@ function processManagerGovernancesNodes(nodes: VaultManagerGovernancesNode[]): V
 function processBoardAuxes(nodes: BoardAuxesNode[]): BoardAuxesMap {
   const obj: BoardAuxesMap = {};
 
-  for (let i = 0; i < nodes.length; i++) {
+  for (let i = 0; i < nodes?.length; i++) {
     const item = nodes[i];
     obj[item.allegedName] = item.decimalPlaces;
   }
