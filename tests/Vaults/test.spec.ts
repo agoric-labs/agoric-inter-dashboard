@@ -1,5 +1,5 @@
 import { constructGraph } from '@/components/VaultCharts';
-import { tokenNames, dailyMetricsResponse } from './mocks';
+import { tokenNames, dailyMetricsResponse, boardAuxes } from './mocks';
 import { extractDailyOracles } from '@/utils';
 
 describe('Tests for constructing graph', () => {
@@ -39,7 +39,7 @@ describe('Tests for constructing graph', () => {
       },
     ];
 
-    const result = constructGraph(tokenNames, dailyMetricsResponse, graphData);
+    const result = constructGraph(tokenNames, dailyMetricsResponse, boardAuxes, graphData);
 
     expect(result).toEqual(expectedGraphDataList);
   });
@@ -49,11 +49,11 @@ describe('Tests for constructing graph', () => {
     const graphData = {};
 
     const expectedGraphDataList: any = [];
-    let result = constructGraph(tokenNames, dailyMetricsResponse as unknown as any, graphData);
+    let result = constructGraph(tokenNames, dailyMetricsResponse as unknown as any, boardAuxes, graphData);
     expect(result).toEqual(expectedGraphDataList);
 
     dailyMetricsResponse = null;
-    result = constructGraph(tokenNames, dailyMetricsResponse as unknown as any, graphData);
+    result = constructGraph(tokenNames, dailyMetricsResponse as unknown as any, boardAuxes, graphData);
     expect(result).toEqual(expectedGraphDataList);
   });
 
@@ -62,11 +62,11 @@ describe('Tests for constructing graph', () => {
     let tokenNames = undefined;
 
     const expectedGraphDataList: any = [];
-    let result = constructGraph(tokenNames as unknown as any, dailyMetricsResponse, graphData);
+    let result = constructGraph(tokenNames as unknown as any, dailyMetricsResponse, boardAuxes, graphData);
     expect(result).toEqual(expectedGraphDataList);
 
     tokenNames = null;
-    result = constructGraph(tokenNames as unknown as any, dailyMetricsResponse, graphData);
+    result = constructGraph(tokenNames as unknown as any, dailyMetricsResponse, boardAuxes, graphData);
     expect(result).toEqual(expectedGraphDataList);
   });
 
