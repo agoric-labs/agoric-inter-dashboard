@@ -179,7 +179,7 @@ exports[`InterProtocol Snapshot tests should match snapshot when data is loaded 
               class="text-2xl font-bold"
               data-testid="inter-protocol-total-reserve-assets"
             >
-              $99.38K
+              $71.75K
             </div>
           </div>
         </div>
@@ -271,7 +271,7 @@ exports[`InterProtocol Snapshot tests should match snapshot when data is loaded 
               class="text-2xl font-bold"
               data-testid="inter-protocol-total-psm-assets"
             >
-              $28.77K
+              $28,665,205,252.95M
             </div>
           </div>
         </div>

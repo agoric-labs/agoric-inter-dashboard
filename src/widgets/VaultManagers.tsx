@@ -31,9 +31,10 @@ export function VaultManagers({ title = 'Collateral Type', data, isLoading }: Pr
   });
 
   const rows = sortedEntries.map(([coinName, coinData]) => {
-    const totalCollateral = coinData?.totalCollateral || 0 ;
+    const totalCollateral = (coinData?.totalCollateral || 0 ) / 1_000_000;
     const typeOutAmount = Number(coinData?.typeOutAmount) || 0
-    const oraclePrice = typeOutAmount / 1_000_000;
+    const typeInAmount = Number(coinData?.typeInAmount) || 1
+    const oraclePrice = typeOutAmount / typeInAmount;
     const totalCollateralUsd = totalCollateral * oraclePrice;
     const totalDebt = coinData?.totalDebt || 0
     const totalIstMinted = totalDebt / 1_000_000;
@@ -42,7 +43,7 @@ export function VaultManagers({ title = 'Collateral Type', data, isLoading }: Pr
     return {
       collateral_type: <CollateralWithIcon collateralType={coinName} />,
       debt_type: 'IST',
-      total_collateral: totalCollateral / 1_000_000,
+      total_collateral: totalCollateral,
       total_collateral_current_usd: totalCollateralUsd,
       total_debt: totalIstMinted,
       colletarization_ratio: colletarizationRatio,
