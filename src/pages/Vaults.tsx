@@ -46,7 +46,7 @@ function processOraclePrices(nodes: OraclePriceNode[]): OraclePriceNodesData {
 function processOracleDailyPrices(nodes: OraclePriceDailiesNode[]): OracleDailyPriceNodesData {
   const obj: OracleDailyPriceNodesData = {};
   return nodes?.reduce((agg, node) => {
-    const {typeInName} = node;
+    const { typeInName } = node;
 
     if (!agg[typeInName]) {
       agg[typeInName] = [];
@@ -85,6 +85,7 @@ function processOpenVaultsData(
   nodes: VaultsNode[],
   oraclePrices: OraclePriceNodesData,
   managerGovernancesNodes: VaultManagerGovernancesNodesData,
+  boardAuxes: BoardAuxesMap,
 ): OpenVaultsData {
   const arr: OpenVaultsData = [];
   const openVaultsData: OpenVaultsData = nodes?.reduce((acc, vaultNode) => {
@@ -93,11 +94,13 @@ function processOpenVaultsData(
       throw new Error(`Node ID does not contain enough segments: ${vaultNode.id}`);
     }
     const managerName = idSegments.slice(0, 4).join('.');
+    const decimalPlaces = (boardAuxes && boardAuxes[vaultNode?.denom]) || 6;
 
     const combinedData = {
       ...oraclePrices[vaultNode.denom],
       ...managerGovernancesNodes[managerName],
       ...vaultNode,
+      decimalPlaces: decimalPlaces,
     };
 
     acc.push(combinedData);
@@ -122,6 +125,7 @@ function processVaultsData(
     vaultsDashboardResponse.vaults.nodes,
     oraclePrices,
     managerGovernancesNodes,
+    boardAuxes,
   );
   const tokenNames: string[] =
     vaultsDashboardResponse?.vaultManagerMetrics?.nodes?.map((node) => node.liquidatingCollateralBrand) || [];
@@ -141,7 +145,7 @@ function processVaultsData(
       ...oraclePrices[liquidatingCollateralBrand],
       ...node,
       oracleDailyPrices: [...(oracleDailyPrices[liquidatingCollateralBrand] || [])],
-      decimalPlaces: decimalPlaces
+      decimalPlaces: decimalPlaces,
     };
     return agg;
   }, dashboardData);

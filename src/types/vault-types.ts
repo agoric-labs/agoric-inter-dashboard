@@ -88,4 +88,6 @@ export type VaultsDashboardData = {
     OraclePriceDailiesArr & { decimalPlaces: number };
 };
 
-export type OpenVaultsData = Array<VaultsNode & OraclePriceNode & VaultManagerGovernancesNode>;
+export type OpenVaultsData = Array<
+  VaultsNode & OraclePriceNode & VaultManagerGovernancesNode & { decimalPlaces: number }
+>;

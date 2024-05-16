@@ -3,6 +3,7 @@ import { OpenVaultsTable } from '@/components/OpenVaultsTable';
 import { SectionHeader } from '@/components/SectionHeader';
 import CollateralWithIcon from '@/components/ui/collateralWithIcon';
 import { OpenVaultsData } from '@/types/vault-types';
+import { createNumberWithLeadingZeroes } from '@/utils';
 
 type Props = {
   title?: string;
@@ -31,14 +32,16 @@ export function OpenVaults({ title = 'Open Vaults', data, isLoading }: Props) {
 
   const rows = data.map((vaultData) => {
     const vaultIdx = vaultData.id.split('.').at(-1)?.split('vault')[1] || '';
-    const typeOutAmount = Number(vaultData?.typeOutAmount) || 0
-    const collateralValueUsd = ((typeOutAmount / 1_000_000) * vaultData.balance) / 1_000_000;
-    const liquidationRatio = (vaultData?.liquidationMarginNumerator ?? 0) / (vaultData?.liquidationMarginDenominator ?? 1);
-    const istDebtAmount = vaultData.debt / 1_000_000;
-    const collateralAmount = vaultData.balance / 1_000_000;
+    const tokenDivisor = createNumberWithLeadingZeroes(vaultData?.decimalPlaces);
+    const typeOutAmount = Number(vaultData?.typeOutAmount) || 0;
+    const collateralValueUsd = ((typeOutAmount / tokenDivisor) * vaultData.balance) / tokenDivisor;
+    const liquidationRatio =
+      (vaultData?.liquidationMarginNumerator ?? 0) / (vaultData?.liquidationMarginDenominator ?? 1);
+    const istDebtAmount = vaultData.debt / tokenDivisor;
+    const collateralAmount = vaultData.balance / tokenDivisor;
     const liquidationPrice = (istDebtAmount * liquidationRatio) / collateralAmount;
-    const currentCollateralPrice = typeOutAmount / 1_000_000;
-    const collateralizationRatio = collateralValueUsd / (vaultData.debt / 1_000_000);
+    const currentCollateralPrice = typeOutAmount / tokenDivisor;
+    const collateralizationRatio = collateralValueUsd / (vaultData.debt / tokenDivisor);
 
     return {
       vault_idx: vaultIdx,
@@ -46,7 +49,7 @@ export function OpenVaults({ title = 'Open Vaults', data, isLoading }: Props) {
       debt_type: 'IST',
       collateral_amount: collateralAmount,
       current_collateral_price: currentCollateralPrice,
-      collateral_oracle_usd_value: typeOutAmount / 1_000_000,
+      collateral_oracle_usd_value: typeOutAmount / tokenDivisor,
       collateral_amount_current_usd: collateralValueUsd,
       debt_amount: istDebtAmount,
       liquidation_margin: liquidationRatio,
