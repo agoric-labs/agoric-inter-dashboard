@@ -159,28 +159,28 @@ export const dashboardDataMock = {
         nodes: [
           {
             id: 'published.vaultFactory.managers.manager1.vaults.vault105',
-            token: 'stATOM',
+            denom: 'stATOM',
             balance: '27214745',
             state: 'active',
             debt: '150309272',
           },
           {
             id: 'published.vaultFactory.managers.manager3.vaults.vault147',
-            token: 'stTIA',
+            denom: 'stTIA',
             balance: '30749961',
             state: 'active',
             debt: '130766039',
           },
           {
             id: 'published.vaultFactory.managers.manager2.vaults.vault40',
-            token: 'stOSMO',
+            denom: 'stOSMO',
             balance: '500000000',
             state: 'active',
             debt: '170850000',
           },
           {
             id: 'published.vaultFactory.managers.manager4.vaults.vault3',
-            token: 'stkATOM',
+            denom: 'stkATOM',
             balance: '5000000',
             state: 'active',
             debt: '25125000',

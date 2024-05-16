@@ -43,7 +43,7 @@ function processOraclePrices(nodes: OraclePriceNode[]): OraclePriceNodesData {
 function processOracleDailyPrices(nodes: OraclePriceDailiesNode[]): OracleDailyPriceNodesData {
   const obj: OracleDailyPriceNodesData = {};
   return nodes?.reduce((agg, node) => {
-    const typeInName = node.typeInName;
+    const {typeInName} = node;
 
     if (!agg[typeInName]) {
       agg[typeInName] = [];
@@ -55,7 +55,7 @@ function processOracleDailyPrices(nodes: OraclePriceDailiesNode[]): OracleDailyP
 }
 
 function processManagerGovernancesNodes(nodes: VaultManagerGovernancesNode[]): VaultManagerGovernancesNodesData {
-  let obj: VaultManagerGovernancesNodesData = {};
+  const obj: VaultManagerGovernancesNodesData = {};
   return nodes?.reduce((agg, node) => {
     const idSegments = node.id.split('.');
     if (idSegments.length < 4) {
@@ -72,7 +72,7 @@ function processOpenVaultsData(
   oraclePrices: OraclePriceNodesData,
   managerGovernancesNodes: VaultManagerGovernancesNodesData,
 ): OpenVaultsData {
-  let arr: OpenVaultsData = [];
+  const arr: OpenVaultsData = [];
   const openVaultsData: OpenVaultsData = nodes?.reduce((acc, vaultNode) => {
     const idSegments = vaultNode.id.split('.');
     if (idSegments.length < 4) {
@@ -110,14 +110,14 @@ function processVaultsData(
   const tokenNames: string[] =
     vaultsDashboardResponse?.vaultManagerMetrics?.nodes?.map((node) => node.liquidatingCollateralBrand) || [];
 
-  let dashboardData: VaultsDashboardData = {};
+  const dashboardData: VaultsDashboardData = {};
   vaultsDashboardResponse?.vaultManagerMetrics?.nodes?.reduce((agg, node) => {
     const idSegments = node.id.split('.');
     if (idSegments.length < 4) {
       throw new Error(`Node ID does not contain enough segments: ${node.id}`);
     }
     const managerName = idSegments.slice(0, 4).join('.');
-    const liquidatingCollateralBrand = node.liquidatingCollateralBrand;
+    const {liquidatingCollateralBrand} = node;
 
     agg[liquidatingCollateralBrand] = {
       ...managerGovernancesNodes[managerName],
