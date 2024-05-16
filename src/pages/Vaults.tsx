@@ -25,6 +25,8 @@ import {
   OpenVaultsData,
   VaultsDashboardResponse,
   VaultsDashboardData,
+  BoardAuxesNode,
+  BoardAuxesMap,
 } from '@/types/vault-types';
 
 function processOraclePrices(nodes: OraclePriceNode[]): OraclePriceNodesData {
@@ -68,6 +70,17 @@ function processManagerGovernancesNodes(nodes: VaultManagerGovernancesNode[]): V
   }, obj);
 }
 
+function processBoardAuxes(nodes: BoardAuxesNode[]): BoardAuxesMap {
+  const obj: BoardAuxesMap = {};
+
+  for (let i = 0; i < nodes.length; i++) {
+    const item = nodes[i];
+    obj[item.allegedName] = item.decimalPlaces;
+  }
+
+  return obj;
+}
+
 function processOpenVaultsData(
   nodes: VaultsNode[],
   oraclePrices: OraclePriceNodesData,
@@ -103,6 +116,8 @@ function processVaultsData(
   const managerGovernancesNodes = processManagerGovernancesNodes(
     vaultsDashboardResponse?.vaultManagerGovernances?.nodes,
   );
+  const boardAuxes = processBoardAuxes(vaultsDashboardResponse.boardAuxes.nodes);
+
   const openVaults: OpenVaultsData = processOpenVaultsData(
     vaultsDashboardResponse.vaults.nodes,
     oraclePrices,
@@ -118,13 +133,15 @@ function processVaultsData(
       throw new Error(`Node ID does not contain enough segments: ${node.id}`);
     }
     const managerName = idSegments.slice(0, 4).join('.');
-    const { liquidatingCollateralBrand } = node;
+    const liquidatingCollateralBrand = node.liquidatingCollateralBrand;
+    const decimalPlaces = (boardAuxes && boardAuxes[liquidatingCollateralBrand]) || 6;
 
     agg[liquidatingCollateralBrand] = {
       ...managerGovernancesNodes[managerName],
       ...oraclePrices[liquidatingCollateralBrand],
       ...node,
       oracleDailyPrices: [...(oracleDailyPrices[liquidatingCollateralBrand] || [])],
+      decimalPlaces: decimalPlaces
     };
     return agg;
   }, dashboardData);

@@ -51,6 +51,7 @@ export type OraclePriceDailiesNode = {
 };
 
 export type BoardAuxesNode = { allegedName: string; decimalPlaces: number };
+export type BoardAuxesMap = { [allegedName: string]: number };
 
 export type VaultsDashboardResponse = {
   boardAuxes: { nodes: Array<BoardAuxesNode> };
@@ -81,7 +82,10 @@ export type OracleDailyPriceNodesData = { [key: string]: OraclePriceDailiesNode[
 export type VaultManagerGovernancesNodesData = { [key: string]: VaultManagerGovernancesNode };
 
 export type VaultsDashboardData = {
-  [key: string]: VaultManagerMetricsNode & OraclePriceNode & VaultManagerGovernancesNode & OraclePriceDailiesArr;
+  [key: string]: VaultManagerMetricsNode &
+    OraclePriceNode &
+    VaultManagerGovernancesNode &
+    OraclePriceDailiesArr & { decimalPlaces: number };
 };
 
 export type OpenVaultsData = Array<VaultsNode & OraclePriceNode & VaultManagerGovernancesNode>;
