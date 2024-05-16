@@ -3,20 +3,26 @@ import useSWR from 'swr/immutable';
 import { VaultTotalLockedCollateralChart } from '@/widgets/VaultTotalLockedCollateralChart';
 import { VaultTotalMintedISTChart } from '@/widgets/VaultTotalMintedISTChart';
 import { VAULTS_DAILY_METRICS_QUERY } from '@/queries';
-import { extractDailyOracles, populateMissingDays, subQueryFetcher } from '@/utils';
+import { createNumberWithLeadingZeroes, extractDailyOracles, populateMissingDays, subQueryFetcher } from '@/utils';
 import ChartsSkeleton from './ChartsSkeleton';
 import { GRAPH_DAYS } from '@/constants';
 import { DailyOracles, FormattedGraphData } from '@/types/common';
 import { GraphData } from '@/types/psm-types';
-import { VaultDailyMetricsQueryResponse } from '@/types/vault-types';
+import { BoardAuxesMap, VaultDailyMetricsQueryResponse, VaultManagerMetricsNode } from '@/types/vault-types';
 
 type Props = {
   tokenNames: Array<string>;
   vaultsDataIsLoading: boolean;
+  boardAuxes: BoardAuxesMap;
   error: any;
 };
 
-export function populateGraphData(dailyOracles: DailyOracles, nodes: any[], graphData: Record<string, GraphData>): void {
+export function populateGraphData(
+  dailyOracles: DailyOracles,
+  nodes: any,
+  boardAuxes: BoardAuxesMap,
+  graphData: Record<string, GraphData>,
+): void {
   for (let j = 0; j < nodes?.length; j++) {
     const dailyTokenMetrics = nodes[j];
     const dateKey = dailyTokenMetrics?.dateKey;
@@ -24,11 +30,14 @@ export function populateGraphData(dailyOracles: DailyOracles, nodes: any[], grap
     const oracle = (dailyOracles && dailyOracles[dateKey]) || { typeOutAmountLast: 1, typeInAmountLast: 1 };
     const blockTime = dailyTokenMetrics?.blockTimeLast?.slice(0, 10);
     const liquidatingCollateralBrand = dailyTokenMetrics?.liquidatingCollateralBrand;
-    const totalCollateralLast = dailyTokenMetrics?.totalCollateralLast;
-    const totalDebtLast = dailyTokenMetrics?.totalDebtLast / 1_000_000;
+    const decimalPlaces = (boardAuxes && boardAuxes[liquidatingCollateralBrand]) || 6;
+    const divisor = createNumberWithLeadingZeroes(decimalPlaces);
+
+    const totalCollateralLast = Number(dailyTokenMetrics?.totalCollateralLast);
+    const totalDebtLast = Number(dailyTokenMetrics?.totalDebtLast) / divisor;
     const typeOutAmountLast = Number(oracle.typeOutAmountLast);
     const typeInAmountLast = Number(oracle.typeInAmountLast);
-    const totalCollateral = (totalCollateralLast / 1_000_000) * (typeOutAmountLast / typeInAmountLast);
+    const totalCollateral = (totalCollateralLast / divisor) * (typeOutAmountLast / typeInAmountLast);
 
     graphData[dateKey] = {
       ...graphData[dateKey],
@@ -43,6 +52,7 @@ export function populateGraphData(dailyOracles: DailyOracles, nodes: any[], grap
 export function constructGraph(
   tokenNames: string[],
   dailyMetricsResponse: VaultDailyMetricsQueryResponse,
+  boardAuxes: BoardAuxesMap,
   graphData: Record<string, GraphData>,
 ): FormattedGraphData[] {
   for (let i = 0; i < tokenNames?.length; i++) {
@@ -51,7 +61,7 @@ export function constructGraph(
 
     const nodes = dailyMetricsResponse?.[tokenName]?.nodes;
     if (nodes) {
-      populateGraphData(dailyOracles, nodes, graphData);
+      populateGraphData(dailyOracles, nodes, boardAuxes, graphData);
     }
   }
 
@@ -59,7 +69,7 @@ export function constructGraph(
   return graphDataList;
 }
 
-export function VaultCharts({ tokenNames, vaultsDataIsLoading, error }: Props) {
+export function VaultCharts({ tokenNames, vaultsDataIsLoading, error, boardAuxes }: Props) {
   const {
     data: dailyMetricsData,
     isLoading: graphDataIsLoading,
@@ -78,7 +88,7 @@ export function VaultCharts({ tokenNames, vaultsDataIsLoading, error }: Props) {
   const dailyMetricsResponse: VaultDailyMetricsQueryResponse = dailyMetricsData?.data?.data;
 
   const graphData: Record<string, GraphData> = {};
-  const graphDataList = constructGraph(tokenNames, dailyMetricsResponse, graphData);
+  const graphDataList = constructGraph(tokenNames, dailyMetricsResponse, boardAuxes, graphData);
 
   return (
     <>

@@ -113,7 +113,7 @@ function processOpenVaultsData(
 
 function processVaultsData(
   vaultsDashboardResponse: VaultsDashboardResponse,
-): [OpenVaultsData, VaultsDashboardData, string[]] {
+): [OpenVaultsData, VaultsDashboardData, string[], BoardAuxesMap] {
   const oraclePrices = processOraclePrices(vaultsDashboardResponse?.oraclePrices?.nodes);
   const oracleDailyPrices = processOracleDailyPrices(vaultsDashboardResponse?.oraclePriceDailies?.nodes);
   const managerGovernancesNodes = processManagerGovernancesNodes(
@@ -150,7 +150,7 @@ function processVaultsData(
     return agg;
   }, dashboardData);
 
-  return [openVaults, dashboardData, tokenNames];
+  return [openVaults, dashboardData, tokenNames, boardAuxes];
 }
 export function Vaults() {
   const {
@@ -163,10 +163,11 @@ export function Vaults() {
 
   const totalVaultsCount = vaultDataResponse?.vaults.totalCount || 1;
   const pageCount = Math.ceil(totalVaultsCount / 100) - 1;
-  const { data: vaultsNextPages, error: nextPagesError, isLoading: nextPagesIsLoading } = useSWR<AxiosResponse, AxiosError>(
-    pageCount ? OPEN_VAULTS_NEXT_PAGES_QUERY(pageCount) : null,
-    subQueryFetcher,
-  );
+  const {
+    data: vaultsNextPages,
+    error: nextPagesError,
+    isLoading: nextPagesIsLoading,
+  } = useSWR<AxiosResponse, AxiosError>(pageCount ? OPEN_VAULTS_NEXT_PAGES_QUERY(pageCount) : null, subQueryFetcher);
 
   let vaultsDataAppended: VaultsDashboardResponse | null = null;
   if (!((pageCount !== 0 && !vaultsNextPages) || !vaultDataResponse)) {
@@ -191,9 +192,10 @@ export function Vaults() {
   let openVaults: OpenVaultsData = [];
   let dashboardData: VaultsDashboardData = {};
   let tokenNames: string[] = [];
+  let boardAuxes: BoardAuxesMap = {};
 
   if (vaultsDataAppended && Object.keys(vaultsDataAppended).length > 0) {
-    [openVaults, dashboardData, tokenNames] = processVaultsData(vaultsDataAppended);
+    [openVaults, dashboardData, tokenNames, boardAuxes] = processVaultsData(vaultsDataAppended);
   }
   const dataIsLoading = isLoading || nextPagesIsLoading;
 
@@ -207,7 +209,12 @@ export function Vaults() {
           <VaultTotalLockedCollateralValueCard data={dashboardData} isLoading={dataIsLoading} />
         </ValueCardGrid>
         <TokenPrices data={dashboardData} isLoading={dataIsLoading} />
-        <VaultCharts tokenNames={tokenNames} vaultsDataIsLoading={dataIsLoading} error={error} />
+        <VaultCharts
+          tokenNames={tokenNames}
+          boardAuxes={boardAuxes}
+          vaultsDataIsLoading={dataIsLoading}
+          error={error}
+        />
         <hr className="my-5" />
         <VaultManagers data={dashboardData} isLoading={dataIsLoading} />
         <hr className="my-5" />
