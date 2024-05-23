@@ -31,16 +31,23 @@ export function TokenPrices({ title = 'Summary', data, isLoading }: Props) {
   });
 
   const oraclePrices = sortedEntries.map((token) => {
-    const typeOutAmount = Number(token?.typeOutAmount) || 0
-    const tokenDivisor = createNumberWithLeadingZeroes(token?.decimalPlaces)
+    const typeOutAmount = Number(token?.typeOutAmount) || 0;
+    const typeInAmount = Number(token?.typeInAmount) || 0;
+
+    const tokenDivisor = createNumberWithLeadingZeroes(token?.decimalPlaces);
     // Determine 24h change in oracle price
     const sortedOracleDailyPrices = token?.oracleDailyPrices?.sort((a, b) => b.dateKey - a.dateKey);
-    const changeValue = sortedOracleDailyPrices.length > 0 ? (() => {
-      const oraclePriceYesterday = sortedOracleDailyPrices[0].typeOutAmountLast / tokenDivisor;
-      const oraclePriceToday = sortedOracleDailyPrices[1].typeOutAmountLast / tokenDivisor;
-      const change = 1 - (oraclePriceToday / oraclePriceYesterday);
-      return Math.round(change * 10000) / 100
-    })() : null;
+    const changeValue =
+      sortedOracleDailyPrices.length > 0
+        ? (() => {
+            const oraclePriceYesterday =
+              sortedOracleDailyPrices[0].typeOutAmountLast / sortedOracleDailyPrices[0].typeInAmountLast;
+            const oraclePriceToday =
+              sortedOracleDailyPrices[1].typeOutAmountLast / sortedOracleDailyPrices[1].typeInAmountLast;
+            const change = 1 - oraclePriceToday / oraclePriceYesterday;
+            return Math.round(change * 10000) / 100;
+          })()
+        : null;
 
     let dayChange;
     if (changeValue === null) {
@@ -55,7 +62,7 @@ export function TokenPrices({ title = 'Summary', data, isLoading }: Props) {
       token: <CollateralWithIcon collateralType={token.liquidatingCollateralBrand} />,
       name: token.liquidatingCollateralBrand,
       numActive: token?.numActiveVaults || 0,
-      oraclePrice: typeOutAmount / tokenDivisor,
+      oraclePrice: typeOutAmount / typeInAmount,
       dayChange,
     };
   });

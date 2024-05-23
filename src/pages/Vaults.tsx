@@ -95,7 +95,7 @@ function processOpenVaultsData(
     }
     const managerName = idSegments.slice(0, 4).join('.');
     const decimalPlaces = (boardAuxes && boardAuxes[vaultNode?.denom]) || 6;
-    const decimalPlacesIST = (boardAuxes && boardAuxes['IST']) || 0;
+    const decimalPlacesIST = (boardAuxes && boardAuxes['IST']) || 6;
 
     const combinedData = {
       ...oraclePrices[vaultNode.denom],
@@ -121,10 +121,10 @@ function processVaultsData(
   const managerGovernancesNodes = processManagerGovernancesNodes(
     vaultsDashboardResponse?.vaultManagerGovernances?.nodes,
   );
-  const boardAuxes = processBoardAuxes(vaultsDashboardResponse.boardAuxes.nodes);
+  const boardAuxes = processBoardAuxes(vaultsDashboardResponse?.boardAuxes?.nodes);
 
   const openVaults: OpenVaultsData = processOpenVaultsData(
-    vaultsDashboardResponse.vaults.nodes,
+    vaultsDashboardResponse?.vaults?.nodes,
     oraclePrices,
     managerGovernancesNodes,
     boardAuxes,
@@ -141,7 +141,7 @@ function processVaultsData(
     const managerName = idSegments.slice(0, 4).join('.');
     const liquidatingCollateralBrand = node.liquidatingCollateralBrand;
     const decimalPlaces = (boardAuxes && boardAuxes[liquidatingCollateralBrand]) || 6;
-    const decimalPlacesIST = (boardAuxes && boardAuxes['IST']) || 0;
+    const decimalPlacesIST = (boardAuxes && boardAuxes['IST']) || 6;
 
     agg[liquidatingCollateralBrand] = {
       ...managerGovernancesNodes[managerName],
@@ -165,7 +165,7 @@ export function Vaults() {
 
   const vaultDataResponse: VaultsDashboardResponse = vaultsData?.data?.data;
 
-  const totalVaultsCount = vaultDataResponse?.vaults.totalCount || 1;
+  const totalVaultsCount = vaultDataResponse?.vaults?.totalCount || 1;
   const pageCount = Math.ceil(totalVaultsCount / 100) - 1;
   const {
     data: vaultsNextPages,
@@ -180,11 +180,11 @@ export function Vaults() {
         nodes: Array<VaultsNode>;
       };
     } = vaultsNextPages?.data?.data || {};
-    const nextVaults = Object.values(vaultPages).flatMap((openVaultsPage) => openVaultsPage.nodes);
+    const nextVaults = Object.values(vaultPages).flatMap((openVaultsPage) => openVaultsPage?.nodes);
 
     vaultsDataAppended = {
       ...vaultDataResponse,
-      vaults: { ...vaultDataResponse.vaults, nodes: [...vaultDataResponse.vaults.nodes, ...nextVaults] },
+      vaults: { ...vaultDataResponse.vaults, nodes: [...vaultDataResponse?.vaults?.nodes, ...nextVaults] },
     };
   }
 

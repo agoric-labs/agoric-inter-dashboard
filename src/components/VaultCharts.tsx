@@ -31,7 +31,7 @@ export function populateGraphData(
     const blockTime = dailyTokenMetrics?.blockTimeLast?.slice(0, 10);
     const liquidatingCollateralBrand = dailyTokenMetrics?.liquidatingCollateralBrand;
     const decimalPlaces = (boardAuxes && boardAuxes[liquidatingCollateralBrand]) || 6;
-    const decimalPlacesIST = (boardAuxes && boardAuxes['IST']) || 0;
+    const decimalPlacesIST = (boardAuxes && boardAuxes['IST']) || 6;
     const divisor = createNumberWithLeadingZeroes(decimalPlaces);
     const divisorIST = createNumberWithLeadingZeroes(decimalPlacesIST);
 
