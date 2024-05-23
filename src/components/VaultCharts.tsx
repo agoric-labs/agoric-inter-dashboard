@@ -31,10 +31,12 @@ export function populateGraphData(
     const blockTime = dailyTokenMetrics?.blockTimeLast?.slice(0, 10);
     const liquidatingCollateralBrand = dailyTokenMetrics?.liquidatingCollateralBrand;
     const decimalPlaces = (boardAuxes && boardAuxes[liquidatingCollateralBrand]) || 6;
+    const decimalPlacesIST = (boardAuxes && boardAuxes['IST']) || 0;
     const divisor = createNumberWithLeadingZeroes(decimalPlaces);
+    const divisorIST = createNumberWithLeadingZeroes(decimalPlacesIST);
 
     const totalCollateralLast = Number(dailyTokenMetrics?.totalCollateralLast);
-    const totalDebtLast = Number(dailyTokenMetrics?.totalDebtLast) / divisor;
+    const totalDebtLast = Number(dailyTokenMetrics?.totalDebtLast) / divisorIST;
     const typeOutAmountLast = Number(oracle.typeOutAmountLast);
     const typeInAmountLast = Number(oracle.typeInAmountLast);
     const totalCollateral = (totalCollateralLast / divisor) * (typeOutAmountLast / typeInAmountLast);

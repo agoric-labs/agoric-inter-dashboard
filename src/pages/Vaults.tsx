@@ -95,12 +95,14 @@ function processOpenVaultsData(
     }
     const managerName = idSegments.slice(0, 4).join('.');
     const decimalPlaces = (boardAuxes && boardAuxes[vaultNode?.denom]) || 6;
+    const decimalPlacesIST = (boardAuxes && boardAuxes['IST']) || 0;
 
     const combinedData = {
       ...oraclePrices[vaultNode.denom],
       ...managerGovernancesNodes[managerName],
       ...vaultNode,
-      decimalPlaces: decimalPlaces,
+      decimalPlaces,
+      decimalPlacesIST,
     };
 
     acc.push(combinedData);
@@ -139,13 +141,15 @@ function processVaultsData(
     const managerName = idSegments.slice(0, 4).join('.');
     const liquidatingCollateralBrand = node.liquidatingCollateralBrand;
     const decimalPlaces = (boardAuxes && boardAuxes[liquidatingCollateralBrand]) || 6;
+    const decimalPlacesIST = (boardAuxes && boardAuxes['IST']) || 0;
 
     agg[liquidatingCollateralBrand] = {
       ...managerGovernancesNodes[managerName],
       ...oraclePrices[liquidatingCollateralBrand],
       ...node,
       oracleDailyPrices: [...(oracleDailyPrices[liquidatingCollateralBrand] || [])],
-      decimalPlaces: decimalPlaces,
+      decimalPlaces,
+      decimalPlacesIST,
     };
     return agg;
   }, dashboardData);
