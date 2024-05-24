@@ -139,7 +139,6 @@ export function Vaults() {
   } = useSWR<AxiosResponse, AxiosError>(VAULTS_DASHBOARD_QUERY, subQueryFetcher);
 
   const vaultDataResponse: VaultsDashboardResponse = vaultsData?.data.data;
-  const [vaultsDataAppended, setVaultsDataAppended] = useState<VaultsDashboardResponse | null>(null);
 
   const totalVaultsCount = vaultDataResponse?.vaults.totalCount || 1;
   const pageCount = Math.ceil(totalVaultsCount / 100) - 1;
@@ -147,20 +146,21 @@ export function Vaults() {
     pageCount ? OPEN_VAULTS_NEXT_PAGES_QUERY(pageCount) : null,
     subQueryFetcher,
   );
-  useEffect(() => {
-    if ((pageCount !== 0 && !vaultsNextPages) || !vaultDataResponse) return;
+
+  let vaultsDataAppended: VaultsDashboardResponse | null = null;
+  if (!((pageCount !== 0 && !vaultsNextPages) || !vaultDataResponse)) {
     const vaultPages: {
       [key: string]: {
         nodes: Array<VaultsNode>;
       };
     } = vaultsNextPages?.data.data || {};
     const nextVaults = Object.values(vaultPages).flatMap((openVaultsPage) => openVaultsPage.nodes);
-    
-    setVaultsDataAppended({
+
+    vaultsDataAppended = {
       ...vaultDataResponse,
       vaults: { ...vaultDataResponse.vaults, nodes: [...vaultDataResponse.vaults.nodes, ...nextVaults] },
-    });
-  }, [vaultsNextPages, vaultDataResponse, pageCount]);
+    };
+  }
 
   if (error) {
     return <ErrorAlert value={error} />;
