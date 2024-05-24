@@ -61,6 +61,7 @@ export type VaultsDashboardResponse = {
   vaultManagerGovernances: { nodes: Array<VaultManagerGovernancesNode> };
   vaults: {
     nodes: Array<VaultsNode>;
+    totalCount: number;
   };
   oraclePriceDailies: { nodes: Array<OraclePriceDailiesNode> };
 };
