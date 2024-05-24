@@ -148,19 +148,20 @@ export function Vaults() {
     subQueryFetcher,
   );
   useEffect(() => {
-    if (!vaultsNextPages || !vaultDataResponse) return;
-    const nextVaults = Object.values(
-      vaultsNextPages.data.data as {
-        [key: string]: {
-          nodes: Array<VaultsNode>;
-        };
-      },
-    ).flatMap((openVaultsPage) => openVaultsPage.nodes);
+    if ((pageCount !== 0 && !vaultsNextPages) || !vaultDataResponse) return;
+    const vaultPages: {
+      [key: string]: {
+        nodes: Array<VaultsNode>;
+      };
+    } = vaultsNextPages?.data.data || {};
+    const nextVaults = Object.values(vaultPages).flatMap((openVaultsPage) => openVaultsPage.nodes);
+    
     setVaultsDataAppended({
       ...vaultDataResponse,
       vaults: { ...vaultDataResponse.vaults, nodes: [...vaultDataResponse.vaults.nodes, ...nextVaults] },
     });
-  }, [vaultsNextPages, vaultDataResponse]);
+  }, [vaultsNextPages, vaultDataResponse, pageCount]);
+
   if (error) {
     return <ErrorAlert value={error} />;
   }
