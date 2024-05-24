@@ -189,7 +189,7 @@ export function Vaults() {
         <hr className="my-5" />
         <VaultManagers data={dashboardData} isLoading={isLoading} />
         <hr className="my-5" />
-        <OpenVaults data={openVaults} isLoading={isLoading} />
+        <OpenVaults data={openVaults} isLoading={isLoading || nextPagesIsLoading} />
       </PageContent>
     </>
   );
