@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { AxiosError, AxiosResponse } from 'axios';
 import useSWR from 'swr';
 import { ValueCardGrid } from '@/components/ValueCardGrid';
@@ -9,7 +10,7 @@ import { OpenVaults } from '@/widgets/OpenVaults';
 import { VaultManagers } from '@/widgets/VaultManagers';
 import { VaultManagerCountCard } from '@/widgets/VaultManagerCountCard';
 import { VaultTotalLockedCollateralValueCard } from '@/widgets/VaultTotalLockedCollateralValueCard';
-import { VAULTS_DASHBOARD_QUERY } from '@/queries';
+import { OPEN_VAULTS_NEXT_PAGES_QUERY, VAULTS_DASHBOARD_QUERY } from '@/queries';
 import { subQueryFetcher } from '@/utils';
 import { VaultCharts } from '@/components/VaultCharts';
 import { ErrorAlert } from '@/components/ErrorAlert';
@@ -117,7 +118,7 @@ function processVaultsData(
       throw new Error(`Node ID does not contain enough segments: ${node.id}`);
     }
     const managerName = idSegments.slice(0, 4).join('.');
-    const {liquidatingCollateralBrand} = node;
+    const { liquidatingCollateralBrand } = node;
 
     agg[liquidatingCollateralBrand] = {
       ...managerGovernancesNodes[managerName],
@@ -137,33 +138,59 @@ export function Vaults() {
     error,
   } = useSWR<AxiosResponse, AxiosError>(VAULTS_DASHBOARD_QUERY, subQueryFetcher);
 
-  if (error) {
-    return <ErrorAlert value={error} />;
+  const vaultDataResponse: VaultsDashboardResponse = vaultsData?.data?.data;
+
+  const totalVaultsCount = vaultDataResponse?.vaults.totalCount || 1;
+  const pageCount = Math.ceil(totalVaultsCount / 100) - 1;
+  const { data: vaultsNextPages, error: nextPagesError, isLoading: nextPagesIsLoading } = useSWR<AxiosResponse, AxiosError>(
+    pageCount ? OPEN_VAULTS_NEXT_PAGES_QUERY(pageCount) : null,
+    subQueryFetcher,
+  );
+
+  let vaultsDataAppended: VaultsDashboardResponse | null = null;
+  if (!((pageCount !== 0 && !vaultsNextPages) || !vaultDataResponse)) {
+    const vaultPages: {
+      [key: string]: {
+        nodes: Array<VaultsNode>;
+      };
+    } = vaultsNextPages?.data?.data || {};
+    const nextVaults = Object.values(vaultPages).flatMap((openVaultsPage) => openVaultsPage.nodes);
+
+    vaultsDataAppended = {
+      ...vaultDataResponse,
+      vaults: { ...vaultDataResponse.vaults, nodes: [...vaultDataResponse.vaults.nodes, ...nextVaults] },
+    };
+  }
+
+  const pageError = error || nextPagesError;
+  if (pageError) {
+    return <ErrorAlert value={pageError} />;
   }
 
   let openVaults: OpenVaultsData = [];
   let dashboardData: VaultsDashboardData = {};
   let tokenNames: string[] = [];
 
-  if (vaultsData?.data?.data && Object.keys(vaultsData.data.data).length > 0) {
-    [openVaults, dashboardData, tokenNames] = processVaultsData(vaultsData.data.data);
+  if (vaultsDataAppended && Object.keys(vaultsDataAppended).length > 0) {
+    [openVaults, dashboardData, tokenNames] = processVaultsData(vaultsDataAppended);
   }
+  const dataIsLoading = isLoading || nextPagesIsLoading;
 
   return (
     <>
       <PageHeader title="Vaults" />
       <PageContent>
         <ValueCardGrid>
-          <VaultManagerCountCard totalCollateralTypes={Object.keys(dashboardData)?.length} isLoading={isLoading} />
-          <ActiveVaultCountCard activeVaults={openVaults?.length} isLoading={isLoading} />
-          <VaultTotalLockedCollateralValueCard data={dashboardData} isLoading={isLoading} />
+          <VaultManagerCountCard totalCollateralTypes={Object.keys(dashboardData)?.length} isLoading={dataIsLoading} />
+          <ActiveVaultCountCard activeVaults={openVaults?.length} isLoading={dataIsLoading} />
+          <VaultTotalLockedCollateralValueCard data={dashboardData} isLoading={dataIsLoading} />
         </ValueCardGrid>
-        <TokenPrices data={dashboardData} isLoading={isLoading} />
-        <VaultCharts tokenNames={tokenNames} vaultsDataIsLoading={isLoading} error={error} />
+        <TokenPrices data={dashboardData} isLoading={dataIsLoading} />
+        <VaultCharts tokenNames={tokenNames} vaultsDataIsLoading={dataIsLoading} error={error} />
         <hr className="my-5" />
-        <VaultManagers data={dashboardData} isLoading={isLoading} />
+        <VaultManagers data={dashboardData} isLoading={dataIsLoading} />
         <hr className="my-5" />
-        <OpenVaults data={openVaults} isLoading={isLoading} />
+        <OpenVaults data={openVaults} isLoading={dataIsLoading} />
       </PageContent>
     </>
   );

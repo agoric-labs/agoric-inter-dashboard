@@ -1,4 +1,4 @@
-import { getDateKey } from "./utils";
+import { getDateKey, range } from "./utils";
 
 export const PSM_DASHBOARD_QUERY = `
 query {
@@ -85,6 +85,7 @@ query {
             state
             debt
         }
+        totalCount
     }
     oraclePriceDailies(filter: {
         dateKey: { 
@@ -99,6 +100,19 @@ query {
         }
     }
 }`;
+
+export const OPEN_VAULTS_NEXT_PAGES_QUERY = (pages: number) => `
+query {
+    ${range(pages).map(index => `v${index}:vaults(filter: {state: {equalTo: "active"}}, first: 100, offset:${(index + 1) * 100}) {
+        nodes {
+            id
+            denom
+            balance
+            state
+            debt
+        }
+    }`)}
+}`
 
 export const VAULTS_DAILY_METRICS_QUERY = (tokens: string[]) => `
 query {
