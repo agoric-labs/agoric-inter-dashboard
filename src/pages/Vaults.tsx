@@ -138,7 +138,7 @@ export function Vaults() {
     error,
   } = useSWR<AxiosResponse, AxiosError>(VAULTS_DASHBOARD_QUERY, subQueryFetcher);
 
-  const vaultDataResponse: VaultsDashboardResponse = vaultsData?.data.data;
+  const vaultDataResponse: VaultsDashboardResponse = vaultsData?.data?.data;
 
   const totalVaultsCount = vaultDataResponse?.vaults.totalCount || 1;
   const pageCount = Math.ceil(totalVaultsCount / 100) - 1;
