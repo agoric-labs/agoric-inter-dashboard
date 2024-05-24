@@ -153,7 +153,7 @@ export function Vaults() {
       [key: string]: {
         nodes: Array<VaultsNode>;
       };
-    } = vaultsNextPages?.data.data || {};
+    } = vaultsNextPages?.data?.data || {};
     const nextVaults = Object.values(vaultPages).flatMap((openVaultsPage) => openVaultsPage.nodes);
 
     vaultsDataAppended = {
@@ -174,22 +174,23 @@ export function Vaults() {
   if (vaultsDataAppended && Object.keys(vaultsDataAppended).length > 0) {
     [openVaults, dashboardData, tokenNames] = processVaultsData(vaultsDataAppended);
   }
+  const dataIsLoading = isLoading || nextPagesIsLoading;
 
   return (
     <>
       <PageHeader title="Vaults" />
       <PageContent>
         <ValueCardGrid>
-          <VaultManagerCountCard totalCollateralTypes={Object.keys(dashboardData)?.length} isLoading={isLoading} />
-          <ActiveVaultCountCard activeVaults={openVaults?.length} isLoading={isLoading || nextPagesIsLoading} />
-          <VaultTotalLockedCollateralValueCard data={dashboardData} isLoading={isLoading} />
+          <VaultManagerCountCard totalCollateralTypes={Object.keys(dashboardData)?.length} isLoading={dataIsLoading} />
+          <ActiveVaultCountCard activeVaults={openVaults?.length} isLoading={dataIsLoading} />
+          <VaultTotalLockedCollateralValueCard data={dashboardData} isLoading={dataIsLoading} />
         </ValueCardGrid>
-        <TokenPrices data={dashboardData} isLoading={isLoading} />
-        <VaultCharts tokenNames={tokenNames} vaultsDataIsLoading={isLoading} error={error} />
+        <TokenPrices data={dashboardData} isLoading={dataIsLoading} />
+        <VaultCharts tokenNames={tokenNames} vaultsDataIsLoading={dataIsLoading} error={error} />
         <hr className="my-5" />
-        <VaultManagers data={dashboardData} isLoading={isLoading} />
+        <VaultManagers data={dashboardData} isLoading={dataIsLoading} />
         <hr className="my-5" />
-        <OpenVaults data={openVaults} isLoading={isLoading || nextPagesIsLoading} />
+        <OpenVaults data={openVaults} isLoading={dataIsLoading} />
       </PageContent>
     </>
   );
