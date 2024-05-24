@@ -60,6 +60,12 @@ export function constructGraph(
 }
 
 export function VaultCharts({ tokenNames, vaultsDataIsLoading, error }: Props) {
+  const {
+    data: dailyMetricsData,
+    isLoading: graphDataIsLoading,
+    error: graphDataError,
+  } = useSWR<AxiosResponse, AxiosError>(tokenNames.length ? VAULTS_DAILY_METRICS_QUERY(tokenNames) : null, subQueryFetcher);
+
   if (vaultsDataIsLoading || error) {
     return (
       <>
@@ -68,12 +74,6 @@ export function VaultCharts({ tokenNames, vaultsDataIsLoading, error }: Props) {
       </>
     );
   }
-
-  const {
-    data: dailyMetricsData,
-    isLoading: graphDataIsLoading,
-    error: graphDataError,
-  } = useSWR<AxiosResponse, AxiosError>(VAULTS_DAILY_METRICS_QUERY(tokenNames), subQueryFetcher);
 
   const dailyMetricsResponse: VaultDailyMetricsQueryResponse = dailyMetricsData?.data?.data;
 
