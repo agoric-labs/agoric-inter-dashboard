@@ -142,7 +142,7 @@ export function Vaults() {
 
   const totalVaultsCount = vaultDataResponse?.vaults.totalCount || 1;
   const pageCount = Math.ceil(totalVaultsCount / 100) - 1;
-  const { data: vaultsNextPages } = useSWR<AxiosResponse, AxiosError>(
+  const { data: vaultsNextPages, error: nextPagesError, isLoading: nextPagesIsLoading } = useSWR<AxiosResponse, AxiosError>(
     pageCount ? OPEN_VAULTS_NEXT_PAGES_QUERY(pageCount) : null,
     subQueryFetcher,
   );
@@ -162,8 +162,9 @@ export function Vaults() {
     };
   }
 
-  if (error) {
-    return <ErrorAlert value={error} />;
+  const pageError = error || nextPagesError;
+  if (pageError) {
+    return <ErrorAlert value={pageError} />;
   }
 
   let openVaults: OpenVaultsData = [];
@@ -180,7 +181,7 @@ export function Vaults() {
       <PageContent>
         <ValueCardGrid>
           <VaultManagerCountCard totalCollateralTypes={Object.keys(dashboardData)?.length} isLoading={isLoading} />
-          <ActiveVaultCountCard activeVaults={openVaults?.length} isLoading={isLoading} />
+          <ActiveVaultCountCard activeVaults={openVaults?.length} isLoading={isLoading || nextPagesIsLoading} />
           <VaultTotalLockedCollateralValueCard data={dashboardData} isLoading={isLoading} />
         </ValueCardGrid>
         <TokenPrices data={dashboardData} isLoading={isLoading} />
