@@ -37,7 +37,7 @@ export function ReserveHistory({ title = 'History', data, tokenNames, isLoading,
         <Tooltip />
         <Legend />
         {tokenNames.map((token, idx) => (
-          <Bar key={token} stackId="a" name={token} dataKey={token} fill={colors[idx % colors.length]} />
+          <Bar key={idx} stackId="a" name={token} dataKey={token} fill={colors[idx % colors.length]} />
         ))}
       </BarChart>
     </ResponsiveContainer>

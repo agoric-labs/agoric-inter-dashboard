@@ -57,7 +57,7 @@ export function PSMMintedPoolBalancePie({ title = 'Total Minted IST Per Anchor',
                 label={RadianTooltip}
               >
                 {pieChartData.map((item, idx) => (
-                  <Cell fill={colors[idx % colors.length]} key={item.label} name={item.label} />
+                  <Cell fill={colors[idx % colors.length]} key={idx} name={item.label} />
                 ))}
               </Pie>
               <Tooltip />
