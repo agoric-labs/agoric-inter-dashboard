@@ -32,6 +32,10 @@ export type VaultLiquidationsNode = {
   blockTime: string;
   currentState: VaultsNode;
   liquidatingState: VaultLiquidationsNode;
+  oraclePrice: {
+    typeInAmount: string;
+    typeOutAmount: string;
+  };
 };
 
 export type OraclePriceNode = {

@@ -1,13 +1,10 @@
 import { format, differenceInSeconds } from 'date-fns';
-import useSWR from 'swr';
-import { AxiosError, AxiosResponse } from 'axios';
 import { Skeleton } from '@/components/ui/skeleton';
 import { LiquidatedVaultsTable } from '@/components/LiquidatedVaultsTable';
 import { SectionHeader } from '@/components/SectionHeader';
-import { LIQUIDATION_ORACLE_PRICES_DAILIES_QUERY } from '@/queries';
-import { formatSecondsToHumanReadable, getDateKey, subQueryFetcher } from '@/utils';
+import { formatSecondsToHumanReadable, parseBigInt } from '@/utils';
 import { VAULT_STATES } from '@/constants';
-import { LiquidationDashboardData, OraclePriceDailiesResponse, OraclePriceNode } from '@/types/liquidation-types';
+import { LiquidationDashboardData } from '@/types/liquidation-types';
 
 type Props = {
   title?: string;
@@ -16,19 +13,6 @@ type Props = {
 };
 
 export function LiquidatedVaults({ title = 'Liquidated Vaults', data, isLoading }: Props) {
-  const oraclePricesDatekeyMap: { [key: string]: Array<number> } = data.vaultLiquidations?.reduce(
-    (agg: { [key: string]: Array<number> }, vault) => {
-      const { denom } = vault;
-      const prevDenomKeys = agg[denom] || [];
-      return { ...agg, [denom]: [...prevDenomKeys, getDateKey(new Date(vault.blockTime)).key] };
-    },
-    {},
-  );
-
-  const { data: oraclePricesDailiesData } = useSWR<AxiosResponse, AxiosError>(
-    oraclePricesDatekeyMap ? LIQUIDATION_ORACLE_PRICES_DAILIES_QUERY(oraclePricesDatekeyMap) : null,
-    subQueryFetcher,
-  );
 
   if (isLoading || !data) {
     return (
@@ -42,26 +26,6 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults', data, isLoading 
     );
   }
 
-  const oraclePricesDailiesResponse: OraclePriceDailiesResponse = oraclePricesDailiesData?.data.data;
-  const oraclePricesDailies: { [key: string]: { [key: number]: OraclePriceNode } } =
-    oraclePricesDailiesResponse &&
-    Object.fromEntries(
-      Object.entries(oraclePricesDailiesResponse).map(([denom, oraclePrices]) => [
-        denom,
-        oraclePrices.nodes.reduce(
-          (agg, oracle) => ({
-            ...agg,
-            [oracle.dateKey]: {
-              ...oracle,
-              typeInAmount: oracle.typeInAmountLast,
-              typeOutAmount: oracle.typeOutAmountLast,
-            },
-          }),
-          {},
-        ),
-      ]),
-    );
-
   data.vaultLiquidations?.sort((a, b) => {
     const nameA: string = a.denom?.toLowerCase();
     const nameB: string = b.denom?.toLowerCase();
@@ -72,11 +36,6 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults', data, isLoading 
     const vaultIdRegex = /^(published\.vaultFactory\.managers\.manager\d+)\.vaults\.vault(\d+)-liquidated$/g;
     const vaultIdRegexMatch = vaultIdRegex.exec(vaultData?.id);
     if (vaultIdRegexMatch === null) throw new Error('Vault ID format invalid');
-
-    const { key: dateKey } = getDateKey(new Date(vaultData.blockTime));
-    const oraclePriceToday = data.oraclePrices[vaultData.denom];
-    const oraclePriceSnapshot = oraclePricesDailies?.[vaultData.denom]?.[dateKey];
-    const oraclePrice = oraclePriceSnapshot || oraclePriceToday;
 
     const [, vaultManager, vaultIdx] = vaultIdRegexMatch;
 
@@ -89,7 +48,8 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults', data, isLoading 
     const collateralAmount = vaultData.liquidatingState.balance / 1_000_000;
     const liquidationPrice = (istDebtAmount * liquidationRatio) / collateralAmount;
     const collateralAmountReturned = (vaultData.liquidatingState.balance - vaultData.balance) / 1_000_000;
-    const oraclePriceRatio = oraclePrice.typeOutAmount / oraclePrice.typeInAmount;
+    const oraclePriceRatio =
+      parseBigInt(vaultData.oraclePrice?.typeOutAmount) / parseBigInt(vaultData.oraclePrice?.typeInAmount);
     const collateralAmountReturnedUsd = collateralAmountReturned * oraclePriceRatio;
     let liquidationTime = '';
     let liquidationStartTime = '';
@@ -119,7 +79,7 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults', data, isLoading 
       liquidationStartTime,
       liquidationTime,
       liquidated_return_amount: collateralAmountReturned,
-      liquidated_return_amount_usd: collateralAmountReturnedUsd, // oracle price too high?
+      liquidated_return_amount_usd: collateralAmountReturnedUsd,
     };
   });
 

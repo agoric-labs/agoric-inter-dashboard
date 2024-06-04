@@ -303,6 +303,7 @@ query {
             state
             balance
             blockTime
+            oraclePrice
             currentState {
                 id
                 denom
@@ -319,16 +320,6 @@ query {
                 balance
                 blockTime
             }
-        }
-    }
-    oraclePrices {
-        nodes {
-            id
-            typeInName
-            typeOutName
-            typeInAmount
-            typeOutAmount
-            priceFeedName
         }
     }
 }`;
@@ -356,23 +347,6 @@ query {
             numLiquidationsCompletedLast
             numLiquidationsAbortedLast
             liquidatingCollateralBrand
-        }
-    }`)}
-}`
-
-export const LIQUIDATION_ORACLE_PRICES_DAILIES_QUERY = (tokens: {[key:string]: number[]}) => `
-query {
-    ${Object.entries(tokens)?.map(([token, oracleKeys]) => 
-    `${token}:oraclePriceDailies (filter: {
-        dateKey: { in: [${oracleKeys.join(', ')}] }, typeInName: {equalTo: "${token}"}
-    }) {
-        nodes {
-            id
-            typeInName
-            typeOutName
-            typeInAmountLast
-            typeOutAmountLast
-            dateKey
         }
     }`)}
 }`

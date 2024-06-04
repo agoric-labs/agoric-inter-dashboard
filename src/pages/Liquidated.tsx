@@ -8,14 +8,21 @@ import { LiquidatedVaultCountCard } from '@/widgets/LiquidatedVaultCountCard';
 import { VaultStatesChart } from '@/widgets/VaultStatesChart';
 import { populateMissingDays, subQueryFetcher } from '@/utils';
 import { LIQUIDATIONS_DASHBOARD, LIQUIDATION_GRAPH_TOKENS_QUERY, LIQUIDATION_DAILY_METRICS_QUERY } from '@/queries';
-import { GraphData, LiquidationDashboardResponse, LiquidationMetricsDailyResponse, OraclePriceNode, TokenNamesResponse, VaultManagerGovernancesNode } from '@/types/liquidation-types';
-import { GRAPH_DAYS } from '@/constants';
-
+import {
+  GraphData,
+  LiquidationDashboardResponse,
+  LiquidationMetricsDailyResponse,
+  TokenNamesResponse,
+  VaultManagerGovernancesNode,
+} from '@/types/liquidation-types';
+import { GRAPH_DAYS, SUBQUERY_STAGING_URL } from '@/constants';
 
 const sum = (items: Array<string>) => items.reduce((agg, next) => agg + Number(next), 0);
 
 export function Liquidated() {
-  const { data, isLoading } = useSWR<AxiosResponse, AxiosError>(LIQUIDATIONS_DASHBOARD, subQueryFetcher);
+  const { data, isLoading } = useSWR<AxiosResponse, AxiosError>(LIQUIDATIONS_DASHBOARD, (query: string) =>
+    subQueryFetcher(query, SUBQUERY_STAGING_URL),
+  );
   const response: LiquidationDashboardResponse = data?.data?.data;
 
   const vaultManagerGovernances: { [key: string]: VaultManagerGovernancesNode } =
@@ -27,22 +34,14 @@ export function Liquidated() {
       const managerName = idSegments.slice(0, 4).join('.');
       return { ...agg, [managerName]: node };
     }, {});
-  const oraclePrices: { [key: string]: OraclePriceNode } = response?.oraclePrices?.nodes?.reduce(
-    (agg, node) => ({ ...agg, [node.typeInName]: node }),
-    {},
-  );
 
   const liquidationDashboardData = {
     vaultManagerGovernances,
     vaultLiquidations: response?.vaultLiquidations?.nodes,
-    oraclePrices,
   };
 
   //  Queries for graph
-  const { data: tokenNamesData } = useSWR<AxiosResponse, AxiosError>(
-    LIQUIDATION_GRAPH_TOKENS_QUERY,
-    subQueryFetcher,
-  );
+  const { data: tokenNamesData } = useSWR<AxiosResponse, AxiosError>(LIQUIDATION_GRAPH_TOKENS_QUERY, subQueryFetcher);
   const tokenNamesResponse: TokenNamesResponse = tokenNamesData?.data.data;
   const tokenNames = tokenNamesResponse?.vaultManagerMetrics.nodes.map((node) => node.liquidatingCollateralBrand) || [];
 
@@ -71,7 +70,7 @@ export function Liquidated() {
   });
 
   const graphDataList = populateMissingDays(graphDataMap, GRAPH_DAYS);
- 
+
   const summedGraphDataList = graphDataList.map((item) => ({
     ...item,
     active: sum(Object.values(item.active)),
