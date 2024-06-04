@@ -140,6 +140,36 @@ exports[`Liquidation Dashboard Snapshot tests should match snapshot when data is
                   <div
                     class="text-right"
                   >
+                    Liquidation Ratio
+                  </div>
+                </button>
+              </th>
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 150px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
+                  <div
+                    class="text-right"
+                  >
+                    Liquidation Price
+                  </div>
+                </button>
+              </th>
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 150px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
+                  <div
+                    class="text-right"
+                  >
                     Collateral Returned Amount
                   </div>
                 </button>
@@ -208,6 +238,24 @@ exports[`Liquidation Dashboard Snapshot tests should match snapshot when data is
                 <div
                   class="text-right font-medium"
                 >
+                  230%
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  $8.72
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
                   4.042
                 </div>
               </td>
@@ -217,7 +265,7 @@ exports[`Liquidation Dashboard Snapshot tests should match snapshot when data is
                 <div
                   class="text-right font-medium"
                 >
-                  $30.00
+                  $6.87
                 </div>
               </td>
             </tr>
@@ -265,6 +313,24 @@ exports[`Liquidation Dashboard Snapshot tests should match snapshot when data is
                 <div
                   class="text-right font-medium"
                 >
+                  190%
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  $13.46
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
                   3.749
                 </div>
               </td>
@@ -274,7 +340,7 @@ exports[`Liquidation Dashboard Snapshot tests should match snapshot when data is
                 <div
                   class="text-right font-medium"
                 >
-                  $40.72
+                  $4.61
                 </div>
               </td>
             </tr>
@@ -322,6 +388,24 @@ exports[`Liquidation Dashboard Snapshot tests should match snapshot when data is
                 <div
                   class="text-right font-medium"
                 >
+                  200%
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  $26.03
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
                   16.157
                 </div>
               </td>
@@ -331,7 +415,7 @@ exports[`Liquidation Dashboard Snapshot tests should match snapshot when data is
                 <div
                   class="text-right font-medium"
                 >
-                  $174.09
+                  $36.03
                 </div>
               </td>
             </tr>
@@ -371,6 +455,24 @@ exports[`Liquidation Dashboard Snapshot tests should match snapshot when data is
                   class="text-right font-medium"
                 >
                   0.001
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  170%
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  $1.13
                 </div>
               </td>
               <td
@@ -436,6 +538,24 @@ exports[`Liquidation Dashboard Snapshot tests should match snapshot when data is
                 <div
                   class="text-right font-medium"
                 >
+                  100%
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
+                  $4.92
+                </div>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                <div
+                  class="text-right font-medium"
+                >
                   921.651
                 </div>
               </td>
@@ -445,7 +565,7 @@ exports[`Liquidation Dashboard Snapshot tests should match snapshot when data is
                 <div
                   class="text-right font-medium"
                 >
-                  $8,313.92
+                  $949.30
                 </div>
               </td>
             </tr>

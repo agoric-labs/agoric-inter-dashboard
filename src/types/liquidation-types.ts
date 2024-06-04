@@ -63,8 +63,6 @@ export type LiquidationDashboardResponse = {
 };
 export type LiquidationDashboardData = {
   vaultLiquidations: Array<VaultLiquidationsNode>;
-  vaultManagerGovernances: { [key: string]: VaultManagerGovernancesNode };
-  oraclePrices: { [key: string]: OraclePriceNode };
 };
 
 export type TokenNamesResponse = {
