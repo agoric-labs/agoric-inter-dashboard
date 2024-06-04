@@ -36,6 +36,10 @@ export type VaultLiquidationsNode = {
     typeInAmount: string;
     typeOutAmount: string;
   };
+  vaultManagerGovernance: {
+    liquidationMarginNumerator: string;
+    liquidationMarginDenominator: string;
+  };
 };
 
 export type OraclePriceNode = {

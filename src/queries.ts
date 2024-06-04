@@ -287,14 +287,6 @@ query {
             numLiquidatingVaults
         }
     }
-    vaultManagerGovernances  {
-        nodes {
-            id
-            liquidationMarginNumerator
-            liquidationMarginDenominator
-        }
-    }
-
     vaultLiquidations (filter: {state: {equalTo: "liquidated"}}) {
         nodes {
             id
@@ -304,6 +296,7 @@ query {
             balance
             blockTime
             oraclePrice
+            vaultManagerGovernance
             currentState {
                 id
                 denom

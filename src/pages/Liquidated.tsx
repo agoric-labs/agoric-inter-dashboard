@@ -13,7 +13,6 @@ import {
   LiquidationDashboardResponse,
   LiquidationMetricsDailyResponse,
   TokenNamesResponse,
-  VaultManagerGovernancesNode,
 } from '@/types/liquidation-types';
 import { GRAPH_DAYS, SUBQUERY_STAGING_URL } from '@/constants';
 
@@ -25,18 +24,7 @@ export function Liquidated() {
   );
   const response: LiquidationDashboardResponse = data?.data?.data;
 
-  const vaultManagerGovernances: { [key: string]: VaultManagerGovernancesNode } =
-    response?.vaultManagerGovernances?.nodes?.reduce((agg, node) => {
-      const idSegments = node?.id?.split('.');
-      if (idSegments.length < 4) {
-        throw new Error(`Node ID does not contain enough segments: ${node.id}`);
-      }
-      const managerName = idSegments.slice(0, 4).join('.');
-      return { ...agg, [managerName]: node };
-    }, {});
-
   const liquidationDashboardData = {
-    vaultManagerGovernances,
     vaultLiquidations: response?.vaultLiquidations?.nodes,
   };
 

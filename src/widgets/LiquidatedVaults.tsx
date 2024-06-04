@@ -13,7 +13,6 @@ type Props = {
 };
 
 export function LiquidatedVaults({ title = 'Liquidated Vaults', data, isLoading }: Props) {
-
   if (isLoading || !data) {
     return (
       <>
@@ -37,13 +36,13 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults', data, isLoading 
     const vaultIdRegexMatch = vaultIdRegex.exec(vaultData?.id);
     if (vaultIdRegexMatch === null) throw new Error('Vault ID format invalid');
 
-    const [, vaultManager, vaultIdx] = vaultIdRegexMatch;
+    const vaultIdx = vaultIdRegexMatch[2];
 
     const vaultStateSuffix = vaultData?.currentState?.state === VAULT_STATES.CLOSED ? ' (Closed)' : '';
     const vaultState = vaultData.state[0].toUpperCase() + vaultData.state.slice(1) + vaultStateSuffix;
-    const vaultManagerGovernance = data.vaultManagerGovernances[vaultManager];
     const liquidationRatio =
-      vaultManagerGovernance.liquidationMarginNumerator / vaultManagerGovernance.liquidationMarginDenominator;
+      parseBigInt(vaultData.vaultManagerGovernance?.liquidationMarginNumerator) /
+      parseBigInt(vaultData.vaultManagerGovernance?.liquidationMarginDenominator);
     const istDebtAmount = vaultData.liquidatingState.debt / 1_000_000;
     const collateralAmount = vaultData.liquidatingState.balance / 1_000_000;
     const liquidationPrice = (istDebtAmount * liquidationRatio) / collateralAmount;
@@ -74,7 +73,7 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults', data, isLoading 
       collateral_type: vaultData.denom,
       state: vaultState,
       liquidating_debt_amount_avg: istDebtAmount,
-      liquidation_margin_avg: liquidationRatio, // ??
+      liquidation_margin_avg: liquidationRatio,
       liquidating_rate: liquidationPrice,
       liquidationStartTime,
       liquidationTime,
