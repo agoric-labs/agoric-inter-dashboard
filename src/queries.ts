@@ -166,6 +166,12 @@ query {
             typeOutAmount
         }
     }
+    boardAuxes {
+        nodes {
+            allegedName
+            decimalPlaces
+        }
+    }
 }`
 
 

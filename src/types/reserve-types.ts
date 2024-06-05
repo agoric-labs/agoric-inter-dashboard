@@ -25,9 +25,11 @@ export type ReserveMetricsNode = {
   allocations: { nodes: Array<AllocationsNode> };
   shortfallBalance: number;
 };
+export type BoardAuxesNode = { allegedName: string; decimalPlaces: number };
 export type ReserveDashboardResponse = {
   oraclePrices: { nodes: Array<OraclePriceNode> };
   reserveMetrics: { nodes: Array<ReserveMetricsNode> };
+  boardAuxes: { nodes: Array<BoardAuxesNode> };
 };
 export type ReserveDashboardData = Array<{
   shortfallBalance: number;
