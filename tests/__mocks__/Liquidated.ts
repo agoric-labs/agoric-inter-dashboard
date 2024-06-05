@@ -45,35 +45,6 @@ export const dashboardDataMock = {
           },
         ],
       },
-      vaultManagerGovernances: {
-        nodes: [
-          {
-            id: 'published.vaultFactory.managers.manager3.governance',
-            liquidationMarginNumerator: '19000',
-            liquidationMarginDenominator: '10000',
-          },
-          {
-            id: 'published.vaultFactory.managers.manager1.governance',
-            liquidationMarginNumerator: '16000',
-            liquidationMarginDenominator: '10000',
-          },
-          {
-            id: 'published.vaultFactory.managers.manager2.governance',
-            liquidationMarginNumerator: '17000',
-            liquidationMarginDenominator: '10000',
-          },
-          {
-            id: 'published.vaultFactory.managers.manager0.governance',
-            liquidationMarginNumerator: '15000',
-            liquidationMarginDenominator: '10000',
-          },
-          {
-            id: 'published.vaultFactory.managers.manager4.governance',
-            liquidationMarginNumerator: '16000',
-            liquidationMarginDenominator: '10000',
-          },
-        ],
-      },
       vaultLiquidations: {
         nodes: [
           {
@@ -83,6 +54,14 @@ export const dashboardDataMock = {
             state: 'liquidated',
             balance: '0',
             blockTime: '2024-04-13T21:24:23.592',
+            oraclePrice: {
+              typeInAmount: '1000000n',
+              typeOutAmount: '1230000n',
+            },
+            vaultManagerGovernance: {
+              liquidationMarginDenominator: '10000n',
+              liquidationMarginNumerator: '19000n',
+            },
             currentState: {
               id: 'published.vaultFactory.managers.manager1.vaults.vault83',
               denom: 'stATOM',
@@ -107,6 +86,14 @@ export const dashboardDataMock = {
             state: 'liquidated',
             balance: '615181733',
             blockTime: '2024-04-12T20:24:04.733',
+            oraclePrice: {
+              typeInAmount: '1000000n',
+              typeOutAmount: '1030000n',
+            },
+            vaultManagerGovernance: {
+              liquidationMarginDenominator: '10000n',
+              liquidationMarginNumerator: '10000n',
+            },
             currentState: {
               id: 'published.vaultFactory.managers.manager3.vaults.vault6',
               denom: 'stTIA',
@@ -132,6 +119,14 @@ export const dashboardDataMock = {
             state: 'liquidated',
             balance: '2586376',
             blockTime: '2023-08-17T23:24:06.377',
+            oraclePrice: {
+              typeInAmount: '1000000n',
+              typeOutAmount: '1698900n',
+            },
+            vaultManagerGovernance: {
+              liquidationMarginDenominator: '10000n',
+              liquidationMarginNumerator: '23000n',
+            },
             currentState: {
               id: 'published.vaultFactory.managers.manager0.vaults.vault44',
               denom: 'ATOM',
@@ -157,6 +152,14 @@ export const dashboardDataMock = {
             state: 'liquidated',
             balance: '16',
             blockTime: '2024-04-19T04:24:02.792',
+            oraclePrice: {
+              typeInAmount: '1000000n',
+              typeOutAmount: '1200000n',
+            },
+            vaultManagerGovernance: {
+              liquidationMarginDenominator: '10000n',
+              liquidationMarginNumerator: '17000n',
+            },
             currentState: {
               id: 'published.vaultFactory.managers.manager2.vaults.vault38',
               denom: 'stOSMO',
@@ -182,6 +185,14 @@ export const dashboardDataMock = {
             state: 'liquidated',
             balance: '0',
             blockTime: '2023-11-22T11:24:03.903',
+            oraclePrice: {
+              typeInAmount: '1000000n',
+              typeOutAmount: '2230000n',
+            },
+            vaultManagerGovernance: {
+              liquidationMarginDenominator: '10000n',
+              liquidationMarginNumerator: '20000n',
+            },
             currentState: {
               id: 'published.vaultFactory.managers.manager4.vaults.vault24',
               denom: 'stkATOM',
@@ -198,50 +209,6 @@ export const dashboardDataMock = {
               balance: '16156761',
               blockTime: '2023-11-21T23:00:04.758',
             },
-          },
-        ],
-      },
-      oraclePrices: {
-        nodes: [
-          {
-            id: 'stATOM-USD',
-            typeInName: 'stATOM',
-            typeOutName: 'USD',
-            typeInAmount: '1000000',
-            typeOutAmount: '11478585',
-            priceFeedName: 'stATOM-USD',
-          },
-          {
-            id: 'stOSMO-USD',
-            typeInName: 'stOSMO',
-            typeOutName: 'USD',
-            typeInAmount: '1000000',
-            typeOutAmount: '1079786',
-            priceFeedName: 'stOSMO-USD',
-          },
-          {
-            id: 'ATOM-USD',
-            typeInName: 'ATOM',
-            typeOutName: 'USD',
-            typeInAmount: '1000000',
-            typeOutAmount: '8448340',
-            priceFeedName: 'ATOM-USD',
-          },
-          {
-            id: 'stkATOM-USD',
-            typeInName: 'stkATOM',
-            typeOutName: 'USD',
-            typeInAmount: '1000000',
-            typeOutAmount: '10775043',
-            priceFeedName: 'stkATOM-USD',
-          },
-          {
-            id: 'stTIA-USD',
-            typeInName: 'stTIA',
-            typeOutName: 'USD',
-            typeInAmount: '1000000',
-            typeOutAmount: '9255084',
-            priceFeedName: 'stTIA-USD',
           },
         ],
       },
@@ -4150,52 +4117,6 @@ export const graphDataMock = {
             numLiquidationsCompletedLast: '0',
             numLiquidationsAbortedLast: '0',
             liquidatingCollateralBrand: 'stTIA',
-          },
-        ],
-      },
-    },
-  },
-};
-
-export const oraclePriceDailies = {
-  data: {
-    data: {
-      ATOM: {
-        nodes: [
-          {
-            id: 'ATOM-USD:20230817',
-            typeInName: 'ATOM',
-            typeOutName: 'USD',
-            typeInAmountLast: '1000000',
-            typeOutAmountLast: '7424017',
-            dateKey: 20230817,
-          },
-        ],
-      },
-      stATOM: {
-        nodes: [
-          {
-            id: 'stATOM-USD:20240413',
-            typeInName: 'stATOM',
-            typeOutName: 'USD',
-            typeInAmountLast: '1000000',
-            typeOutAmountLast: '10861897',
-            dateKey: 20240413,
-          },
-        ],
-      },
-      stOSMO: {
-        nodes: [],
-      },
-      stTIA: {
-        nodes: [
-          {
-            id: 'stTIA-USD:20240412',
-            typeInName: 'stTIA',
-            typeOutName: 'USD',
-            typeInAmountLast: '1000000',
-            typeOutAmountLast: '9020684',
-            dateKey: 20240412,
           },
         ],
       },

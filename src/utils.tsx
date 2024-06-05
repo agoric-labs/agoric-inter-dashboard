@@ -161,9 +161,9 @@ export const fetchData = async (options: RequestOptions): Promise<AxiosResponse>
   }
 };
 
-export const subQueryFetcher = (query: string) => {
-  const options = {
-    url: SUBQUERY_URL,
+export const subQueryFetcher = (query: string, url: string = SUBQUERY_URL): Promise<AxiosResponse> => {
+  const options: RequestOptions = {
+    url,
     method: RequestMethod.POST,
     data: { query },
   };
@@ -247,3 +247,5 @@ export function createNumberWithLeadingZeroes(numOfZeroes: number) {
     return Math.pow(10, numOfZeroes);
   }
 }
+
+export const parseBigInt = (str: string) => Number(str.slice(0, -1))

@@ -32,6 +32,14 @@ export type VaultLiquidationsNode = {
   blockTime: string;
   currentState: VaultsNode;
   liquidatingState: VaultLiquidationsNode;
+  oraclePrice: {
+    typeInAmount: string;
+    typeOutAmount: string;
+  };
+  vaultManagerGovernance: {
+    liquidationMarginNumerator: string;
+    liquidationMarginDenominator: string;
+  };
 };
 
 export type OraclePriceNode = {
@@ -55,8 +63,6 @@ export type LiquidationDashboardResponse = {
 };
 export type LiquidationDashboardData = {
   vaultLiquidations: Array<VaultLiquidationsNode>;
-  vaultManagerGovernances: { [key: string]: VaultManagerGovernancesNode };
-  oraclePrices: { [key: string]: OraclePriceNode };
 };
 
 export type TokenNamesResponse = {
