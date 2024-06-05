@@ -1,3 +1,5 @@
+import { BoardAuxesMap } from '@/types/vault-types';
+
 export const tokenNames: string[] = ['ATOM', 'stTIA', 'stkATOM', 'stOSMO', 'stATOM'];
 export const dailyMetricsResponse = {
   ATOM: {
@@ -79,4 +81,19 @@ export const dailyMetricsResponse = {
       },
     ],
   },
+};
+
+export const boardAuxes: BoardAuxesMap = {
+  ATOM: 6,
+  BLD: 6,
+  DAI_axl: 18,
+  DAI_grv: 18,
+  IST: 6,
+  KREAdCHARACTER: 0,
+  KREAdITEM: 0,
+  USDC_axl: 6,
+  USDC_grv: 6,
+  USDT_axl: 6,
+  USDT_grv: 6,
+  'Zoe Invitation': 0,
 };
