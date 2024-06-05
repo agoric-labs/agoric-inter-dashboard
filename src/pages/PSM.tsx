@@ -4,7 +4,7 @@ import { PageHeader } from '@/components/PageHeader';
 import { PageContent } from '@/components/PageContent';
 import { PSMStats } from '@/widgets/PSMStats';
 import { PSMMintedPoolBalancePie } from '@/widgets/PSMMintedPoolBalancePie';
-import { populateMissingDays, subQueryFetcher } from '@/utils';
+import { getTokenDivisor, populateMissingDays, subQueryFetcher } from '@/utils';
 import { PSM_DASHBOARD_QUERY, PSM_GRAPH_TOKENS_QUERY, PSM_TOKEN_DAILY_MINT_QUERY } from '@/queries';
 import { PsmMetricsResponse, PsmMetricsDailyResponse, GraphData, PSMDashboardResponse } from '@/types/psm-types';
 import { GRAPH_DAYS } from '@/constants';
@@ -39,11 +39,13 @@ export const PSM = () => {
   const graphDataMap: { [key: number]: GraphData } = {};
   Object.values(dailyMetricsResponse || {}).forEach((tokenDataList) => {
     tokenDataList?.nodes.forEach((dailyTokenMetrics) => {
+      const tokenDivisor = getTokenDivisor(boardAuxes, dailyTokenMetrics.denom);
+
       graphDataMap[dailyTokenMetrics.dateKey] = {
         ...graphDataMap[dailyTokenMetrics.dateKey],
         x: dailyTokenMetrics.blockTimeLast.split('T')[0],
         key: dailyTokenMetrics.dateKey,
-        [dailyTokenMetrics.denom]: Number(dailyTokenMetrics.totalMintedProvidedLast) / 1_000_000,
+        [dailyTokenMetrics.denom]: Number(dailyTokenMetrics.totalMintedProvidedLast) / tokenDivisor,
       };
     });
   });
@@ -56,7 +58,7 @@ export const PSM = () => {
       <PageContent>
         <div className="grid gap-4 grid-cols-1 2xl:grid-cols-2">
           <div>
-            <PSMStats data={queryData} error={error} isLoading={isLoading} />
+            <PSMStats data={queryData} boardAuxes={boardAuxes} error={error} isLoading={isLoading} />
           </div>
           <PSMMintedPoolBalancePie data={queryData} isLoading={isLoading} />
         </div>

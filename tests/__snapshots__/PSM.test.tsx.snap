@@ -39,13 +39,13 @@ exports[`PSM Dashboard Snapshot tests should match snapshot when data is loaded 
                   class="font-bold"
                   data-testid="psm-minted-ist-undefined"
                 >
-                  $2.38
+                  —
                    of
                    
                   <span
                     class="text-gray-400"
                   >
-                    $1.00M
+                    —
                   </span>
                 </span>
                 <p
@@ -60,7 +60,7 @@ exports[`PSM Dashboard Snapshot tests should match snapshot when data is loaded 
                 <span
                   class="font-bold"
                 >
-                  0%
+                  NaN%
                 </span>
                 <p
                   class="text-sm text-muted-foreground"
