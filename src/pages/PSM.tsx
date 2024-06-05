@@ -6,12 +6,12 @@ import { PSMStats } from '@/widgets/PSMStats';
 import { PSMMintedPoolBalancePie } from '@/widgets/PSMMintedPoolBalancePie';
 import { populateMissingDays, subQueryFetcher } from '@/utils';
 import { PSM_DASHBOARD_QUERY, PSM_GRAPH_TOKENS_QUERY, PSM_TOKEN_DAILY_MINT_QUERY } from '@/queries';
-import { PsmMetricsResponse, PsmMetricsDailyResponse, GraphData } from '@/types/psm-types';
+import { PsmMetricsResponse, PsmMetricsDailyResponse, GraphData, PSMDashboardResponse } from '@/types/psm-types';
 import { GRAPH_DAYS } from '@/constants';
 
 export const PSM = () => {
   const { data, error, isLoading } = useSWR<AxiosResponse, AxiosError>(PSM_DASHBOARD_QUERY, subQueryFetcher);
-  const response = data?.data?.data;
+  const response: PSMDashboardResponse = data?.data?.data;
   const queryData: { [key: string]: object } = {};
 
   response?.psmMetrics?.nodes?.forEach((node: { denom: string }) => {
@@ -20,6 +20,11 @@ export const PSM = () => {
   response?.psmGovernances?.nodes?.forEach((node: { denom: string }) => {
     if (node.denom in queryData) queryData[node.denom] = { ...queryData[node.denom], ...node };
   });
+
+  const boardAuxes: { [key: string]: number } = response?.boardAuxes?.nodes?.reduce(
+    (agg, node) => ({ ...agg, [node.allegedName]: node.decimalPlaces }),
+    {},
+  );
 
   //  Queries for graph
   const { data: tokenNamesData } = useSWR<AxiosResponse, AxiosError>(PSM_GRAPH_TOKENS_QUERY, subQueryFetcher);
@@ -42,7 +47,7 @@ export const PSM = () => {
       };
     });
   });
-  
+
   const graphDataList = populateMissingDays(graphDataMap, GRAPH_DAYS);
 
   return (

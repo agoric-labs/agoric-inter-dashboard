@@ -22,3 +22,30 @@ export type PsmMetricsDailyResponse = {
   };
 };
 export type GraphData = { key: number; x: string };
+
+export type Metadata = {
+  lastProcessedHeight: number;
+};
+export type PsmMetricNode = {
+  blockHeight: string;
+  denom: string;
+  mintedPoolBalance: string;
+};
+
+export type PsmGovernanceNode = {
+  mintLimit: string;
+  denom: string;
+};
+
+export type BoardAuxesNode = { allegedName: string; decimalPlaces: number };
+
+export type PSMDashboardResponse = {
+  _metadata: Metadata;
+  psmMetrics: {
+    nodes: Array<PsmMetricNode>;
+  };
+  psmGovernances: {
+    nodes: Array<PsmGovernanceNode>;
+  };
+  boardAuxes: { nodes: Array<BoardAuxesNode> };
+};
