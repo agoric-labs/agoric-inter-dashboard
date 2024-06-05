@@ -184,12 +184,10 @@ export const getDateKey = (date: Date, daysToSubtract: number = 0) => {
   dateObject.setDate(dateObject.getDate() - daysToSubtract);
   const startDateFormatDate = dateObject.toISOString().slice(0, 10);
   const startDateKey = Number(startDateFormatDate.replaceAll('-', ''));
-  return {key: startDateKey, formattedDate: startDateFormatDate};
-}
+  return { key: startDateKey, formattedDate: startDateFormatDate };
+};
 
 export const range = (stop: number) => [...Object(Array(stop)).keys()];
-
-
 
 const fillMissingDays = (startDate: Date, endDate: Date, formattedData: FormattedGraphData[]): void => {
   const timeDifferenceInMilliseconds = endDate.getTime() - startDate.getTime();
@@ -205,7 +203,10 @@ const fillMissingDays = (startDate: Date, endDate: Date, formattedData: Formatte
     }
   }
 };
-export const populateMissingDays = (graphDataMap: Record<string, GraphData>, GRAPH_DAYS: number): FormattedGraphData[] => {
+export const populateMissingDays = (
+  graphDataMap: Record<string, GraphData>,
+  GRAPH_DAYS: number,
+): FormattedGraphData[] => {
   const sortedGraphDataList = Object.values(graphDataMap).sort((a, b) => a.key - b.key);
 
   const formattedData: FormattedGraphData[] = [];
@@ -248,4 +249,10 @@ export function createNumberWithLeadingZeroes(numOfZeroes: number) {
   }
 }
 
-export const parseBigInt = (str: string) => Number(str.slice(0, -1))
+export const parseBigInt = (str: string) => Number(str.slice(0, -1));
+
+export const getTokenDivisor = (boardAuxes: { [key: string]: number }, tokenName: string) => {
+  const decimalPlaces = (boardAuxes && boardAuxes[tokenName]) || 6;
+  const tokenDivisor = createNumberWithLeadingZeroes(decimalPlaces);
+  return tokenDivisor;
+};
