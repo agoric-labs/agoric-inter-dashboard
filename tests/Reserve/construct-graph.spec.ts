@@ -9,8 +9,13 @@ import { ReserveAllocationMetricsDailyNode } from '@/types/reserve-types';
 
 describe('Tests for constructing graph', () => {
   // Tests for constructGraph
-  it('should return a list of graph data with length equal to GRAPH_DAYS when given valid tokenNames and dailyMetricsResponse', () => {
+  it('should return a list of graph data with length equal to GRAPH_DAYS when given valid tokenNames, dailyMetricsResponse, boardAuxes', () => {
     const result = constructGraph(tokenNames, dailyMetricsResponse, boardAuxes);
+    expect(result).toHaveLength(GRAPH_DAYS);
+  });
+
+  it('should return a list of graph data using default values when boardAuxes is undefined', () => {
+    const result = constructGraph(tokenNames, dailyMetricsResponse, undefined as any);
     expect(result).toHaveLength(GRAPH_DAYS);
   });
 
