@@ -77,7 +77,7 @@ export const Reserve = () => {
             isLoading={moduleAccountsLoading}
             error={moduleAccountsError}
           />
-          <ReserveShortfall data={reserveDashboardQueryData} isLoading={isLoading} />
+          <ReserveShortfall data={reserveDashboardQueryData} boardAuxes={boardAuxes} isLoading={isLoading} />
         </div>
         <ReserveHistoryGraph tokenNames={tokenNames} error={tokenNamesError} isLoading={tokenNamesIsLoading} />
       </PageContent>
