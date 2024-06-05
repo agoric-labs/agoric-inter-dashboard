@@ -80,35 +80,36 @@ export function InterProtocol() {
     {},
   );
 
-  const boardAuxes: { [key: string]: number } = dashboardResponse.boardAuxes.nodes.reduce(
-    (agg, node) => ({ ...agg, [node.allegedName]: node.decimalPlaces }),
+  const boardAuxes: { [key: string]: number } = dashboardResponse?.boardAuxes?.nodes?.reduce(
+    (agg, node) => ({ ...agg, [node?.allegedName]: node?.decimalPlaces }),
     {},
   );
 
   const istTokenDivisor = getTokenDivisor(boardAuxes, 'IST');
 
   const psmMinted =
-    dashboardResponse.psmMetrics.nodes.reduce((agg, node) => agg + Number(node.mintedPoolBalance), 0) / istTokenDivisor;
+    dashboardResponse?.psmMetrics?.nodes?.reduce((agg, node) => agg + Number(node?.mintedPoolBalance), 0) /
+    istTokenDivisor;
 
   const psmAnchor = dashboardResponse.psmMetrics.nodes.reduce((agg, node) => {
-    const decimalPlaces = (boardAuxes && boardAuxes[node.denom]) || 6;
-    const anchorPoolBalance = Number(node.anchorPoolBalance) / 10 ** decimalPlaces;
+    const tokenDivisor = getTokenDivisor(boardAuxes, node?.denom);
+    const anchorPoolBalance = Number(node?.anchorPoolBalance) / tokenDivisor;
     return agg + anchorPoolBalance;
   }, 0);
 
   const vaultMinted = dashboardResponse.vaultManagerMetrics.nodes.reduce((agg, node) => {
-    const tokenDivisor = getTokenDivisor(boardAuxes, node.liquidatingCollateralBrand);
-    return agg + Number(node.totalDebt) / tokenDivisor;
+    const tokenDivisor = getTokenDivisor(boardAuxes, node?.liquidatingCollateralBrand);
+    return agg + Number(node?.totalDebt) / tokenDivisor;
   }, 0);
 
   const totalMinted = psmMinted + vaultMinted;
 
   const vaultMintLimit =
-    dashboardResponse.vaultManagerGovernances.nodes.reduce((agg, node) => agg + Number(node.debtLimit), 0) /
+    dashboardResponse?.vaultManagerGovernances?.nodes?.reduce((agg, node) => agg + Number(node?.debtLimit), 0) /
     istTokenDivisor;
 
   const psmMintLimit =
-    dashboardResponse.psmGovernances.nodes.reduce((agg, node) => agg + Number(node.mintLimit), 0) / istTokenDivisor;
+    dashboardResponse?.psmGovernances?.nodes?.reduce((agg, node) => agg + Number(node?.mintLimit), 0) / istTokenDivisor;
 
   const totalMintLimit = vaultMintLimit + psmMintLimit;
 
@@ -116,24 +117,25 @@ export function InterProtocol() {
   const totalReserve = dashboardResponse.reserveMetrics.nodes.reduce(
     (agg, node) =>
       agg +
-      node.allocations.nodes.reduce((agg_, node_) => {
-        const tokenDivisor = getTokenDivisor(boardAuxes, node_.denom);
+      node?.allocations?.nodes.reduce((agg_, node_) => {
+        const tokenDivisor = getTokenDivisor(boardAuxes, node_?.denom);
         const allocationInUsd =
-          ((Number(node_.value) / tokenDivisor) * Number(oraclePrices[node_.denom]?.typeOutAmount || tokenDivisor)) /
+          ((Number(node_?.value) / tokenDivisor) * Number(oraclePrices[node_?.denom]?.typeOutAmount || tokenDivisor)) /
           tokenDivisor;
         return agg_ + allocationInUsd;
       }, 0),
     0,
   );
   const reserveShortfall =
-    dashboardResponse.reserveMetrics.nodes.reduce((agg, node) => agg + Number(node.shortfallBalance), 0) /
+    dashboardResponse?.reserveMetrics?.nodes?.reduce((agg, node) => agg + Number(node?.shortfallBalance), 0) /
     istTokenDivisor;
-  const totalLockedCollateral = dashboardResponse.vaultManagerMetrics.nodes.reduce((agg, node) => {
-    const tokenDivisor = getTokenDivisor(boardAuxes, node.liquidatingCollateralBrand);
+  const totalLockedCollateral = dashboardResponse?.vaultManagerMetrics?.nodes?.reduce((agg, node) => {
+    const tokenDivisor = getTokenDivisor(boardAuxes, node?.liquidatingCollateralBrand);
 
     const collateralInUsd =
-      ((Number(node.totalCollateral) / tokenDivisor) *
-        Number(oraclePrices[node.liquidatingCollateralBrand]?.typeOutAmount) || 0) / tokenDivisor;
+      ((Number(node?.totalCollateral) / tokenDivisor) *
+        Number(oraclePrices[node?.liquidatingCollateralBrand]?.typeOutAmount)) /
+      Number(oraclePrices[node?.liquidatingCollateralBrand]?.typeInAmount);
     return agg + collateralInUsd;
   }, 0);
 
