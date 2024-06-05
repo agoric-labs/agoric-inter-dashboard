@@ -4,9 +4,9 @@ import { render } from '@testing-library/react';
 import { Liquidated } from '@/pages/Liquidated';
 import {
   LIQUIDATIONS_DASHBOARD,
-  LIQUIDATION_GRAPH_TOKENS_QUERY,
+  VAULT_STATE_DAILIES_QUERY,
 } from '@/queries';
-import { graphDataMock, dashboardDataMock, graphNodesDataMock } from './__mocks__/Liquidated';
+import { graphDataMock, dashboardDataMock } from './__mocks__/Liquidated';
 
 jest.mock('swr', () => ({
   default: jest.fn(),
@@ -36,8 +36,8 @@ describe('Liquidation Dashboard Snapshot tests', () => {
       const mockData =
         {
           [LIQUIDATIONS_DASHBOARD]: dashboardDataMock,
-          [LIQUIDATION_GRAPH_TOKENS_QUERY]: graphNodesDataMock,
-        }[query] || graphDataMock;
+          [VAULT_STATE_DAILIES_QUERY]: graphDataMock,
+        }[query];
       return { data: mockData, error: null, isLoading: false };
     });
 
