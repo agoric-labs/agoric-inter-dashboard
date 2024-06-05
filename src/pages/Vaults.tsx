@@ -25,6 +25,8 @@ import {
   OpenVaultsData,
   VaultsDashboardResponse,
   VaultsDashboardData,
+  BoardAuxesNode,
+  BoardAuxesMap,
 } from '@/types/vault-types';
 
 function processOraclePrices(nodes: OraclePriceNode[]): OraclePriceNodesData {
@@ -44,7 +46,7 @@ function processOraclePrices(nodes: OraclePriceNode[]): OraclePriceNodesData {
 function processOracleDailyPrices(nodes: OraclePriceDailiesNode[]): OracleDailyPriceNodesData {
   const obj: OracleDailyPriceNodesData = {};
   return nodes?.reduce((agg, node) => {
-    const {typeInName} = node;
+    const { typeInName } = node;
 
     if (!agg[typeInName]) {
       agg[typeInName] = [];
@@ -68,10 +70,22 @@ function processManagerGovernancesNodes(nodes: VaultManagerGovernancesNode[]): V
   }, obj);
 }
 
+function processBoardAuxes(nodes: BoardAuxesNode[]): BoardAuxesMap {
+  const obj: BoardAuxesMap = {};
+
+  for (let i = 0; i < nodes?.length; i++) {
+    const item = nodes[i];
+    obj[item.allegedName] = item.decimalPlaces;
+  }
+
+  return obj;
+}
+
 function processOpenVaultsData(
   nodes: VaultsNode[],
   oraclePrices: OraclePriceNodesData,
   managerGovernancesNodes: VaultManagerGovernancesNodesData,
+  boardAuxes: BoardAuxesMap,
 ): OpenVaultsData {
   const arr: OpenVaultsData = [];
   const openVaultsData: OpenVaultsData = nodes?.reduce((acc, vaultNode) => {
@@ -80,11 +94,15 @@ function processOpenVaultsData(
       throw new Error(`Node ID does not contain enough segments: ${vaultNode.id}`);
     }
     const managerName = idSegments.slice(0, 4).join('.');
+    const decimalPlaces = (boardAuxes && boardAuxes[vaultNode?.denom]) || 6;
+    const decimalPlacesIST = (boardAuxes && boardAuxes['IST']) || 6;
 
     const combinedData = {
       ...oraclePrices[vaultNode.denom],
       ...managerGovernancesNodes[managerName],
       ...vaultNode,
+      decimalPlaces,
+      decimalPlacesIST,
     };
 
     acc.push(combinedData);
@@ -97,16 +115,19 @@ function processOpenVaultsData(
 
 function processVaultsData(
   vaultsDashboardResponse: VaultsDashboardResponse,
-): [OpenVaultsData, VaultsDashboardData, string[]] {
+): [OpenVaultsData, VaultsDashboardData, string[], BoardAuxesMap] {
   const oraclePrices = processOraclePrices(vaultsDashboardResponse?.oraclePrices?.nodes);
   const oracleDailyPrices = processOracleDailyPrices(vaultsDashboardResponse?.oraclePriceDailies?.nodes);
   const managerGovernancesNodes = processManagerGovernancesNodes(
     vaultsDashboardResponse?.vaultManagerGovernances?.nodes,
   );
+  const boardAuxes = processBoardAuxes(vaultsDashboardResponse?.boardAuxes?.nodes);
+
   const openVaults: OpenVaultsData = processOpenVaultsData(
-    vaultsDashboardResponse.vaults.nodes,
+    vaultsDashboardResponse?.vaults?.nodes,
     oraclePrices,
     managerGovernancesNodes,
+    boardAuxes,
   );
   const tokenNames: string[] =
     vaultsDashboardResponse?.vaultManagerMetrics?.nodes?.map((node) => node.liquidatingCollateralBrand) || [];
@@ -118,18 +139,22 @@ function processVaultsData(
       throw new Error(`Node ID does not contain enough segments: ${node.id}`);
     }
     const managerName = idSegments.slice(0, 4).join('.');
-    const { liquidatingCollateralBrand } = node;
+    const liquidatingCollateralBrand = node.liquidatingCollateralBrand;
+    const decimalPlaces = (boardAuxes && boardAuxes[liquidatingCollateralBrand]) || 6;
+    const decimalPlacesIST = (boardAuxes && boardAuxes['IST']) || 6;
 
     agg[liquidatingCollateralBrand] = {
       ...managerGovernancesNodes[managerName],
       ...oraclePrices[liquidatingCollateralBrand],
       ...node,
       oracleDailyPrices: [...(oracleDailyPrices[liquidatingCollateralBrand] || [])],
+      decimalPlaces,
+      decimalPlacesIST,
     };
     return agg;
   }, dashboardData);
 
-  return [openVaults, dashboardData, tokenNames];
+  return [openVaults, dashboardData, tokenNames, boardAuxes];
 }
 export function Vaults() {
   const {
@@ -140,12 +165,13 @@ export function Vaults() {
 
   const vaultDataResponse: VaultsDashboardResponse = vaultsData?.data?.data;
 
-  const totalVaultsCount = vaultDataResponse?.vaults.totalCount || 1;
+  const totalVaultsCount = vaultDataResponse?.vaults?.totalCount || 1;
   const pageCount = Math.ceil(totalVaultsCount / 100) - 1;
-  const { data: vaultsNextPages, error: nextPagesError, isLoading: nextPagesIsLoading } = useSWR<AxiosResponse, AxiosError>(
-    pageCount ? OPEN_VAULTS_NEXT_PAGES_QUERY(pageCount) : null,
-    subQueryFetcher,
-  );
+  const {
+    data: vaultsNextPages,
+    error: nextPagesError,
+    isLoading: nextPagesIsLoading,
+  } = useSWR<AxiosResponse, AxiosError>(pageCount ? OPEN_VAULTS_NEXT_PAGES_QUERY(pageCount) : null, subQueryFetcher);
 
   let vaultsDataAppended: VaultsDashboardResponse | null = null;
   if (!((pageCount !== 0 && !vaultsNextPages) || !vaultDataResponse)) {
@@ -154,11 +180,11 @@ export function Vaults() {
         nodes: Array<VaultsNode>;
       };
     } = vaultsNextPages?.data?.data || {};
-    const nextVaults = Object.values(vaultPages).flatMap((openVaultsPage) => openVaultsPage.nodes);
+    const nextVaults = Object.values(vaultPages).flatMap((openVaultsPage) => openVaultsPage?.nodes);
 
     vaultsDataAppended = {
       ...vaultDataResponse,
-      vaults: { ...vaultDataResponse.vaults, nodes: [...vaultDataResponse.vaults.nodes, ...nextVaults] },
+      vaults: { ...vaultDataResponse.vaults, nodes: [...vaultDataResponse?.vaults?.nodes, ...nextVaults] },
     };
   }
 
@@ -170,9 +196,10 @@ export function Vaults() {
   let openVaults: OpenVaultsData = [];
   let dashboardData: VaultsDashboardData = {};
   let tokenNames: string[] = [];
+  let boardAuxes: BoardAuxesMap = {};
 
   if (vaultsDataAppended && Object.keys(vaultsDataAppended).length > 0) {
-    [openVaults, dashboardData, tokenNames] = processVaultsData(vaultsDataAppended);
+    [openVaults, dashboardData, tokenNames, boardAuxes] = processVaultsData(vaultsDataAppended);
   }
   const dataIsLoading = isLoading || nextPagesIsLoading;
 
@@ -186,7 +213,12 @@ export function Vaults() {
           <VaultTotalLockedCollateralValueCard data={dashboardData} isLoading={dataIsLoading} />
         </ValueCardGrid>
         <TokenPrices data={dashboardData} isLoading={dataIsLoading} />
-        <VaultCharts tokenNames={tokenNames} vaultsDataIsLoading={dataIsLoading} error={error} />
+        <VaultCharts
+          tokenNames={tokenNames}
+          boardAuxes={boardAuxes}
+          vaultsDataIsLoading={dataIsLoading}
+          error={error}
+        />
         <hr className="my-5" />
         <VaultManagers data={dashboardData} isLoading={dataIsLoading} />
         <hr className="my-5" />

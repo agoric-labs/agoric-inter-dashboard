@@ -1,5 +1,5 @@
 import { constructGraph } from '@/components/VaultCharts';
-import { tokenNames, dailyMetricsResponse } from './mocks';
+import { tokenNames, dailyMetricsResponse, boardAuxes } from './mocks';
 import * as utils from '@/utils';
 
 describe('Tests for constructing graph', () => {
@@ -39,7 +39,7 @@ describe('Tests for constructing graph', () => {
       },
     ];
 
-    const result = constructGraph(tokenNames, dailyMetricsResponse, graphData);
+    const result = constructGraph(tokenNames, dailyMetricsResponse, boardAuxes, graphData);
 
     expect(result).toEqual(expectedGraphDataList);
   });
@@ -49,11 +49,11 @@ describe('Tests for constructing graph', () => {
     const graphData = {};
 
     const expectedGraphDataList: any = [];
-    let result = constructGraph(tokenNames, dailyMetricsResponse as unknown as any, graphData);
+    let result = constructGraph(tokenNames, dailyMetricsResponse as unknown as any, boardAuxes, graphData);
     expect(result).toEqual(expectedGraphDataList);
 
     dailyMetricsResponse = null;
-    result = constructGraph(tokenNames, dailyMetricsResponse as unknown as any, graphData);
+    result = constructGraph(tokenNames, dailyMetricsResponse as unknown as any, boardAuxes, graphData);
     expect(result).toEqual(expectedGraphDataList);
   });
 
@@ -62,11 +62,11 @@ describe('Tests for constructing graph', () => {
     let tokenNames = undefined;
 
     const expectedGraphDataList: any = [];
-    let result = constructGraph(tokenNames as unknown as any, dailyMetricsResponse, graphData);
+    let result = constructGraph(tokenNames as unknown as any, dailyMetricsResponse, boardAuxes, graphData);
     expect(result).toEqual(expectedGraphDataList);
 
     tokenNames = null;
-    result = constructGraph(tokenNames as unknown as any, dailyMetricsResponse, graphData);
+    result = constructGraph(tokenNames as unknown as any, dailyMetricsResponse, boardAuxes, graphData);
     expect(result).toEqual(expectedGraphDataList);
   });
 
@@ -107,7 +107,49 @@ describe('Tests for constructing graph', () => {
     ];
 
     jest.spyOn(utils, 'extractDailyOracles').mockReturnValue({});
-    const result = constructGraph(tokenNames, dailyMetricsResponse, graphData);
+    const result = constructGraph(tokenNames, dailyMetricsResponse, boardAuxes, graphData);
+
+    expect(result).toEqual(expectedGraphDataList);
+  });
+
+  it('should return formatted graph data when given valid input and boardAuxes is an empty object', () => {
+    const graphData = {};
+
+    const expectedGraphDataList = [
+      {
+        'stTIA-total_collateral': 113147.464202,
+        'stTIA-total_minted': 334322.59104,
+        key: 20240510,
+        x: '2024-05-10',
+      },
+      {
+        'ATOM-total_collateral': 2044.732568,
+        'ATOM-total_minted': 1716.395996,
+        key: 20240511,
+        'stTIA-total_collateral': 112152.560009,
+        'stTIA-total_minted': 330447.863054,
+        x: '2024-05-11',
+      },
+      {
+        'ATOM-total_collateral': 2056.752568,
+        'ATOM-total_minted': 1716.82738,
+        key: 20240512,
+        'stTIA-total_collateral': 112152.560009,
+        'stTIA-total_minted': 330454.604268,
+        x: '2024-05-12',
+      },
+      {
+        'ATOM-total_collateral': 2068.772568,
+        'ATOM-total_minted': 1717.224228,
+        key: 20240513,
+        'stTIA-total_collateral': 112320.327361,
+        'stTIA-total_minted': 330990.866379,
+        x: '2024-05-13',
+      },
+    ];
+
+    jest.spyOn(utils, 'extractDailyOracles').mockReturnValue({});
+    const result = constructGraph(tokenNames, dailyMetricsResponse, {}, graphData);
 
     expect(result).toEqual(expectedGraphDataList);
   });
@@ -149,11 +191,11 @@ describe('Tests for constructing graph', () => {
     ];
 
     jest.spyOn(utils, 'extractDailyOracles').mockReturnValue(null as unknown as any);
-    let result = constructGraph(tokenNames, dailyMetricsResponse, graphData);
+    let result = constructGraph(tokenNames, dailyMetricsResponse, boardAuxes, graphData);
     expect(result).toEqual(expectedGraphDataList);
 
     jest.spyOn(utils, 'extractDailyOracles').mockReturnValue(undefined as unknown as any);
-    result = constructGraph(tokenNames, dailyMetricsResponse, graphData);
+    result = constructGraph(tokenNames, dailyMetricsResponse, boardAuxes, graphData);
     expect(result).toEqual(expectedGraphDataList);
   });
 });

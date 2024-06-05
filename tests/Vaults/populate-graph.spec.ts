@@ -1,11 +1,11 @@
 import { populateGraphData } from '@/components/VaultCharts';
-import { dailyMetricsResponseNodes, oracleDailies } from './mocks';
+import { boardAuxes, dailyMetricsResponseNodes, oracleDailies } from './mocks';
 
 describe('Tests for constructing graph', () => {
   it('should populate graphData object with expected keys and values when dailyOracles and nodes are provided', () => {
     const graphData = {};
 
-    populateGraphData(oracleDailies, dailyMetricsResponseNodes, graphData);
+    populateGraphData(oracleDailies, dailyMetricsResponseNodes, boardAuxes, graphData);
 
     expect(graphData).toEqual({
       '20220101': {
@@ -27,7 +27,7 @@ describe('Tests for constructing graph', () => {
     let dailyOracles = null;
     let graphData = {};
 
-    populateGraphData(dailyOracles as unknown as any, dailyMetricsResponseNodes, graphData);
+    populateGraphData(dailyOracles as unknown as any, dailyMetricsResponseNodes, boardAuxes, graphData);
     expect(graphData).toEqual({
       '20220101': {
         'ATOM-total_collateral': 2069.253102,
@@ -46,7 +46,7 @@ describe('Tests for constructing graph', () => {
     dailyOracles = undefined;
     graphData = {};
 
-    populateGraphData(dailyOracles as unknown as any, dailyMetricsResponseNodes, graphData);
+    populateGraphData(dailyOracles as unknown as any, dailyMetricsResponseNodes, boardAuxes, graphData);
     expect(graphData).toEqual({
       '20220101': {
         'ATOM-total_collateral': 2069.253102,
@@ -66,19 +66,19 @@ describe('Tests for constructing graph', () => {
   it('should not add data in graphData if nodes array is undefined or null', () => {
     let graphData = {};
 
-    populateGraphData(oracleDailies, null as unknown as any, graphData);
+    populateGraphData(oracleDailies, null as unknown as any, boardAuxes, graphData);
     expect(graphData).toEqual({});
 
     graphData = {};
 
-    populateGraphData(oracleDailies, undefined as unknown as any, graphData);
+    populateGraphData(oracleDailies, undefined as unknown as any, boardAuxes, graphData);
     expect(graphData).toEqual({});
   });
 
   it('should not add data in graphData if nodes array is empty', () => {
     let graphData = {};
 
-    populateGraphData(oracleDailies, [], graphData);
+    populateGraphData(oracleDailies, [], boardAuxes, graphData);
     expect(graphData).toEqual({});
 
     graphData = {};

@@ -3,6 +3,7 @@ import { VaultManagersTable } from '@/components/VaultManagersTable';
 import { SectionHeader } from '@/components/SectionHeader';
 import CollateralWithIcon from '@/components/ui/collateralWithIcon';
 import { VaultsDashboardData } from '@/types/vault-types';
+import { createNumberWithLeadingZeroes } from '@/utils';
 
 type Props = {
   title?: string;
@@ -31,15 +32,18 @@ export function VaultManagers({ title = 'Collateral Type', data, isLoading }: Pr
   });
 
   const rows = sortedEntries.map(([coinName, coinData]) => {
-    const totalCollateral = (coinData?.totalCollateral || 0 ) / 1_000_000;
-    const typeOutAmount = Number(coinData?.typeOutAmount) || 0
-    const typeInAmount = Number(coinData?.typeInAmount) || 1
+    const tokenDivisor = createNumberWithLeadingZeroes(coinData?.decimalPlaces);
+    const tokenDivisorIST = createNumberWithLeadingZeroes(coinData?.decimalPlacesIST);
+
+    const totalCollateral = (coinData?.totalCollateral || 0) / tokenDivisor;
+    const typeOutAmount = Number(coinData?.typeOutAmount) || 0;
+    const typeInAmount = Number(coinData?.typeInAmount) || 1;
     const oraclePrice = typeOutAmount / typeInAmount;
     const totalCollateralUsd = totalCollateral * oraclePrice;
-    const totalDebt = coinData?.totalDebt || 0
-    const totalIstMinted = totalDebt / 1_000_000;
+    const totalDebt = coinData?.totalDebt || 0;
+    const totalIstMinted = totalDebt / tokenDivisorIST;
     const colletarizationRatio = totalCollateralUsd / totalIstMinted;
-    const debtLimit = coinData.debtLimit / 1_000_000;
+    const debtLimit = coinData.debtLimit / tokenDivisorIST;
     return {
       collateral_type: <CollateralWithIcon collateralType={coinName} />,
       debt_type: 'IST',

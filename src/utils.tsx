@@ -237,3 +237,13 @@ export const extractDailyOracles = (tokenName: string, dailyMetricsResponse: any
 
   return dailyOracles;
 };
+
+export function createNumberWithLeadingZeroes(numOfZeroes: number) {
+  if (numOfZeroes < 0) {
+    return NaN;
+  } else if (numOfZeroes === 0) {
+    return 1;
+  } else {
+    return Math.pow(10, numOfZeroes);
+  }
+}

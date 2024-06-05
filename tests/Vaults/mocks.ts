@@ -1,5 +1,5 @@
 import { DailyOracles } from '@/types/common';
-import { VaultDailyMetricsQueryResponse } from '@/types/vault-types';
+import { BoardAuxesMap, VaultDailyMetricsQueryResponse } from '@/types/vault-types';
 export const tokenNames: string[] = ['ATOM', 'stTIA', 'stkATOM', 'stOSMO', 'stATOM'];
 export const dailyMetricsResponse: VaultDailyMetricsQueryResponse = {
   ATOM: {
@@ -185,4 +185,19 @@ export const oracleDailies: DailyOracles = {
     typeInAmountLast: '1000000',
     typeOutAmountLast: '10238759',
   },
+};
+
+export const boardAuxes: BoardAuxesMap = {
+  ATOM: 6,
+  BLD: 6,
+  DAI_axl: 18,
+  DAI_grv: 18,
+  IST: 6,
+  KREAdCHARACTER: 0,
+  KREAdITEM: 0,
+  USDC_axl: 6,
+  USDC_grv: 6,
+  USDT_axl: 6,
+  USDT_grv: 6,
+  'Zoe Invitation': 0,
 };
