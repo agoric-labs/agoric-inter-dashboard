@@ -79,7 +79,12 @@ export const Reserve = () => {
           />
           <ReserveShortfall data={reserveDashboardQueryData} boardAuxes={boardAuxes} isLoading={isLoading} />
         </div>
-        <ReserveHistoryGraph tokenNames={tokenNames} error={tokenNamesError} isLoading={tokenNamesIsLoading} />
+        <ReserveHistoryGraph
+          tokenNames={tokenNames}
+          boardAuxes={boardAuxes}
+          error={tokenNamesError}
+          isLoading={tokenNamesIsLoading}
+        />
       </PageContent>
     </>
   );

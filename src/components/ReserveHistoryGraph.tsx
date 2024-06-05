@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import { AxiosError, AxiosResponse } from 'axios';
 import { ReserveHistory } from '@/widgets/ReserveHistory';
 import { GRAPH_DAYS } from '@/constants';
-import { populateMissingDays, getDateKey, range, subQueryFetcher, extractDailyOracles } from '@/utils';
+import { populateMissingDays, getDateKey, range, subQueryFetcher, extractDailyOracles, getTokenDivisor } from '@/utils';
 import { RESERVE_DAILY_METRICS_QUERY } from '@/queries';
 import { GraphData, ReserveAllocationMetricsDaily, ReserveAllocationMetricsDailyNode } from '@/types/reserve-types';
 import ChartsSkeleton from './ChartsSkeleton';
@@ -11,6 +11,7 @@ type Props = {
   tokenNames: string[];
   error: any;
   isLoading: boolean;
+  boardAuxes: { [key: string]: number };
 };
 
 export function generateGraphDataForDateRange(dayRange: number[]): Record<string, GraphData> {
@@ -30,6 +31,7 @@ export function updateGraphDataForToken(
   graphData: Record<string, GraphData>,
   dailyMetricsResponse: any,
   lastTokenMetric: ReserveAllocationMetricsDailyNode,
+  boardAuxes: { [key: string]: number },
 ): void {
   const dailyOracles = extractDailyOracles(tokenName, dailyMetricsResponse);
 
@@ -49,7 +51,8 @@ export function updateGraphDataForToken(
     const oracle = (dailyOracles && dailyOracles[dateKey]) || { typeOutAmountLast: 1, typeInAmountLast: 1 };
     const tokenMetrics = (dailyMetrics && dailyMetrics[dateKey]) || lastTokenMetric;
 
-    const tokenValue = (Number(tokenMetrics?.valueLast) || 0) / 1_000_000;
+    const tokenDivisor = getTokenDivisor(boardAuxes, tokenName);
+    const tokenValue = (Number(tokenMetrics?.valueLast) || 0) / tokenDivisor;
     const ratio = Number(oracle.typeOutAmountLast) / Number(oracle.typeInAmountLast);
     graphData[dateKey][tokenName] = tokenValue * ratio;
 
@@ -57,7 +60,7 @@ export function updateGraphDataForToken(
   }
 }
 
-export function constructGraph(tokenNames: string[], dailyMetricsResponse: any) {
+export function constructGraph(tokenNames: string[], dailyMetricsResponse: any, boardAuxes: { [key: string]: number }) {
   if (!tokenNames || tokenNames?.length === 0 || !dailyMetricsResponse) {
     return [];
   }
@@ -68,14 +71,14 @@ export function constructGraph(tokenNames: string[], dailyMetricsResponse: any) 
   for (let i = 0; i < tokenNames.length; i++) {
     const tokenName = tokenNames[i];
     let lastTokenMetric: ReserveAllocationMetricsDailyNode = dailyMetricsResponse?.[`${tokenName}_last`]?.nodes[0];
-    updateGraphDataForToken(tokenName, graphData, dailyMetricsResponse, lastTokenMetric);
+    updateGraphDataForToken(tokenName, graphData, dailyMetricsResponse, lastTokenMetric, boardAuxes);
   }
 
   const graphDataList = populateMissingDays(graphData, GRAPH_DAYS);
   return graphDataList;
 }
 
-const ReserveHistoryGraph = ({ tokenNames, isLoading, error }: Props) => {
+const ReserveHistoryGraph = ({ tokenNames, boardAuxes, isLoading, error }: Props) => {
   const isTokenNamesEmpty = !tokenNames || tokenNames.length === 0;
   if (isLoading || error || isTokenNamesEmpty) {
     const errorMessage = !isTokenNamesEmpty && 'Oops! Missing Token Names';
@@ -104,7 +107,7 @@ const ReserveHistoryGraph = ({ tokenNames, isLoading, error }: Props) => {
   } = useSWR<AxiosResponse, AxiosError>(RESERVE_DAILY_METRICS_QUERY(tokenNames, startDateKey), subQueryFetcher);
 
   const dailyMetricsResponse = dailyMetricsData?.data.data;
-  const graphData = constructGraph(tokenNames, dailyMetricsResponse);
+  const graphData = constructGraph(tokenNames, dailyMetricsResponse, boardAuxes);
 
   return (
     <ReserveHistory
