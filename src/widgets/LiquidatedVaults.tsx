@@ -2,7 +2,7 @@ import { format, differenceInSeconds } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
 import { LiquidatedVaultsTable } from '@/components/LiquidatedVaultsTable';
 import { SectionHeader } from '@/components/SectionHeader';
-import { formatSecondsToHumanReadable, parseBigInt } from '@/utils';
+import { formatSecondsToHumanReadable, getTokenDivisor, parseBigInt } from '@/utils';
 import { VAULT_STATES } from '@/constants';
 import { LiquidationDashboardData } from '@/types/liquidation-types';
 
@@ -10,9 +10,10 @@ type Props = {
   title?: string;
   data: LiquidationDashboardData;
   isLoading: boolean;
+  boardAuxes: { [key: string]: number };
 };
 
-export function LiquidatedVaults({ title = 'Liquidated Vaults', data, isLoading }: Props) {
+export function LiquidatedVaults({ title = 'Liquidated Vaults', data, boardAuxes, isLoading }: Props) {
   if (isLoading || !data) {
     return (
       <>
@@ -43,8 +44,12 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults', data, isLoading 
     const liquidationRatio =
       parseBigInt(vaultData.vaultManagerGovernance?.liquidationMarginNumerator) /
       parseBigInt(vaultData.vaultManagerGovernance?.liquidationMarginDenominator);
-    const istDebtAmount = vaultData.liquidatingState.debt / 1_000_000;
-    const collateralAmount = vaultData.liquidatingState.balance / 1_000_000;
+
+    const istDivisor = getTokenDivisor(boardAuxes, 'IST');
+    const tokenDivisor = getTokenDivisor(boardAuxes, vaultData.denom);
+
+    const istDebtAmount = vaultData.liquidatingState.debt / istDivisor;
+    const collateralAmount = vaultData.liquidatingState.balance / tokenDivisor;
     const liquidationPrice = (istDebtAmount * liquidationRatio) / collateralAmount;
     const collateralAmountReturned = (vaultData.liquidatingState.balance - vaultData.balance) / 1_000_000;
     const oraclePriceRatio =

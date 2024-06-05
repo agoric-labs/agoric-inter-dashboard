@@ -24,6 +24,11 @@ export function Liquidated() {
   );
   const response: LiquidationDashboardResponse = data?.data?.data;
 
+  const boardAuxes: { [key: string]: number } = response?.boardAuxes?.nodes?.reduce(
+    (agg, node) => ({ ...agg, [node.allegedName]: node.decimalPlaces }),
+    {},
+  );
+
   const liquidationDashboardData = {
     vaultLiquidations: response?.vaultLiquidations?.nodes,
   };
@@ -37,7 +42,7 @@ export function Liquidated() {
     LIQUIDATION_DAILY_METRICS_QUERY(tokenNames),
     subQueryFetcher,
   );
-  const dailyMetricsResponse: LiquidationMetricsDailyResponse = dailyMetricsData?.data.data;
+  const dailyMetricsResponse: LiquidationMetricsDailyResponse = dailyMetricsData?.data?.data;
   const graphDataMap: { [key: number]: GraphData } = {};
   Object.values(dailyMetricsResponse || {}).forEach((tokenDataList) => {
     tokenDataList?.nodes.forEach((dailyTokenMetrics) => {
@@ -74,7 +79,7 @@ export function Liquidated() {
         </ValueCardGrid>
         {/* <VaultStatesChart data={summedGraphDataList} isLoading={graphDataIsLoading} /> */}
         <hr className="my-5" />
-        <LiquidatedVaults data={liquidationDashboardData} isLoading={isLoading} />
+        <LiquidatedVaults data={liquidationDashboardData} boardAuxes={boardAuxes} isLoading={isLoading} />
       </PageContent>
     </>
   );

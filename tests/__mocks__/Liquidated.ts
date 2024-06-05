@@ -212,6 +212,58 @@ export const dashboardDataMock = {
           },
         ],
       },
+      boardAuxes: {
+        nodes: [
+          {
+            allegedName: 'USDC_axl',
+            decimalPlaces: 6,
+          },
+          {
+            allegedName: 'USDT_axl',
+            decimalPlaces: 6,
+          },
+          {
+            allegedName: 'IST',
+            decimalPlaces: 6,
+          },
+          {
+            allegedName: 'KREAdCHARACTER',
+            decimalPlaces: 0,
+          },
+          {
+            allegedName: 'DAI_grv',
+            decimalPlaces: 18,
+          },
+          {
+            allegedName: 'ATOM',
+            decimalPlaces: 6,
+          },
+          {
+            allegedName: 'USDT_grv',
+            decimalPlaces: 6,
+          },
+          {
+            allegedName: 'BLD',
+            decimalPlaces: 6,
+          },
+          {
+            allegedName: 'KREAdITEM',
+            decimalPlaces: 0,
+          },
+          {
+            allegedName: 'USDC_grv',
+            decimalPlaces: 6,
+          },
+          {
+            allegedName: 'Zoe Invitation',
+            decimalPlaces: 0,
+          },
+          {
+            allegedName: 'DAI_axl',
+            decimalPlaces: 18,
+          },
+        ],
+      },
     },
   },
 };

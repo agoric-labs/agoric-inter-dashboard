@@ -282,6 +282,12 @@ query {
 
 export const LIQUIDATIONS_DASHBOARD = `
 query {
+    boardAuxes {
+        nodes {
+            allegedName
+            decimalPlaces
+        }
+    }
     vaultManagerMetrics {
         nodes {
             id
