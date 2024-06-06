@@ -51,6 +51,7 @@ export type OraclePriceNode = {
   priceFeedName?: string;
 };
 
+export type BoardAuxesNode = { allegedName: string; decimalPlaces: number };
 export type LiquidationDashboardResponse = {
   vaultLiquidations: { nodes: Array<VaultLiquidationsNode> };
   vaultManagerGovernances: {
@@ -60,6 +61,7 @@ export type LiquidationDashboardResponse = {
     nodes: Array<VaultManagerMetricsNode>;
   };
   oraclePrices: { nodes: Array<OraclePriceNode> };
+  boardAuxes: { nodes: Array<BoardAuxesNode> };
 };
 export type LiquidationDashboardData = {
   vaultLiquidations: Array<VaultLiquidationsNode>;

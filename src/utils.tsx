@@ -251,6 +251,7 @@ export function createNumberWithLeadingZeroes(numOfZeroes: number) {
 
 export const parseBigInt = (str: string) => Number(str.slice(0, -1));
 
+
 /**
  * The function computes the token divisor for a given token name.
  *
