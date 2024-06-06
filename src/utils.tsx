@@ -251,8 +251,18 @@ export function createNumberWithLeadingZeroes(numOfZeroes: number) {
 
 export const parseBigInt = (str: string) => Number(str.slice(0, -1));
 
-export const getTokenDivisor = (boardAuxes: { [key: string]: number }, tokenName: string) => {
-  const decimalPlaces = (boardAuxes && boardAuxes[tokenName]) || 6;
-  const tokenDivisor = createNumberWithLeadingZeroes(decimalPlaces);
-  return tokenDivisor;
+/**
+ * The function computes the token divisor for a given token name.
+ *
+ * If boardAuxes is falsy (null or undefined), the function returns a NaN value
+ * to reflect anomalies in the data on the UI.
+ *
+ */
+export const getTokenDivisor = (boardAuxes: { [key: string]: number } | null, tokenName: string): number => {
+  if (!boardAuxes) {
+    return NaN;
+  }
+
+  const decimalPlaces = boardAuxes[tokenName] ?? 6;
+  return createNumberWithLeadingZeroes(decimalPlaces);
 };
