@@ -18,6 +18,12 @@ query {
             denom
         }
     }
+    boardAuxes {
+        nodes {
+            allegedName
+            decimalPlaces
+        }
+    }
 }`;
 
 export const PSM_GRAPH_TOKENS_QUERY = `
