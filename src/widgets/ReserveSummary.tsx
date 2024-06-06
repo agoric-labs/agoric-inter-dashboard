@@ -20,7 +20,7 @@ export function ReserveSummary({ title = 'Total Reserve Assets', data, boardAuxe
       Object.values(node.allocations).reduce((agg_, node_) => {
         const tokenDivisor = getTokenDivisor(boardAuxes, node_.denom);
         const allocationInUsd =
-          ((Number(node_.value) / tokenDivisor) * Number(node_.typeOutAmount || tokenDivisor)) / tokenDivisor;
+          ((Number(node_.value) / tokenDivisor) * Number(node_.typeOutAmount || 1)) / Number(node_.typeInAmount || 1);
         return agg_ + allocationInUsd;
       }, 0),
     0,

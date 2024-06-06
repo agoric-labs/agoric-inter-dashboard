@@ -51,7 +51,7 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults', data, boardAuxes
     const istDebtAmount = vaultData.liquidatingState.debt / istDivisor;
     const collateralAmount = vaultData.liquidatingState.balance / tokenDivisor;
     const liquidationPrice = (istDebtAmount * liquidationRatio) / collateralAmount;
-    const collateralAmountReturned = (vaultData.liquidatingState.balance - vaultData.balance) / 1_000_000;
+    const collateralAmountReturned = (vaultData.liquidatingState.balance - vaultData.balance) / tokenDivisor;
     const oraclePriceRatio =
       parseBigInt(vaultData.oraclePrice?.typeOutAmount) / parseBigInt(vaultData.oraclePrice?.typeInAmount);
     const collateralAmountReturnedUsd = collateralAmountReturned * oraclePriceRatio;

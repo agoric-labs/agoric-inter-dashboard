@@ -164,6 +164,7 @@ query {
         nodes {
             typeInName
             typeOutAmount
+            typeInAmount
         }
     }
     boardAuxes {
