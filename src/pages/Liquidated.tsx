@@ -10,9 +10,10 @@ import { populateMissingDays, subQueryFetcher } from '@/utils';
 import { LIQUIDATIONS_DASHBOARD, VAULT_STATE_DAILIES_QUERY } from '@/queries';
 import { GraphData, LiquidationDashboardResponse, VaultStateDailyResponse } from '@/types/liquidation-types';
 import { GRAPH_DAYS, SUBQUERY_STAGING_URL } from '@/constants';
+import { ErrorAlert } from '@/components/ErrorAlert';
 
 export function Liquidated() {
-  const { data, isLoading } = useSWR<AxiosResponse, AxiosError>(LIQUIDATIONS_DASHBOARD, (query: string) =>
+  const { data, isLoading, error } = useSWR<AxiosResponse, AxiosError>(LIQUIDATIONS_DASHBOARD, (query: string) =>
     subQueryFetcher(query, SUBQUERY_STAGING_URL),
   );
   const response: LiquidationDashboardResponse = data?.data?.data;
@@ -27,9 +28,12 @@ export function Liquidated() {
   };
 
   //  Queries for graph
-  const { data: vaultStateDailyData, isLoading: graphDataIsLoading } = useSWR<AxiosResponse, AxiosError>(
-    VAULT_STATE_DAILIES_QUERY,
-    (query: string) => subQueryFetcher(query, SUBQUERY_STAGING_URL),
+  const {
+    data: vaultStateDailyData,
+    isLoading: graphDataIsLoading,
+    error: graphDataError,
+  } = useSWR<AxiosResponse, AxiosError>(VAULT_STATE_DAILIES_QUERY, (query: string) =>
+    subQueryFetcher(query, SUBQUERY_STAGING_URL),
   );
   const vaultStateDailyResponse: VaultStateDailyResponse = vaultStateDailyData?.data?.data;
   const graphDataMap: { [key: number]: GraphData } = {};
@@ -43,6 +47,11 @@ export function Liquidated() {
   });
 
   const graphDataList = populateMissingDays(graphDataMap, GRAPH_DAYS);
+
+  const errorMessage = error || graphDataError;
+  if (errorMessage) {
+    return <ErrorAlert value={errorMessage} title="Request Error" />;
+  }
 
   return (
     <>
