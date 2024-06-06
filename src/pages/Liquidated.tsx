@@ -39,7 +39,7 @@ export function Liquidated() {
   const graphDataMap: { [key: number]: GraphData } = {};
   vaultStateDailyResponse?.vaultStatesDailies.nodes?.forEach((vaultState) => {
     graphDataMap[Number(vaultState.id)] = {
-      x: vaultState.blockTimeLast.split('T')[0],
+      x: vaultState.blockTimeLast?.split('T')[0],
       key: Number(vaultState.id),
       active: Number(vaultState.active),
       liquidated: Number(vaultState.liquidated),
