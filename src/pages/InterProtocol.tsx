@@ -134,8 +134,8 @@ export function InterProtocol() {
 
     const collateralInUsd =
       ((Number(node?.totalCollateral) / tokenDivisor) *
-        Number(oraclePrices[node?.liquidatingCollateralBrand]?.typeOutAmount)) /
-      Number(oraclePrices[node?.liquidatingCollateralBrand]?.typeInAmount);
+        Number(oraclePrices[node?.liquidatingCollateralBrand]?.typeOutAmount) || 1) /
+      Number(oraclePrices[node?.liquidatingCollateralBrand]?.typeInAmount || 1);
     return agg + collateralInUsd;
   }, 0);
 
