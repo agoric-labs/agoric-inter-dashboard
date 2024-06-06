@@ -23,6 +23,10 @@ export const Reserve = () => {
   const oraclePrices: { [key: string]: OraclePriceNode } =
     response?.oraclePrices?.nodes?.reduce((agg, node) => ({ ...agg, [node.typeInName]: node }), {}) || {};
 
+  const boardAuxes: { [key: string]: number } = response?.boardAuxes?.nodes?.reduce(
+    (agg, node) => ({ ...agg, [node.allegedName]: node.decimalPlaces }),
+    {},
+  );
   // TODO: make the fallback implementation in this section of code more readable
   const reserveDashboardQueryData: ReserveDashboardData =
     response?.reserveMetrics?.nodes?.map((vaultNode) => ({
@@ -66,15 +70,21 @@ export const Reserve = () => {
       <PageHeader title="Reserve Assets" />
       <PageContent>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <ReserveSummary data={reserveDashboardQueryData} isLoading={isLoading} />
+          <ReserveSummary data={reserveDashboardQueryData} boardAuxes={boardAuxes} isLoading={isLoading} />
           <ReserveCosmosSummary
             reserveAddress={reserveAddress}
+            boardAuxes={boardAuxes}
             isLoading={moduleAccountsLoading}
             error={moduleAccountsError}
           />
-          <ReserveShortfall data={reserveDashboardQueryData} isLoading={isLoading} />
+          <ReserveShortfall data={reserveDashboardQueryData} boardAuxes={boardAuxes} isLoading={isLoading} />
         </div>
-        <ReserveHistoryGraph tokenNames={tokenNames} error={tokenNamesError} isLoading={tokenNamesIsLoading} />
+        <ReserveHistoryGraph
+          tokenNames={tokenNames}
+          boardAuxes={boardAuxes}
+          error={tokenNamesError}
+          isLoading={tokenNamesIsLoading}
+        />
       </PageContent>
     </>
   );

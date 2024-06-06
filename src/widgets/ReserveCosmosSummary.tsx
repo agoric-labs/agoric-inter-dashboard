@@ -1,6 +1,6 @@
 import { ValueCard } from '@/components/ValueCard';
 import { GET_ACCOUNT_BALANCE_URL, UIST_DENOMINATION } from '@/constants';
-import { fetchDataFromUrl, formatPrice } from '@/utils';
+import { fetchDataFromUrl, formatPrice, getTokenDivisor } from '@/utils';
 import { AxiosResponse, AxiosError } from 'axios';
 import useSWR from 'swr';
 import DataStatus from '@/components/DataStatus';
@@ -10,9 +10,16 @@ type Props = {
   isLoading: boolean;
   error: any;
   reserveAddress: string;
+  boardAuxes: { [key: string]: number };
 };
 
-export function ReserveCosmosSummary({ title = 'Cosmos Reserve', isLoading, reserveAddress, error }: Props) {
+export function ReserveCosmosSummary({
+  title = 'Cosmos Reserve',
+  boardAuxes,
+  isLoading,
+  reserveAddress,
+  error,
+}: Props) {
   if (isLoading || error || !reserveAddress) {
     const errorMessage = !reserveAddress && 'Oops! Unable to show Cosmos Reserve';
 
@@ -34,7 +41,9 @@ export function ReserveCosmosSummary({ title = 'Cosmos Reserve', isLoading, rese
   const istReserve: { amount: number } = reserveBalance?.data?.balances?.find(
     (balance: { denom: string }) => balance.denom === UIST_DENOMINATION,
   );
-  const istReserveBalance = (istReserve?.amount || 0) / 1_000_000;
+
+  const istDivisor = getTokenDivisor(boardAuxes, 'IST');
+  const istReserveBalance = (istReserve?.amount || 0) / istDivisor;
 
   return <ValueCard title={title} value={formatPrice(istReserveBalance)} />;
 }

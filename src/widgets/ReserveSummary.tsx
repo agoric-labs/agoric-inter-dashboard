@@ -1,15 +1,16 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { ValueCard } from '@/components/ValueCard';
 import { ReserveDashboardData } from '@/types/reserve-types';
-import { formatPrice } from '@/utils';
+import { formatPrice, getTokenDivisor } from '@/utils';
 
 type Props = {
   title?: string;
   data: ReserveDashboardData;
+  boardAuxes: { [key: string]: number };
   isLoading: boolean;
 };
 
-export function ReserveSummary({ title = 'Total Reserve Assets', data, isLoading }: Props) {
+export function ReserveSummary({ title = 'Total Reserve Assets', data, boardAuxes, isLoading }: Props) {
   if (isLoading || !data) {
     return <ValueCard title={title} value={<Skeleton className="w-[100px] h-[32px] rounded-full" />} />;
   }
@@ -17,7 +18,9 @@ export function ReserveSummary({ title = 'Total Reserve Assets', data, isLoading
     (agg, node) =>
       agg +
       Object.values(node.allocations).reduce((agg_, node_) => {
-        const allocationInUsd = ((Number(node_.value) / 1_000_000) * Number(node_.typeOutAmount || 1_000_000)) / 1_000_000;
+        const tokenDivisor = getTokenDivisor(boardAuxes, node_.denom);
+        const allocationInUsd =
+          ((Number(node_.value) / tokenDivisor) * Number(node_.typeOutAmount || 1)) / Number(node_.typeInAmount || 1);
         return agg_ + allocationInUsd;
       }, 0),
     0,

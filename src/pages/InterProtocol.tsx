@@ -41,7 +41,7 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
   );
 };
 
-function getInterchainBalance(data: AccountData[]): number {
+function getInterchainBalance(data: AccountData[], boardAuxes: { [key: string]: number }): number {
   const balanceList = data
     .map((account) => ({
       channel_id: account.channel_id,
@@ -49,7 +49,8 @@ function getInterchainBalance(data: AccountData[]): number {
       uist_balance: Number(account.balance.find((b) => b.denom === 'uist')?.amount || '0'),
     }))
     .filter((account) => account.uist_balance !== 0);
-  return balanceList.reduce((acc, account) => acc + account.uist_balance, 0) / 1_000_000;
+  const istDivisor = getTokenDivisor(boardAuxes, 'IST');
+  return balanceList.reduce((acc, account) => acc + account.uist_balance, 0) / istDivisor;
 }
 export function InterProtocol() {
   const {
@@ -71,17 +72,17 @@ export function InterProtocol() {
     return <InterProtocolSkeleton error={error} isLoading={isLoading} />;
   }
 
-  const ibcBalance = getInterchainBalance(interchainBalanceData?.data?.balances);
   const dashboardResponse: InterProtocolResponse = dashboardData?.data?.data;
+  const boardAuxes: { [key: string]: number } = dashboardResponse?.boardAuxes?.nodes?.reduce(
+    (agg, node) => ({ ...agg, [node?.allegedName]: node?.decimalPlaces }),
+    {},
+  );
+
+  const ibcBalance = getInterchainBalance(interchainBalanceData?.data?.balances, boardAuxes);
   const walletCount = dashboardResponse?.wallets?.totalCount;
 
   const oraclePrices: { [key: string]: OraclePriceNode } = dashboardResponse?.oraclePrices?.nodes?.reduce(
     (agg, node) => ({ ...agg, [node.typeInName]: node }),
-    {},
-  );
-
-  const boardAuxes: { [key: string]: number } = dashboardResponse?.boardAuxes?.nodes?.reduce(
-    (agg, node) => ({ ...agg, [node?.allegedName]: node?.decimalPlaces }),
     {},
   );
 
@@ -120,8 +121,9 @@ export function InterProtocol() {
       node?.allocations?.nodes.reduce((agg_, node_) => {
         const tokenDivisor = getTokenDivisor(boardAuxes, node_?.denom);
         const allocationInUsd =
-          ((Number(node_?.value) / tokenDivisor) * Number(oraclePrices[node_?.denom]?.typeOutAmount || tokenDivisor)) /
-          tokenDivisor;
+          ((Number(node_?.value) / tokenDivisor) * Number(oraclePrices[node_.denom]?.typeOutAmount || 1)) /
+          Number(oraclePrices[node_.denom]?.typeInAmount || 1);
+
         return agg_ + allocationInUsd;
       }, 0),
     0,

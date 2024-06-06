@@ -4,27 +4,32 @@ import {
   updateGraphDataForToken,
 } from '@/components/ReserveHistoryGraph';
 import { GRAPH_DAYS } from '@/constants';
-import { tokenNames, dailyMetricsResponse } from './mocks';
+import { tokenNames, dailyMetricsResponse, boardAuxes } from './mocks';
 import { ReserveAllocationMetricsDailyNode } from '@/types/reserve-types';
 
 describe('Tests for constructing graph', () => {
   // Tests for constructGraph
-  it('should return a list of graph data with length equal to GRAPH_DAYS when given valid tokenNames and dailyMetricsResponse', () => {
-    const result = constructGraph(tokenNames, dailyMetricsResponse);
+  it('should return a list of graph data with length equal to GRAPH_DAYS when given valid tokenNames, dailyMetricsResponse, boardAuxes', () => {
+    const result = constructGraph(tokenNames, dailyMetricsResponse, boardAuxes);
+    expect(result).toHaveLength(GRAPH_DAYS);
+  });
+
+  it('should return a list of graph data using default values when boardAuxes is undefined', () => {
+    const result = constructGraph(tokenNames, dailyMetricsResponse, undefined as any);
     expect(result).toHaveLength(GRAPH_DAYS);
   });
 
   it('should return an empty list when given empty tokenNames and dailyMetricsResponse', () => {
     const dailyMetricsResponse = {};
-    const result = constructGraph([], dailyMetricsResponse);
+    const result = constructGraph([], dailyMetricsResponse, boardAuxes);
     expect(result).toHaveLength(0);
   });
 
-  it('should return an empty list when given tokenNames and dailyMetricsResponse are null or undefined', () => {
-    let result = constructGraph(null as any, null);
+  it('should return an empty list when given tokenNames, dailyMetricsResponse and boardAuxes object is null or undefined', () => {
+    let result = constructGraph(null as any, null, null as any);
     expect(result).toHaveLength(0);
 
-    result = constructGraph(undefined as any, undefined);
+    result = constructGraph(undefined as any, undefined, undefined as any);
     expect(result).toHaveLength(0);
   });
 
@@ -53,7 +58,7 @@ describe('Tests for constructing graph', () => {
 
     let lastTokenMetric: ReserveAllocationMetricsDailyNode = dailyMetricsResponse?.[`${tokenName}_last`]?.nodes[0];
 
-    updateGraphDataForToken(tokenName, graphData, dailyMetricsResponse, lastTokenMetric);
+    updateGraphDataForToken(tokenName, graphData, dailyMetricsResponse, lastTokenMetric, boardAuxes);
 
     expect(graphData).toEqual({
       '20220101': { key: 1, x: '2022-01-01', ATOM: 85.9552681344 },
@@ -68,7 +73,7 @@ describe('Tests for constructing graph', () => {
 
     let lastTokenMetric: ReserveAllocationMetricsDailyNode = dailyMetricsResponse?.[`${tokenName}_last`]?.nodes[0];
 
-    updateGraphDataForToken(tokenName, graphData, dailyMetricsResponse, lastTokenMetric);
+    updateGraphDataForToken(tokenName, graphData, dailyMetricsResponse, lastTokenMetric, boardAuxes);
 
     expect(graphData).toEqual({
       '20220103': { key: 3, x: '2022-01-03', ATOM: 6.58702 },
@@ -83,7 +88,7 @@ describe('Tests for constructing graph', () => {
 
     let lastTokenMetric: ReserveAllocationMetricsDailyNode = dailyMetricsResponse?.[`${tokenName}_last`]?.nodes[0];
 
-    updateGraphDataForToken(tokenName, graphData, undefined, lastTokenMetric);
+    updateGraphDataForToken(tokenName, graphData, undefined, lastTokenMetric, boardAuxes);
 
     expect(graphData).toEqual({
       '20220103': { key: 3, x: '2022-01-03', ATOM: 6.58702 },
