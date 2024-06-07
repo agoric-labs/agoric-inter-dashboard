@@ -38,7 +38,7 @@ export function TokenPrices({ title = 'Summary', data, isLoading }: Props) {
     // Determine 24h change in oracle price
     const sortedOracleDailyPrices = token?.oracleDailyPrices?.sort((a, b) => b.dateKey - a.dateKey);
     const changeValue =
-      sortedOracleDailyPrices.length > 0
+      sortedOracleDailyPrices.length >= 2
         ? (() => {
             const oraclePriceYesterday =
               sortedOracleDailyPrices[0].typeOutAmountLast / sortedOracleDailyPrices[0].typeInAmountLast;
