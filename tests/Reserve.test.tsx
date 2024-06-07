@@ -22,6 +22,7 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
   unobserve: jest.fn(),
   disconnect: jest.fn(),
 }));
+jest.useFakeTimers().setSystemTime(new Date('2024-06-07'));
 
 jest.mock('recharts', () => {
   const OriginalModule = jest.requireActual('recharts');
