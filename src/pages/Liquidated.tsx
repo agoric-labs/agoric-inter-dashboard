@@ -64,11 +64,16 @@ export function Liquidated() {
 
   const graphDataList = populateMissingDays(graphDataMap, GRAPH_DAYS);
 
-  const summedGraphDataList = graphDataList.map((item) => ({
-    ...item,
-    active: sum(Object.values(item.active)),
-    liquidated: sum(Object.values(item.active)),
-  }));
+  const summedGraphDataList = graphDataList.map((item) => {
+    const totalActive = item.active ? sum(Object.values(item.active)) : 0;
+    const totalLiquidated = item.liquidated ? sum(Object.values(item.liquidated)) : 0;
+
+    return {
+      ...item,
+      active: totalActive,
+      liquidated: totalLiquidated
+    };
+  });
 
   return (
     <>
