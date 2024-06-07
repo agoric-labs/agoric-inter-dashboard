@@ -3,6 +3,7 @@ export type FormattedGraphData = {
   x: string;
   key: number;
   active?: any;
+  liquidated?: any;
 };
 
 export type DailyOracles = {

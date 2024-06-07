@@ -249,7 +249,7 @@ export function createNumberWithLeadingZeroes(numOfZeroes: number) {
   }
 }
 
-export const parseBigInt = (str: string) => Number(str.slice(0, -1));
+export const parseBigInt = (str: string) => Number(str?.slice(0, -1));
 
 
 /**
