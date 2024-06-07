@@ -65,13 +65,13 @@ export function Liquidated() {
   const graphDataList = populateMissingDays(graphDataMap, GRAPH_DAYS);
 
   const summedGraphDataList = graphDataList.map((item) => {
-    const totalActive = item.active ? sum(Object.values(item.active)) : NaN;
-    const totalLiquidated = item.liquidated ? sum(Object.values(item.liquidated)) : NaN;
+    const totalActive = item.active ? sum(Object.values(item.active)) : 0;
+    const totalLiquidated = item.liquidated ? sum(Object.values(item.liquidated)) : 0;
 
     return {
       ...item,
       active: totalActive,
-      liquidated: totalLiquidated,
+      liquidated: totalLiquidated
     };
   });
 
@@ -82,7 +82,7 @@ export function Liquidated() {
         <ValueCardGrid>
           <LiquidatedVaultCountCard data={response?.vaultManagerMetrics?.nodes} isLoading={isLoading} />
         </ValueCardGrid>
-        <VaultStatesChart data={summedGraphDataList} isLoading={graphDataIsLoading} />
+        {/* <VaultStatesChart data={summedGraphDataList} isLoading={graphDataIsLoading} /> */}
         <hr className="my-5" />
         <LiquidatedVaults data={liquidationDashboardData} boardAuxes={boardAuxes} isLoading={isLoading} />
       </PageContent>

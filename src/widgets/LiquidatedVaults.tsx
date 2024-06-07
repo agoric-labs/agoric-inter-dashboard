@@ -41,10 +41,9 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults', data, boardAuxes
 
     const vaultStateSuffix = vaultData?.currentState?.state === VAULT_STATES.CLOSED ? ' (Closed)' : '';
     const vaultState = vaultData.state[0].toUpperCase() + vaultData.state.slice(1) + vaultStateSuffix;
-    console.log("YYYYYYYYYYYY", vaultData)
     const liquidationRatio =
-      parseBigInt(vaultData.vaultManagerGovernance?.liquidationMarginNumerator || '') /
-      parseBigInt(vaultData.vaultManagerGovernance?.liquidationMarginDenominator || '');
+      parseBigInt(vaultData.vaultManagerGovernance?.liquidationMarginNumerator) /
+      parseBigInt(vaultData.vaultManagerGovernance?.liquidationMarginDenominator);
 
     const istDivisor = getTokenDivisor(boardAuxes, 'IST');
     const tokenDivisor = getTokenDivisor(boardAuxes, vaultData.denom);
@@ -53,8 +52,6 @@ export function LiquidatedVaults({ title = 'Liquidated Vaults', data, boardAuxes
     const collateralAmount = vaultData.liquidatingState.balance / tokenDivisor;
     const liquidationPrice = (istDebtAmount * liquidationRatio) / collateralAmount;
     const collateralAmountReturned = (vaultData.liquidatingState.balance - vaultData.balance) / tokenDivisor;
-    console.log("YYYYYYYYYYYY 5555")
-
     const oraclePriceRatio =
       parseBigInt(vaultData.oraclePrice?.typeOutAmount) / parseBigInt(vaultData.oraclePrice?.typeInAmount);
     const collateralAmountReturnedUsd = collateralAmountReturned * oraclePriceRatio;
