@@ -42,7 +42,7 @@ export function Liquidated() {
       x: vaultState.blockTimeLast?.split('T')[0],
       key: Number(vaultState.id),
       active: Number(vaultState.active),
-      liquidated: Number(vaultState.liquidated),
+      liquidated: Number(vaultState.liquidated) + Number(vaultState.liquidatedClosed),
     };
   });
 
