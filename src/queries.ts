@@ -336,29 +336,17 @@ query {
     }
 }`;
 
-export const LIQUIDATION_GRAPH_TOKENS_QUERY = `
+export const VAULT_STATE_DAILIES_QUERY = `
 query {
-    vaultManagerMetrics {
+    vaultStatesDailies  ( first: 90, orderBy: ID_DESC, offset: 1) {
         nodes {
             id
-            liquidatingCollateralBrand
-        }   
-    }
-}`
-
-export const LIQUIDATION_DAILY_METRICS_QUERY = (tokens: string[]) => `
-query {
-    ${tokens?.map((token) =>
-    `${token}: vaultManagerMetricsDailies ( first: 90, filter:{liquidatingCollateralBrand: {equalTo: "${token}"}}, orderBy:DATE_KEY_DESC)  {
-        nodes {
-            id
-            dateKey
             blockTimeLast
-            numActiveVaultsLast
-            numLiquidatingVaultsLast
-            numLiquidationsCompletedLast
-            numLiquidationsAbortedLast
-            liquidatingCollateralBrand
+            active
+            closed
+            liquidated
+            liquidating
+            liquidatedClosed
         }
-    }`)}
+    }
 }`

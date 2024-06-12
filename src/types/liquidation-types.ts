@@ -67,28 +67,22 @@ export type LiquidationDashboardData = {
   vaultLiquidations: Array<VaultLiquidationsNode>;
 };
 
-export type TokenNamesResponse = {
-  vaultManagerMetrics: {
-    nodes: Array<{ id: string; liquidatingCollateralBrand: string }>;
-  };
-};
-export type LiquidationMetricsDailyNode = {
+export type VaultStateDailyNode = {
   id: string;
-  dateKey: number;
   blockTimeLast: string;
-  numActiveVaultsLast: number;
-  numLiquidatingVaultsLast: number;
-  numLiquidationsCompletedLast: number;
-  numLiquidationsAbortedLast: number;
-  liquidatingCollateralBrand: string;
+  active: string;
+  liquidated: string;
+  closed: string;
+  liquidating: string;
+  liquidatedClosed: string;
 };
 
-export type LiquidationMetricsDailyResponse = {
-  [key: string]: {
-    nodes: Array<LiquidationMetricsDailyNode>;
+export type VaultStateDailyResponse = {
+  vaultStatesDailies: {
+    nodes: Array<VaultStateDailyNode>;
   };
 };
-export type GraphData = { key: number; x: string; active: object; liquidated: object };
+export type GraphData = { key: number; x: string; active: number; liquidated: number };
 
 export type OraclePriceDailiesNode = {
   typeInAmountLast: number;
