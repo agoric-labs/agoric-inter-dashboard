@@ -4703,7 +4703,7 @@ exports[`Liquidation Dashboard Snapshot tests should match snapshot when data is
                         dy="0.355em"
                         x="72"
                       >
-                        65
+                        150
                       </tspan>
                     </text>
                   </g>
@@ -4739,7 +4739,7 @@ exports[`Liquidation Dashboard Snapshot tests should match snapshot when data is
                         dy="0.355em"
                         x="72"
                       >
-                        130
+                        300
                       </tspan>
                     </text>
                   </g>
@@ -4775,7 +4775,7 @@ exports[`Liquidation Dashboard Snapshot tests should match snapshot when data is
                         dy="0.355em"
                         x="72"
                       >
-                        195
+                        450
                       </tspan>
                     </text>
                   </g>
@@ -4811,7 +4811,7 @@ exports[`Liquidation Dashboard Snapshot tests should match snapshot when data is
                         dy="0.355em"
                         x="72"
                       >
-                        260
+                        600
                       </tspan>
                     </text>
                   </g>
@@ -4905,7 +4905,7 @@ exports[`Liquidation Dashboard Snapshot tests should match snapshot when data is
                         dy="0.355em"
                         x="72"
                       >
-                        65
+                        150
                       </tspan>
                     </text>
                   </g>
@@ -4941,7 +4941,7 @@ exports[`Liquidation Dashboard Snapshot tests should match snapshot when data is
                         dy="0.355em"
                         x="72"
                       >
-                        130
+                        300
                       </tspan>
                     </text>
                   </g>
@@ -4977,7 +4977,7 @@ exports[`Liquidation Dashboard Snapshot tests should match snapshot when data is
                         dy="0.355em"
                         x="72"
                       >
-                        195
+                        450
                       </tspan>
                     </text>
                   </g>
@@ -5013,9 +5013,291 @@ exports[`Liquidation Dashboard Snapshot tests should match snapshot when data is
                         dy="0.355em"
                         x="72"
                       >
-                        260
+                        600
                       </tspan>
                     </text>
+                  </g>
+                </g>
+              </g>
+              <g
+                class="recharts-layer recharts-bar"
+              >
+                <g
+                  class="recharts-layer recharts-bar-rectangles"
+                >
+                  <g
+                    class="recharts-layer"
+                  >
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
+                    <g
+                      class="recharts-layer recharts-bar-rectangle"
+                    />
                   </g>
                 </g>
               </g>
@@ -5644,6 +5926,33 @@ exports[`Liquidation Dashboard Snapshot tests should match snapshot when data is
                     style="color: rgb(213, 110, 239);"
                   >
                     Liquidated
+                  </span>
+                </li>
+                <li
+                  class="recharts-legend-item legend-item-2"
+                  style="display: inline-block; margin-right: 10px;"
+                >
+                  <svg
+                    class="recharts-surface"
+                    height="14"
+                    style="display: inline-block; vertical-align: middle; margin-right: 4px;"
+                    viewBox="0 0 32 32"
+                    width="14"
+                  >
+                    <title />
+                    <desc />
+                    <path
+                      class="recharts-legend-icon"
+                      d="M0,4h32v24h-32z"
+                      fill="#3292D7"
+                      stroke="none"
+                    />
+                  </svg>
+                  <span
+                    class="recharts-legend-item-text"
+                    style="color: rgb(50, 146, 215);"
+                  >
+                    Closed
                   </span>
                 </li>
               </ul>

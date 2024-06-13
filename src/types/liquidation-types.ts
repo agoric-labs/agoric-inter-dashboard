@@ -82,7 +82,7 @@ export type VaultStateDailyResponse = {
     nodes: Array<VaultStateDailyNode>;
   };
 };
-export type GraphData = { key: number; x: string; active: number; liquidated: number };
+export type GraphData = { key: number; x: string; active: number; liquidated: number; closed: number };
 
 export type OraclePriceDailiesNode = {
   typeInAmountLast: number;

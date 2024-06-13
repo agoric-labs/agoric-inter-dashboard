@@ -46,7 +46,7 @@ export function VaultStatesChart({ title = 'Vault States', data, isLoading }: Pr
         <YAxis />
         <Tooltip />
         <Legend />
-        {['active', 'liquidated'].map((col, idx) => (
+        {['active', 'liquidated', 'closed'].map((col, idx) => (
           <Bar key={col} stackId="a" dataKey={col} name={toTitleCase(col)} fill={colors[idx % colors.length]} />
         ))}
       </BarChart>
