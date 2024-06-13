@@ -43,6 +43,7 @@ export function Liquidated() {
       key: Number(vaultState.id),
       active: Number(vaultState.active),
       liquidated: Number(vaultState.liquidated) + Number(vaultState.liquidatedClosed),
+      closed: Number(vaultState.closed),
     };
   });
 
