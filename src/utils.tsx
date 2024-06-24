@@ -219,7 +219,7 @@ export const populateMissingDays = (
   let prevData: GraphData | null = null;
 
   for (const currentData of sortedGraphDataList) {
-    const currentCompleteData = { ...prevData, ...currentData };
+    const currentCompleteData: GraphData = { ...prevData, ...currentData };
     const currentDate = new Date(currentCompleteData.x);
     prevDate && fillMissingDays(prevDate, currentDate, formattedData, currentCompleteData);
     formattedData.push(currentCompleteData);
