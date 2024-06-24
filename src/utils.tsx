@@ -189,7 +189,12 @@ export const getDateKey = (date: Date, daysToSubtract: number = 0) => {
 
 export const range = (stop: number) => [...Object(Array(stop)).keys()];
 
-const fillMissingDays = (startDate: Date, endDate: Date, formattedData: FormattedGraphData[]): void => {
+const fillMissingDays = (
+  startDate: Date,
+  endDate: Date,
+  formattedData: FormattedGraphData[],
+  dataToFill: GraphData,
+): void => {
   const timeDifferenceInMilliseconds = endDate.getTime() - startDate.getTime();
   const daysDifference = Math.ceil(timeDifferenceInMilliseconds / (1000 * 60 * 60 * 24));
 
@@ -199,7 +204,7 @@ const fillMissingDays = (startDate: Date, endDate: Date, formattedData: Formatte
       newDate.setDate(startDate.getDate() + day);
       const formattedDate = newDate.toISOString().slice(0, 10).replace(/-/g, '');
       const dateKey = Number(formattedDate);
-      formattedData.push({ x: formattedDate, key: dateKey });
+      formattedData.push({ ...dataToFill, x: formattedDate, key: dateKey });
     }
   }
 };
@@ -211,14 +216,16 @@ export const populateMissingDays = (
 
   const formattedData: FormattedGraphData[] = [];
   let prevDate: Date | null = null;
+  let prevData: GraphData | null = null;
 
   for (const currentData of sortedGraphDataList) {
-    const currentDate = new Date(currentData.x);
-
-    prevDate && fillMissingDays(prevDate, currentDate, formattedData);
-    formattedData.push(currentData);
+    const currentCompleteData: GraphData = { ...prevData, ...currentData };
+    const currentDate = new Date(currentCompleteData.x);
+    prevDate && fillMissingDays(prevDate, currentDate, formattedData, currentCompleteData);
+    formattedData.push(currentCompleteData);
 
     prevDate = currentDate;
+    prevData = currentCompleteData;
   }
 
   return formattedData.slice(-GRAPH_DAYS);
@@ -250,7 +257,6 @@ export function createNumberWithLeadingZeroes(numOfZeroes: number) {
 }
 
 export const parseBigInt = (str: string) => Number(str?.slice(0, -1));
-
 
 /**
  * The function computes the token divisor for a given token name.
