@@ -14,7 +14,7 @@ import { ErrorAlert } from '@/components/ErrorAlert';
 
 export function Liquidated() {
   const { data, isLoading, error } = useSWR<AxiosResponse, AxiosError>(LIQUIDATIONS_DASHBOARD, (query: string) =>
-    subQueryFetcher(query, SUBQUERY_STAGING_URL),
+    subQueryFetcher(query),
   );
   const response: LiquidationDashboardResponse = data?.data?.data;
 
@@ -61,7 +61,7 @@ export function Liquidated() {
         <ValueCardGrid>
           <LiquidatedVaultCountCard data={response?.vaultManagerMetrics?.nodes} isLoading={isLoading} />
         </ValueCardGrid>
-        <VaultStatesChart data={graphDataList} isLoading={graphDataIsLoading} />
+        {/* <VaultStatesChart data={graphDataList} isLoading={graphDataIsLoading} /> */}
         <hr className="my-5" />
         <LiquidatedVaults data={liquidationDashboardData} boardAuxes={boardAuxes} isLoading={isLoading} />
       </PageContent>
