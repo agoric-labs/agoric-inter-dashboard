@@ -28,28 +28,28 @@ export function Liquidated() {
   };
 
   //  Queries for graph
-  const {
-    data: vaultStateDailyData,
-    isLoading: graphDataIsLoading,
-    error: graphDataError,
-  } = useSWR<AxiosResponse, AxiosError>(VAULT_STATE_DAILIES_QUERY, (query: string) =>
-    subQueryFetcher(query, SUBQUERY_STAGING_URL),
-  );
-  const vaultStateDailyResponse: VaultStateDailyResponse = vaultStateDailyData?.data?.data;
-  const graphDataMap: { [key: number]: GraphData } = {};
-  vaultStateDailyResponse?.vaultStatesDailies.nodes?.forEach((vaultState) => {
-    graphDataMap[Number(vaultState.id)] = {
-      x: vaultState.blockTimeLast?.split('T')[0],
-      key: Number(vaultState.id),
-      active: Number(vaultState.active),
-      liquidated: Number(vaultState.liquidated) + Number(vaultState.liquidatedClosed),
-      closed: Number(vaultState.closed),
-    };
-  });
+  // const {
+  //   data: vaultStateDailyData,
+  //   isLoading: graphDataIsLoading,
+  //   error: graphDataError,
+  // } = useSWR<AxiosResponse, AxiosError>(VAULT_STATE_DAILIES_QUERY, (query: string) =>
+  //   subQueryFetcher(query, SUBQUERY_STAGING_URL),
+  // );
+  // const vaultStateDailyResponse: VaultStateDailyResponse = vaultStateDailyData?.data?.data;
+  // const graphDataMap: { [key: number]: GraphData } = {};
+  // vaultStateDailyResponse?.vaultStatesDailies.nodes?.forEach((vaultState) => {
+  //   graphDataMap[Number(vaultState.id)] = {
+  //     x: vaultState.blockTimeLast?.split('T')[0],
+  //     key: Number(vaultState.id),
+  //     active: Number(vaultState.active),
+  //     liquidated: Number(vaultState.liquidated) + Number(vaultState.liquidatedClosed),
+  //     closed: Number(vaultState.closed),
+  //   };
+  // });
 
-  const graphDataList = populateMissingDays(graphDataMap, GRAPH_DAYS);
+  // const graphDataList = populateMissingDays(graphDataMap, GRAPH_DAYS);
 
-  const errorMessage = error || graphDataError;
+  const errorMessage = error;
   if (errorMessage) {
     return <ErrorAlert value={errorMessage} title="Request Error" />;
   }
