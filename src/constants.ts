@@ -11,7 +11,6 @@ export const VBANK_RESERVE_ACCOUNT = 'vbank/reserve';
 export const GRAPH_DAYS = 90;
 
 export const SUBQUERY_URL = 'https://api.subquery.network/sq/agoric-labs/agoric-mainnet-v2';
-export const SUBQUERY_STAGING_URL = 'https://api.subquery.network/sq/agoric-labs/agoric-mainnet-v2__YWdvc';
 
 export const enum VAULT_STATES {
   ACTIVE = 'active',
