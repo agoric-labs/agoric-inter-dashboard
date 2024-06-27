@@ -14,7 +14,7 @@ import { ErrorAlert } from '@/components/ErrorAlert';
 
 export function Liquidated() {
   const { data, isLoading, error } = useSWR<AxiosResponse, AxiosError>(LIQUIDATIONS_DASHBOARD, (query: string) =>
-    subQueryFetcher(query),
+    subQueryFetcher(query, SUBQUERY_STAGING_URL),
   );
   const response: LiquidationDashboardResponse = data?.data?.data;
 
@@ -28,28 +28,28 @@ export function Liquidated() {
   };
 
   //  Queries for graph
-  // const {
-  //   data: vaultStateDailyData,
-  //   isLoading: graphDataIsLoading,
-  //   error: graphDataError,
-  // } = useSWR<AxiosResponse, AxiosError>(VAULT_STATE_DAILIES_QUERY, (query: string) =>
-  //   subQueryFetcher(query, SUBQUERY_STAGING_URL),
-  // );
-  // const vaultStateDailyResponse: VaultStateDailyResponse = vaultStateDailyData?.data?.data;
-  // const graphDataMap: { [key: number]: GraphData } = {};
-  // vaultStateDailyResponse?.vaultStatesDailies.nodes?.forEach((vaultState) => {
-  //   graphDataMap[Number(vaultState.id)] = {
-  //     x: vaultState.blockTimeLast?.split('T')[0],
-  //     key: Number(vaultState.id),
-  //     active: Number(vaultState.active),
-  //     liquidated: Number(vaultState.liquidated) + Number(vaultState.liquidatedClosed),
-  //     closed: Number(vaultState.closed),
-  //   };
-  // });
+  const {
+    data: vaultStateDailyData,
+    isLoading: graphDataIsLoading,
+    error: graphDataError,
+  } = useSWR<AxiosResponse, AxiosError>(VAULT_STATE_DAILIES_QUERY, (query: string) =>
+    subQueryFetcher(query, SUBQUERY_STAGING_URL),
+  );
+  const vaultStateDailyResponse: VaultStateDailyResponse = vaultStateDailyData?.data?.data;
+  const graphDataMap: { [key: number]: GraphData } = {};
+  vaultStateDailyResponse?.vaultStatesDailies.nodes?.forEach((vaultState) => {
+    graphDataMap[Number(vaultState.id)] = {
+      x: vaultState.blockTimeLast?.split('T')[0],
+      key: Number(vaultState.id),
+      active: Number(vaultState.active),
+      liquidated: Number(vaultState.liquidated) + Number(vaultState.liquidatedClosed),
+      closed: Number(vaultState.closed),
+    };
+  });
 
-  // const graphDataList = populateMissingDays(graphDataMap, GRAPH_DAYS);
+  const graphDataList = populateMissingDays(graphDataMap, GRAPH_DAYS);
 
-  const errorMessage = error;
+  const errorMessage = error || graphDataError;
   if (errorMessage) {
     return <ErrorAlert value={errorMessage} title="Request Error" />;
   }
@@ -61,7 +61,7 @@ export function Liquidated() {
         <ValueCardGrid>
           <LiquidatedVaultCountCard data={response?.vaultManagerMetrics?.nodes} isLoading={isLoading} />
         </ValueCardGrid>
-        {/* <VaultStatesChart data={graphDataList} isLoading={graphDataIsLoading} /> */}
+        <VaultStatesChart data={graphDataList} isLoading={graphDataIsLoading} />
         <hr className="my-5" />
         <LiquidatedVaults data={liquidationDashboardData} boardAuxes={boardAuxes} isLoading={isLoading} />
       </PageContent>
