@@ -314,6 +314,8 @@ query {
             state
             balance
             blockTime
+            oraclePrice
+            vaultManagerGovernance
             currentState {
                 id
                 denom

@@ -50,26 +50,26 @@ export const columns: DataColumn<Row>[] = [
     type: 'number',
     header: 'IST Debt Amount',
   },
-  // {
-  //   accessorKey: 'liquidation_margin_avg',
-  //   type: 'percent',
-  //   header: 'Liquidation Ratio',
-  // },
-  // {
-  //   accessorKey: 'liquidating_rate',
-  //   type: 'usd',
-  //   header: 'Liquidation Price',
-  // },
+  {
+    accessorKey: 'liquidation_margin_avg',
+    type: 'percent',
+    header: 'Liquidation Ratio',
+  },
+  {
+    accessorKey: 'liquidating_rate',
+    type: 'usd',
+    header: 'Liquidation Price',
+  },
   {
     accessorKey: 'liquidated_return_amount',
     type: 'number',
     header: 'Collateral Returned Amount',
   },
-  // {
-  //   accessorKey: 'liquidated_return_amount_usd',
-  //   type: 'usd',
-  //   header: 'Collateral Returned ($USD)',
-  // },
+  {
+    accessorKey: 'liquidated_return_amount_usd',
+    type: 'usd',
+    header: 'Collateral Returned ($USD)',
+  },
 ];
 
 export function LiquidatedVaultsTable({ data }: Props) {
