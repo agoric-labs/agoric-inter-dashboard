@@ -1085,6 +1085,17 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when data is load
                   class="text-left w-full"
                   type="button"
                 >
+                  Created at
+                </button>
+              </th>
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 150px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
                   Debt Type
                 </button>
               </th>
@@ -1243,6 +1254,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when data is load
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -1344,6 +1360,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when data is load
                     stkATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-19 05:56
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -1453,6 +1474,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when data is load
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-04-11 01:41
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -1554,6 +1580,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when data is load
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2023-12-05 01:46
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -2931,6 +2962,17 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                   class="text-left w-full"
                   type="button"
                 >
+                  Created at
+                </button>
+              </th>
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 150px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
                   Debt Type
                 </button>
               </th>
@@ -3089,6 +3131,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -3194,6 +3241,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -3295,6 +3347,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     ATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -3404,6 +3461,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -3505,6 +3567,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     ATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -3614,6 +3681,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -3715,6 +3787,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     ATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -3824,6 +3901,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -3925,6 +4007,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     ATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -4034,6 +4121,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -4135,6 +4227,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     ATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -4244,6 +4341,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -4345,6 +4447,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     ATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -4454,6 +4561,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -4555,6 +4667,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     ATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -4664,6 +4781,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -4765,6 +4887,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     ATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -4874,6 +5001,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -4975,6 +5107,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     ATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -5084,6 +5221,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -5185,6 +5327,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     ATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -5294,6 +5441,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -5395,6 +5547,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     ATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -5504,6 +5661,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -5605,6 +5767,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -5714,6 +5881,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -5815,6 +5987,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -5924,6 +6101,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -6025,6 +6207,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -6134,6 +6321,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -6235,6 +6427,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -6344,6 +6541,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -6445,6 +6647,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -6554,6 +6761,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -6655,6 +6867,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -6764,6 +6981,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -6869,6 +7091,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -6970,6 +7197,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -7079,6 +7311,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -7180,6 +7417,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -7289,6 +7531,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -7390,6 +7637,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -7499,6 +7751,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -7600,6 +7857,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -7709,6 +7971,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -7810,6 +8077,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -7919,6 +8191,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -8020,6 +8297,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -8129,6 +8411,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -8230,6 +8517,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -8339,6 +8631,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -8440,6 +8737,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -8549,6 +8851,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -8654,6 +8961,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -8755,6 +9067,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -8864,6 +9181,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -8965,6 +9287,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -9074,6 +9401,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -9175,6 +9507,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -9284,6 +9621,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -9385,6 +9727,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -9494,6 +9841,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -9595,6 +9947,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -9704,6 +10061,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -9805,6 +10167,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -9914,6 +10281,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -10015,6 +10387,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -10124,6 +10501,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -10225,6 +10607,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -10334,6 +10721,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -10435,6 +10827,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -10544,6 +10941,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -10645,6 +11047,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -10754,6 +11161,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -10855,6 +11267,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -10964,6 +11381,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -11065,6 +11487,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -11174,6 +11601,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -11275,6 +11707,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -11384,6 +11821,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -11485,6 +11927,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -11594,6 +12041,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -11695,6 +12147,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -11804,6 +12261,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -11905,6 +12367,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -12014,6 +12481,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -12115,6 +12587,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -12224,6 +12701,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -12325,6 +12807,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -12434,6 +12921,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -12535,6 +13027,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -12644,6 +13141,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -12745,6 +13247,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -12854,6 +13361,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -12955,6 +13467,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -13064,6 +13581,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -13165,6 +13687,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -13274,6 +13801,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -13375,6 +13907,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -13484,6 +14021,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -13585,6 +14127,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -13694,6 +14241,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -13795,6 +14347,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -13904,6 +14461,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -14005,6 +14567,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stkATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -14114,6 +14681,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -14215,6 +14787,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stOSMO
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -14324,6 +14901,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -14425,6 +15007,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stOSMO
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -14534,6 +15121,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -14635,6 +15227,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stOSMO
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -14744,6 +15341,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -14845,6 +15447,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stOSMO
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -14954,6 +15561,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -15055,6 +15667,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stOSMO
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -15164,6 +15781,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -15265,6 +15887,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stOSMO
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -15374,6 +16001,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -15475,6 +16107,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stOSMO
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -15584,6 +16221,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -15685,6 +16327,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stOSMO
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -15794,6 +16441,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -15895,6 +16547,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stOSMO
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -16004,6 +16661,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -16105,6 +16767,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stOSMO
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -16214,6 +16881,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -16315,6 +16987,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stOSMO
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -16424,6 +17101,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -16525,6 +17207,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -16634,6 +17321,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -16735,6 +17427,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -16844,6 +17541,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -16945,6 +17647,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -17054,6 +17761,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -17155,6 +17867,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -17264,6 +17981,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -17365,6 +18087,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -17474,6 +18201,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -17575,6 +18307,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -17684,6 +18421,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -17785,6 +18527,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -17894,6 +18641,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -17995,6 +18747,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -18104,6 +18861,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -18205,6 +18967,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -18314,6 +19081,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -18415,6 +19187,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -18524,6 +19301,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -18625,6 +19407,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -18734,6 +19521,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -18835,6 +19627,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -18944,6 +19741,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -19045,6 +19847,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -19154,6 +19961,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -19255,6 +20067,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -19364,6 +20181,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -19465,6 +20287,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -19574,6 +20401,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -19675,6 +20507,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -19784,6 +20621,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -19885,6 +20727,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -19994,6 +20841,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -20095,6 +20947,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -20204,6 +21061,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -20305,6 +21167,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -20414,6 +21281,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -20515,6 +21387,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -20624,6 +21501,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -20725,6 +21607,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -20834,6 +21721,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -20935,6 +21827,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -21044,6 +21941,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -21145,6 +22047,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -21254,6 +22161,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -21355,6 +22267,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -21464,6 +22381,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -21565,6 +22487,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -21674,6 +22601,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -21775,6 +22707,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -21884,6 +22821,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -21985,6 +22927,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -22094,6 +23041,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -22195,6 +23147,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -22304,6 +23261,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -22405,6 +23367,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -22514,6 +23481,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -22615,6 +23587,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -22724,6 +23701,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -22825,6 +23807,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -22934,6 +23921,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -23035,6 +24027,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -23144,6 +24141,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -23245,6 +24247,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -23354,6 +24361,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -23459,6 +24471,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -23560,6 +24577,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-18 20:05
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -24732,6 +25754,17 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                   class="text-left w-full"
                   type="button"
                 >
+                  Created at
+                </button>
+              </th>
+              <th
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+                style="width: 150px;"
+              >
+                <button
+                  class="text-left w-full"
+                  type="button"
+                >
                   Debt Type
                 </button>
               </th>
@@ -24890,6 +25923,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-03-18 20:05
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -24991,6 +26029,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stkATOM
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2024-03-19 05:56
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
@@ -25100,6 +26143,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
               >
+                2024-04-11 01:41
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
                 IST
               </td>
               <td
@@ -25201,6 +26249,11 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                     stTIA
                   </span>
                 </span>
+              </td>
+              <td
+                class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
+              >
+                2023-12-05 01:46
               </td>
               <td
                 class="p-4 align-middle [&:has([role=checkbox])]:pr-0"
