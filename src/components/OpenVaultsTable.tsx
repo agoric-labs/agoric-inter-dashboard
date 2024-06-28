@@ -33,7 +33,7 @@ export const columns: DataColumn<Row>[] = [
   {
     accessorKey: 'vault_created_time',
     type: 'text',
-    header: 'Created at',
+    header: 'Date Opened',
   },
   {
     accessorKey: 'debt_type',
