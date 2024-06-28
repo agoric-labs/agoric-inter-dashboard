@@ -31,6 +31,11 @@ export const columns: DataColumn<Row>[] = [
     header: 'Collateral Type',
   },
   {
+    accessorKey: 'vault_created_time',
+    type: 'text',
+    header: 'Created at',
+  },
+  {
     accessorKey: 'debt_type',
     type: 'text',
     header: 'Debt Type',
