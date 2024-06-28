@@ -33,6 +33,7 @@ export type VaultsNode = {
   id: string;
   state: string;
   denom: string;
+  blockTime: string;
 };
 
 export type VaultManagerGovernancesNode = {

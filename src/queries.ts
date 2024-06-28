@@ -90,6 +90,7 @@ query {
             balance
             state
             debt
+            blockTime
         }
         totalCount
     }
@@ -116,6 +117,7 @@ query {
             balance
             state
             debt
+            blockTime
         }
     }`)}
 }`

@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
 import { OpenVaultsTable } from '@/components/OpenVaultsTable';
 import { SectionHeader } from '@/components/SectionHeader';
@@ -58,6 +59,7 @@ export function OpenVaults({ title = 'Open Vaults', data, isLoading }: Props) {
       liquidation_price: liquidationPrice,
       liquidation_cushion: currentCollateralPrice / (liquidationPrice - 1),
       collateralization_ratio: collateralizationRatio === Infinity ? 0 : collateralizationRatio,
+      vault_created_time: format(new Date(vaultData?.blockTime), 'yyyy-MM-dd HH:mm'),
     };
   });
 
