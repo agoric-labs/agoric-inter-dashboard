@@ -1085,7 +1085,7 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when data is load
                   class="text-left w-full"
                   type="button"
                 >
-                  Created at
+                  Date Opened
                 </button>
               </th>
               <th
@@ -2962,7 +2962,7 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                   class="text-left w-full"
                   type="button"
                 >
-                  Created at
+                  Date Opened
                 </button>
               </th>
               <th
@@ -25754,7 +25754,7 @@ exports[`Vaults Dashboard Snapshot tests should match snapshot when openVaults a
                   class="text-left w-full"
                   type="button"
                 >
-                  Created at
+                  Date Opened
                 </button>
               </th>
               <th
