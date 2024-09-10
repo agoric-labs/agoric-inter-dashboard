@@ -7,22 +7,58 @@ import { LiquidatedVaults } from '@/widgets/LiquidatedVaults';
 import { LiquidatedVaultCountCard } from '@/widgets/LiquidatedVaultCountCard';
 import { VaultStatesChart } from '@/widgets/VaultStatesChart';
 import { populateMissingDays, subQueryFetcher } from '@/utils';
-import { LIQUIDATIONS_DASHBOARD, VAULT_STATE_DAILIES_QUERY } from '@/queries';
-import { GraphData, LiquidationDashboardResponse, VaultStateDailyResponse } from '@/types/liquidation-types';
+import { LIQUIDATED_VAULTS_NEXT_PAGES_QUERY, LIQUIDATIONS_DASHBOARD, VAULT_STATE_DAILIES_QUERY } from '@/queries';
+import {
+  GraphData,
+  LiquidationDashboardResponse,
+  VaultLiquidationsNode,
+  VaultStateDailyResponse,
+} from '@/types/liquidation-types';
 import { GRAPH_DAYS } from '@/constants';
 import { ErrorAlert } from '@/components/ErrorAlert';
 
 export function Liquidated() {
   const { data, isLoading, error } = useSWR<AxiosResponse, AxiosError>(LIQUIDATIONS_DASHBOARD, subQueryFetcher);
-  const response: LiquidationDashboardResponse = data?.data?.data;
+  const liquidatedVaultsDataResponse: LiquidationDashboardResponse = data?.data?.data;
 
-  const boardAuxes: { [key: string]: number } = response?.boardAuxes?.nodes?.reduce(
+  const totalVaultsCount = liquidatedVaultsDataResponse?.vaultLiquidations.totalCount || 1;
+  const pageCount = Math.ceil(totalVaultsCount / 100) - 1;
+  const {
+    data: liquidatedVaultsNextPages,
+    error: nextPagesError,
+    isLoading: nextPagesIsLoading,
+  } = useSWR<AxiosResponse, AxiosError>(
+    pageCount ? LIQUIDATED_VAULTS_NEXT_PAGES_QUERY(pageCount) : null,
+    subQueryFetcher,
+  );
+
+  const pageError = error || nextPagesError;
+
+  let liquidatedVaultsDataAppended: LiquidationDashboardResponse = liquidatedVaultsDataResponse;
+  if (liquidatedVaultsNextPages) {
+    const vaultPages: {
+      [key: string]: {
+        nodes: Array<VaultLiquidationsNode>;
+      };
+    } = liquidatedVaultsNextPages?.data?.data || {};
+    const nextVaults = Object.values(vaultPages).flatMap((openVaultsPage) => openVaultsPage.nodes);
+
+    liquidatedVaultsDataAppended = {
+      ...liquidatedVaultsDataResponse,
+      vaultLiquidations: {
+        ...liquidatedVaultsDataResponse.vaultLiquidations,
+        nodes: [...liquidatedVaultsDataResponse.vaultLiquidations.nodes, ...nextVaults],
+      },
+    };
+  }
+
+  const boardAuxes: { [key: string]: number } | undefined = liquidatedVaultsDataAppended?.boardAuxes?.nodes?.reduce(
     (agg, node) => ({ ...agg, [node.allegedName]: node.decimalPlaces }),
     {},
   );
 
   const liquidationDashboardData = {
-    vaultLiquidations: response?.vaultLiquidations?.nodes,
+    vaultLiquidations: liquidatedVaultsDataAppended?.vaultLiquidations?.nodes,
   };
 
   //  Queries for graph
@@ -42,6 +78,9 @@ export function Liquidated() {
       closed: Number(vaultState.closed),
     };
   });
+  if (pageError) {
+    return <ErrorAlert value={pageError} />;
+  }
 
   const graphDataList = populateMissingDays(graphDataMap, GRAPH_DAYS);
 
@@ -49,17 +88,20 @@ export function Liquidated() {
   if (errorMessage) {
     return <ErrorAlert value={errorMessage} title="Request Error" />;
   }
-
+  const dataIsLoading = isLoading || nextPagesIsLoading;
   return (
     <>
       <PageHeader title="Liquidated Vaults" />
       <PageContent>
         <ValueCardGrid>
-          <LiquidatedVaultCountCard data={response?.vaultManagerMetrics?.nodes} isLoading={isLoading} />
+          <LiquidatedVaultCountCard
+            data={liquidatedVaultsDataAppended?.vaultManagerMetrics?.nodes}
+            isLoading={dataIsLoading}
+          />
         </ValueCardGrid>
         <VaultStatesChart data={graphDataList} isLoading={graphDataIsLoading} />
         <hr className="my-5" />
-        <LiquidatedVaults data={liquidationDashboardData} boardAuxes={boardAuxes} isLoading={isLoading} />
+        <LiquidatedVaults data={liquidationDashboardData} boardAuxes={boardAuxes} isLoading={dataIsLoading} />
       </PageContent>
     </>
   );
