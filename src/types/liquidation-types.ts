@@ -53,7 +53,7 @@ export type OraclePriceNode = {
 
 export type BoardAuxesNode = { allegedName: string; decimalPlaces: number };
 export type LiquidationDashboardResponse = {
-  vaultLiquidations: { nodes: Array<VaultLiquidationsNode> };
+  vaultLiquidations: { nodes: Array<VaultLiquidationsNode>; totalCount: number };
   vaultManagerGovernances: {
     nodes: Array<VaultManagerGovernancesNode>;
   };

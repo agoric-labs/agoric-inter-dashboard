@@ -335,8 +335,40 @@ query {
                 blockTime
             }
         }
+        totalCount
     }
 }`;
+export const LIQUIDATED_VAULTS_NEXT_PAGES_QUERY = (pages: number) => `
+query {
+    ${range(pages).map(index => `v${index}:vaultLiquidations (filter: {state: {equalTo: "liquidated"}}, first: 100, offset:${(index + 1) * 100}) {
+        nodes {
+            id
+            denom
+            debt
+            state
+            balance
+            blockTime
+            oraclePrice
+            vaultManagerGovernance
+            currentState {
+                id
+                denom
+                debt
+                state
+                balance
+                blockTime
+            }
+            liquidatingState {
+                id
+                denom
+                debt
+                state
+                balance
+                blockTime
+            }
+        }
+    }`)}
+}`
 
 export const VAULT_STATE_DAILIES_QUERY = `
 query {
