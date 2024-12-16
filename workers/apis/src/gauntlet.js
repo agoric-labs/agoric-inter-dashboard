@@ -1,6 +1,5 @@
-import { graphqlQuery, LIQUIDATION_ORACLE_PRICES_DAILIES_QUERY } from './queries.js';
-import { SUBQUERY_URL } from './constants.js';
-import { getDateKey } from './utils.js';
+import { graphqlQuery, LIQUIDATION_ORACLE_PRICES_DAILIES_QUERY, PAGINATINATED_DATA_QUERIES } from './queries.js';
+import { fetchSubquery, getDateKey, parseFromPaginatedData } from './utils.js';
 
 async function getOraclPricesDailiesForLiquidatedVaults(vaultLiquidations) {
   const oraclePricesDatekeyMap = vaultLiquidations?.nodes.reduce((agg, vault) => {
@@ -8,14 +7,7 @@ async function getOraclPricesDailiesForLiquidatedVaults(vaultLiquidations) {
     const prevDenomKeys = agg[denom] || [];
     return { ...agg, [denom]: [...prevDenomKeys, getDateKey(new Date(vault.blockTime)).key] };
   }, {});
-  const oraclePricesResponse = await fetch(SUBQUERY_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-    body: JSON.stringify(LIQUIDATION_ORACLE_PRICES_DAILIES_QUERY(oraclePricesDatekeyMap)),
-  });
+  const oraclePricesResponse = await fetchSubquery(LIQUIDATION_ORACLE_PRICES_DAILIES_QUERY(oraclePricesDatekeyMap));
   const { data } = await oraclePricesResponse.json();
 
   const oraclePricesDailies =
@@ -37,19 +29,25 @@ async function getOraclPricesDailiesForLiquidatedVaults(vaultLiquidations) {
 
 export async function handleGauntletRequest(env) {
   try {
-    const response = await fetch(SUBQUERY_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify(graphqlQuery),
-    });
+    const response = await fetchSubquery(graphqlQuery);
 
     const { data } = await response.json();
     console.log('Data Fetched Successfully');
 
     const { oraclePrices, oraclePriceDailies, vaultManagerMetrics, vaultManagerGovernances, vaults, vaultLiquidations, _metadata } = data;
+
+    const paginatedDataResponse = await fetchSubquery(
+      PAGINATINATED_DATA_QUERIES(
+        Math.floor(vaults.totalCount / 100),
+        Math.floor(vaultLiquidations.totalCount / 100),
+        Math.floor(oraclePriceDailies.totalCount / 100)
+      )
+    );
+    const { data: paginatedData } = await paginatedDataResponse.json();
+
+    vaults.nodes.push(...parseFromPaginatedData('vaults', paginatedData));
+    vaultLiquidations.nodes.push(...parseFromPaginatedData('vaultLiquidations', paginatedData));
+    oraclePriceDailies.nodes.push(...parseFromPaginatedData('oraclePriceDailies', paginatedData));
 
     const liquidationOraclePricesDailies = await getOraclPricesDailiesForLiquidatedVaults(vaultLiquidations);
 
