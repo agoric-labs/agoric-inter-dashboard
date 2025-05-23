@@ -58,7 +58,8 @@ export function MainLayout({ children }: Props) {
 
   return (
     <>
-      <NoticeBanner bannerContent="By way of a community vote, Inter Protocol is being sunsetted, and is currently in a 60-day wind-down. Vault holders are encouraged to close their vaults expeditiously, and IST positions should be settled. Please see the FAQ (https://inter.trade/blog/inter-protocol-sunset-faq) for more information. The wind-down is scheduled to complete on June 26, 2025." />
+      <NoticeBanner bannerContent="By way of a community vote, Inter Protocol is being sunsetted, and is currently in a 60-day wind-down. Vault holders are encouraged to close their vaults expeditiously, and IST positions should be settled. Please see the FAQ (https://inter.trade/blog/inter-protocol-sunset-faq) for more information. The wind-down is scheduled to complete on June 26, 2025. " />
+      <NoticeBanner bannerContent=" info.inter.trade is currently experiencing technical difficulties. The team is actively working on it. All other aspects of Inter Protocol are currently functioning as normal."/>
       <div className="lg:flex column-bg">
         <Helmet titleTemplate="%s | Inter Protocol Dashboard">
           <title>Home</title>
